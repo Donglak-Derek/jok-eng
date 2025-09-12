@@ -1,8 +1,9 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  --background: #f6f7f9; /* light default */
   --foreground: #171717;
+  --card-bg: #ffffff;
 }
 
 @theme inline {
@@ -12,10 +13,12 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Optional: dark override for users preferring dark */
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --card-bg: #111111;
   }
 }
 

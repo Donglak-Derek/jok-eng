@@ -18,4 +18,3 @@ export default function ProgressBar({ total, completed }: Props) {
     </div>
   );
 }
-
