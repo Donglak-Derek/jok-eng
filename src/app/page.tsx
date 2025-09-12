@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { categories, scripts } from "@/data/sample";
+import { categories, scripts } from "@/data";
 import Card from "@/components/Card";
 
 export default function Home() {

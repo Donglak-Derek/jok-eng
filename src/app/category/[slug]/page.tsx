@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { scripts } from "@/data/sample";
+import { scripts } from "@/data";
 import Card from "@/components/Card";
 import RepeatCount from "@/components/RepeatCount";
 

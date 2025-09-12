@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { scripts } from "@/data/sample";
+import { scripts } from "@/data";
 import SentenceCard from "@/components/SentenceCard";
 import ProgressBar from "@/components/ProgressBar";
 import Link from "next/link";
