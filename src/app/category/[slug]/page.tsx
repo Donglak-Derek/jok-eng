@@ -2,12 +2,16 @@ import Link from "next/link";
 import { scripts } from "@/data";
 import Card from "@/components/Card";
 import RepeatCount from "@/components/RepeatCount";
+import { notFound } from "next/navigation";
 
 type Props = { params: Promise<{ slug: string }> };
 
 export default async function CategoryPage({ params }: Props) {
   const { slug } = await params;
   const list = scripts.filter((s) => s.categorySlug === slug);
+  if (list.length === 0) {
+    notFound();
+  }
   const categoryName = list[0]?.categoryName ?? slug;
 
   return (
