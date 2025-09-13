@@ -37,7 +37,7 @@ export default function SentenceCard({ sentence, index, onHeard }: Props) {
   return (
     <div
       className={
-        "relative rounded-2xl shadow-md border border-black/5 dark:border-white/10 bg-[color:var(--card-bg)] p-4 flex flex-col gap-3 active:scale-[0.99] transition " +
+        "relative rounded-2xl shadow-md border border-black/5 dark:border-white/10 bg-[color:var(--card-bg)] p-4 md:p-5 lg:p-6 flex flex-col gap-3 md:gap-4 active:scale-[0.99] transition " +
         (speaking ? "ring-1 ring-black/20 dark:ring-white/30" : "")
       }
       onClick={onCardClick}
@@ -52,13 +52,13 @@ export default function SentenceCard({ sentence, index, onHeard }: Props) {
       aria-label="Play sentence"
     >
       <div className="min-w-0 pr-10">
-        <div className="text-lg font-medium">{sentence.en}</div>
-        <div className="text-sm text-black/70 dark:text-white/70">{sentence.ko}</div>
+        <div className="text-lg md:text-xl lg:text-2xl font-medium">{sentence.en}</div>
+        <div className="text-sm md:text-base text-black/70 dark:text-white/70">{sentence.ko}</div>
       </div>
 
-      <div className="flex flex-wrap gap-2 mt-1">
+      <div className="flex flex-wrap gap-2 md:gap-2.5 mt-1">
         {keywords.map((k) => (
-          <span key={k.word} className="text-xs px-2 py-1 rounded bg-black/5 dark:bg-white/5">
+          <span key={k.word} className="text-xs md:text-sm px-2 md:px-2.5 py-1 rounded bg-black/5 dark:bg-white/5">
             <span className="font-semibold">{k.word}</span>: {k.meaningKo}
           </span>
         ))}
@@ -68,7 +68,7 @@ export default function SentenceCard({ sentence, index, onHeard }: Props) {
       <svg
         aria-hidden
         viewBox="0 0 24 24"
-        className="pointer-events-none absolute bottom-3 right-3 w-8 h-8 text-black/15 dark:text-white/20"
+        className="pointer-events-none absolute bottom-3 right-3 w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-black/15 dark:text-white/20"
         fill="currentColor"
       >
         <path d="M8 5v14l11-7z" />
