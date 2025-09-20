@@ -53,12 +53,15 @@ export default function ScriptClient({ script }: Props) {
       const next = cur + 1;
       localStorage.setItem(repeatsKey, String(next));
       setRepeats(next);
+      // Reset progress immediately so cards return to original color
+      localStorage.setItem(storageKey, JSON.stringify([]));
+      setHeardSet(new Set());
       const t = setTimeout(() => {
         window.location.href = `/category/${script.categorySlug}`;
       }, 800);
       return () => clearTimeout(t);
     }
-  }, [heardSet.size, repeatsKey, script.categorySlug, total]);
+  }, [heardSet.size, repeatsKey, storageKey, script.categorySlug, total]);
 
   return (
     <div className="min-h-dvh bg-[var(--background)]">
@@ -84,9 +87,19 @@ export default function ScriptClient({ script }: Props) {
               key={sen.id}
               sentence={sen}
               index={i}
+              heard={heardSet.has(i)}
               onHeard={(idx) => setHeardSet((s) => new Set(s).add(idx))}
             />
           ))}
+        </div>
+
+        <div className="pt-2">
+          <Link
+            href={`/category/${script.categorySlug}`}
+            className="inline-flex w-full items-center justify-center px-4 md:px-5 py-2 md:py-2.5 rounded-full border border-black/10 dark:border-white/15 text-sm md:text-base active:scale-[0.99] transition"
+          >
+            ← Back to {script.categoryName}
+          </Link>
         </div>
       </div>
     </div>

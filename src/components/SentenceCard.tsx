@@ -6,27 +6,30 @@ import type { Sentence } from "@/types";
 type Props = {
   sentence: Sentence;
   index: number;
+  heard: boolean;
   onHeard: (index: number) => void;
 };
 
-export default function SentenceCard({ sentence, index, onHeard }: Props) {
+export default function SentenceCard({ sentence, index, heard, onHeard }: Props) {
   const [speaking, setSpeaking] = useState(false);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
   const speak = useCallback(() => {
     if (typeof window === "undefined") return;
     if (speaking) return; // avoid restarting while speaking
+    if (!heard) {
+      onHeard(index);
+    }
     const u = new SpeechSynthesisUtterance(sentence.en);
     u.lang = "en-US";
     u.rate = 1;
     u.onstart = () => setSpeaking(true);
     u.onend = () => {
       setSpeaking(false);
-      onHeard(index);
     };
     utteranceRef.current = u;
     window.speechSynthesis.speak(u);
-  }, [index, onHeard, sentence.en, speaking]);
+  }, [heard, index, onHeard, sentence.en, speaking]);
 
   const keywords = useMemo(() => sentence.keywords, [sentence.keywords]);
 
@@ -37,8 +40,9 @@ export default function SentenceCard({ sentence, index, onHeard }: Props) {
   return (
     <div
       className={
-        "relative rounded-2xl shadow-md border border-black/5 dark:border-white/10 bg-[color:var(--card-bg)] p-4 md:p-5 lg:p-6 flex flex-col gap-3 md:gap-4 active:scale-[0.99] transition " +
-        (speaking ? "ring-1 ring-black/20 dark:ring-white/30" : "")
+        "relative rounded-2xl shadow-md border border-black/5 dark:border-white/10 p-4 md:p-5 lg:p-6 flex flex-col gap-3 md:gap-4 active:scale-[0.99] transition " +
+        (speaking ? "ring-1 ring-black/20 dark:ring-white/30 " : "") +
+        (heard ? "bg-black/5 dark:bg-white/10" : "bg-[color:var(--card-bg)]")
       }
       onClick={onCardClick}
       role="button"
