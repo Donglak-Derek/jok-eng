@@ -1,6 +1,5 @@
 import { Script } from "@/types";
 import { basicsTenses } from "./basics_tenses";
-import { articlesAAnThe } from "./articles_a_an_the";
 import { grammarArticles } from "./grammar_articles";
 import { verbTensesConsistency } from "./grammar_verb_tenses_consistency";
 import { subjectVerbAgreement } from "./grammar_subject_verb_agreement";
@@ -14,7 +13,6 @@ import { relativeClauses } from "./grammar_relative_clauses";
 
 export const grammarScripts: Script[] = [
   basicsTenses,
-  articlesAAnThe,
   grammarArticles,
   verbTensesConsistency,
   subjectVerbAgreement,
