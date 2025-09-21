@@ -1,6 +1,8 @@
 import { Script } from "@/types";
-import { morningShow } from "./morning_show";
+import { interviewSmartQuestion } from "./interview_smart_question";
 import { techInterview } from "./tech_interview";
 
-export const interviewScripts: Script[] = [morningShow, techInterview];
-
+export const interviewScripts: Script[] = [
+  interviewSmartQuestion,
+  techInterview,
+];
