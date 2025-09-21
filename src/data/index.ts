@@ -4,12 +4,14 @@ import { standupScripts } from "@/data/standup";
 import { skitScripts } from "@/data/skit";
 import { interviewScripts } from "@/data/interview";
 import { everydayScripts } from "@/data/everyday";
+import { grammarScripts } from "@/data/grammar";
 
 export const scripts: Script[] = [
   ...standupScripts,
   ...skitScripts,
   ...interviewScripts,
   ...everydayScripts,
+  ...grammarScripts,
 ];
 
 export const categories: Category[] = Array.from(
