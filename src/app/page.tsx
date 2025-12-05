@@ -11,7 +11,7 @@ export default function Home() {
             Jok-eng
           </h1>
           <span className="text-[11px] md:text-xs px-3 py-1 rounded-full border border-[color:var(--accent-blue)]/40 bg-[color:var(--accent-blue)]/10 text-[color:var(--muted)] shadow-[0_0_20px_rgba(34,211,238,0.3)]">
-            MVP
+            9NyangHea
           </span>
         </header>
 
@@ -30,7 +30,8 @@ export default function Home() {
               </h2>
             </div>
             <p className="text-base md:text-lg text-[color:var(--muted)] max-w-2xl leading-relaxed">
-              Textbooks taught you how to be polite. We teach you how to be interesting. Master sarcasm, banter, and the jokes you missed.
+              Textbooks taught you how to be polite. We teach you how to be
+              interesting. Master sarcasm, banter, and the jokes you missed.
             </p>
             <div className="flex gap-3 flex-wrap pt-1">
               <Link
@@ -44,12 +45,19 @@ export default function Home() {
         </section>
 
         <section className="mt-2">
-          <h2 id="categories" className="headline text-xl md:text-2xl mb-3 bg-gradient-to-r from-[color:var(--accent-purple)] to-[color:var(--accent-blue)] text-transparent bg-clip-text">
+          <h2
+            id="categories"
+            className="headline text-xl md:text-2xl mb-3 bg-gradient-to-r from-[color:var(--accent-purple)] to-[color:var(--accent-blue)] text-transparent bg-clip-text"
+          >
             Categories
           </h2>
           <div className="grid grid-cols-1 gap-3 md:gap-4">
             {categories.map((c) => (
-              <Link key={c.slug} href={`/category/${c.slug}`} className="active:scale-[0.98] transition">
+              <Link
+                key={c.slug}
+                href={`/category/${c.slug}`}
+                className="active:scale-[0.98] transition"
+              >
                 <Card className="p-4 md:p-5 lg:p-6">
                   <div className="flex items-center justify-between">
                     <div>
@@ -57,7 +65,11 @@ export default function Home() {
                         {c.name}
                       </div>
                       <div className="text-xs md:text-sm text-[color:var(--muted)] mt-1">
-                        {scripts.filter((s) => s.categorySlug === c.slug).length} scripts
+                        {
+                          scripts.filter((s) => s.categorySlug === c.slug)
+                            .length
+                        }{" "}
+                        scripts
                       </div>
                     </div>
                     <div className="text-[color:var(--accent-blue)]/70 text-base md:text-lg drop-shadow-[0_0_18px_rgba(34,211,238,0.35)]">
