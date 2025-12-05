@@ -11,7 +11,7 @@ export default function Home() {
             Jok-eng
           </h1>
           <span className="text-[11px] md:text-xs px-3 py-1 rounded-full border border-[color:var(--accent-blue)]/40 bg-[color:var(--accent-blue)]/10 text-[color:var(--muted)] shadow-[0_0_20px_rgba(34,211,238,0.3)]">
-            9NyangHea
+            by 9NyangHea
           </span>
         </header>
 
