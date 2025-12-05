@@ -1,10 +1,10 @@
 import { Script, Category } from "@/types";
 import { CATEGORY_NAMES } from "@/data/categories";
-import { standupScripts } from "@/data/standup";
-import { skitScripts } from "@/data/skit";
-import { interviewScripts } from "@/data/interview";
-import { everydayScripts } from "@/data/everyday";
-import { grammarScripts } from "@/data/grammar";
+import { standupScripts } from "@/data/the_party_survival_kit";
+import { skitScripts } from "@/data/dating_and_disasters";
+import { interviewScripts } from "@/data/office_banter";
+import { everydayScripts } from "@/data/small_talk";
+import { grammarScripts } from "@/data/the_sarcasm_detector";
 
 export const scripts: Script[] = [
   ...standupScripts,
