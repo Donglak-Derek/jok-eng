@@ -3,145 +3,82 @@ import { CATEGORY_NAMES } from "@/data/categories";
 
 export const transportation: Script = {
   id: "everyday-transportation",
-  title: "Transportation",
+  title: "Uber & Taxi Banter",
   categorySlug: "everyday",
   categoryName: CATEGORY_NAMES["everyday"],
   cleanedEnglish:
-    "Practice talking about driving, traffic, and commuting in daily life. These sentences help with conversations about how you get around.",
+    "Light lines for rideshares—fast small talk that makes you sound friendly without oversharing.",
   sentences: [
     {
       id: "s1",
-      en: "It took me 40 minutes to get here today.",
-      ko: "오늘 여기 오는데 40분 걸렸어요.",
+      en: "Hey, thanks for picking me up—how's your day going?",
+      ko: "태워주셔서 감사해요—오늘 하루 어떠세요?",
       keywords: [
-        { word: "minutes", meaningKo: "분" },
-        { word: "took", meaningKo: "걸렸다" },
+        { word: "pick up", meaningKo: "태우다" },
+        { word: "how's your day", meaningKo: "오늘 하루 어때요?" },
       ],
     },
     {
       id: "s2",
-      en: "The traffic was really heavy this morning.",
-      ko: "오늘 아침에 교통이 정말 막혔어요.",
+      en: "Traffic is wild today, right?",
+      ko: "오늘 교통 장난 아니죠?",
       keywords: [
         { word: "traffic", meaningKo: "교통" },
-        { word: "heavy", meaningKo: "심한" },
+        { word: "wild", meaningKo: "장난 아닌" },
       ],
     },
     {
       id: "s3",
-      en: "I drive to work every day.",
-      ko: "저는 매일 차로 출근해요.",
+      en: "If there's a faster route, I'm all for it.",
+      ko: "더 빠른 길이 있으면 저는 언제나 환영이에요.",
       keywords: [
-        { word: "drive", meaningKo: "운전하다" },
-        { word: "work", meaningKo: "직장" },
+        { word: "route", meaningKo: "길, 경로" },
+        { word: "all for it", meaningKo: "찬성이다" },
       ],
     },
     {
       id: "s4",
-      en: "Sometimes I take the bus instead of driving.",
-      ko: "가끔은 운전 대신 버스를 타요.",
+      en: "I’m headed to a friend's thing—trying not to be late.",
+      ko: "친구 모임 가는 길이에요—늦지 않으려고요.",
       keywords: [
-        { word: "bus", meaningKo: "버스" },
-        { word: "instead", meaningKo: "대신에" },
+        { word: "headed to", meaningKo: "~로 가는 중" },
+        { word: "late", meaningKo: "늦은" },
       ],
     },
     {
       id: "s5",
-      en: "The highway was clear and fast today.",
-      ko: "오늘은 고속도로가 막히지 않고 빨랐어요.",
+      en: "Mind if I crack a window just a bit?",
+      ko: "창문 조금만 열어도 될까요?",
       keywords: [
-        { word: "highway", meaningKo: "고속도로" },
-        { word: "clear", meaningKo: "막히지 않은" },
+        { word: "mind if", meaningKo: "~해도 될까요" },
+        { word: "crack a window", meaningKo: "창문을 조금 열다" },
       ],
     },
     {
       id: "s6",
-      en: "I was late because of an accident on the road.",
-      ko: "도로에 사고가 나서 늦었어요.",
+      en: "Thanks for the smooth driving—feels like a bonus nap zone.",
+      ko: "부드럽게 운전해 주셔서 감사해요—보너스 낮잠 구역 같네요.",
       keywords: [
-        { word: "accident", meaningKo: "사고" },
-        { word: "road", meaningKo: "도로" },
+        { word: "smooth", meaningKo: "부드러운" },
+        { word: "bonus", meaningKo: "보너스" },
       ],
     },
     {
       id: "s7",
-      en: "How long does it take you to get to work?",
-      ko: "출근하는 데 얼마나 걸려요?",
+      en: "By the way, do you have a favorite podcast or playlist for rides?",
+      ko: "그나저나, 운전할 때 좋아하는 팟캐스트나 플레이리스트 있어요?",
       keywords: [
-        { word: "how long", meaningKo: "얼마나 오래" },
-        { word: "take", meaningKo: "걸리다" },
+        { word: "podcast", meaningKo: "팟캐스트" },
+        { word: "playlist", meaningKo: "재생 목록" },
       ],
     },
     {
       id: "s8",
-      en: "There was a traffic jam near the city center.",
-      ko: "도심 근처에 교통 체증이 있었어요.",
+      en: "This is my stop—thanks and have a chill shift!",
+      ko: "여기가 제 목적지예요—감사하고 편한 근무 되세요!",
       keywords: [
-        { word: "traffic jam", meaningKo: "교통 체증" },
-        { word: "city center", meaningKo: "도심" },
-      ],
-    },
-    {
-      id: "s9",
-      en: "I usually leave home early to avoid traffic.",
-      ko: "저는 보통 교통을 피하려고 집을 일찍 나가요.",
-      keywords: [
-        { word: "leave", meaningKo: "떠나다" },
-        { word: "avoid", meaningKo: "피하다" },
-      ],
-    },
-    {
-      id: "s10",
-      en: "Gas prices are getting higher these days.",
-      ko: "요즘은 기름값이 점점 오르고 있어요.",
-      keywords: [
-        { word: "gas", meaningKo: "기름, 휘발유" },
-        { word: "prices", meaningKo: "가격" },
-      ],
-    },
-    {
-      id: "s11",
-      en: "I parked my car in front of the store.",
-      ko: "가게 앞에 차를 주차했어요.",
-      keywords: [
-        { word: "park", meaningKo: "주차하다" },
-        { word: "store", meaningKo: "가게" },
-      ],
-    },
-    {
-      id: "s12",
-      en: "Sometimes I listen to podcasts while driving.",
-      ko: "가끔 운전하면서 팟캐스트를 들어요.",
-      keywords: [
-        { word: "listen", meaningKo: "듣다" },
-        { word: "podcasts", meaningKo: "팟캐스트" },
-      ],
-    },
-    {
-      id: "s13",
-      en: "My commute is about thirty minutes each way.",
-      ko: "제 출퇴근은 편도 약 30분이에요.",
-      keywords: [
-        { word: "commute", meaningKo: "출퇴근" },
-        { word: "each way", meaningKo: "편도" },
-      ],
-    },
-    {
-      id: "s14",
-      en: "The train is faster than driving during rush hour.",
-      ko: "출근 시간에는 기차가 운전보다 빨라요.",
-      keywords: [
-        { word: "train", meaningKo: "기차" },
-        { word: "rush hour", meaningKo: "출퇴근 시간" },
-      ],
-    },
-    {
-      id: "s15",
-      en: "I need to renew my driver’s license soon.",
-      ko: "곧 운전면허를 갱신해야 해요.",
-      keywords: [
-        { word: "renew", meaningKo: "갱신하다" },
-        { word: "license", meaningKo: "면허" },
+        { word: "stop", meaningKo: "목적지" },
+        { word: "shift", meaningKo: "근무" },
       ],
     },
   ],

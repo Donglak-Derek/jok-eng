@@ -3,21 +3,19 @@ import { CATEGORY_NAMES } from "@/data/categories";
 
 export const autocorrect: Script = {
   id: "standup-autocorrect",
-  title: "Autocorrect Support Group",
+  title: "Name Game at the Bar",
   categorySlug: "standup",
   categoryName: CATEGORY_NAMES["standup"],
   cleanedEnglish:
-    "My phone's autocorrect is so confident it should lead a support group, apologizing for turning 'I'm fine' into 'I'm fired.'",
+    "When you forget names at a party, you need a joke that saves you. This bit teaches how to admit it with humor and keep the vibe light.",
   sentences: [
-    { id: "s1", en: "My phone autocorrect is too confident.", ko: "내 휴대폰 자동 수정은 너무 자신감이 넘쳐요.", keywords: [ { word: "autocorrect", meaningKo: "자동 수정" }, { word: "confident", meaningKo: "자신감 있는" } ] },
-    { id: "s2", en: "It changes 'I'm fine' to 'I'm fired'.", ko: "'나 괜찮아'를 '나 해고됐어'로 바꿔 버려요.", keywords: [ { word: "change", meaningKo: "바꾸다" }, { word: "fired", meaningKo: "해고된" } ] },
-    { id: "s3", en: "Autocorrect thinks it's my life coach.", ko: "자동 수정이 제 인생 코치인 줄 알아요.", keywords: [ { word: "life coach", meaningKo: "인생 코치" } ] },
-    { id: "s4", en: "It says, 'You're bold now.'", ko: "'너 이제 대담하네'라고 하죠.", keywords: [ { word: "bold", meaningKo: "대담한" } ] },
-    { id: "s5", en: "I started an autocorrect support group.", ko: "저는 자동 수정 지원 모임을 시작했어요.", keywords: [ { word: "support group", meaningKo: "지원 모임" } ] },
-    { id: "s6", en: "We read our worst messages out loud.", ko: "우리는 최악의 메시지를 큰 소리로 읽어요.", keywords: [ { word: "out loud", meaningKo: "큰 소리로" } ] },
-    { id: "s7", en: "Everyone says, 'Me too'.", ko: "모두가 '나도 그래'라고 말해요.", keywords: [ { word: "me too", meaningKo: "나도 그래" } ] },
-    { id: "s8", en: "Then autocorrect changes 'support' to 'sport'.", ko: "그러고는 자동 수정이 '지원'을 '스포츠'로 바꿔요.", keywords: [ { word: "support", meaningKo: "지원" }, { word: "sport", meaningKo: "스포츠" } ] },
-    { id: "s9", en: "So we stretch before we text.", ko: "그래서 문자 보내기 전에 스트레칭해요.", keywords: [ { word: "stretch", meaningKo: "스트레칭하다" }, { word: "text", meaningKo: "문자 보내다" } ] },
+    { id: "s1", en: "At crowded bars, I forget names every five minutes.", ko: "북적이는 바에서는 5분마다 이름을 잊어요.", keywords: [ { word: "crowded", meaningKo: "붐비는" }, { word: "forget", meaningKo: "잊다" } ] },
+    { id: "s2", en: "So I joke, 'Sorry, my brain's autocorrect keeps renaming you.'", ko: "그래서 이렇게 농담해요: '미안, 내 뇌 자동 수정이 자꾸 너를 다른 이름으로 불러.'", keywords: [ { word: "autocorrect", meaningKo: "자동 수정" }, { word: "rename", meaningKo: "다시 이름 붙이다" } ] },
+    { id: "s3", en: "They laugh because I own the mistake.", ko: "실수를 인정하니 사람들이 웃어요.", keywords: [ { word: "own", meaningKo: "인정하다" }, { word: "mistake", meaningKo: "실수" } ] },
+    { id: "s4", en: "Then I ask, 'Remind me before I call you Captain again?'", ko: "그리고 이렇게 묻죠: '또 캡틴이라고 부르기 전에 알려줄래?'", keywords: [ { word: "remind", meaningKo: "상기시키다" }, { word: "again", meaningKo: "다시" } ] },
+    { id: "s5", en: "Now it's an inside joke, not a weird pause.", ko: "이제 어색한 정적이 아니라 내부 농담이 돼요.", keywords: [ { word: "inside joke", meaningKo: "내부 농담" }, { word: "pause", meaningKo: "멈춤" } ] },
+    { id: "s6", en: "If they forget my name too, I high-five and say, 'Great, we’re even.'", ko: "그들도 내 이름을 잊으면 하이파이브하며 말해요, '좋아, 우리 비겼네.'", keywords: [ { word: "high-five", meaningKo: "하이파이브하다" }, { word: "even", meaningKo: "비긴" } ] },
+    { id: "s7", en: "This keeps the vibe playful instead of tense.", ko: "이렇게 하면 분위기가 긴장 대신 장난스러워져요.", keywords: [ { word: "playful", meaningKo: "장난기 있는" }, { word: "tense", meaningKo: "긴장한" } ] },
+    { id: "s8", en: "Plus, I actually remember after joking about it.", ko: "게다가 농담을 하고 나면 실제로 기억이 나요.", keywords: [ { word: "remember", meaningKo: "기억하다" }, { word: "after", meaningKo: "후에" } ] },
   ],
 };
-

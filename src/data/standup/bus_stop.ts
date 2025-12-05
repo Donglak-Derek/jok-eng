@@ -3,20 +3,19 @@ import { CATEGORY_NAMES } from "@/data/categories";
 
 export const busStop: Script = {
   id: "standup-bus-stop",
-  title: "The Bus Stop Joke",
+  title: "The Party Survival Story",
   categorySlug: "standup",
   categoryName: CATEGORY_NAMES["standup"],
   cleanedEnglish:
-    "Waiting at a bus stop, I saw a bus with a sign: 'Only for dogs.' Finally, public transport explaining all the barking.",
+    "A go-to story for bars, parties, and group dinners so you don’t freeze—self-aware, short, and ends with a playful twist instead of an awkward silence.",
   sentences: [
-    { id: "s1", en: "I was waiting at the bus stop.", ko: "나는 버스 정류장에서 기다리고 있었어요.", keywords: [ { word: "bus stop", meaningKo: "버스 정류장" }, { word: "waiting", meaningKo: "기다리는 중" } ] },
-    { id: "s2", en: "A bus slowly pulled up and then kept going.", ko: "버스가 천천히 다가오더니 그냥 지나갔어요.", keywords: [ { word: "pulled up", meaningKo: "다가오다" }, { word: "kept going", meaningKo: "계속 가다" } ] },
-    { id: "s3", en: "On the side, it said: 'Only for dogs'.", ko: "옆면에 ‘개들만 탑승’이라고 쓰여 있었어요.", keywords: [ { word: "side", meaningKo: "옆면" }, { word: "only", meaningKo: "오직" } ] },
-    { id: "s4", en: "I thought, finally, they explained the barking.", ko: "마침내 왜 짖는지 설명해줬구나 하고 생각했죠.", keywords: [ { word: "finally", meaningKo: "마침내" }, { word: "barking", meaningKo: "짖는 소리" } ] },
-    { id: "s5", en: "A woman next to me nodded like it made sense.", ko: "옆에 있던 여자는 그게 말이 되는 듯 고개를 끄덕였어요.", keywords: [ { word: "nodded", meaningKo: "고개를 끄덕였다" }, { word: "made sense", meaningKo: "말이 되다" } ] },
-    { id: "s6", en: "I barked once just to be polite.", ko: "예의상 한 번 짖었어요.", keywords: [ { word: "polite", meaningKo: "예의 바른" } ] },
-    { id: "s7", en: "She said, 'Your pronunciation is impressive.'", ko: "그녀가 말했어요. '발음이 인상적이네요.'", keywords: [ { word: "pronunciation", meaningKo: "발음" }, { word: "impressive", meaningKo: "인상적인" } ] },
-    { id: "s8", en: "Now I wait for the cat line.", ko: "이제 저는 고양이 전용 노선을 기다려요.", keywords: [ { word: "line", meaningKo: "노선" }, { word: "wait", meaningKo: "기다리다" } ] },
+    { id: "s1", en: "I keep one short story ready for parties so I don't freeze.", ko: "파티에서 얼지 않으려고 짧은 이야기를 하나 준비해요.", keywords: [ { word: "freeze", meaningKo: "얼다, 굳다" }, { word: "ready", meaningKo: "준비된" } ] },
+    { id: "s2", en: "It starts simple: 'I got on the wrong bus once.'", ko: "단순하게 시작해요: '예전에 잘못된 버스를 탄 적 있어.'", keywords: [ { word: "wrong", meaningKo: "잘못된" }, { word: "once", meaningKo: "한 번" } ] },
+    { id: "s3", en: "People lean in because everyone has a travel mistake.", ko: "여러분도 여행 실수는 있으니까 사람들이 몸을 기울여요.", keywords: [ { word: "lean in", meaningKo: "관심을 보이다" }, { word: "mistake", meaningKo: "실수" } ] },
+    { id: "s4", en: "I add a quick joke: 'The sign said Dogs Only. I barked to be polite.'", ko: "짧은 농담을 더해요: '표지판에 개만 탑승이라고 써 있어서, 예의상 한 번 짖었어.'", keywords: [ { word: "sign", meaningKo: "표지판" }, { word: "polite", meaningKo: "예의 바른" } ] },
+    { id: "s5", en: "They laugh because it's self-deprecating and short.", ko: "자기비하이고 짧아서 사람들이 웃어요.", keywords: [ { word: "self-deprecating", meaningKo: "자기비하의" }, { word: "short", meaningKo: "짧은" } ] },
+    { id: "s6", en: "Then I pivot: 'Anyway, what’s your best wrong-turn story?'", ko: "그리고 이렇게 전환해요: '아무튼, 너희가 길 잘못 든 얘기 중 최고는 뭐야?'", keywords: [ { word: "pivot", meaningKo: "전환하다" }, { word: "wrong-turn", meaningKo: "길을 잘못 듦" } ] },
+    { id: "s7", en: "Now they talk, and I sip my drink like a pro emcee.", ko: "이제 그들이 이야기하고, 저는 프로 MC처럼 음료를 마셔요.", keywords: [ { word: "emcee", meaningKo: "사회자" }, { word: "sip", meaningKo: "조금씩 마시다" } ] },
+    { id: "s8", en: "If it flops, I just point at the DJ and cheer.", ko: "만약 망하면 DJ를 가리키며 환호해요.", keywords: [ { word: "flop", meaningKo: "망하다" }, { word: "cheer", meaningKo: "환호하다" } ] },
   ],
 };
-
