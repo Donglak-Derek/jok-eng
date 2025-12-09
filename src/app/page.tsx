@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { categories, scripts } from "@/data";
 import Card from "@/components/Card";
 
@@ -25,7 +26,7 @@ export default function Home() {
               Cool Late Starter
             </p>
             <div className="flex items-baseline gap-3 flex-wrap">
-              <h2 className="headline text-4xl md:text-5xl lg:text-6xl tracking-[0.08em] bg-gradient-to-r from-[color:var(--accent-pink)] via-[color:var(--accent-purple)] to-[color:var(--accent-blue)] text-transparent bg-clip-text drop-shadow-[0_0_26px_rgba(168,85,247,0.45)]">
+              <h2 className="headline text-4xl md:text-5xl lg:text-6xl tracking-[0.08em] animate-shimmer drop-shadow-[0_0_26px_rgba(168,85,247,0.45)]">
                 Stop Nodding. Start Joking.
               </h2>
             </div>
@@ -56,24 +57,37 @@ export default function Home() {
               <Link
                 key={c.slug}
                 href={`/category/${c.slug}`}
-                className="active:scale-[0.98] transition"
+                className="active:scale-[0.98] transition group"
               >
-                <Card className="p-4 md:p-5 lg:p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="headline text-[18px] md:text-[20px] lg:text-[22px] tracking-[0.02em]">
-                        {c.name}
+                <Card className="p-4 md:p-5 lg:p-6 overflow-hidden relative">
+                  <div className="flex items-center gap-4 md:gap-6">
+                    <div className="relative w-20 h-20 md:w-24 md:h-24 flex-shrink-0 rounded-2xl overflow-hidden bg-[color:var(--card-bg)] shadow-inner border border-[color:var(--accent-purple)]/20">
+                      <Image
+                        src={c.image}
+                        alt={c.name}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="headline text-[18px] md:text-[20px] lg:text-[22px] tracking-[0.02em] truncate pr-2">
+                          {c.name}
+                        </div>
+                        <div className="text-[color:var(--accent-blue)]/70 text-lg md:text-xl drop-shadow-[0_0_18px_rgba(34,211,238,0.35)] transition-transform group-hover:translate-x-1">
+                          ›
+                        </div>
                       </div>
-                      <div className="text-xs md:text-sm text-[color:var(--muted)] mt-1">
+                      <p className="text-sm md:text-[15px] text-[color:var(--foreground)]/80 my-1.5 leading-snug line-clamp-2">
+                        {c.description}
+                      </p>
+                      <div className="text-xs md:text-sm text-[color:var(--muted)] font-medium">
                         {
                           scripts.filter((s) => s.categorySlug === c.slug)
                             .length
                         }{" "}
                         scripts
                       </div>
-                    </div>
-                    <div className="text-[color:var(--accent-blue)]/70 text-base md:text-lg drop-shadow-[0_0_18px_rgba(34,211,238,0.35)]">
-                      ›
                     </div>
                   </div>
                 </Card>

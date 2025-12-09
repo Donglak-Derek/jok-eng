@@ -1,5 +1,5 @@
 import { Script, Category } from "@/types";
-import { CATEGORY_NAMES } from "@/data/categories";
+import { CATEGORY_DETAILS } from "@/data/categories";
 import { standupScripts } from "@/data/the_party_survival_kit";
 import { skitScripts } from "@/data/dating_and_disasters";
 import { interviewScripts } from "@/data/office_banter";
@@ -16,4 +16,7 @@ export const scripts: Script[] = [
 
 export const categories: Category[] = Array.from(
   new Set(scripts.map((s) => s.categorySlug))
-).map((slug) => ({ slug, name: CATEGORY_NAMES[slug] } as Category));
+).map((slug) => ({
+  slug,
+  ...CATEGORY_DETAILS[slug],
+} as Category));
