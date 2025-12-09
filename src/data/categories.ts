@@ -27,6 +27,16 @@ export const CATEGORY_DETAILS: Record<
     description: "Sharpen your senses to spot the subtlest irony.",
     image: "/images/categories/sarcasm_detector.svg",
   },
+  the_polite_fight: {
+    name: "The 'Polite' Fight",
+    description: "Conflict resolution for late starters who hate being rude.",
+    image: "/images/categories/polite_fight.svg",
+  },
+  texting_decoder: {
+    name: "Texting & Slang Decoder",
+    description: "The unwritten rules of digital English. Don't text like a robot.",
+    image: "/images/categories/texting_decoder.svg",
+  },
 };
 // Add new categories by extending CATEGORY_DETAILS.
 
