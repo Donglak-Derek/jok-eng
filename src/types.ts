@@ -25,8 +25,16 @@ export type Script = {
   title: string;
   categorySlug: string;
   categoryName: string;
-  cleanedEnglish: string;
+  cleanedEnglish: string; // Used as summary for story_flow
   sentences: Sentence[];
+  // New fields for story_flow
+  type?: "script" | "story_flow";
+  context?: string;
+  segments?: {
+    step: string;
+    text: string;
+    note: string;
+  }[];
 };
 
 export type Category = {
