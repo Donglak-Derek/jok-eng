@@ -8,6 +8,16 @@ export type Sentence = {
   en: string;
   ko: string;
   keywords: Keyword[];
+  // New "Mistake -> Fix" format fields
+  scenario?: string;
+  badResponse?: {
+    text: string;
+    why: string;
+  };
+  goodResponse?: {
+    text: string;
+    why: string;
+  };
 };
 
 export type Script = {

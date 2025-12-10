@@ -7,90 +7,177 @@ export const emojiGuide: Script = {
   categorySlug: "texting_decoder",
   categoryName: CATEGORY_NAMES["texting_decoder"],
   cleanedEnglish:
-    "Decoding the hidden meanings of emojis. When is a smile actually a smile?",
+    "Decoding the hidden meanings of emojis. Mistake -> Fix format.",
   sentences: [
     {
       id: "e1",
-      en: "🙂 The Slight Smile: Often used to be passive-aggressive or dismissive.",
-      ko: "🙂 약간의 미소: 종종 수동적 공격적이거나 무시할 때 사용됨.",
-      keywords: [
-        { word: "passive-aggressive", meaningKo: "수동적 공격적인" },
-      ],
-    },
-    {
-      id: "e2",
-      en: "😭 Loudly Crying: Usually means 'dying of laughter', not actual sadness.",
-      ko: "😭 대성통곡: 보통 '웃겨 죽음'을 의미함, 진짜 슬픔 아님.",
-      keywords: [
-        { word: "laughter", meaningKo: "웃음" },
-      ],
-    },
-    {
-      id: "e3",
-      en: "💀 Skull: 'I'm dead' (from laughing). A stronger version of lol.",
-      ko: "💀 해골: '나 죽음' (웃겨서). lol의 더 강한 버전.",
-      keywords: [
-        { word: "dead", meaningKo: "죽은 (여기선 웃겨 죽음)" },
-      ],
-    },
-    {
-      id: "e4",
-      en: "🙃 Upside-down Face: Sarcasm, irony, or 'my life is a mess but I'm smiling'.",
-      ko: "🙃 거꾸로 된 얼굴: 비꼬기, 아이러니, 또는 '내 인생은 엉망이지만 웃고 있어'.",
-      keywords: [
-        { word: "sarcasm", meaningKo: "비꼬기" },
-        { word: "irony", meaningKo: "반어법" },
-      ],
-    },
-    {
-      id: "e5",
-      en: "👍 Thumbs Up: Can be seen as dismissive or 'conversation over' to younger generations.",
-      ko: "👍 엄지 척: 젊은 세대에게는 무시하거나 '대화 종료'로 보일 수 있음.",
+      en: "Got it, thanks! 👍", // Fallback for audio/search
+      ko: "👍 엄지 척: 단독으로 쓰면 무례함", // Fallback text
       keywords: [
         { word: "dismissive", meaningKo: "무시하는" },
       ],
+      scenario: "Your boss sends a long update about the project timeline.",
+      badResponse: {
+        text: "👍",
+        why: "To older bosses, this is fine. To Gen Z or Millennials, a single thumb can feel dismissive or sarcastic, like 'k, whatever'.",
+      },
+      goodResponse: {
+        text: "Got it, thanks! 👍",
+        why: "Adding text before the emoji makes it sound engaged and polite.",
+      },
+    },
+    {
+      id: "e2",
+      en: "This is hilarious 😭",
+      ko: "😭 대성통곡: 진짜 슬픔이 아님",
+      keywords: [
+        { word: "laughter", meaningKo: "웃음 (여기선)" },
+      ],
+      scenario: "Your friend sends a funny meme.",
+      badResponse: {
+        text: "That is funny 😂",
+        why: "Using the 'tears of joy' emoji (😂) can make you seem older. It's not 'cool' anymore.",
+      },
+      goodResponse: {
+        text: "This is hilarious 😭",
+        why: "The 'loudly crying' emoji (😭) is the modern way to say 'dying of laughter'.",
+      },
+    },
+    {
+      id: "e3",
+      en: "I'm dead 💀",
+      ko: "💀 해골: 웃겨 죽음",
+      keywords: [
+        { word: "dead", meaningKo: "죽은 (웃겨서)" },
+      ],
+      scenario: "Someone tells an incredibly embarrassing story.",
+      badResponse: {
+        text: "LOL",
+        why: "'LOL' can sometimes feel a bit dry or dated if used alone.",
+      },
+      goodResponse: {
+        text: "I'm dead 💀",
+        why: "The skull acts as a superlative. It means the story killed you (with laughter).",
+      },
+    },
+    {
+      id: "e4",
+      en: "Great job... 🙃",
+      ko: "🙃 거꾸로 된 얼굴: 비꼬기",
+      keywords: [
+        { word: "sarcasm", meaningKo: "비꼬기" },
+      ],
+      scenario: "The printer breaks right before a deadline.",
+      badResponse: {
+        text: "Great job.",
+        why: "Without an emoji, this just sounds angry or confusing.",
+      },
+      goodResponse: {
+        text: "Great job... 🙃",
+        why: "The upside-down face signals 'my life is a mess but I'm smiling through the pain' (sarcasm).",
+      },
+    },
+    {
+      id: "e5",
+      en: "Thanks for the feedback!",
+      ko: "🙂 약간의 미소: 수동적 공격적일 수 있음",
+      keywords: [
+        { word: "passive-aggressive", meaningKo: "수동적 공격적인" },
+      ],
+      scenario: "A colleague critiques your work.",
+      badResponse: {
+        text: "Thanks for the feedback. 🙂",
+        why: "The slight smile (🙂) often reads as 'I hate you but I'm being professional'. It's very passive-aggressive.",
+      },
+      goodResponse: {
+        text: "Thanks for the feedback!",
+        why: "No emoji is better here. Or use a genuine smile (😄) if you really mean it.",
+      },
     },
     {
       id: "e6",
-      en: "🙏 Folded Hands: Thank you, please, or sometimes 'high five' (rarely).",
-      ko: "🙏 합장: 감사합니다, 부탁해요, 또는 가끔 '하이파이브' (드뭄).",
+      en: "Can you help me? 🙏",
+      ko: "🙏 합장: 부탁해요",
       keywords: [
-        { word: "rarely", meaningKo: "드물게" },
+        { word: "pleading", meaningKo: "간청하는" },
       ],
+      scenario: "Asking a favor from a busy coworker.",
+      badResponse: {
+        text: "Can you help me?",
+        why: "A naked request can feel demanding.",
+      },
+      goodResponse: {
+        text: "Can you help me? 🙏",
+        why: "The folded hands (🙏) softens the request, meaning 'please' or 'thank you'.",
+      },
     },
     {
       id: "e7",
-      en: "👀 Eyes: 'I see this', 'drama happening', or 'looking at something interesting'.",
-      ko: "👀 눈: '보고 있다', '드라마(싸움/가십) 발생', 또는 '흥미로운 것 발견'.",
+      en: "I see what's happening 👀",
+      ko: "👀 눈: 흥미진진/드라마",
       keywords: [
-        { word: "drama", meaningKo: "극적인 사건, 가십" },
+        { word: "drama", meaningKo: "드라마, 가십" },
       ],
+      scenario: "Two coworkers are arguing in the group chat.",
+      badResponse: {
+        text: "Wow.",
+        why: "Too direct. You might get dragged into the fight.",
+      },
+      goodResponse: {
+        text: "👀",
+        why: "The eyes emoji means 'I am watching this drama unfold and eating popcorn'. It's playful voyeurism.",
+      },
     },
     {
       id: "e8",
-      en: "🤡 Clown Face: You look foolish or you did something stupid.",
-      ko: "🤡 광대: 너 바보 같아 보임 또는 멍청한 짓을 함.",
+      en: "I messed up 🤡",
+      ko: "🤡 광대: 바보 같은 짓",
       keywords: [
-        { word: "foolish", meaningKo: "어리석은" },
+        { word: "clown", meaningKo: "광대 (바보)" },
       ],
+      scenario: "You believed a fake news headline.",
+      badResponse: {
+        text: "I was stupid.",
+        why: "A bit too self-deprecating and sad.",
+      },
+      goodResponse: {
+        text: "I messed up 🤡",
+        why: "Calling yourself a clown implies 'I acted foolishly' in a funny, self-aware way.",
+      },
     },
     {
       id: "e9",
-      en: "✨ Sparkles: Emphasis, sarcasm, or adding 'pizzazz' to a word.",
-      ko: "✨ 반짝이: 강조, 비꼬기, 또는 단어에 '화려함' 더하기.",
+      en: "It's a 'surprise' ✨",
+      ko: "✨ 반짝이: 강조/비꼬기",
       keywords: [
         { word: "emphasis", meaningKo: "강조" },
-        { word: "pizzazz", meaningKo: "활기, 화려함" },
       ],
+      scenario: "Describing a mandatory fun work event.",
+      badResponse: {
+        text: "It is a surprise.",
+        why: "Sounds like a factual statement.",
+      },
+      goodResponse: {
+        text: "It's a ✨surprise✨",
+        why: "Surrounding a word with sparkles adds sarcasm or ironic excitement.",
+      },
     },
     {
       id: "e10",
-      en: "🫠 Melting Face: Embarrassment, dread, or sinking feeling.",
-      ko: "🫠 녹는 얼굴: 당황, 두려움, 또는 가라앉는 기분.",
+      en: "Sorry about that 🫠",
+      ko: "🫠 녹는 얼굴: 당황/창피",
       keywords: [
-        { word: "embarrassment", meaningKo: "당황, 창피" },
-        { word: "dread", meaningKo: "두려움" },
+        { word: "cringe", meaningKo: "민망함" },
       ],
+      scenario: "You accidentally reply-all to the whole company.",
+      badResponse: {
+        text: "Sorry.",
+        why: "Too serious. Makes people worry you're actually in trouble.",
+      },
+      goodResponse: {
+        text: "Sorry about that 🫠",
+        why: "The melting face says 'I am dissolving from embarrassment'. Resonates well with everyone.",
+      },
     },
   ],
 };
