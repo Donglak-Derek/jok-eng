@@ -31,7 +31,7 @@ export default function ScriptClient({ script }: Props) {
               href={`/category/${script.categorySlug}`}
               className="inline-flex w-full items-center justify-center px-4 md:px-5 py-2 md:py-2.5 rounded-full border border-[color:var(--accent-purple)]/40 bg-[color:var(--card-bg)]/80 text-sm md:text-base active:scale-[0.99] transition shadow-[0_10px_40px_rgba(124,58,237,0.18)] hover:border-[color:var(--accent-pink)]/50"
             >
-              ← Back to {script.categoryName}
+               ← Back to {script.categoryName}
             </Link>
           </div>
         </div>

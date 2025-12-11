@@ -12,25 +12,51 @@ type Props = {
 
 export default function SentenceCard({ sentence, index, heard, onHeard }: Props) {
   const [speaking, setSpeaking] = useState(false);
-  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
-  const speak = useCallback(() => {
+  const speak = useCallback(async () => {
     if (typeof window === "undefined") return;
     if (speaking) return; // avoid restarting while speaking
     if (!heard) {
       onHeard(index);
     }
-    // Speak the good response if available, otherwise the English text
+    
     const textToSpeak = sentence.goodResponse ? sentence.goodResponse.text : sentence.en;
-    const u = new SpeechSynthesisUtterance(textToSpeak);
-    u.lang = "en-US";
-    u.rate = 1;
-    u.onstart = () => setSpeaking(true);
-    u.onend = () => {
+    setSpeaking(true);
+
+    try {
+      // Direct stream URL - starts playing immediately (no waiting for blob download)
+      const params = new URLSearchParams({
+        text: textToSpeak,
+        voice: "en-US-AriaNeural", 
+      });
+      
+      const audio = new Audio(`/api/tts?${params}`);
+      
+      await new Promise<void>((resolve, reject) => {
+        audio.onended = () => resolve();
+        audio.onerror = (e) => reject(e);
+        // .play() returns a promise that rejects if autoplay is blocked
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(reject);
+        }
+      });
+      
+    } catch (error) {
+       console.warn("High-quality TTS failed/blocked, falling back to system voice:", error);
+       
+       // Fallback to Web Speech API
+       await new Promise<void>((resolve) => {
+         const u = new SpeechSynthesisUtterance(textToSpeak);
+         u.lang = "en-US";
+         u.rate = 1;
+         u.onend = () => resolve();
+         u.onerror = () => resolve(); 
+         window.speechSynthesis.speak(u);
+       });
+    } finally {
       setSpeaking(false);
-    };
-    utteranceRef.current = u;
-    window.speechSynthesis.speak(u);
+    }
   }, [heard, index, onHeard, sentence.en, sentence.goodResponse, speaking]);
 
   const keywords = useMemo(() => sentence.keywords, [sentence.keywords]);

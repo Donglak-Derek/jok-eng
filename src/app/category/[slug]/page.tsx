@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { scripts } from "@/data";
-import Card from "@/components/Card";
-import RepeatCount from "@/components/RepeatCount";
+import ScenarioList from "@/components/ScenarioList";
 import { notFound } from "next/navigation";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -24,25 +23,7 @@ export default async function CategoryPage({ params }: Props) {
           </h1>
         </header>
 
-        <div className="grid grid-cols-1 gap-3 md:gap-4 mt-2">
-          {list.map((s) => (
-            <Link key={s.id} href={`/script/${s.id}`} className="active:scale-[0.98] transition">
-              <Card className="p-4 md:p-5 lg:p-6">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <div className="headline text-[18px] md:text-[20px] lg:text-[22px] truncate tracking-[0.02em]">
-                      {s.title}
-                    </div>
-                    <div className="text-xs md:text-sm text-[color:var(--muted)] mt-1 line-clamp-2">
-                      {s.cleanedEnglish}
-                    </div>
-                  </div>
-                  <RepeatCount id={s.id} className="shrink-0 ml-2" />
-                </div>
-              </Card>
-            </Link>
-          ))}
-        </div>
+        <ScenarioList scripts={list} />
       </div>
     </div>
   );
