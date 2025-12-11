@@ -12,16 +12,17 @@ type Props = {
 
 export default function SentenceCard({ sentence, index, heard, onHeard }: Props) {
   const [speaking, setSpeaking] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const speak = useCallback(async () => {
     if (typeof window === "undefined") return;
-    if (speaking) return; // avoid restarting while speaking
+    if (speaking || loading) return; // avoid restarting while speaking/loading
     if (!heard) {
       onHeard(index);
     }
     
     const textToSpeak = sentence.goodResponse ? sentence.goodResponse.text : sentence.en;
-    setSpeaking(true);
+    setLoading(true);
 
     try {
       // Direct stream URL - starts playing immediately (no waiting for blob download)
@@ -33,8 +34,14 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
       const audio = new Audio(`/api/tts?${params}`);
       
       await new Promise<void>((resolve, reject) => {
+        // Event listeners before play
+        audio.oncanplay = () => {
+             setLoading(false);
+             setSpeaking(true);
+        };
         audio.onended = () => resolve();
         audio.onerror = (e) => reject(e);
+        
         // .play() returns a promise that rejects if autoplay is blocked
         const playPromise = audio.play();
         if (playPromise !== undefined) {
@@ -47,6 +54,10 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
        
        // Fallback to Web Speech API
        await new Promise<void>((resolve) => {
+         // Reset explicit loading since fallback is instant
+         setLoading(false);
+         setSpeaking(true);
+         
          const u = new SpeechSynthesisUtterance(textToSpeak);
          u.lang = "en-US";
          u.rate = 1;
@@ -56,14 +67,23 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
        });
     } finally {
       setSpeaking(false);
+      setLoading(false);
     }
-  }, [heard, index, onHeard, sentence.en, sentence.goodResponse, speaking]);
+  }, [heard, index, onHeard, sentence.en, sentence.goodResponse, speaking, loading]);
 
   const keywords = useMemo(() => sentence.keywords, [sentence.keywords]);
 
   const onCardClick = useCallback(() => {
     speak();
   }, [speak]);
+
+  // Loading Spinner
+  const Spinner = () => (
+    <svg className="animate-spin h-full w-full text-[color:var(--accent-blue)]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
+  );
 
   // New "Mistake -> Fix" Layout
   if (sentence.scenario && sentence.badResponse && sentence.goodResponse) {
@@ -85,7 +105,7 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
             speak();
           }
         }}
-        aria-label="Play correct response"
+        aria-label={loading ? "Loading audio" : "Play correct response"}
       >
         {/* Scenario Header */}
         <div className="pb-3 border-b border-[color:var(--accent-purple)]/20">
@@ -141,14 +161,15 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
            </div>
         )}
 
-        <svg
-          aria-hidden
-          viewBox="0 0 24 24"
-          className="pointer-events-none absolute bottom-4 right-4 w-6 h-6 text-[color:var(--accent-blue)]/50"
-          fill="currentColor"
-        >
-          <path d="M8 5v14l11-7z" />
-        </svg>
+        <div className="absolute bottom-4 right-4 w-6 h-6 text-[color:var(--accent-blue)]/50 pointer-events-none">
+          {loading ? (
+             <Spinner />
+          ) : (
+             <svg aria-hidden viewBox="0 0 24 24" fill="currentColor">
+               <path d="M8 5v14l11-7z" />
+             </svg>
+          )}
+        </div>
       </div>
     );
   }
@@ -172,7 +193,7 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
           speak();
         }
       }}
-      aria-label="Play sentence"
+      aria-label={loading ? "Loading audio" : "Play sentence"}
     >
       <div className="min-w-0 pr-10">
         <div className="text-lg md:text-xl lg:text-2xl font-semibold drop-shadow-[0_0_15px_rgba(168,85,247,0.25)]">
@@ -193,14 +214,15 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
       </div>
 
       {/* Decorative play icon in bottom-right */}
-      <svg
-        aria-hidden
-        viewBox="0 0 24 24"
-        className="pointer-events-none absolute bottom-3 right-3 w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-[color:var(--accent-blue)]/50"
-        fill="currentColor"
-      >
-        <path d="M8 5v14l11-7z" />
-      </svg>
+      <div className="absolute bottom-3 right-3 w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-[color:var(--accent-blue)]/50 pointer-events-none">
+          {loading ? (
+             <Spinner />
+          ) : (
+             <svg aria-hidden viewBox="0 0 24 24" fill="currentColor">
+               <path d="M8 5v14l11-7z" />
+             </svg>
+          )}
+      </div>
     </div>
   );
 }
