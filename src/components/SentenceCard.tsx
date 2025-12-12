@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import type { Sentence } from "@/types";
 
 type Props = {
@@ -73,13 +73,9 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
 
   const keywords = useMemo(() => sentence.keywords, [sentence.keywords]);
 
-  const onCardClick = useCallback(() => {
-    speak();
-  }, [speak]);
-
   // Loading Spinner
   const Spinner = () => (
-    <svg className="animate-spin h-full w-full text-[color:var(--accent-blue)]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+    <svg className="animate-spin h-5 w-5 text-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
     </svg>
@@ -90,22 +86,12 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
     return (
       <div
         className={
-          "relative rounded-3xl border border-[color:var(--accent-purple)]/35 p-5 md:p-6 lg:p-7 flex flex-col gap-5 active:scale-[0.99] transition duration-200 bg-[color:var(--card-bg)]/80 shadow-[0_10px_60px_rgba(34,19,74,0.7)] " +
+          "relative rounded-3xl border border-[color:var(--accent-purple)]/35 p-5 md:p-6 lg:p-7 flex flex-col gap-5 transition duration-200 bg-[color:var(--card-bg)]/80 shadow-[0_10px_60px_rgba(34,19,74,0.7)] " +
           (speaking
             ? "ring-2 ring-[color:var(--accent-blue)]/60 shadow-[0_0_25px_rgba(34,211,238,0.35)] "
             : "hover:border-[color:var(--accent-pink)]/45 hover:shadow-[0_10px_80px_rgba(236,72,153,0.22)] ") +
           (heard ? "border-[color:var(--accent-blue)]/50 bg-[color:var(--card-bg)]/40" : "")
         }
-        onClick={onCardClick}
-        role="button"
-        tabIndex={0}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            speak();
-          }
-        }}
-        aria-label={loading ? "Loading audio" : "Play correct response"}
       >
         {/* Scenario Header */}
         <div className="pb-3 border-b border-[color:var(--accent-purple)]/20">
@@ -148,7 +134,7 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
 
         {/* Play Hint */}
         {keywords.length > 0 && (
-           <div className="flex flex-wrap gap-2 mt-1 pt-3 border-t border-[color:var(--accent-purple)]/20">
+           <div className="flex flex-wrap gap-2 mt-1 pt-3 border-t border-[color:var(--accent-purple)]/20 mb-2">
             {keywords.map((k) => (
               <span
                 key={k.word}
@@ -161,15 +147,23 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
            </div>
         )}
 
-        <div className="absolute bottom-4 right-4 w-6 h-6 text-[color:var(--accent-blue)]/50 pointer-events-none">
-          {loading ? (
-             <Spinner />
-          ) : (
-             <svg aria-hidden viewBox="0 0 24 24" fill="currentColor">
-               <path d="M8 5v14l11-7z" />
-             </svg>
-          )}
-        </div>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            speak();
+          }}
+          className="w-full py-3 rounded-xl bg-[color:var(--accent-blue)]/10 hover:bg-[color:var(--accent-blue)]/20 text-[color:var(--accent-blue)] flex items-center justify-center gap-2 font-semibold transition-all active:scale-[0.99] outline-none focus:ring-2 focus:ring-[color:var(--accent-blue)]/50"
+          aria-label={loading ? "Loading audio" : "Play correct response"}
+        >
+            {loading ? (
+               <Spinner />
+            ) : (
+               <svg aria-hidden viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                 <path d="M8 5v14l11-7z" />
+               </svg>
+            )}
+            <span>{loading ? "Loading Audio..." : "Play Audio"}</span>
+        </button>
       </div>
     );
   }
@@ -178,31 +172,21 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
   return (
     <div
       className={
-        "relative rounded-3xl border border-[color:var(--accent-purple)]/35 p-4 md:p-5 lg:p-6 flex flex-col gap-3 md:gap-4 active:scale-[0.99] transition duration-200 bg-[color:var(--card-bg)]/80 shadow-[0_10px_60px_rgba(34,19,74,0.7)] " +
+        "relative rounded-3xl border border-[color:var(--accent-purple)]/35 p-4 md:p-5 lg:p-6 flex flex-col gap-3 md:gap-4 transition duration-200 bg-[color:var(--card-bg)]/80 shadow-[0_10px_60px_rgba(34,19,74,0.7)] " +
         (speaking
           ? "ring-2 ring-[color:var(--accent-blue)]/60 shadow-[0_0_25px_rgba(34,211,238,0.35)] "
           : "hover:border-[color:var(--accent-pink)]/45 hover:shadow-[0_10px_80px_rgba(236,72,153,0.22)] ") +
         (heard ? "border-[color:var(--accent-blue)]/50 bg-[color:var(--card-bg)]/40" : "")
       }
-      onClick={onCardClick}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          speak();
-        }
-      }}
-      aria-label={loading ? "Loading audio" : "Play sentence"}
     >
-      <div className="min-w-0 pr-10">
+      <div className="min-w-0">
         <div className="text-lg md:text-xl lg:text-2xl font-semibold drop-shadow-[0_0_15px_rgba(168,85,247,0.25)]">
           {sentence.en}
         </div>
         <div className="text-sm md:text-base text-[color:var(--muted)]">{sentence.ko}</div>
       </div>
 
-      <div className="flex flex-wrap gap-2 md:gap-2.5 mt-1">
+      <div className="flex flex-wrap gap-2 md:gap-2.5 mt-1 mb-2">
         {keywords.map((k) => (
           <span
             key={k.word}
@@ -213,16 +197,24 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
         ))}
       </div>
 
-      {/* Decorative play icon in bottom-right */}
-      <div className="absolute bottom-3 right-3 w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-[color:var(--accent-blue)]/50 pointer-events-none">
+      {/* Full width play button */}
+      <button
+         onClick={(e) => {
+           e.stopPropagation();
+           speak();
+         }}
+         className="w-full py-3 rounded-xl bg-[color:var(--accent-blue)]/10 hover:bg-[color:var(--accent-blue)]/20 text-[color:var(--accent-blue)] flex items-center justify-center gap-2 font-semibold transition-all active:scale-[0.99] outline-none focus:ring-2 focus:ring-[color:var(--accent-blue)]/50"
+         aria-label={loading ? "Loading audio" : "Play sentence"}
+      >
           {loading ? (
              <Spinner />
           ) : (
-             <svg aria-hidden viewBox="0 0 24 24" fill="currentColor">
+             <svg aria-hidden viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
                <path d="M8 5v14l11-7z" />
              </svg>
           )}
-      </div>
+          <span>{loading ? "Loading Audio..." : "Play Audio"}</span>
+      </button>
     </div>
   );
 }
