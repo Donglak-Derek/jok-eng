@@ -106,27 +106,27 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
         {/* Content Grid */}
         <div className="grid md:grid-cols-2 gap-4 md:gap-6">
           {/* Bad Response (Mistake) */}
-          <div className="relative p-4 rounded-2xl bg-red-500/10 border border-red-500/20">
-            <div className="absolute -top-2.5 left-4 px-2 py-0.5 rounded-full bg-red-500/20 border border-red-500/30 backdrop-blur text-[10px] font-bold text-red-300 uppercase tracking-wider">
+          <div className="relative p-4 rounded-2xl bg-destructive/10 border border-destructive/20">
+            <div className="absolute -top-2.5 left-4 px-2 py-0.5 rounded-full bg-destructive/20 border border-destructive/30 backdrop-blur text-[10px] font-bold text-destructive uppercase tracking-wider">
               Mistake
             </div>
-            <div className="text-lg md:text-xl font-bold text-red-300 mb-2 font-mono">
+            <div className="text-lg md:text-xl font-bold text-destructive mb-2 font-mono">
               &quot;{sentence.badResponse.text}&quot;
             </div>
-            <div className="text-xs md:text-sm text-red-200/70 leading-relaxed">
+            <div className="text-xs md:text-sm text-destructive/70 leading-relaxed">
               {sentence.badResponse.why}
             </div>
           </div>
 
           {/* Good Response (Fix) */}
-          <div className="relative p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20">
-            <div className="absolute -top-2.5 left-4 px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/30 backdrop-blur text-[10px] font-bold text-emerald-300 uppercase tracking-wider">
+          <div className="relative p-4 rounded-2xl bg-success/10 border border-success/20">
+            <div className="absolute -top-2.5 left-4 px-2 py-0.5 rounded-full bg-success/20 border border-success/30 backdrop-blur text-[10px] font-bold text-success uppercase tracking-wider">
               Better Fix
             </div>
-            <div className="text-lg md:text-xl font-bold text-emerald-300 mb-2 font-mono">
+            <div className="text-lg md:text-xl font-bold text-success mb-2 font-mono">
               &quot;{sentence.goodResponse.text}&quot;
             </div>
-            <div className="text-xs md:text-sm text-emerald-200/70 leading-relaxed">
+            <div className="text-xs md:text-sm text-success/70 leading-relaxed">
               {sentence.goodResponse.why}
             </div>
           </div>

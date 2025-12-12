@@ -29,6 +29,9 @@
   --color-accent-blue: var(--accent-blue);
   --color-accent-purple: var(--accent-purple);
   --color-accent-pink: var(--accent-pink);
+
+  --color-destructive: #ef4444; /* red-500 */
+  --color-success: #10b981; /* emerald-500 */
 }
 
 body {
