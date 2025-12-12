@@ -34,6 +34,8 @@ export type Script = {
   segments?: {
     step: string;
     text: string;
+    ko?: string;
+    keywords?: Keyword[];
     note: string;
   }[];
 };
