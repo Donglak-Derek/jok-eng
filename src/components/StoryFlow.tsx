@@ -25,7 +25,7 @@ export default function StoryFlow({ script }: Props) {
   return (
     <div className="flex flex-col gap-6 md:gap-8 max-w-2xl mx-auto">
       <div className="text-center">
-        <p className="text-lg md:text-xl text-[color:var(--muted)] mb-4">
+        <p className="text-lg md:text-xl text-muted mb-4">
           {script.context}
         </p>
       </div>
@@ -41,14 +41,14 @@ export default function StoryFlow({ script }: Props) {
               transition={{ duration: 0.3 }}
               className="w-full"
             >
-              <div className="bg-[color:var(--card-bg)] border border-[color:var(--accent-purple)]/30 rounded-3xl p-6 md:p-8 shadow-[0_10px_40px_rgba(34,19,74,0.6)] flex flex-col items-center text-center gap-4">
-                <div className="text-sm font-bold uppercase tracking-widest text-[color:var(--accent-pink)]">
+              <div className="bg-card border border-secondary/30 rounded-3xl p-6 md:p-8 shadow-[0_10px_40px_rgba(34,19,74,0.6)] flex flex-col items-center text-center gap-4">
+                <div className="text-sm font-bold uppercase tracking-widest text-tertiary">
                   {segments[currentStep].step}
                 </div>
                 <div className="text-2xl md:text-3xl font-medium leading-relaxed my-4">
                   &quot;{segments[currentStep].text}&quot;
                 </div>
-                <div className="text-[color:var(--muted)] italic text-sm md:text-base bg-[color:var(--background)]/50 px-4 py-2 rounded-full border border-[color:var(--accent-blue)]/20">
+                <div className="text-muted italic text-sm md:text-base bg-background/50 px-4 py-2 rounded-full border border-primary/20">
                   💡 {segments[currentStep].note}
                 </div>
               </div>
@@ -58,13 +58,13 @@ export default function StoryFlow({ script }: Props) {
               key="complete"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="bg-[color:var(--card-bg)] border border-[color:var(--accent-purple)]/30 rounded-3xl p-6 md:p-8 shadow-[0_10px_40px_rgba(34,19,74,0.6)] flex flex-col items-center text-center gap-6"
+              className="bg-card border border-secondary/30 rounded-3xl p-6 md:p-8 shadow-[0_10px_40px_rgba(34,19,74,0.6)] flex flex-col items-center text-center gap-6"
             >
-              <div className="text-3xl md:text-4xl text-[color:var(--accent-blue)]">
+              <div className="text-3xl md:text-4xl text-primary">
                 👏
               </div>
               <h3 className="headline text-2xl md:text-3xl">Story Code Cracked!</h3>
-              <p className="text-[color:var(--muted)]">
+              <p className="text-muted">
                 You&apos;ve mastered the rhythm. Ready to try it out?
               </p>
             </motion.div>
@@ -76,7 +76,7 @@ export default function StoryFlow({ script }: Props) {
         {currentStep > 0 && (
           <button
             onClick={handleReset}
-            className="px-6 py-3 rounded-full border border-[color:var(--muted)]/30 text-[color:var(--muted)] hover:bg-[color:var(--muted)]/10 transition"
+            className="px-6 py-3 rounded-full border border-muted/30 text-muted hover:bg-muted/10 transition"
           >
             Start Over
           </button>
@@ -84,7 +84,7 @@ export default function StoryFlow({ script }: Props) {
         {currentStep < segments.length && (
           <button
             onClick={handleNext}
-            className="px-8 py-3 rounded-full bg-gradient-to-r from-[color:var(--accent-pink)] to-[color:var(--accent-purple)] text-white font-medium shadow-[0_4px_20px_rgba(236,72,153,0.4)] active:scale-95 transition hover:brightness-110"
+            className="px-8 py-3 rounded-full bg-gradient-to-r from-tertiary to-secondary text-white font-medium shadow-[0_4px_20px_rgba(236,72,153,0.4)] active:scale-95 transition hover:brightness-110"
           >
             Next Step →
           </button>

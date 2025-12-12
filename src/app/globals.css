@@ -18,6 +18,17 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  
+  --color-card: var(--card-bg);
+  --color-muted: var(--muted);
+  --color-primary: var(--accent-blue);
+  --color-secondary: var(--accent-purple);
+  --color-tertiary: var(--accent-pink);
+  
+  /* Preserve original names as aliases if needed, or primarily use semantic names */
+  --color-accent-blue: var(--accent-blue);
+  --color-accent-purple: var(--accent-purple);
+  --color-accent-pink: var(--accent-pink);
 }
 
 body {

@@ -27,5 +27,5 @@ export default function RepeatCount({ id, className = "" }: Props) {
     return () => window.removeEventListener("storage", onStorage);
   }, [id]);
 
-  return <span className={"text-xs text-[color:var(--muted)] " + className}>Repeats: {count}</span>;
+  return <span className={"text-xs text-muted " + className}>Repeats: {count}</span>;
 }

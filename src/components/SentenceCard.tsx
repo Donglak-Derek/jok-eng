@@ -86,19 +86,19 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
     return (
       <div
         className={
-          "relative rounded-3xl border border-[color:var(--accent-purple)]/35 p-5 md:p-6 lg:p-7 flex flex-col gap-5 transition duration-200 bg-[color:var(--card-bg)]/80 shadow-[0_10px_60px_rgba(34,19,74,0.7)] " +
+          "relative rounded-3xl border border-secondary/35 p-5 md:p-6 lg:p-7 flex flex-col gap-5 transition duration-200 bg-card/80 shadow-[0_10px_60px_rgba(34,19,74,0.7)] " +
           (speaking
-            ? "ring-2 ring-[color:var(--accent-blue)]/60 shadow-[0_0_25px_rgba(34,211,238,0.35)] "
-            : "hover:border-[color:var(--accent-pink)]/45 hover:shadow-[0_10px_80px_rgba(236,72,153,0.22)] ") +
-          (heard ? "border-[color:var(--accent-blue)]/50 bg-[color:var(--card-bg)]/40" : "")
+            ? "ring-2 ring-primary/60 shadow-[0_0_25px_rgba(34,211,238,0.35)] "
+            : "hover:border-tertiary/45 hover:shadow-[0_10px_80px_rgba(236,72,153,0.22)] ") +
+          (heard ? "border-primary/50 bg-card/40" : "")
         }
       >
         {/* Scenario Header */}
-        <div className="pb-3 border-b border-[color:var(--accent-purple)]/20">
-          <div className="text-xs font-bold tracking-widest text-[color:var(--accent-blue)] uppercase mb-1">
+        <div className="pb-3 border-b border-secondary/20">
+          <div className="text-xs font-bold tracking-widest text-primary uppercase mb-1">
             Scenario
           </div>
-          <div className="text-base md:text-lg font-medium text-[color:var(--foreground)]">
+          <div className="text-base md:text-lg font-medium text-foreground">
             {sentence.scenario}
           </div>
         </div>
@@ -134,13 +134,13 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
 
         {/* Play Hint */}
         {keywords.length > 0 && (
-           <div className="flex flex-wrap gap-2 mt-1 pt-3 border-t border-[color:var(--accent-purple)]/20 mb-2">
+           <div className="flex flex-wrap gap-2 mt-1 pt-3 border-t border-secondary/20 mb-2">
             {keywords.map((k) => (
               <span
                 key={k.word}
-                className="text-xs md:text-sm px-2.5 md:px-3 py-1 rounded-full bg-[color:var(--accent-purple)]/10 border border-[color:var(--accent-purple)]/35"
+                className="text-xs md:text-sm px-2.5 md:px-3 py-1 rounded-full bg-secondary/10 border border-secondary/35"
               >
-                <span className="font-semibold text-[color:var(--accent-purple)]">{k.word}</span>
+                <span className="font-semibold text-secondary">{k.word}</span>
                 <span className="opacity-70">: {k.meaningKo}</span>
               </span>
             ))}
@@ -152,7 +152,7 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
             e.stopPropagation();
             speak();
           }}
-          className="w-full py-3 rounded-xl bg-[color:var(--accent-blue)]/10 hover:bg-[color:var(--accent-blue)]/20 text-[color:var(--accent-blue)] flex items-center justify-center gap-2 font-semibold transition-all active:scale-[0.99] outline-none focus:ring-2 focus:ring-[color:var(--accent-blue)]/50"
+          className="w-full py-3 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary flex items-center justify-center gap-2 font-semibold transition-all active:scale-[0.99] outline-none focus:ring-2 focus:ring-primary/50"
           aria-label={loading ? "Loading audio" : "Play correct response"}
         >
             {loading ? (
@@ -172,25 +172,25 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
   return (
     <div
       className={
-        "relative rounded-3xl border border-[color:var(--accent-purple)]/35 p-4 md:p-5 lg:p-6 flex flex-col gap-3 md:gap-4 transition duration-200 bg-[color:var(--card-bg)]/80 shadow-[0_10px_60px_rgba(34,19,74,0.7)] " +
+        "relative rounded-3xl border border-secondary/35 p-4 md:p-5 lg:p-6 flex flex-col gap-3 md:gap-4 transition duration-200 bg-card/80 shadow-[0_10px_60px_rgba(34,19,74,0.7)] " +
         (speaking
-          ? "ring-2 ring-[color:var(--accent-blue)]/60 shadow-[0_0_25px_rgba(34,211,238,0.35)] "
-          : "hover:border-[color:var(--accent-pink)]/45 hover:shadow-[0_10px_80px_rgba(236,72,153,0.22)] ") +
-        (heard ? "border-[color:var(--accent-blue)]/50 bg-[color:var(--card-bg)]/40" : "")
+          ? "ring-2 ring-primary/60 shadow-[0_0_25px_rgba(34,211,238,0.35)] "
+          : "hover:border-tertiary/45 hover:shadow-[0_10px_80px_rgba(236,72,153,0.22)] ") +
+        (heard ? "border-primary/50 bg-card/40" : "")
       }
     >
       <div className="min-w-0">
         <div className="text-lg md:text-xl lg:text-2xl font-semibold drop-shadow-[0_0_15px_rgba(168,85,247,0.25)]">
           {sentence.en}
         </div>
-        <div className="text-sm md:text-base text-[color:var(--muted)]">{sentence.ko}</div>
+        <div className="text-sm md:text-base text-muted">{sentence.ko}</div>
       </div>
 
       <div className="flex flex-wrap gap-2 md:gap-2.5 mt-1 mb-2">
         {keywords.map((k) => (
           <span
             key={k.word}
-            className="text-xs md:text-sm px-2.5 md:px-3 py-1 rounded-full bg-[color:var(--accent-purple)]/10 border border-[color:var(--accent-purple)]/35 shadow-[0_0_15px_rgba(168,85,247,0.2)]"
+            className="text-xs md:text-sm px-2.5 md:px-3 py-1 rounded-full bg-secondary/10 border border-secondary/35 shadow-[0_0_15px_rgba(168,85,247,0.2)]"
           >
             <span className="font-semibold">{k.word}</span>: {k.meaningKo}
           </span>
@@ -203,7 +203,7 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
            e.stopPropagation();
            speak();
          }}
-         className="w-full py-3 rounded-xl bg-[color:var(--accent-blue)]/10 hover:bg-[color:var(--accent-blue)]/20 text-[color:var(--accent-blue)] flex items-center justify-center gap-2 font-semibold transition-all active:scale-[0.99] outline-none focus:ring-2 focus:ring-[color:var(--accent-blue)]/50"
+         className="w-full py-3 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary flex items-center justify-center gap-2 font-semibold transition-all active:scale-[0.99] outline-none focus:ring-2 focus:ring-primary/50"
          aria-label={loading ? "Loading audio" : "Play sentence"}
       >
           {loading ? (

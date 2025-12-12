@@ -47,36 +47,36 @@ export default function ScenarioCard({ script, index }: Props) {
         className={`relative overflow-hidden rounded-3xl p-6 h-full flex flex-col justify-between border bg-gradient-to-br backdrop-blur-sm shadow-lg transition-all ${theme}`}
       >
         {/* Background Pattern */}
-        <div className="absolute -right-8 -top-8 opacity-10 text-[color:var(--foreground)] rotate-12 group-hover:rotate-45 transition-transform duration-700">
+        <div className="absolute -right-8 -top-8 opacity-10 text-foreground rotate-12 group-hover:rotate-45 transition-transform duration-700">
            <svg width="128" height="128" viewBox="0 0 24 24" fill="currentColor">{icon}</svg>
         </div>
 
         <div className="relative z-10">
           <div className="flex justify-between items-start mb-4">
-             <div className="p-3 rounded-2xl bg-[color:var(--background)]/40 backdrop-blur border border-white/10 shadow-sm text-[color:var(--foreground)]">
+             <div className="p-3 rounded-2xl bg-background/40 backdrop-blur border border-white/10 shadow-sm text-foreground">
                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">{icon}</svg>
              </div>
              {repeats > 0 && (
-                <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[color:var(--background)]/60 text-xs font-bold text-[color:var(--accent-blue)] border border-[color:var(--accent-blue)]/20 shadow-sm">
+                <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-background/60 text-xs font-bold text-primary border border-primary/20 shadow-sm">
                   <span>↻</span>
                   <span>{repeats}</span>
                 </div>
              )}
           </div>
           
-          <h3 className="text-xl md:text-2xl font-bold mb-2 leading-tight group-hover:text-[color:var(--accent-blue)] transition-colors">
+          <h3 className="text-xl md:text-2xl font-bold mb-2 leading-tight group-hover:text-primary transition-colors">
             {script.title}
           </h3>
-          <p className="text-sm md:text-base text-[color:var(--muted)] line-clamp-3 leading-relaxed">
+          <p className="text-sm md:text-base text-muted line-clamp-3 leading-relaxed">
             {script.cleanedEnglish}
           </p>
         </div>
 
         <div className="relative z-10 mt-6 md:mt-8 flex justify-end">
-           <span className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-[color:var(--foreground)] text-[color:var(--background)] font-bold text-sm shadow-lg group-hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] transition-all transform translate-x-1 group-hover:translate-x-0 opacity-0 group-hover:opacity-100">
+           <span className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-foreground text-background font-bold text-sm shadow-lg group-hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] transition-all transform translate-x-1 group-hover:translate-x-0 opacity-0 group-hover:opacity-100">
              Start Training →
            </span>
-           <span className="absolute right-0 bottom-1 flex items-center gap-2 px-5 py-2.5 rounded-full bg-[color:var(--card-bg)] border border-[color:var(--foreground)]/10 text-[color:var(--foreground)] font-bold text-sm transition-all group-hover:opacity-0 group-hover:scale-90">
+           <span className="absolute right-0 bottom-1 flex items-center gap-2 px-5 py-2.5 rounded-full bg-card border border-foreground/10 text-foreground font-bold text-sm transition-all group-hover:opacity-0 group-hover:scale-90">
              Start
            </span>
         </div>
