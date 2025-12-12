@@ -26,6 +26,7 @@ export type Script = {
   categorySlug: string;
   categoryName: string;
   cleanedEnglish: string; // Used as summary for story_flow
+  icon?: string;
   sentences: Sentence[];
   // New fields for story_flow
   type?: "script" | "story_flow";

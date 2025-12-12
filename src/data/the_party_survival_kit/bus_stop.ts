@@ -8,6 +8,7 @@ export const busStop: Script = {
   categoryName: CATEGORY_NAMES["the_party_survival_kit"],
   cleanedEnglish:
     "A go-to story for bars, parties, and group dinners so you don’t freeze—self-aware, short, and ends with a playful twist instead of an awkward silence.",
+  icon: "🚌",
   sentences: [
     {
       id: "s1",

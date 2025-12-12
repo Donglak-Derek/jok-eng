@@ -38,6 +38,9 @@ export default function ScenarioCard({ script, index }: Props) {
     <path key="circle" d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z" />, // Circle
   ];
   const icon = icons[index % icons.length];
+  
+  // Custom icon check (emoji or text)
+  const customIcon = script.icon;
 
   return (
     <Link href={`/script/${script.id}`} className="block group">
@@ -48,14 +51,22 @@ export default function ScenarioCard({ script, index }: Props) {
       >
         {/* Background Pattern */}
         <div className="absolute -right-8 -top-8 opacity-10 text-foreground rotate-12 group-hover:rotate-45 transition-transform duration-700">
-           <svg width="128" height="128" viewBox="0 0 24 24" fill="currentColor">{icon}</svg>
+           {customIcon ? (
+             <span className="text-[100px] leading-none grayscale opacity-50">{customIcon}</span>
+           ) : (
+             <svg width="128" height="128" viewBox="0 0 24 24" fill="currentColor">{icon}</svg>
+           )}
         </div>
 
         <div className="relative z-10">
           <div className="flex justify-between items-start mb-4">
-             <div className="p-3 rounded-2xl bg-background/40 backdrop-blur border border-white/10 shadow-sm text-foreground">
-               <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">{icon}</svg>
-             </div>
+              <div className="p-3 rounded-2xl bg-background/40 backdrop-blur border border-white/10 shadow-sm text-foreground flex items-center justify-center min-w-[48px] min-h-[48px]">
+                {customIcon ? (
+                  <span className="text-2xl">{customIcon}</span>
+                ) : (
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">{icon}</svg>
+                )}
+              </div>
              {repeats > 0 && (
                 <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-background/60 text-xs font-bold text-primary border border-primary/20 shadow-sm">
                   <span>↻</span>

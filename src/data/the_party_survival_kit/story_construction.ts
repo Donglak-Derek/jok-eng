@@ -7,6 +7,7 @@ export const storyConstructionScript: Script = {
   categorySlug: "the_party_survival_kit",
   categoryName: "The Party Survival Kit",
   cleanedEnglish: "The Story Construction: Break a story into Hook -> Context -> Punchline.",
+  icon: "🌏",
   context: "Use this when someone asks where you are from, but you want to be funny, not boring.",
   segments: [
     {

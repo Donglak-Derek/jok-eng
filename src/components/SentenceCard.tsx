@@ -86,7 +86,7 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
     return (
       <div
         className={
-          "relative rounded-3xl border border-secondary/35 p-5 md:p-6 lg:p-7 flex flex-col gap-5 transition duration-200 bg-card/80 shadow-[0_10px_60px_rgba(34,19,74,0.7)] " +
+          "relative rounded-3xl border border-secondary/35 p-6 md:p-8 lg:p-10 flex flex-col gap-8 md:gap-10 transition duration-200 bg-card/80 shadow-[0_10px_60px_rgba(34,19,74,0.7)] " +
           (speaking
             ? "ring-2 ring-primary/60 shadow-[0_0_25px_rgba(34,211,238,0.35)] "
             : "hover:border-tertiary/45 hover:shadow-[0_10px_80px_rgba(236,72,153,0.22)] ") +
@@ -152,17 +152,10 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
             e.stopPropagation();
             speak();
           }}
-          className="w-full py-3 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary flex items-center justify-center gap-2 font-semibold transition-all active:scale-[0.99] outline-none focus:ring-2 focus:ring-primary/50"
+          className="w-full py-3 rounded-xl border-2 border-primary bg-primary/5 text-primary font-bold text-base tracking-widest uppercase shadow-[0_0_15px_rgba(34,211,238,0.25)] transition-all hover:bg-primary/10 hover:shadow-[0_0_30px_rgba(34,211,238,0.45)] active:scale-[0.98] outline-none flex justify-center items-center"
           aria-label={loading ? "Loading audio" : "Play correct response"}
         >
-            {loading ? (
-               <Spinner />
-            ) : (
-               <svg aria-hidden viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                 <path d="M8 5v14l11-7z" />
-               </svg>
-            )}
-            <span>{loading ? "Loading Audio..." : "Play Audio"}</span>
+            {loading ? <Spinner /> : <span>Play Audio</span>}
         </button>
       </div>
     );
@@ -172,7 +165,7 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
   return (
     <div
       className={
-        "relative rounded-3xl border border-secondary/35 p-4 md:p-5 lg:p-6 flex flex-col gap-3 md:gap-4 transition duration-200 bg-card/80 shadow-[0_10px_60px_rgba(34,19,74,0.7)] " +
+        "relative rounded-3xl border border-secondary/35 p-6 md:p-8 lg:p-10 flex flex-col gap-6 md:gap-8 transition duration-200 bg-card/80 shadow-[0_10px_60px_rgba(34,19,74,0.7)] " +
         (speaking
           ? "ring-2 ring-primary/60 shadow-[0_0_25px_rgba(34,211,238,0.35)] "
           : "hover:border-tertiary/45 hover:shadow-[0_10px_80px_rgba(236,72,153,0.22)] ") +
@@ -203,17 +196,10 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
            e.stopPropagation();
            speak();
          }}
-         className="w-full py-3 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary flex items-center justify-center gap-2 font-semibold transition-all active:scale-[0.99] outline-none focus:ring-2 focus:ring-primary/50"
+         className="w-full py-3 rounded-xl border-2 border-primary bg-primary/5 text-primary font-bold text-base tracking-widest uppercase shadow-[0_0_15px_rgba(34,211,238,0.25)] transition-all hover:bg-primary/10 hover:shadow-[0_0_30px_rgba(34,211,238,0.45)] active:scale-[0.98] outline-none flex justify-center items-center"
          aria-label={loading ? "Loading audio" : "Play sentence"}
       >
-          {loading ? (
-             <Spinner />
-          ) : (
-             <svg aria-hidden viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-               <path d="M8 5v14l11-7z" />
-             </svg>
-          )}
-          <span>{loading ? "Loading Audio..." : "Play Audio"}</span>
+          {loading ? <Spinner /> : <span>Play Audio</span>}
       </button>
     </div>
   );

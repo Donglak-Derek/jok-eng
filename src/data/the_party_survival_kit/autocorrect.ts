@@ -8,6 +8,7 @@ export const autocorrect: Script = {
   categoryName: CATEGORY_NAMES["the_party_survival_kit"],
   cleanedEnglish:
     "When you forget names at a party, you need a joke that saves you. This bit teaches how to admit it with humor and keep the vibe light.",
+  icon: "🏷️",
   sentences: [
     {
       id: "s1",
