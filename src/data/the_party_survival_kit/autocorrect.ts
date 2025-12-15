@@ -8,6 +8,7 @@ export const autocorrect: Script = {
   categoryName: CATEGORY_NAMES["the_party_survival_kit"],
   cleanedEnglish:
     "When you forget names at a party, you need a joke that saves you. This bit teaches how to admit it with humor and keep the vibe light.",
+  cleanedKorean: "파티에서 이름을 잊었을 때 당신을 구해줄 농담입니다. 유머러스하게 실수를 인정하고 분위기를 띄우는 법을 배웁니다.",
   icon: "🏷️",
   sentences: [
     {

@@ -7,6 +7,7 @@ export const storyConstructionScript: Script = {
   categorySlug: "the_party_survival_kit",
   categoryName: "The Party Survival Kit",
   cleanedEnglish: "The Story Construction: Break a story into Hook -> Context -> Punchline.",
+  cleanedKorean: "스토리 구성법: 이야기를 '훅 -> 맥락 -> 펀치라인'으로 나누어 구성하는 방법을 배웁니다.",
   icon: "🌏",
   context: "Use this when someone asks where you are from, but you want to be funny, not boring.",
   segments: [

@@ -81,6 +81,17 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
     </svg>
   );
 
+  // Audio Visualizer Component
+  const AudioVisualizer = () => (
+    <div className="flex items-end justify-center gap-1 h-5">
+      <div className="w-1 bg-current animate-[bounce_0.5s_infinite] h-2"></div>
+      <div className="w-1 bg-current animate-[bounce_0.7s_infinite] h-4"></div>
+      <div className="w-1 bg-current animate-[bounce_0.6s_infinite] h-3"></div>
+      <div className="w-1 bg-current animate-[bounce_0.8s_infinite] h-5"></div>
+      <div className="w-1 bg-current animate-[bounce_0.55s_infinite] h-2"></div>
+    </div>
+  );
+
   // New "Mistake -> Fix" Layout
   if (sentence.scenario && sentence.badResponse && sentence.goodResponse) {
     return (
@@ -88,8 +99,8 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
         className={
           "relative rounded-3xl border border-secondary/35 p-6 md:p-8 lg:p-10 flex flex-col gap-8 md:gap-10 transition duration-200 bg-card/80 shadow-[0_10px_60px_rgba(34,19,74,0.7)] " +
           (speaking
-            ? "ring-2 ring-primary/60 shadow-[0_0_25px_rgba(34,211,238,0.35)] "
-            : "hover:border-tertiary/45 hover:shadow-[0_10px_80px_rgba(236,72,153,0.22)] ") +
+            ? "ring-2 ring-primary/80 shadow-[0_0_40px_rgba(34,211,238,0.5)] border-primary "
+            : "hover:border-primary/60 hover:shadow-[0_0_30px_rgba(34,211,238,0.2)] ") +
           (heard ? "border-primary/50 bg-card/40" : "")
         }
       >
@@ -155,7 +166,7 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
           className="w-full py-3 rounded-xl border-2 border-primary bg-primary/5 text-primary font-bold text-base tracking-widest uppercase shadow-[0_0_15px_rgba(34,211,238,0.25)] transition-all hover:bg-primary/10 hover:shadow-[0_0_30px_rgba(34,211,238,0.45)] active:scale-[0.98] outline-none flex justify-center items-center"
           aria-label={loading ? "Loading audio" : "Play correct response"}
         >
-            {loading ? <Spinner /> : <span>Play Audio</span>}
+            {loading ? <Spinner /> : (speaking ? <AudioVisualizer /> : <span>Play Audio</span>)}
         </button>
       </div>
     );
@@ -167,8 +178,8 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
       className={
         "relative rounded-3xl border border-secondary/35 p-6 md:p-8 lg:p-10 flex flex-col gap-6 md:gap-8 transition duration-200 bg-card/80 shadow-[0_10px_60px_rgba(34,19,74,0.7)] " +
         (speaking
-          ? "ring-2 ring-primary/60 shadow-[0_0_25px_rgba(34,211,238,0.35)] "
-          : "hover:border-tertiary/45 hover:shadow-[0_10px_80px_rgba(236,72,153,0.22)] ") +
+          ? "ring-2 ring-primary/80 shadow-[0_0_40px_rgba(34,211,238,0.5)] border-primary "
+          : "hover:border-primary/60 hover:shadow-[0_0_30px_rgba(34,211,238,0.2)] ") +
         (heard ? "border-primary/50 bg-card/40" : "")
       }
     >
@@ -199,7 +210,7 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
          className="w-full py-3 rounded-xl border-2 border-primary bg-primary/5 text-primary font-bold text-base tracking-widest uppercase shadow-[0_0_15px_rgba(34,211,238,0.25)] transition-all hover:bg-primary/10 hover:shadow-[0_0_30px_rgba(34,211,238,0.45)] active:scale-[0.98] outline-none flex justify-center items-center"
          aria-label={loading ? "Loading audio" : "Play sentence"}
       >
-          {loading ? <Spinner /> : <span>Play Audio</span>}
+          {loading ? <Spinner /> : (speaking ? <AudioVisualizer /> : <span>Play Audio</span>)}
       </button>
     </div>
   );

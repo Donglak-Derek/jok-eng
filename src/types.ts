@@ -26,6 +26,7 @@ export type Script = {
   categorySlug: string;
   categoryName: string;
   cleanedEnglish: string; // Used as summary for story_flow
+  cleanedKorean?: string; // Korean summary
   icon?: string;
   sentences: Sentence[];
   // New fields for story_flow
@@ -44,6 +45,7 @@ export type Category = {
   slug: string;
   name: string;
   description: string;
+  descriptionKo?: string;
   image: string;
 };
 

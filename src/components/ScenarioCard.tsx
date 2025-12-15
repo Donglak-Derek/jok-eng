@@ -19,77 +19,88 @@ export default function ScenarioCard({ script, index }: Props) {
     setRepeats(v ? Number(v) || 0 : 0);
   }, [repeatsKey]);
 
-  // Generate a deterministic gradient based on index/id for variety
+  // Mastery / Progress Logic (Simple Ring visualization)
+  const getMasteryColor = (count: number) => {
+    if (count >= 10) return "text-yellow-400";
+    if (count >= 5) return "text-cyan-400";
+    if (count >= 1) return "text-pink-400";
+    return "text-muted/30";
+  };
+  const masteryColor = getMasteryColor(repeats);
+
+  // Design Theme - Neon Comedy Club Vibe
   const gradients = [
-    "from-pink-500/20 to-rose-500/20 border-rose-500/20 hover:border-rose-500/40",
-    "from-purple-500/20 to-indigo-500/20 border-indigo-500/20 hover:border-indigo-500/40",
-    "from-blue-500/20 to-cyan-500/20 border-cyan-500/20 hover:border-cyan-500/40",
-    "from-emerald-500/20 to-teal-500/20 border-teal-500/20 hover:border-teal-500/40",
-    "from-amber-500/20 to-orange-500/20 border-orange-500/20 hover:border-orange-500/40",
+    "from-purple-900/40 to-black border-purple-500/50 shadow-[0_0_15px_rgba(168,85,247,0.4)]",
+    "from-pink-900/40 to-black border-pink-500/50 shadow-[0_0_15px_rgba(236,72,153,0.4)]",
+    "from-blue-900/40 to-black border-cyan-500/50 shadow-[0_0_15px_rgba(34,211,238,0.4)]",
   ];
   const theme = gradients[index % gradients.length];
   
-  // Icon patterns (simple SVG paths)
-  const icons = [
-    <path key="bolt" d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />, // Bolt
-    <path key="star" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />, // Star
-    <path key="cube" d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />, // Cube
-    <path key="shield" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />, // Shield
-    <path key="circle" d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z" />, // Circle
-  ];
-  const icon = icons[index % icons.length];
-  
-  // Custom icon check (emoji or text)
-  const customIcon = script.icon;
+  const icon = script.icon || "📝";
+
+  // Type Label Logic
+  const isStoryFlow = script.type === "story_flow";
+  const typeLabel = isStoryFlow ? "Story Build" : "Scenario";
+  const typeColor = isStoryFlow ? "text-pink-400 border-pink-500/40" : "text-cyan-400 border-cyan-500/40"; // Different neon colors for types
 
   return (
-    <Link href={`/script/${script.id}`} className="block group">
+    <Link href={`/script/${script.id}`} className="block h-full">
       <motion.div
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-        className={`relative overflow-hidden rounded-3xl p-6 h-full flex flex-col justify-between border bg-gradient-to-br backdrop-blur-sm shadow-lg transition-all ${theme}`}
+        whileTap={{ scale: 0.96 }}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ type: "spring", stiffness: 400, damping: 17 }}
+        className={`relative h-full rounded-2xl border bg-card/60 backdrop-blur-md p-5 flex flex-col justify-between shadow-sm ${theme}`}
       >
-        {/* Background Pattern */}
-        <div className="absolute -right-8 -top-8 opacity-10 text-foreground rotate-12 group-hover:rotate-45 transition-transform duration-700">
-           {customIcon ? (
-             <span className="text-[100px] leading-none grayscale opacity-50">{customIcon}</span>
-           ) : (
-             <svg width="128" height="128" viewBox="0 0 24 24" fill="currentColor">{icon}</svg>
-           )}
+        <div className="flex justify-between items-start mb-3">
+           {/* Icon with Mastery Ring */}
+           <div className="relative">
+             <div className={`absolute inset-0 rounded-full border-2 border-current opacity-30 ${masteryColor}`} />
+             {repeats > 0 && <div className={`absolute inset-0 rounded-full border-2 border-current border-t-transparent animate-[spin_3s_linear_infinite] ${masteryColor}`} />}
+             
+             <div className="w-12 h-12 rounded-full bg-background/50 flex items-center justify-center text-2xl shadow-sm relative z-10 m-1">
+               {icon}
+             </div>
+           </div>
+
+           <div className="flex flex-col items-end gap-1.5">
+             {/* Type Badge */}
+             <div className={`px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-widest border bg-black/40 shadow-[0_0_8px_rgba(0,0,0,0.5)] ${typeColor}`}>
+               {typeLabel}
+             </div>
+
+             {/* Simple Counter Badge - Neon Style */}
+             {repeats > 0 && (
+               <div className="flex items-center gap-1 px-2 py-1 bg-black/60 rounded-md text-[10px] font-bold text-primary uppercase tracking-wider border border-primary/40 shadow-[0_0_8px_rgba(34,211,238,0.3)]">
+                  <span>{repeats}</span>
+                  <span className="text-[8px] opacity-80">Reps</span>
+               </div>
+             )}
+           </div>
         </div>
 
-        <div className="relative z-10">
-          <div className="flex justify-between items-start mb-4">
-              <div className="p-3 rounded-2xl bg-background/40 backdrop-blur border border-white/10 shadow-sm text-foreground flex items-center justify-center min-w-[48px] min-h-[48px]">
-                {customIcon ? (
-                  <span className="text-2xl">{customIcon}</span>
-                ) : (
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">{icon}</svg>
-                )}
-              </div>
-             {repeats > 0 && (
-                <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-background/60 text-xs font-bold text-primary border border-primary/20 shadow-sm">
-                  <span>↻</span>
-                  <span>{repeats}</span>
-                </div>
-             )}
-          </div>
-          
-          <h3 className="text-xl md:text-2xl font-bold mb-2 leading-tight group-hover:text-primary transition-colors">
+        <div className="flex-1 min-h-[80px]">
+          <h3 className="text-lg font-bold mb-1.5 leading-tight text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.5)]">
             {script.title}
           </h3>
-          <p className="text-sm md:text-base text-muted line-clamp-3 leading-relaxed">
+          <p className="text-xs text-gray-300 leading-relaxed line-clamp-2 mb-1">
             {script.cleanedEnglish}
           </p>
+          {script.cleanedKorean && (
+            <p className="text-xs text-muted leading-relaxed line-clamp-2">
+              {script.cleanedKorean}
+            </p>
+          )}
         </div>
 
-        <div className="relative z-10 mt-6 md:mt-8 flex justify-end">
-           <span className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-foreground text-background font-bold text-sm shadow-lg group-hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] transition-all transform translate-x-1 group-hover:translate-x-0 opacity-0 group-hover:opacity-100">
-             Start Training →
-           </span>
-           <span className="absolute right-0 bottom-1 flex items-center gap-2 px-5 py-2.5 rounded-full bg-card border border-foreground/10 text-foreground font-bold text-sm transition-all group-hover:opacity-0 group-hover:scale-90">
-             Start
-           </span>
+        {/* Always Visible Action Button - Neon */}
+        <div className="mt-4 flex items-center justify-between">
+            <span className="text-[10px] font-medium text-white/50 uppercase tracking-widest pl-1">
+              Tap to practice
+            </span>
+            <div className="w-8 h-8 rounded-full bg-primary/10 border border-primary/50 text-primary flex items-center justify-center shadow-[0_0_10px_rgba(34,211,238,0.4)]">
+              <svg className="w-4 h-4 fill-current ml-0.5" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </div>
         </div>
       </motion.div>
     </Link>
