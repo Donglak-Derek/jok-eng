@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { Script } from "@/types";
@@ -16,6 +16,15 @@ export default function StoryFlow({ script }: Props) {
   const [currentStep, setCurrentStep] = useState(0);
   const segments = script.segments || [];
   const total = segments.length;
+  const repeatsKey = `jokeng:repeats:${script.id}`;
+  
+  const [repeats, setRepeats] = useState<number>(0);
+
+  // Load repeats
+  useEffect(() => {
+    const v = localStorage.getItem(repeatsKey);
+    setRepeats(v ? Number(v) || 0 : 0);
+  }, [repeatsKey]);
   
   // TTS State
   const [speaking, setSpeaking] = useState(false);
@@ -25,7 +34,12 @@ export default function StoryFlow({ script }: Props) {
     if (currentStep < total - 1) {
       setCurrentStep((prev) => prev + 1);
     } else {
-       // On finish, go back to category
+       // On finish, increment repeats
+       const nextRepeats = repeats + 1;
+       setRepeats(nextRepeats);
+       localStorage.setItem(repeatsKey, String(nextRepeats));
+
+       // Go back to category
        router.push(`/category/${script.categorySlug}`);
     }
   };
@@ -119,6 +133,7 @@ export default function StoryFlow({ script }: Props) {
         {/* Progress */}
         <div className="flex items-center justify-between">
           <ProgressBar total={total} completed={currentStep + 1} />
+          <div className="text-xs md:text-sm text-muted ml-3 shrink-0">Repeats: {repeats}</div>
         </div>
 
         {/* Card Area */}
