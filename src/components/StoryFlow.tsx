@@ -30,18 +30,31 @@ export default function StoryFlow({ script }: Props) {
   const [speaking, setSpeaking] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  // Completion State
+  const isCompletion = currentStep === total;
+
   const handleNext = () => {
-    if (currentStep < total - 1) {
+    if (currentStep < total) {
       setCurrentStep((prev) => prev + 1);
     } else {
-       // On finish, increment repeats
-       const nextRepeats = repeats + 1;
-       setRepeats(nextRepeats);
-       localStorage.setItem(repeatsKey, String(nextRepeats));
-
+       // Finish action (from Completion Card)
        // Go back to category
        router.push(`/category/${script.categorySlug}`);
     }
+  };
+
+  const handleFinishTraining = () => {
+     // Save repeats
+     const nextRepeats = repeats + 1;
+     setRepeats(nextRepeats);
+     localStorage.setItem(repeatsKey, String(nextRepeats));
+     
+     // Go to next
+     handleNext();
+  };
+  
+  const handleRepeat = () => {
+     setCurrentStep(0);
   };
 
   const handlePrev = () => {
@@ -103,7 +116,17 @@ export default function StoryFlow({ script }: Props) {
   }, [segments, currentStep, speaking, loading]);
 
 
-  const isLast = currentStep === total - 1;
+  // Congratulation Sound Effect
+  useEffect(() => {
+    if (isCompletion) {
+      const audio = new Audio("/sounds/good_job.mp3");
+      audio.volume = 0.5;
+      audio.play().catch(e => console.log("Audio play failed (user interaction needed likely)", e));
+    }
+  }, [isCompletion]);
+
+
+  const isLastSegment = currentStep === total - 1;
   const currentSegment = segments[currentStep];
 
   // Spinner Icon
@@ -118,7 +141,7 @@ export default function StoryFlow({ script }: Props) {
     <div className="min-h-dvh text-foreground flex flex-col">
       <div className="flex-1 max-w-md md:max-w-2xl lg:max-w-3xl mx-auto px-4 md:px-6 lg:px-8 py-5 md:py-8 flex flex-col gap-5 md:gap-6 w-full">
         {/* Header - Matching StandardScriptFlow */}
-        <header className="sticky top-0 z-10 -mx-4 md:-mx-6 lg:-mx-8 px-4 md:px-6 lg:px-8 py-3 md:py-4 backdrop-blur bg-background/70 flex items-center gap-3 border-b border-secondary/30 shadow-[0_10px_40px_rgba(34,19,74,0.7)]">
+        <header className="sticky top-0 z-10 -mx-4 md:-mx-6 lg:-mx-8 px-4 md:px-6 lg:px-8 py-3 md:py-4 backdrop-blur bg-background/70 flex items-center gap-3 border-b border-secondary/30 shadow-[0_10px_40px_rgba(34,19,74,0.7)] relative">
           <Link href={`/category/${script.categorySlug}`} className="text-lg md:text-xl leading-none text-primary drop-shadow-[0_0_18px_rgba(34,211,238,0.35)]">←</Link>
           <div className="flex-1 min-w-0">
             <h1 className="headline text-2xl md:text-3xl lg:text-4xl tracking-[0.05em] bg-gradient-to-r from-tertiary via-secondary to-primary text-transparent bg-clip-text truncate">
@@ -128,17 +151,20 @@ export default function StoryFlow({ script }: Props) {
               <p className="text-xs md:text-sm text-muted line-clamp-1">{script.context}</p>
             </div>
           </div>
+          
+          {/* Full Width Progress Bar */}
+          <div className="absolute bottom-0 left-0 right-0 h-1 bg-secondary/20">
+             <div 
+               className="h-full bg-primary shadow-[0_0_10px_rgba(34,211,238,0.6)] transition-all duration-300 ease-out"
+               style={{ width: `${(currentStep / total) * 100}%` }}
+             />
+          </div>
         </header>
-
-        {/* Progress */}
-        <div className="flex items-center justify-between">
-          <ProgressBar total={total} completed={currentStep + 1} />
-          <div className="text-xs md:text-sm text-muted ml-3 shrink-0">Repeats: {repeats}</div>
-        </div>
 
         {/* Card Area */}
         <div className="flex-1 flex flex-col justify-center min-h-[400px]">
           <AnimatePresence mode="wait">
+            {!isCompletion ? (
              <motion.div
                key={currentStep}
                initial={{ opacity: 0, x: 20 }}
@@ -213,6 +239,43 @@ export default function StoryFlow({ script }: Props) {
                   </button>
                 </div>
              </motion.div>
+           ) : (
+             <motion.div
+               key="completion"
+               initial={{ opacity: 0, scale: 0.9 }}
+               animate={{ opacity: 1, scale: 1 }}
+               exit={{ opacity: 0, scale: 0.9 }}
+               transition={{ duration: 0.4 }}
+               className="w-full"
+             >
+                <div className="relative rounded-3xl border border-primary/50 p-6 md:p-8 lg:p-10 flex flex-col gap-6 md:gap-8 transition duration-200 bg-card/90 shadow-[0_0_60px_rgba(34,211,238,0.3)] text-center items-center">
+                    <div className="text-6xl md:text-7xl animate-bounce mb-2">🎉</div>
+                    
+                    <div className="flex flex-col gap-2">
+                      <h2 className="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-secondary via-primary to-secondary animate-pulse">
+                        Congratulation!
+                      </h2>
+                      <p className="text-lg text-muted">You finished this story flow.</p>
+                    </div>
+
+                    <div className="w-full flex flex-col gap-3 mt-4">
+                       <button
+                         onClick={handleRepeat}
+                         className="w-full py-4 rounded-xl bg-primary text-primary-foreground font-black text-xl tracking-widest uppercase shadow-[0_0_25px_rgba(34,211,238,0.4)] transition-all hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(34,211,238,0.6)] active:scale-[0.98]"
+                       >
+                         Repeat
+                       </button>
+
+                       <button 
+                         onClick={handleFinishTraining}
+                         className="w-full py-3 rounded-xl border-2 border-primary/30 text-primary font-bold text-sm tracking-wider uppercase hover:bg-primary/10 hover:border-primary transition-colors"
+                       >
+                         Finish
+                       </button>
+                    </div>
+                </div>
+             </motion.div>
+           )}
           </AnimatePresence>
         </div>
       </div>
@@ -229,26 +292,30 @@ export default function StoryFlow({ script }: Props) {
            </button>
            
            <div className="flex-1 flex items-center gap-3">
-             {/* Previous Button */}
-             <button
-               onClick={handlePrev}
-               disabled={currentStep === 0}
+              {/* Previous Button */}
+              {!isCompletion && (
+              <button
+                onClick={handlePrev}
+                disabled={currentStep === 0}
                className={`flex-1 px-3 py-3 rounded-xl border-2 font-bold text-xs md:text-sm tracking-wider uppercase transition-all shadow-[0_0_15px_rgba(0,0,0,0)] ${
                  currentStep === 0 
                    ? "border-secondary/20 text-muted/30 cursor-not-allowed" 
                    : "border-secondary text-secondary hover:bg-secondary/10 hover:shadow-[0_0_20px_var(--color-secondary)] active:scale-[0.98]"
                }`}
              >
-               Prev
-             </button>
+                Prev
+              </button>
+              )}
 
-             {/* Next / Finish Button */}
-             <button
-               onClick={handleNext}
-               className="flex-1 px-3 py-3 rounded-xl border-2 border-primary bg-primary/10 text-primary font-bold text-xs md:text-sm tracking-wider uppercase shadow-[0_0_20px_rgba(34,211,238,0.25)] transition-all hover:bg-primary/20 hover:shadow-[0_0_35px_rgba(34,211,238,0.5)] active:scale-[0.98]"
-             >
-               {isLast ? "Finish" : "Next"}
-             </button>
+              {/* Next / Finish Button */}
+              {!isCompletion && (
+              <button
+                onClick={handleNext}
+                className="flex-1 px-3 py-3 rounded-xl border-2 border-primary bg-primary/10 text-primary font-bold text-xs md:text-sm tracking-wider uppercase shadow-[0_0_20px_rgba(34,211,238,0.25)] transition-all hover:bg-primary/20 hover:shadow-[0_0_35px_rgba(34,211,238,0.5)] active:scale-[0.98]"
+              >
+                {isLastSegment ? "Next" : "Next"}
+              </button>
+              )}
            </div>
         </div>
       </div>
