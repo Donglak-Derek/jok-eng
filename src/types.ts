@@ -20,17 +20,31 @@ export type Sentence = {
   };
 };
 
+export type DecoderItem = {
+  id: string;
+  phrase: string;
+  literalMeaning: string;
+  actualMeaning: string;
+  dangerLevel: string;
+  survivalTip: string;
+  // Translations
+  phraseKo?: string;
+  literalMeaningKo?: string;
+  actualMeaningKo?: string;
+  survivalTipKo?: string;
+};
+
 export type Script = {
   id: string;
   title: string;
   categorySlug: string;
   categoryName: string;
-  cleanedEnglish: string; // Used as summary for story_flow
+  cleanedEnglish: string; // Used as summary
   cleanedKorean?: string; // Korean summary
   icon?: string;
   sentences: Sentence[];
-  // New fields for story_flow
-  type?: "script" | "story_flow";
+  // New fields for story_flow and decoder
+  type?: "script" | "story_flow" | "decoder";
   context?: string;
   segments?: {
     step: string;
@@ -39,6 +53,7 @@ export type Script = {
     keywords?: Keyword[];
     note: string;
   }[];
+  decoderItems?: DecoderItem[];
 };
 
 export type Category = {

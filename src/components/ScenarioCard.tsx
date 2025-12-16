@@ -76,6 +76,14 @@ export default function ScenarioCard({ script, index }: Props) {
                   <span className="text-[8px] opacity-80">Reps</span>
                </div>
              )}
+
+             {/* Item Count Badge */}
+             <div className="flex items-center gap-1 px-2 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider border bg-black/40 text-muted-foreground border-white/10">
+                <span>
+                  {script.decoderItems?.length || script.segments?.length || script.sentences?.length || 0}
+                </span>
+                <span className="opacity-70">Items</span>
+             </div>
            </div>
         </div>
 
