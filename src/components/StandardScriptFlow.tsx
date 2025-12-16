@@ -55,13 +55,7 @@ export default function StandardScriptFlow({ script }: Props) {
   // Handle completion check logic (optional now as we drive it manually via Next button on last card)
   // We can update the repeats count when the user finishes the last card or clicks "Finish".
 
-  const handleHeard = (index: number) => {
-    setHeardSet((prev) => {
-      const next = new Set(prev);
-      next.add(index);
-      return next;
-    });
-  };
+
 
   const handlePrev = () => {
     if (currentIndex > 0) {

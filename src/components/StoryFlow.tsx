@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { Script } from "@/types";
 import { motion, AnimatePresence } from "framer-motion";
-import ProgressBar from "@/components/ProgressBar";
 
 type Props = {
   script: Script;
@@ -14,7 +13,7 @@ type Props = {
 export default function StoryFlow({ script }: Props) {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(0);
-  const segments = script.segments || [];
+  const segments = useMemo(() => script.segments || [], [script.segments]);
   const total = segments.length;
   const repeatsKey = `jokeng:repeats:${script.id}`;
   
