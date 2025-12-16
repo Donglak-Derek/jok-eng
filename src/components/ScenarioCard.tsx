@@ -40,8 +40,20 @@ export default function ScenarioCard({ script, index }: Props) {
 
   // Type Label Logic
   const isStoryFlow = script.type === "story_flow";
-  const typeLabel = isStoryFlow ? "Story Build" : "Scenario";
-  const typeColor = isStoryFlow ? "text-pink-400 border-pink-500/40" : "text-cyan-400 border-cyan-500/40"; // Different neon colors for types
+  const isDecoder = script.type === "decoder";
+  
+  let typeLabel = "Scenario";
+  if (isStoryFlow) typeLabel = "Story Build";
+  if (isDecoder) typeLabel = "Signal Decoder";
+
+  const typeColor = isStoryFlow 
+      ? "text-pink-400 border-pink-500/40" 
+      : isDecoder 
+          ? "text-green-400 border-green-500/40" 
+          : "text-cyan-400 border-cyan-500/40";
+
+  // Decoder always spins (Radar effect)
+  const shouldSpin = repeats > 0 || isDecoder;
 
   return (
     <Link href={`/script/${script.id}`} className="block h-full">
@@ -56,7 +68,7 @@ export default function ScenarioCard({ script, index }: Props) {
            {/* Icon with Mastery Ring */}
            <div className="relative">
              <div className={`absolute inset-0 rounded-full border-2 border-current opacity-30 ${masteryColor}`} />
-             {repeats > 0 && <div className={`absolute inset-0 rounded-full border-2 border-current border-t-transparent animate-[spin_3s_linear_infinite] ${masteryColor}`} />}
+             {shouldSpin && <div className={`absolute inset-0 rounded-full border-2 border-current border-t-transparent animate-[spin_3s_linear_infinite] ${masteryColor}`} />}
              
              <div className="w-12 h-12 rounded-full bg-background/50 flex items-center justify-center text-2xl shadow-sm relative z-10 m-1">
                {icon}
