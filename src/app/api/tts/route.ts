@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { MsEdgeTTS, OUTPUT_FORMAT } from "msedge-tts";
+import { Communicate } from "edge-tts-universal";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -11,19 +11,23 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const tts = new MsEdgeTTS();
-    await tts.setMetadata(voice, OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3);
-    const result = await tts.toStream(text);
-    const readable = result.audioStream;
-
+    const comm = new Communicate(text, { voice });
+    
+    // Create a ReadableStream from the async iterator
     const stream = new ReadableStream({
-        start(controller) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            readable.on("data", (chunk: any) => controller.enqueue(chunk));
-            readable.on("end", () => controller.close());
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            readable.on("error", (err: any) => controller.error(err));
-        },
+      async start(controller) {
+        try {
+          // @ts-ignore - comm.stream() returns an async iterator
+          for await (const chunk of comm.stream()) {
+            if (chunk.type === "audio") {
+              controller.enqueue(chunk.data);
+            }
+          }
+          controller.close();
+        } catch (err) {
+          controller.error(err);
+        }
+      },
     });
 
     return new NextResponse(stream, {
