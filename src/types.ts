@@ -64,3 +64,13 @@ export type Category = {
   image: string;
 };
 
+export type UserScript = Script & {
+  userId: string;
+  createdAt: number; // timestamp
+  originalPrompt: {
+    context: string;
+    myRole: string;
+    otherRole: string;
+    plot: string;
+  };
+};

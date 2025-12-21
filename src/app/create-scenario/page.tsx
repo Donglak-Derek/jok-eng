@@ -2,6 +2,7 @@
 
 import Header from "@/components/Header";
 import Link from "next/link";
+import CreateScenarioForm from "@/components/CreateScenarioForm";
 
 export default function CreateScenarioPage() {
   return (
@@ -11,12 +12,7 @@ export default function CreateScenarioPage() {
 
             <div className="mt-4">
                  <Link href="/" className="text-sm text-muted hover:text-primary transition-colors mb-4 block">← Back to Home</Link>
-                 <h1 className="headline text-3xl md:text-4xl mb-6 bg-gradient-to-r from-secondary to-primary text-transparent bg-clip-text">
-                    Create New Scenario
-                </h1>
-                <div className="p-8 rounded-3xl border border-dashed border-secondary/40 bg-secondary/5 h-[400px] flex items-center justify-center">
-                    <p className="text-muted">Scenario creation form coming soon...</p>
-                </div>
+                 <CreateScenarioForm />
             </div>
         </div>
     </div>
