@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { AuthProvider } from "@/context/AuthContext";
 import { Geist, Geist_Mono, Bebas_Neue } from "next/font/google";
 import ParticlesBackground from "@/components/ParticlesBackground";
 import "./globals.css";
@@ -36,8 +37,10 @@ export default function RootLayout({
         suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} ${posterHeadings.variable} antialiased`}
       >
-        <ParticlesBackground />
-        {children}
+        <AuthProvider>
+            <ParticlesBackground />
+            {children}
+        </AuthProvider>
       </body>
     </html>
   );
