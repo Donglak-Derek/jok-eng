@@ -11,7 +11,6 @@ export default function CreateScenarioPage() {
             <Header />
 
             <div className="mt-4">
-                 <Link href="/" className="text-sm text-muted hover:text-primary transition-colors mb-4 block">← Back to Home</Link>
                  <CreateScenarioForm />
             </div>
         </div>
