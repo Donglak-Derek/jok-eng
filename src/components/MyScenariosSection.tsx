@@ -2,7 +2,7 @@
 
 import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
-import { motion } from "framer-motion";
+
 
 export default function MyScenariosSection() {
   const { user, loading } = useAuth();
@@ -30,7 +30,7 @@ export default function MyScenariosSection() {
           </h2>
           
           <p className="text-sm md:text-base text-muted max-w-xl leading-relaxed">
-             From awkward tinder dates to answering "What do you do?"—build custom practice decks tailored to your exact situations.
+             From awkward tinder dates to answering &quot;What do you do?&quot;—build custom practice decks tailored to your exact situations.
           </p>
           
           <div className="pt-2">

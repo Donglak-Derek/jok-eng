@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     const stream = new ReadableStream({
       async start(controller) {
         try {
-          // @ts-ignore - comm.stream() returns an async iterator
+          // comm.stream() returns an async iterator
           for await (const chunk of comm.stream()) {
             if (chunk.type === "audio") {
               controller.enqueue(chunk.data);

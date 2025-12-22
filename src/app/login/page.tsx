@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuth } from "@/context/AuthContext";
+import Image from "next/image";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -43,7 +44,13 @@ export default function LoginPage() {
                 onClick={handleLogin}
                 className="w-full py-3.5 px-6 rounded-xl bg-white text-black font-bold flex items-center justify-center gap-3 shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all"
             >
-                <img src="https://www.google.com/favicon.ico" alt="Google" className="w-5 h-5" />
+                <Image 
+                    src="https://www.google.com/favicon.ico" 
+                    alt="Google" 
+                    width={20} 
+                    height={20} 
+                    className="w-5 h-5" 
+                />
                 <span>Sign in with Google</span>
             </button>
             

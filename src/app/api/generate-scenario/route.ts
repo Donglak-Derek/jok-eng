@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { Script, Sentence } from "@/types";
+import { Script } from "@/types";
 import { v4 as uuidv4 } from "uuid";
 import pRetry from "p-retry";
 
@@ -76,6 +76,7 @@ export async function POST(request: NextRequest) {
         categorySlug: "custom",
         categoryName: "Custom Scenario",
         cleanedEnglish: data.cleanedEnglish,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         sentences: data.sentences.map((s: any) => ({
             ...s,
             id: uuidv4(), // Ensure fresh IDs
@@ -84,6 +85,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ script });
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error("Generate Scenario Error:", error);
     

@@ -1,7 +1,6 @@
 "use client";
 
 import Header from "@/components/Header";
-import Link from "next/link";
 import CreateScenarioForm from "@/components/CreateScenarioForm";
 
 export default function CreateScenarioPage() {

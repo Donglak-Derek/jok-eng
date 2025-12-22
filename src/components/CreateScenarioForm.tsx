@@ -8,8 +8,6 @@ import Link from "next/link";
 import { db } from "@/lib/firebase";
 import { collection, addDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
-import ScenarioCard from "./ScenarioCard"; // Reusing existing card for preview? Or maybe simpler list.
-// Actually lets reuse ScenarioList or simplified card list.
 // For preview, we want to see sentences.
 import SentenceCard from "./SentenceCard";
 
@@ -48,6 +46,7 @@ export default function CreateScenarioForm() {
         const data = await res.json();
         setGeneratedScript(data.script);
         setStep("preview");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
         console.error(error);
         alert(`Error: ${error.message}`);
