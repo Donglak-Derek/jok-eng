@@ -15,7 +15,12 @@ export default function SignalDecoder({ script }: Props) {
   const items = script.decoderItems || [];
   const total = items.length;
   const [currentIndex, setCurrentIndex] = useState(0);
+  
+  // Game State
   const [isRevealed, setIsRevealed] = useState(false);
+  const [userGuess, setUserGuess] = useState(50); // 0 (Safe) to 100 (Danger)
+  const [guessState, setGuessState] = useState<'idle' | 'locked'>('idle');
+  
   const [speaking, setSpeaking] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -27,28 +32,72 @@ export default function SignalDecoder({ script }: Props) {
   // isLastItem refers to the last actual content card
   const isLastItem = currentIndex === total - 1;
 
+  // Helper to normalize danger levels from data strings to 0-100
+  const getDangerValue = (level: string): number => {
+    const l = level.toLowerCase();
+    if (l.includes("critical") || l.includes("run") || l.includes("red flag") || l.includes("high")) return 90;
+    if (l.includes("medium") || l.includes("caution") || l.includes("flake")) return 50;
+    if (l.includes("low") || l.includes("safe")) return 15;
+    if (l.includes("rejection")) return 80; // High but distinct
+    return 50; // Default fallback
+  };
+
+  const resetCard = () => {
+    setIsRevealed(false);
+    setUserGuess(50);
+    setGuessState('idle');
+  };
+
   const handleNext = () => {
     // If we are at the last item, next goes to completion (index = total)
     if (currentIndex < total) {
       setCurrentIndex((prev) => prev + 1);
-      setIsRevealed(false);
+      resetCard();
     }
   };
 
   const handlePrev = () => {
     if (currentIndex > 0) {
       setCurrentIndex((prev) => prev - 1);
-      setIsRevealed(false);
+      resetCard();
     }
   };
   
   const handleRepeat = () => {
     setCurrentIndex(0);
-    setIsRevealed(false);
+    resetCard();
   };
 
   const handleFinish = () => {
      router.push(`/category/${script.categorySlug}`);
+  };
+
+  const handleLockInGuess = () => {
+    setGuessState('locked');
+    setIsRevealed(true);
+  };
+  
+  // Get feedback based on guess accuracy
+  const getFeedback = () => {
+    if (!currentItem) return null;
+    const actual = getDangerValue(currentItem.dangerLevel);
+    const diff = Math.abs(userGuess - actual);
+    
+    // Logic: 
+    // If actual is HIGH (>=70) and user guessed LOW (<40) -> "You Died"
+    // If actual is LOW (<40) and user guessed HIGH (>=70) -> "Overthinking"
+    // If within 25 points -> "Nailed it"
+    
+    if (diff <= 25) {
+      return { msg: "Nailed it! 🎯", color: "text-green-500", bg: "bg-green-500/10" };
+    }
+    if (actual >= 70 && userGuess < 50) {
+      return { msg: "RIP. You missed the Red Flag. 💀", color: "text-red-500", bg: "bg-red-500/10" };
+    }
+    if (actual < 40 && userGuess >= 60) {
+       return { msg: "Relax, it's not that deep. 😅", color: "text-blue-500", bg: "bg-blue-500/10" };
+    }
+    return { msg: "Not quite... look closer. 🤔", color: "text-yellow-500", bg: "bg-yellow-500/10" };
   };
 
   const speak = useCallback(async (text: string) => {
@@ -95,6 +144,11 @@ export default function SignalDecoder({ script }: Props) {
       audio.play().catch(e => console.log("Audio play failed", e));
     }
   }, [isCompletion]);
+
+  // Scroll to top on slide change
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [currentIndex]);
 
 
   // If no items, show error or return null
@@ -163,15 +217,39 @@ export default function SignalDecoder({ script }: Props) {
 
                             <hr className="border-secondary/20" />
 
-                            {/* Reveal Section */}
+                            {/* Game / Reveal Section */}
                             <div className="min-h-[300px] flex flex-col">
                                 {!isRevealed ? (
-                                    <div className="flex-1 flex items-center justify-center py-10">
+                                    <div className="flex-1 flex flex-col items-center justify-center py-6 gap-8">
+                                        <div className="text-center space-y-2">
+                                            <h3 className="text-xl font-bold uppercase tracking-tight">Danger Check</h3>
+                                            <p className="text-muted text-sm">How dangerous is this phrase?</p>
+                                        </div>
+
+                                        {/* Danger Slider Game */}
+                                        <div className="w-full max-w-sm px-4">
+                                            <div className="flex justify-between text-xs font-bold uppercase mb-2">
+                                                <span className="text-green-500">Green Flag (Safe)</span>
+                                                <span className="text-red-500">Red Flag (Run)</span>
+                                            </div>
+                                            <input 
+                                                type="range" 
+                                                min="0" 
+                                                max="100" 
+                                                value={userGuess} 
+                                                onChange={(e) => setUserGuess(Number(e.target.value))}
+                                                className="w-full h-4 bg-gradient-to-r from-green-500 via-yellow-400 to-red-500 rounded-lg appearance-none cursor-pointer accent-white shadow-inner"
+                                            />
+                                            <div className="text-center mt-2 font-mono text-xl font-bold text-primary">
+                                                {userGuess < 33 ? "Safe" : userGuess < 66 ? "Caution" : "Danger!"} ({userGuess}%)
+                                            </div>
+                                        </div>
+
                                         <button
-                                            onClick={() => setIsRevealed(true)}
+                                            onClick={handleLockInGuess}
                                             className="px-8 py-4 rounded-xl bg-gradient-to-r from-secondary to-primary text-white font-black text-xl uppercase tracking-widest shadow-lg hover:shadow-xl hover:scale-105 transition-all w-full md:w-auto"
                                         >
-                                            🕵️ Reveal Truth
+                                            🕵️ Lock In Guess
                                         </button>
                                     </div>
                                 ) : (
@@ -180,6 +258,19 @@ export default function SignalDecoder({ script }: Props) {
                                         animate={{ opacity: 1, scale: 1 }}
                                         className="flex flex-col gap-6"
                                     >
+                                        {/* Feedback Banner */}
+                                        {(() => {
+                                            const fb = getFeedback();
+                                            if (!fb) return null;
+                                            return (
+                                                <div className={`p-4 rounded-xl border-l-4 ${fb.bg} border-l-[${fb.color.replace('text-', '')}] flex items-center justify-center text-center shadow-lg transform -rotate-1`}>
+                                                    <h3 className={`text-xl md:text-2xl font-black uppercase tracking-tight ${fb.color}`}>
+                                                        {fb.msg}
+                                                    </h3>
+                                                </div>
+                                            );
+                                        })()}
+
                                         {/* Comparison Grid */}
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div className="p-4 rounded-xl bg-background/50 border border-secondary/20">
@@ -195,8 +286,26 @@ export default function SignalDecoder({ script }: Props) {
                                         {/* Danger Level & Tip */}
                                         <div className="flex flex-col gap-2 p-4 rounded-xl bg-red-500/10 border border-red-500/30">
                                             <div className="flex items-center justify-between">
-                                                <span className="font-bold text-red-400">DANGER LEVEL</span>
-                                                <span className="font-black text-red-500">{currentItem.dangerLevel}</span>
+                                                <span className="font-bold text-red-400">ACTUAL DANGER LEVEL</span>
+                                                <span className="font-black text-red-500 text-lg">{currentItem.dangerLevel}</span>
+                                            </div>
+                                            {/* Show comparison bar */}
+                                            <div className="w-full h-2 bg-background rounded-full overflow-hidden mt-1 relative">
+                                                {/* Actual Marker */}
+                                                <div 
+                                                    className="absolute top-0 bottom-0 w-1 bg-red-500 z-10" 
+                                                    style={{ left: `${getDangerValue(currentItem.dangerLevel)}%` }} 
+                                                />
+                                                {/* User Guess Marker */}
+                                                <div 
+                                                    className="absolute top-0 bottom-0 w-1 bg-primary z-10 opacity-70" 
+                                                    style={{ left: `${userGuess}%` }} 
+                                                />
+                                                <div className="w-full h-full bg-gradient-to-r from-green-500/20 via-yellow-400/20 to-red-500/20" />
+                                            </div>
+                                            <div className="flex justify-between text-[10px] text-muted uppercase font-bold mt-1">
+                                                <span className="text-primary">Your Guess: {userGuess}%</span>
+                                                <span className="text-red-500">Actual: {getDangerValue(currentItem.dangerLevel)}%</span>
                                             </div>
                                         </div>
 
