@@ -151,9 +151,6 @@ export default function SignalDecoder({ script }: Props) {
                                 <h2 className="text-3xl md:text-4xl font-bold leading-tight">
                                     &quot;{currentItem.phrase}&quot;
                                 </h2>
-                                {currentItem.phraseKo && (
-                                    <p className="text-lg text-muted">{currentItem.phraseKo}</p>
-                                )}
                                 
                                 {/* Audio Button */}
                                  <button
@@ -188,12 +185,10 @@ export default function SignalDecoder({ script }: Props) {
                                             <div className="p-4 rounded-xl bg-background/50 border border-secondary/20">
                                                 <h3 className="text-sm font-bold text-muted uppercase mb-2">Literal Meaning</h3>
                                                 <p className="text-lg">{currentItem.literalMeaning}</p>
-                                                {currentItem.literalMeaningKo && <p className="text-sm text-muted mt-1">{currentItem.literalMeaningKo}</p>}
                                             </div>
                                             <div className="p-4 rounded-xl bg-tertiary/10 border border-tertiary/30">
                                                 <h3 className="text-sm font-bold text-tertiary uppercase mb-2">Actual Meaning (Subtext)</h3>
                                                 <p className="text-lg font-semibold">{currentItem.actualMeaning}</p>
-                                                {currentItem.actualMeaningKo && <p className="text-sm text-muted/80 mt-1">{currentItem.actualMeaningKo}</p>}
                                             </div>
                                         </div>
                                         
@@ -208,7 +203,6 @@ export default function SignalDecoder({ script }: Props) {
                                         <div className="p-4 rounded-xl bg-green-500/10 border border-green-500/30">
                                              <h3 className="text-sm font-bold text-green-500 uppercase mb-1">Survival Tip</h3>
                                              <p className="text-md md:text-lg">{currentItem.survivalTip}</p>
-                                             {currentItem.survivalTipKo && <p className="text-sm text-muted mt-1">{currentItem.survivalTipKo}</p>}
                                         </div>
                                     </motion.div>
                                 )}

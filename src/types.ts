@@ -1,12 +1,11 @@
 export type Keyword = {
   word: string;
-  meaningKo: string;
+  definition: string;
 };
 
 export type Sentence = {
   id: string;
   en: string;
-  ko: string;
   keywords: Keyword[];
   // New "Mistake -> Fix" format fields
   scenario?: string;
@@ -27,11 +26,6 @@ export type DecoderItem = {
   actualMeaning: string;
   dangerLevel: string;
   survivalTip: string;
-  // Translations
-  phraseKo?: string;
-  literalMeaningKo?: string;
-  actualMeaningKo?: string;
-  survivalTipKo?: string;
 };
 
 export type Script = {
@@ -40,7 +34,6 @@ export type Script = {
   categorySlug: string;
   categoryName: string;
   cleanedEnglish: string; // Used as summary
-  cleanedKorean?: string; // Korean summary
   icon?: string;
   sentences: Sentence[];
   // New fields for story_flow and decoder
@@ -49,7 +42,6 @@ export type Script = {
   segments?: {
     step: string;
     text: string;
-    ko?: string;
     keywords?: Keyword[];
     note: string;
   }[];
@@ -60,7 +52,6 @@ export type Category = {
   slug: string;
   name: string;
   description: string;
-  descriptionKo?: string;
   image: string;
 };
 

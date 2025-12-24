@@ -12,9 +12,8 @@ export const emojiGuide: Script = {
     {
       id: "e1",
       en: "Got it, thanks! 👍", // Fallback for audio/search
-      ko: "👍 엄지 척: 단독으로 쓰면 무례함", // Fallback text
       keywords: [
-        { word: "dismissive", meaningKo: "무시하는" },
+        { word: "dismissive", definition: "showing indifference" },
       ],
       scenario: "Your boss sends a long update about the project timeline.",
       badResponse: {
@@ -29,9 +28,8 @@ export const emojiGuide: Script = {
     {
       id: "e2",
       en: "This is hilarious 😭",
-      ko: "😭 대성통곡: 진짜 슬픔이 아님",
       keywords: [
-        { word: "laughter", meaningKo: "웃음 (여기선)" },
+        { word: "laughter", definition: "act of laughing" },
       ],
       scenario: "Your friend sends a funny meme.",
       badResponse: {
@@ -46,9 +44,8 @@ export const emojiGuide: Script = {
     {
       id: "e3",
       en: "I'm dead 💀",
-      ko: "💀 해골: 웃겨 죽음",
       keywords: [
-        { word: "dead", meaningKo: "죽은 (웃겨서)" },
+        { word: "dead", definition: "figuratively: laughing hard" },
       ],
       scenario: "Someone tells an incredibly embarrassing story.",
       badResponse: {
@@ -63,9 +60,8 @@ export const emojiGuide: Script = {
     {
       id: "e4",
       en: "Great job... 🙃",
-      ko: "🙃 거꾸로 된 얼굴: 비꼬기",
       keywords: [
-        { word: "sarcasm", meaningKo: "비꼬기" },
+        { word: "sarcasm", definition: "using irony to mock" },
       ],
       scenario: "The printer breaks right before a deadline.",
       badResponse: {
@@ -80,9 +76,8 @@ export const emojiGuide: Script = {
     {
       id: "e5",
       en: "Thanks for the feedback!",
-      ko: "🙂 약간의 미소: 수동적 공격적일 수 있음",
       keywords: [
-        { word: "passive-aggressive", meaningKo: "수동적 공격적인" },
+        { word: "passive-aggressive", definition: "indirectly hostile" },
       ],
       scenario: "A colleague critiques your work.",
       badResponse: {
@@ -97,9 +92,8 @@ export const emojiGuide: Script = {
     {
       id: "e6",
       en: "Can you help me? 🙏",
-      ko: "🙏 합장: 부탁해요",
       keywords: [
-        { word: "pleading", meaningKo: "간청하는" },
+        { word: "pleading", definition: "asking emotionally" },
       ],
       scenario: "Asking a favor from a busy coworker.",
       badResponse: {
@@ -114,9 +108,8 @@ export const emojiGuide: Script = {
     {
       id: "e7",
       en: "I see what's happening 👀",
-      ko: "👀 눈: 흥미진진/드라마",
       keywords: [
-        { word: "drama", meaningKo: "드라마, 가십" },
+        { word: "drama", definition: "exciting or emotional events" },
       ],
       scenario: "Two coworkers are arguing in the group chat.",
       badResponse: {
@@ -131,9 +124,8 @@ export const emojiGuide: Script = {
     {
       id: "e8",
       en: "I messed up 🤡",
-      ko: "🤡 광대: 바보 같은 짓",
       keywords: [
-        { word: "clown", meaningKo: "광대 (바보)" },
+        { word: "clown", definition: "foolish or funny person" },
       ],
       scenario: "You believed a fake news headline.",
       badResponse: {
@@ -148,9 +140,8 @@ export const emojiGuide: Script = {
     {
       id: "e9",
       en: "It's a 'surprise' ✨",
-      ko: "✨ 반짝이: 강조/비꼬기",
       keywords: [
-        { word: "emphasis", meaningKo: "강조" },
+        { word: "emphasis", definition: "special importance" },
       ],
       scenario: "Describing a mandatory fun work event.",
       badResponse: {
@@ -165,9 +156,8 @@ export const emojiGuide: Script = {
     {
       id: "e10",
       en: "Sorry about that 🫠",
-      ko: "🫠 녹는 얼굴: 당황/창피",
       keywords: [
-        { word: "cringe", meaningKo: "민망함" },
+        { word: "cringe", definition: "embarrassment" },
       ],
       scenario: "You accidentally reply-all to the whole company.",
       badResponse: {

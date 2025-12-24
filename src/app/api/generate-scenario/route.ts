@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
       TASK:
       1. Create a funny, natural, and useful roleplay script (3-6 sentences).
       2. The English should be natural "Real English", not textbook style.
-      3. For each sentence, provide the English text, a Korean translation, and 1-2 key vocabulary words.
+      3. For each sentence, provide the English text and 1-2 key vocabulary words with English definitions.
       4. Crucial: For the USER'S lines, provide a "badResponse" (a common mistake/rude way to say it) and a "goodResponse" (the better way you wrote).
 
       OUTPUT FORMAT:
@@ -40,8 +40,7 @@ export async function POST(request: NextRequest) {
           {
             "id": "1",
             "en": "English text",
-            "ko": "Korean translation",
-            "keywords": [{"word": "vocab", "meaningKo": "meaning"}],
+            "keywords": [{"word": "vocab", "definition": "English definition"}],
             "scenario": "Short context for this line (e.g. 'Opening', 'Refusal')",
             "badResponse": {"text": "Mistake version", "why": "Why it is bad"},
             "goodResponse": {"text": "Better version", "why": "Why it is good"}

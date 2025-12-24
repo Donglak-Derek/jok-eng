@@ -106,11 +106,6 @@ export default function ScenarioCard({ script, index }: Props) {
           <p className="text-xs text-gray-300 leading-relaxed line-clamp-2 mb-1">
             {script.cleanedEnglish}
           </p>
-          {script.cleanedKorean && (
-            <p className="text-xs text-muted leading-relaxed line-clamp-2">
-              {script.cleanedKorean}
-            </p>
-          )}
         </div>
 
         {/* Always Visible Action Button - Neon */}

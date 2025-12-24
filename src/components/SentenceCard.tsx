@@ -152,7 +152,7 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
                 className="text-xs md:text-sm px-2.5 md:px-3 py-1 rounded-full bg-secondary/10 border border-secondary/35"
               >
                 <span className="font-semibold text-secondary">{k.word}</span>
-                <span className="opacity-70">: {k.meaningKo}</span>
+                <span className="opacity-70">: {k.definition}</span>
               </span>
             ))}
            </div>
@@ -187,7 +187,6 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
         <div className="text-lg md:text-xl lg:text-2xl font-semibold drop-shadow-[0_0_15px_rgba(168,85,247,0.25)]">
           {sentence.en}
         </div>
-        <div className="text-sm md:text-base text-muted">{sentence.ko}</div>
       </div>
 
       <div className="flex flex-wrap gap-2 md:gap-2.5 mt-1 mb-2">
@@ -196,7 +195,7 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
             key={k.word}
             className="text-xs md:text-sm px-2.5 md:px-3 py-1 rounded-full bg-secondary/10 border border-secondary/35 shadow-[0_0_15px_rgba(168,85,247,0.2)]"
           >
-            <span className="font-semibold">{k.word}</span>: {k.meaningKo}
+            <span className="font-semibold">{k.word}</span>: {k.definition}
           </span>
         ))}
       </div>

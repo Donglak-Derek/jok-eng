@@ -12,9 +12,8 @@ export const acronyms101: Script = {
     {
       id: "a1",
       en: "Here's the report. TL;DR: We need more budget.",
-      ko: "TL;DR: 너무 길어서 안 읽음 (요약)",
       keywords: [
-        { word: "summary", meaningKo: "요약" },
+        { word: "summary", definition: "a brief statement of main points" },
       ],
       scenario: "You send a 5-paragraph email update.",
       badResponse: {
@@ -29,9 +28,8 @@ export const acronyms101: Script = {
     {
       id: "a2",
       en: "TBH, I don't think that's a good idea.",
-      ko: "TBH: 솔직히 말해서",
       keywords: [
-        { word: "honest", meaningKo: "솔직한" },
+        { word: "honest", definition: "telling the truth" },
       ],
       scenario: "You disagree with a friend's plan.",
       badResponse: {
@@ -46,9 +44,8 @@ export const acronyms101: Script = {
     {
       id: "a3",
       en: "IMO, we should wait.",
-      ko: "IMO: 제 의견으로는",
       keywords: [
-        { word: "opinion", meaningKo: "이견" },
+        { word: "opinion", definition: "a personal view or judgement" },
       ],
       scenario: "Suggesting a strategy change in a group chat.",
       badResponse: {
@@ -63,9 +60,8 @@ export const acronyms101: Script = {
     {
       id: "a4",
       en: "AFAIK, the deadline is Friday.",
-      ko: "AFAIK: 제가 알기로는",
       keywords: [
-        { word: "knowledge", meaningKo: "지식" },
+        { word: "knowledge", definition: "facts or information acquired" },
       ],
       scenario: "Someone asks when a project is due.",
       badResponse: {
@@ -80,9 +76,8 @@ export const acronyms101: Script = {
     {
       id: "a5",
       en: "IDK, maybe try restarting it?",
-      ko: "IDK: 몰라",
       keywords: [
-        { word: "uncertainty", meaningKo: "불확실성" },
+        { word: "uncertainty", definition: "state of being unsure" },
       ],
       scenario: "Tech support question from a parent.",
       badResponse: {
@@ -97,9 +92,8 @@ export const acronyms101: Script = {
     {
       id: "a6",
       en: "I can't talk RN.",
-      ko: "RN: 지금 당장",
       keywords: [
-        { word: "busy", meaningKo: "바쁜" },
+        { word: "busy", definition: "having a lot to do" },
       ],
       scenario: "You get a call during a meeting.",
       badResponse: {
@@ -114,9 +108,8 @@ export const acronyms101: Script = {
     {
       id: "a7",
       en: "NGL, that presentation was long.",
-      ko: "NGL: 거짓말 안 하고 (솔직히)",
       keywords: [
-        { word: "truth", meaningKo: "진실" },
+        { word: "truth", definition: "fact or validity" },
       ],
       scenario: "Debriefing after a boring meeting.",
       badResponse: {
@@ -131,9 +124,8 @@ export const acronyms101: Script = {
     {
       id: "a8",
       en: "That sucks lol",
-      ko: "lol: (문장 완화제)",
       keywords: [
-        { word: "softener", meaningKo: "완화제" },
+        { word: "softener", definition: "word used to make something less harsh" },
       ],
       scenario: "A friend complains about a minor inconvenience (dropped toast).",
       badResponse: {
@@ -148,9 +140,8 @@ export const acronyms101: Script = {
     {
       id: "a9",
       en: "Where are you?? haha",
-      ko: "haha: (압박감 줄이기)",
       keywords: [
-        { word: "awkwardness", meaningKo: "어색함" },
+        { word: "awkwardness", definition: "feeling of embarrassment" },
       ],
       scenario: "Your friend is 30 minutes late.",
       badResponse: {
@@ -165,9 +156,8 @@ export const acronyms101: Script = {
     {
       id: "a10",
       en: "ICYMI: We moved the meeting.",
-      ko: "ICYMI: 혹시 놓쳤을까 봐",
       keywords: [
-        { word: "missed", meaningKo: "놓친" },
+        { word: "missed", definition: "failed to see or hear" },
       ],
       scenario: "Sending a reminder to the team.",
       badResponse: {

@@ -190,13 +190,6 @@ export default function StoryFlow({ script }: Props) {
                        &quot;{currentSegment.text}&quot;
                     </div>
 
-                    {/* Korean Translation */}
-                    {currentSegment.ko && (
-                      <div className="text-base md:text-lg text-muted">
-                        {currentSegment.ko}
-                      </div>
-                    )}
-
                     {/* Coaching Note */}
                     <div className="w-full text-muted italic text-sm md:text-base bg-background/50 px-4 py-3 rounded-xl border border-primary/20 flex gap-2 items-start justify-center">
                        <span>💡</span>
@@ -213,7 +206,7 @@ export default function StoryFlow({ script }: Props) {
                           className="text-xs md:text-sm px-2.5 md:px-3 py-1 rounded-full bg-secondary/10 border border-secondary/35 shadow-[0_0_15px_rgba(168,85,247,0.2)]"
                         >
                           <span className="font-semibold text-secondary">{k.word}</span>
-                          <span className="opacity-70">: {k.meaningKo}</span>
+                          <span className="opacity-70">: {k.definition}</span>
                         </span>
                       ))}
                      </div>

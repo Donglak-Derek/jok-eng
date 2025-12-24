@@ -29,9 +29,6 @@ export default function Home() {
               Textbooks taught you how to be polite. We teach you how to be
               interesting. Master sarcasm, banter, and the jokes you missed.
             </p>
-            <p className="text-sm md:text-base text-muted/80 max-w-2xl leading-relaxed">
-              교과서는 공손함을 가르치지만, 우리는 재미있는 사람이 되는 법을 가르칩니다. 반어법, 농담, 그리고 당신이 놓친 유머를 마스터하세요.
-            </p>
             <div className="flex gap-3 flex-wrap pt-1">
               <Link
                 href="#categories"
@@ -81,11 +78,6 @@ export default function Home() {
                       <p className="text-sm md:text-[15px] text-foreground/80 my-1.5 leading-snug line-clamp-2">
                         {c.description}
                       </p>
-                      {c.descriptionKo && (
-                        <p className="text-xs md:text-sm text-muted/80 leading-snug line-clamp-2">
-                          {c.descriptionKo}
-                        </p>
-                      )}
                       <div className="text-xs md:text-sm text-muted font-medium">
                         {
                           scripts.filter((s) => s.categorySlug === c.slug)
