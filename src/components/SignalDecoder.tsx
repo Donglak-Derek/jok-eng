@@ -69,6 +69,12 @@ export default function SignalDecoder({ script }: Props) {
   };
 
   const handleFinish = () => {
+     // Increment repeat count
+     if (typeof window !== 'undefined') {
+       const key = `jokeng:repeats:${script.id}`;
+       const current = Number(localStorage.getItem(key) || 0);
+       localStorage.setItem(key, String(current + 1));
+     }
      router.push(`/category/${script.categorySlug}`);
   };
 
@@ -199,17 +205,17 @@ export default function SignalDecoder({ script }: Props) {
                             
                             {/* The Phrase */}
                             <div className="flex flex-col gap-3 text-center pt-4">
-                                <span className="text-xs font-bold uppercase tracking-widest text-secondary">
+                                <span className="text-xs font-bold uppercase tracking-widest text-secondary md:text-sm lg:text-base">
                                     The Signal
                                 </span>
-                                <h2 className="text-3xl md:text-4xl font-bold leading-tight">
+                                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
                                     &quot;{currentItem.phrase}&quot;
                                 </h2>
                                 
                                 {/* Audio Button */}
                                  <button
                                     onClick={() => speak(currentItem.phrase)}
-                                    className="self-center mt-2 px-4 py-2 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors flex items-center gap-2 text-sm font-bold uppercase tracking-wider"
+                                    className="self-center mt-2 px-4 py-2 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors flex items-center gap-2 text-sm md:text-base font-bold uppercase tracking-wider"
                                  >
                                     {loading ? <Spinner /> : "🔊 Play Audio"}
                                  </button>
@@ -222,13 +228,13 @@ export default function SignalDecoder({ script }: Props) {
                                 {!isRevealed ? (
                                     <div className="flex-1 flex flex-col items-center justify-center py-6 gap-8">
                                         <div className="text-center space-y-2">
-                                            <h3 className="text-xl font-bold uppercase tracking-tight">Danger Check</h3>
-                                            <p className="text-muted text-sm">How dangerous is this phrase?</p>
+                                            <h3 className="text-xl md:text-3xl lg:text-4xl font-bold uppercase tracking-tight">Danger Check</h3>
+                                            <p className="text-muted text-sm md:text-lg lg:text-xl">How dangerous is this phrase?</p>
                                         </div>
 
                                         {/* Danger Slider Game */}
-                                        <div className="w-full max-w-sm px-4">
-                                            <div className="flex justify-between text-xs font-bold uppercase mb-2">
+                                        <div className="w-full max-w-sm md:max-w-md lg:max-w-lg px-4">
+                                            <div className="flex justify-between text-xs md:text-sm font-bold uppercase mb-2">
                                                 <span className="text-green-500">Green Flag (Safe)</span>
                                                 <span className="text-red-500">Red Flag (Run)</span>
                                             </div>
@@ -240,14 +246,14 @@ export default function SignalDecoder({ script }: Props) {
                                                 onChange={(e) => setUserGuess(Number(e.target.value))}
                                                 className="w-full h-4 bg-gradient-to-r from-green-500 via-yellow-400 to-red-500 rounded-lg appearance-none cursor-pointer accent-white shadow-inner"
                                             />
-                                            <div className="text-center mt-2 font-mono text-xl font-bold text-primary">
+                                            <div className="text-center mt-2 font-mono text-xl md:text-3xl font-bold text-primary">
                                                 {userGuess < 33 ? "Safe" : userGuess < 66 ? "Caution" : "Danger!"} ({userGuess}%)
                                             </div>
                                         </div>
 
                                         <button
                                             onClick={handleLockInGuess}
-                                            className="px-8 py-4 rounded-xl bg-gradient-to-r from-secondary to-primary text-white font-black text-xl uppercase tracking-widest shadow-lg hover:shadow-xl hover:scale-105 transition-all w-full md:w-auto"
+                                            className="px-8 py-4 rounded-xl bg-gradient-to-r from-secondary to-primary text-white font-black text-xl md:text-2xl uppercase tracking-widest shadow-lg hover:shadow-xl hover:scale-105 transition-all w-full md:w-auto"
                                         >
                                             🕵️ Lock In Guess
                                         </button>
@@ -264,7 +270,7 @@ export default function SignalDecoder({ script }: Props) {
                                             if (!fb) return null;
                                             return (
                                                 <div className={`p-4 rounded-xl border-l-4 ${fb.bg} border-l-[${fb.color.replace('text-', '')}] flex items-center justify-center text-center shadow-lg transform -rotate-1`}>
-                                                    <h3 className={`text-xl md:text-2xl font-black uppercase tracking-tight ${fb.color}`}>
+                                                    <h3 className={`text-xl md:text-3xl lg:text-4xl font-black uppercase tracking-tight ${fb.color}`}>
                                                         {fb.msg}
                                                     </h3>
                                                 </div>
@@ -272,46 +278,46 @@ export default function SignalDecoder({ script }: Props) {
                                         })()}
 
                                         {/* Comparison Grid */}
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            <div className="p-4 rounded-xl bg-background/50 border border-secondary/20">
-                                                <h3 className="text-sm font-bold text-muted uppercase mb-2">Literal Meaning</h3>
-                                                <p className="text-lg">{currentItem.literalMeaning}</p>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                                            <div className="p-4 md:p-6 rounded-xl bg-background/50 border border-secondary/20">
+                                                <h3 className="text-sm md:text-base lg:text-lg font-bold text-muted uppercase mb-2">Literal Meaning</h3>
+                                                <p className="text-lg md:text-xl lg:text-2xl leading-snug">{currentItem.literalMeaning}</p>
                                             </div>
-                                            <div className="p-4 rounded-xl bg-tertiary/10 border border-tertiary/30">
-                                                <h3 className="text-sm font-bold text-tertiary uppercase mb-2">Actual Meaning (Subtext)</h3>
-                                                <p className="text-lg font-semibold">{currentItem.actualMeaning}</p>
+                                            <div className="p-4 md:p-6 rounded-xl bg-tertiary/10 border border-tertiary/30">
+                                                <h3 className="text-sm md:text-base lg:text-lg font-bold text-tertiary uppercase mb-2">Actual Meaning (Subtext)</h3>
+                                                <p className="text-lg md:text-xl lg:text-2xl font-semibold leading-snug">{currentItem.actualMeaning}</p>
                                             </div>
                                         </div>
                                         
                                         {/* Danger Level & Tip */}
-                                        <div className="flex flex-col gap-2 p-4 rounded-xl bg-red-500/10 border border-red-500/30">
+                                        <div className="flex flex-col gap-2 p-4 md:p-6 rounded-xl bg-red-500/10 border border-red-500/30">
                                             <div className="flex items-center justify-between">
-                                                <span className="font-bold text-red-400">ACTUAL DANGER LEVEL</span>
-                                                <span className="font-black text-red-500 text-lg">{currentItem.dangerLevel}</span>
+                                                <span className="font-bold text-red-400 md:text-lg lg:text-xl">ACTUAL DANGER LEVEL</span>
+                                                <span className="font-black text-red-500 text-lg md:text-2xl lg:text-3xl">{currentItem.dangerLevel}</span>
                                             </div>
                                             {/* Show comparison bar */}
-                                            <div className="w-full h-2 bg-background rounded-full overflow-hidden mt-1 relative">
+                                            <div className="w-full h-2 md:h-3 bg-background rounded-full overflow-hidden mt-1 relative">
                                                 {/* Actual Marker */}
                                                 <div 
-                                                    className="absolute top-0 bottom-0 w-1 bg-red-500 z-10" 
+                                                    className="absolute top-0 bottom-0 w-1 md:w-2 bg-red-500 z-10" 
                                                     style={{ left: `${getDangerValue(currentItem.dangerLevel)}%` }} 
                                                 />
                                                 {/* User Guess Marker */}
                                                 <div 
-                                                    className="absolute top-0 bottom-0 w-1 bg-primary z-10 opacity-70" 
+                                                    className="absolute top-0 bottom-0 w-1 md:w-2 bg-primary z-10 opacity-70" 
                                                     style={{ left: `${userGuess}%` }} 
                                                 />
                                                 <div className="w-full h-full bg-gradient-to-r from-green-500/20 via-yellow-400/20 to-red-500/20" />
                                             </div>
-                                            <div className="flex justify-between text-[10px] text-muted uppercase font-bold mt-1">
+                                            <div className="flex justify-between text-[10px] md:text-sm text-muted uppercase font-bold mt-1">
                                                 <span className="text-primary">Your Guess: {userGuess}%</span>
                                                 <span className="text-red-500">Actual: {getDangerValue(currentItem.dangerLevel)}%</span>
                                             </div>
                                         </div>
 
-                                        <div className="p-4 rounded-xl bg-green-500/10 border border-green-500/30">
-                                             <h3 className="text-sm font-bold text-green-500 uppercase mb-1">Survival Tip</h3>
-                                             <p className="text-md md:text-lg">{currentItem.survivalTip}</p>
+                                        <div className="p-4 md:p-6 rounded-xl bg-green-500/10 border border-green-500/30">
+                                             <h3 className="text-sm md:text-base lg:text-lg font-bold text-green-500 uppercase mb-2">Survival Tip</h3>
+                                             <p className="text-md md:text-xl lg:text-2xl leading-relaxed">{currentItem.survivalTip}</p>
                                         </div>
                                     </motion.div>
                                 )}

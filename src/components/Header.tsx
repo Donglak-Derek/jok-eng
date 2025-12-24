@@ -13,11 +13,11 @@ export default function Header() {
     <header className="sticky top-0 z-10 -mx-4 md:-mx-6 lg:-mx-8 px-4 md:px-6 lg:px-8 py-3 md:py-4 backdrop-blur bg-background/70 flex items-center justify-between border-b border-secondary/30 shadow-[0_10px_40px_rgba(34,19,74,0.7)]">
       <div className="flex items-center gap-3">
         <Link href="/">
-            <h1 className="headline text-2xl md:text-3xl lg:text-4xl tracking-[0.06em] bg-gradient-to-r from-tertiary via-secondary to-primary text-transparent bg-clip-text drop-shadow-[0_0_22px_rgba(168,85,247,0.4)]">
+            <h1 className="headline text-2xl md:text-5xl lg:text-6xl tracking-[0.06em] bg-gradient-to-r from-tertiary via-secondary to-primary text-transparent bg-clip-text drop-shadow-[0_0_22px_rgba(168,85,247,0.4)]">
                 Jok-eng
             </h1>
         </Link>
-        <span className="hidden md:inline-block text-[11px] md:text-xs px-3 py-1 rounded-full border border-primary/40 bg-primary/10 text-muted shadow-[0_0_20px_rgba(34,211,238,0.3)]">
+        <span className="hidden md:inline-block text-[11px] md:text-base px-3 py-1 rounded-full border border-primary/40 bg-primary/10 text-muted shadow-[0_0_20px_rgba(34,211,238,0.3)]">
             by 9NyangHea
         </span>
       </div>

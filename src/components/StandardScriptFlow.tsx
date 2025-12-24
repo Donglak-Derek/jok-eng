@@ -115,7 +115,7 @@ export default function StandardScriptFlow({ script }: Props) {
         <header className="sticky top-0 z-20 -mx-4 md:-mx-6 lg:-mx-8 px-4 md:px-6 lg:px-8 py-3 md:py-4 backdrop-blur-xl bg-background/60 flex items-center gap-3 border-b border-white/5 shadow-[0_10px_30px_rgba(0,0,0,0.5)] relative">
           <Link href={`/category/${script.categorySlug}`} className="text-lg md:text-xl leading-none text-primary drop-shadow-[0_0_18px_rgba(34,211,238,0.35)]">←</Link>
           <div className="flex-1 min-w-0">
-            <h1 className="headline text-2xl md:text-3xl lg:text-4xl tracking-[0.05em] bg-gradient-to-r from-tertiary via-secondary to-primary text-transparent bg-clip-text truncate">
+            <h1 className="headline text-2xl md:text-5xl lg:text-6xl tracking-[0.05em] bg-gradient-to-r from-tertiary via-secondary to-primary text-transparent bg-clip-text truncate">
               {script.title}
             </h1>
             <div className="flex items-center gap-3">

@@ -88,22 +88,24 @@ export default function ScenarioCard({ script, index }: Props) {
                   <span className="text-[8px] opacity-80">Reps</span>
                </div>
              )}
-
-             {/* Item Count Badge */}
-             <div className="flex items-center gap-1 px-2 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider border bg-black/40 text-muted-foreground border-white/10">
-                <span>
-                  {script.decoderItems?.length || script.segments?.length || script.sentences?.length || 0}
-                </span>
-                <span className="opacity-70">Items</span>
-             </div>
            </div>
         </div>
 
-        <div className="flex-1 min-h-[80px]">
-          <h3 className="text-lg font-bold mb-1.5 leading-tight text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.5)]">
-            {script.title}
-          </h3>
-          <p className="text-xs text-gray-300 leading-relaxed line-clamp-2 mb-1">
+        <div className="flex-1 min-h-[80px] md:min-h-[120px] lg:min-h-[140px] flex flex-col justify-center">
+          <div className="flex items-center flex-wrap gap-2 mb-2 md:mb-4">
+            <h3 className="text-lg md:text-3xl lg:text-4xl font-bold leading-tight text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.5)]">
+              {script.title}
+            </h3>
+             {/* Item Count Badge - Now next to Title */}
+             <div className="flex items-center gap-1 px-1.5 py-0.5 md:px-3 md:py-1 rounded-full text-[8px] md:text-xs lg:text-sm font-bold uppercase tracking-wider border bg-white/10 text-muted-foreground border-white/10 whitespace-nowrap">
+                <span>
+                  {script.decoderItems?.length || script.segments?.length || script.sentences?.length || 0}
+                </span>
+                <span className="opacity-70">items</span>
+             </div>
+          </div>
+          
+          <p className="text-xs md:text-lg lg:text-xl text-gray-300 leading-relaxed line-clamp-2 mb-1">
             {script.cleanedEnglish}
           </p>
         </div>

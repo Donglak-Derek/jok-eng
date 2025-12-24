@@ -181,17 +181,17 @@ export default function StoryFlow({ script }: Props) {
                   }
                 >
                   <div className="flex flex-col gap-4 text-center items-center">
-                    <div className="text-sm font-bold uppercase tracking-widest text-tertiary border border-tertiary/30 px-3 py-1 rounded-full bg-tertiary/10">
+                    <div className="text-sm md:text-base font-bold uppercase tracking-widest text-tertiary border border-tertiary/30 px-3 py-1 rounded-full bg-tertiary/10">
                       {currentSegment.step}
                     </div>
                     
                     {/* Main English Text */}
-                    <div className="text-2xl md:text-3xl font-medium leading-relaxed my-2">
+                    <div className="text-2xl md:text-3xl lg:text-4xl font-medium leading-relaxed my-2 md:my-4">
                        &quot;{currentSegment.text}&quot;
                     </div>
 
                     {/* Coaching Note */}
-                    <div className="w-full text-muted italic text-sm md:text-base bg-background/50 px-4 py-3 rounded-xl border border-primary/20 flex gap-2 items-start justify-center">
+                    <div className="w-full text-muted italic text-sm md:text-lg lg:text-xl bg-background/50 px-4 md:px-6 py-3 md:py-4 rounded-xl border border-primary/20 flex gap-2 items-start justify-center">
                        <span>💡</span>
                        <span>{currentSegment.note}</span>
                     </div>
@@ -203,7 +203,7 @@ export default function StoryFlow({ script }: Props) {
                       {currentSegment.keywords.map((k) => (
                         <span
                           key={k.word}
-                          className="text-xs md:text-sm px-2.5 md:px-3 py-1 rounded-full bg-secondary/10 border border-secondary/35 shadow-[0_0_15px_rgba(168,85,247,0.2)]"
+                          className="text-xs md:text-base px-2.5 md:px-4 py-1.5 rounded-full bg-secondary/10 border border-secondary/35 shadow-[0_0_15px_rgba(168,85,247,0.2)]"
                         >
                           <span className="font-semibold text-secondary">{k.word}</span>
                           <span className="opacity-70">: {k.definition}</span>

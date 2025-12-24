@@ -109,7 +109,7 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
           <div className="text-xs font-bold tracking-widest text-primary uppercase mb-1">
             Scenario
           </div>
-          <div className="text-base md:text-lg font-medium text-foreground">
+          <div className="text-base md:text-2xl font-medium text-foreground">
             {sentence.scenario}
           </div>
         </div>
@@ -121,10 +121,10 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
             <div className="absolute -top-2.5 left-4 px-2 py-0.5 rounded-full bg-destructive/20 border border-destructive/30 backdrop-blur text-[10px] font-bold text-destructive uppercase tracking-wider">
               Mistake
             </div>
-            <div className="text-lg md:text-xl font-bold text-destructive mb-2 font-mono">
+            <div className="text-lg md:text-3xl font-bold text-destructive mb-3 font-mono">
               &quot;{sentence.badResponse.text}&quot;
             </div>
-            <div className="text-xs md:text-sm text-destructive/70 leading-relaxed">
+            <div className="text-xs md:text-lg text-destructive/70 leading-relaxed">
               {sentence.badResponse.why}
             </div>
           </div>
@@ -134,10 +134,10 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
             <div className="absolute -top-2.5 left-4 px-2 py-0.5 rounded-full bg-success/20 border border-success/30 backdrop-blur text-[10px] font-bold text-success uppercase tracking-wider">
               Better Fix
             </div>
-            <div className="text-lg md:text-xl font-bold text-success mb-2 font-mono">
+            <div className="text-lg md:text-3xl font-bold text-success mb-3 font-mono">
               &quot;{sentence.goodResponse.text}&quot;
             </div>
-            <div className="text-xs md:text-sm text-success/70 leading-relaxed">
+            <div className="text-xs md:text-lg text-success/70 leading-relaxed">
               {sentence.goodResponse.why}
             </div>
           </div>
@@ -147,10 +147,10 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
         {keywords.length > 0 && (
            <div className="flex flex-wrap gap-2 mt-1 pt-3 border-t border-secondary/20 mb-2">
             {keywords.map((k) => (
-              <span
-                key={k.word}
-                className="text-xs md:text-sm px-2.5 md:px-3 py-1 rounded-full bg-secondary/10 border border-secondary/35"
-              >
+                <span
+                  key={k.word}
+                  className="text-xs md:text-base px-2.5 md:px-4 py-1.5 rounded-full bg-secondary/10 border border-secondary/35"
+                >
                 <span className="font-semibold text-secondary">{k.word}</span>
                 <span className="opacity-70">: {k.definition}</span>
               </span>
@@ -184,7 +184,7 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
       }
     >
       <div className="min-w-0">
-        <div className="text-lg md:text-xl lg:text-2xl font-semibold drop-shadow-[0_0_15px_rgba(168,85,247,0.25)]">
+        <div className="text-lg md:text-3xl lg:text-4xl font-semibold drop-shadow-[0_0_15px_rgba(168,85,247,0.25)] leading-tight">
           {sentence.en}
         </div>
       </div>
@@ -193,7 +193,7 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
         {keywords.map((k) => (
           <span
             key={k.word}
-            className="text-xs md:text-sm px-2.5 md:px-3 py-1 rounded-full bg-secondary/10 border border-secondary/35 shadow-[0_0_15px_rgba(168,85,247,0.2)]"
+            className="text-xs md:text-lg px-2.5 md:px-4 py-1.5 rounded-full bg-secondary/10 border border-secondary/35 shadow-[0_0_15px_rgba(168,85,247,0.2)]"
           >
             <span className="font-semibold">{k.word}</span>: {k.definition}
           </span>
