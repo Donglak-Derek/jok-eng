@@ -3,18 +3,18 @@ export const CATEGORY_DETAILS: Record<
   { name: string; description: string; image: string }
 > = {
   the_party_survival_kit: {
-    name: "The Party Survival Kit",
-    description: "Master the art of mingling with wit and charm.",
+    name: "The Storyteller's Toolkit",
+    description: "Master the art of the anecdote. Learn funny stories and stand-up bits to charm any crowd.",
     image: "/images/categories/party_survival_kit.svg",
   },
   dating_and_disasters: {
-    name: "Dating & Disasters",
-    description: "Turn awkward moments into hilarious stories.",
+    name: "Turning Awkward into Gold",
+    description: "Transform daily embarrassments into hilarious stories. Never fear an awkward silence again.",
     image: "/images/categories/dating_and_disasters.svg",
   },
   office_banter: {
-    name: "Office Banter (Tech Edition)",
-    description: "navigate the tech world with humor and code.",
+    name: "Career & Office Talk",
+    description: "From acing the interview to winning the water cooler. Essential scripts for professional success.",
     image: "/images/categories/office_banter.svg",
   },
   small_talk: {
