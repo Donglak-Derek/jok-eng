@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { context, myRole, otherRole, plot } = body;
+    const { context, myRole, otherRole, plot, userName } = body;
 
     const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
 
@@ -21,6 +21,7 @@ export async function POST(request: NextRequest) {
       You are an expert English tutor creating a "Jok-eng" style roleplay scenario.
       
       CONTEXT: ${context}
+      USER NAME: ${userName || "User"}
       USER ROLE: ${myRole}
       OTHER ROLE: ${otherRole}
       PLOT SUMMARY: ${plot}

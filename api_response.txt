@@ -1,0 +1,29 @@
+Note: Unnecessary use of -X or --request, POST is already inferred.
+* Host localhost:3000 was resolved.
+* IPv6: ::1
+* IPv4: 127.0.0.1
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying [::1]:3000...
+* Connected to localhost (::1) port 3000
+> POST /api/generate-scenario HTTP/1.1
+> Host: localhost:3000
+> User-Agent: curl/8.7.1
+> Accept: */*
+> Content-Type: application/json
+> Content-Length: 105
+> 
+} [105 bytes data]
+* upload completely sent off: 105 bytes
+100   105    0     0  100   105      0     86  0:00:01  0:00:01 --:--:--    86100   105    0     0  100   105      0     47  0:00:02  0:00:02 --:--:--    47100   105    0     0  100   105      0     32  0:00:03  0:00:03 --:--:--    32100   105    0     0  100   105      0     24  0:00:04  0:00:04 --:--:--    24100   105    0     0  100   105      0     20  0:00:05  0:00:05 --:--:--    20100   105    0     0  100   105      0     16  0:00:06  0:00:06 --:--:--     0< HTTP/1.1 200 OK
+< vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+< content-type: application/json
+< Date: Sat, 27 Dec 2025 11:10:43 GMT
+< Connection: keep-alive
+< Keep-Alive: timeout=5
+< Transfer-Encoding: chunked
+< 
+{ [2703 bytes data]
+100  2796    0  2691  100   105    392     15  0:00:07  0:00:06  0:00:01   578100  2796    0  2691  100   105    392     15  0:00:07  0:00:06  0:00:01   738
+* Connection #0 to host localhost left intact
+{"script":{"id":"66ca3622-7f76-4e84-916e-8a0c7bfcffc7","title":"The Ancestor-Awakener Latte","categorySlug":"custom","categoryName":"Custom Scenario","cleanedEnglish":"A customer makes a dramatic request for a very strong coffee.","sentences":[{"id":"4d495291-ad9e-4c8e-aec2-3c91d1525063","en":"Hey there! What can I whip up for you on this slightly gloomy Tuesday?","keywords":[{"word":"whip up","definition":"To make something very quickly, especially food or a drink."},{"word":"gloomy","definition":"Dark, depressing, or overcast (often used for weather)."}],"scenario":"Barista's friendly greeting and opening question."},{"id":"fefb1751-cc06-4366-bb86-143ff4277bc6","en":"I need a large latte, but please make it strong enough to wake up my ancestors.","keywords":[{"word":"ancestors","definition":"People related to you who lived a long time ago."},{"word":"strong enough","definition":"Having sufficient power, intensity, or caffeine."}],"scenario":"Placing the main order with a humorous exaggeration.","badResponse":{"text":"Give me the biggest latte you have right now.","why":"Too demanding and direct; lacks 'please' and sounds transactional, not friendly."},"goodResponse":{"text":"I need a large latte, but please make it strong enough to wake up my ancestors.","why":"Uses 'I need' which is polite when followed by the specific order, and the humorous addition keeps the tone light."}},{"id":"3124f0ff-a3fd-4c51-871c-50eaae341c4a","en":"Ooh, an ancestor-awakener! Got it. Do you want that with oat milk, or are we sticking to the classic two-percent?","keywords":[{"word":"ancestor-awakener","definition":"A humorous term invented for something extremely potent (strong)."},{"word":"sticking to","definition":"Continuing with or choosing a previously established or standard option."}],"scenario":"Barista confirms the joke and asks for a key customization."},{"id":"d5b67e68-7c69-4c0e-bd45-9a18ef606713","en":"Classic two-percent is perfect. And can I get an extra shot of espresso? Just to be sure.","keywords":[{"word":"extra shot","definition":"An additional serving of espresso (caffeine)."},{"word":"just to be sure","definition":"To confirm or as a precaution, implying a desire for maximum effect."}],"scenario":"Confirming the milk type and adding a final powerful customization.","badResponse":{"text":"I want an extra shot. Put it in.","why":"Lacks the request phrasing ('Can I get...') and sounds like giving a command, which is rude."},"goodResponse":{"text":"Classic two-percent is perfect. And can I get an extra shot of espresso? Just to be sure.","why":"Uses 'Can I get' which is the standard polite request phrase in American English service settings."}}]}}

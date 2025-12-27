@@ -4,11 +4,44 @@ import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/Button";
-
+import { useEffect, useState } from "react";
+import { UserScript } from "@/types";
+import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import Card from "./Card";
 
 export default function MyScenariosSection() {
   const { user, loading } = useAuth();
   const router = useRouter();
+  const [scenarios, setScenarios] = useState<UserScript[]>([]);
+
+  useEffect(() => {
+    if (!user) {
+        console.log("No user in MyScenariosSection, clearing scenarios");
+        setScenarios([]);
+        return;
+    }
+
+    console.log("Fetching scenarios for user:", user.uid);
+    const q = query(
+        collection(db, "users", user.uid, "scenarios"), 
+        orderBy("createdAt", "desc")
+    );
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+        console.log("Snapshot received! Docs count:", snapshot.docs.length);
+        const docs = snapshot.docs.map(doc => ({
+            // Spread data first, so doc.id (Firestore ID) overwrites any 'id' field in the data
+            ...doc.data(),
+            id: doc.id 
+        })) as UserScript[];
+        setScenarios(docs);
+    }, (error) => {
+        console.error("Error fetching scenarios:", error);
+    });
+
+    return () => unsubscribe();
+  }, [user]);
 
   if (loading) return null; // Or a subtle skeleton
 
@@ -67,26 +100,50 @@ export default function MyScenariosSection() {
             </Link>
         </div>
 
-        {/* Empty State (assuming no data for now, would map over scenarios here later) */}
-        <div className="p-8 rounded-3xl border border-dashed border-secondary/30 bg-card/40 flex flex-col items-center justify-center text-center gap-4 transition-colors hover:bg-card/60">
-            <div className="w-16 h-16 md:w-24 md:h-24 rounded-full bg-secondary/10 flex items-center justify-center text-3xl md:text-5xl mb-1">
-                📝
+        {scenarios.length === 0 ? (
+            <div className="p-8 rounded-3xl border border-dashed border-secondary/30 bg-card/40 flex flex-col items-center justify-center text-center gap-4 transition-colors hover:bg-card/60">
+                <div className="w-16 h-16 md:w-24 md:h-24 rounded-full bg-secondary/10 flex items-center justify-center text-3xl md:text-5xl mb-1">
+                    📝
+                </div>
+                <div className="flex flex-col gap-1 md:gap-2">
+                    <h3 className="text-lg md:text-3xl font-bold text-foreground">Write your first script</h3>
+                    <p className="text-sm md:text-xl text-muted max-w-md mx-auto">
+                        Turn your real-life awkward moments into practice gold.
+                    </p>
+                </div>
+                <Button
+                    onClick={() => router.push("/create-scenario")}
+                    variant="primary"
+                    size="lg"
+                    className="mt-2 text-sm md:text-lg shadow-lg"
+                >
+                    Create Scenario
+                </Button>
             </div>
-            <div className="flex flex-col gap-1 md:gap-2">
-                <h3 className="text-lg md:text-3xl font-bold text-foreground">Write your first script</h3>
-                <p className="text-sm md:text-xl text-muted max-w-md mx-auto">
-                    Turn your real-life awkward moments into practice gold.
-                </p>
+        ) : (
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {scenarios.map((script) => (
+                    <Link key={script.id} href={`/scenario/${script.id}`}>
+                        <Card className="p-5 h-full hover:bg-card/80 transition-colors">
+                            <div className="flex flex-col gap-2 h-full">
+                                <div>
+                                    <h3 className="text-lg font-bold line-clamp-1">{script.title || "Untitled Scenario"}</h3>
+                                    <p className="text-xs text-muted font-mono uppercase tracking-wider mt-1">
+                                        {new Date(script.createdAt).toLocaleDateString()}
+                                    </p>
+                                </div>
+                                <p className="text-sm text-foreground/80 line-clamp-2 mt-2">
+                                    {script.cleanedEnglish}
+                                </p>
+                                <div className="mt-auto pt-4 flex items-center gap-2 text-xs font-medium text-secondary">
+                                    <span>{script.sentences.length} lines</span>
+                                </div>
+                            </div>
+                        </Card>
+                    </Link>
+                ))}
             </div>
-            <Button
-                onClick={() => router.push("/create-scenario")}
-                variant="primary"
-                size="lg"
-                className="mt-2 text-sm md:text-lg shadow-lg"
-            >
-                Create Scenario
-            </Button>
-        </div>
+        )}
     </section>
   );
 }

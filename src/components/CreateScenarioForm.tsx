@@ -36,7 +36,10 @@ export default function CreateScenarioForm() {
         const res = await fetch("/api/generate-scenario", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(inputs),
+            body: JSON.stringify({
+                ...inputs,
+                userName: user?.displayName || user?.email?.split('@')[0] || "User"
+            }),
         });
         
         if (!res.ok) {
@@ -56,28 +59,63 @@ export default function CreateScenarioForm() {
   };
 
   const handleSave = async () => {
-     if (!user || !generatedScript) return;
+     console.log("handleSave called");
+     if (!user) {
+         console.error("No user found in handleSave");
+         alert("You must be logged in to save.");
+         return;
+     }
+     if (!generatedScript) {
+        console.error("No generated script to save");
+        return;
+     }
      
      setIsSaving(true);
      try {
-         const userScript: Omit<UserScript, "id"> = { // Firestore creates ID
+         console.log("Preparing to save script for user:", user.uid);
+         const userScript: Omit<UserScript, "id"> = {
              ...generatedScript,
              userId: user.uid,
              createdAt: Date.now(),
              originalPrompt: inputs
          };
 
-         // Remove ID from top level as Firestore generates it, or use the UUID we made. 
-         // Let's use addDoc which makes an auto-ID, so we can ignore the script.id from generator for the doc ID.
+         // Sanitize function to remove undefined values
+         // eslint-disable-next-line @typescript-eslint/no-explicit-any
+         const sanitize = (obj: any): any => {
+           return JSON.parse(JSON.stringify(obj, (key, value) => {
+             return value === undefined ? null : value;
+           }));
+         };
+
+         const sanitizedScript = sanitize(userScript);
          
-         await addDoc(collection(db, "users", user.uid, "scenarios"), userScript);
+         console.log("Saving to Firestore path:", `users/${user.uid}/scenarios`);
+         console.log("Payload summary:", { 
+            title: sanitizedScript.title, 
+            sentencesCount: sanitizedScript.sentences?.length 
+         });
+
+         // Race against a timeout
+         const timeoutPromise = new Promise((_, reject) => 
+            setTimeout(() => reject(new Error("Firestore write timed out (5s)")), 5000)
+         );
+
+         const docRef = await Promise.race([
+            addDoc(collection(db, "users", user.uid, "scenarios"), sanitizedScript),
+            timeoutPromise
+         // eslint-disable-next-line @typescript-eslint/no-explicit-any
+         ]) as any; // Cast to avoid TS error on race result type
+
+         console.log("Document written with ID: ", docRef.id);
          
          // Redirect to Home
+         console.log("Redirecting to home...");
          router.push("/");
          
      } catch (error) {
          console.error("Error saving scenario:", error);
-         alert("Failed to save scenario");
+         alert(`Failed to save scenario: ${error instanceof Error ? error.message : "Unknown error"}. Check console for details.`);
          setIsSaving(false);
      }
   };
