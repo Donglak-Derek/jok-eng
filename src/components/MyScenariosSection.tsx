@@ -2,10 +2,13 @@
 
 import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/Button";
 
 
 export default function MyScenariosSection() {
   const { user, loading } = useAuth();
+  const router = useRouter();
 
   if (loading) return null; // Or a subtle skeleton
 
@@ -34,13 +37,15 @@ export default function MyScenariosSection() {
           </p>
           
           <div className="pt-2">
-            <Link
-              href="/login"
-              className="inline-flex items-center gap-2 px-6 md:px-8 py-3 md:py-4 rounded-xl bg-primary text-primary-foreground font-bold text-sm md:text-xl shadow-[0_0_20px_rgba(34,211,238,0.4)] hover:shadow-[0_0_30px_rgba(34,211,238,0.6)] hover:scale-[1.02] active:scale-[0.98] transition-all"
+            <Button
+              onClick={() => router.push("/login")}
+              className="px-6 md:px-8 shadow-[0_0_20px_rgba(34,211,238,0.4)] hover:shadow-[0_0_30px_rgba(34,211,238,0.6)]"
+              variant="primary"
+              size="lg"
             >
                <span>Get Started for Free</span>
-               <span>→</span>
-            </Link>
+               <span className="ml-2">→</span>
+            </Button>
           </div>
         </div>
       </section>
@@ -73,12 +78,14 @@ export default function MyScenariosSection() {
                     Turn your real-life awkward moments into practice gold.
                 </p>
             </div>
-            <Link
-                href="/create-scenario"
-                className="mt-2 px-5 md:px-8 py-2.5 md:py-4 rounded-xl bg-primary text-primary-foreground text-sm md:text-xl font-bold shadow-lg hover:bg-primary/90 transition-all"
+            <Button
+                onClick={() => router.push("/create-scenario")}
+                variant="primary"
+                size="xl"
+                className="mt-2 text-sm md:text-xl shadow-lg"
             >
                 Create Scenario
-            </Link>
+            </Button>
         </div>
     </section>
   );

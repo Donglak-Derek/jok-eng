@@ -2,6 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 import type { Sentence } from "@/types";
+import { Button } from "@/components/Button";
 
 type Props = {
   sentence: Sentence;
@@ -73,13 +74,7 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
 
   const keywords = useMemo(() => sentence.keywords, [sentence.keywords]);
 
-  // Loading Spinner
-  const Spinner = () => (
-    <svg className="animate-spin h-5 w-5 text-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-    </svg>
-  );
+
 
   // Audio Visualizer Component
   const AudioVisualizer = () => (
@@ -158,16 +153,19 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
            </div>
         )}
 
-        <button
+        <Button
           onClick={(e) => {
             e.stopPropagation();
             speak();
           }}
-          className="w-full py-3 rounded-xl border-2 border-primary bg-primary/5 text-primary font-bold text-base tracking-widest uppercase shadow-[0_0_15px_rgba(34,211,238,0.25)] transition-all hover:bg-primary/10 hover:shadow-[0_0_30px_rgba(34,211,238,0.45)] active:scale-[0.98] outline-none flex justify-center items-center"
+          variant="outline"
+          size="md"
+          isLoading={loading}
+          className="w-full border-primary bg-primary/5 text-primary tracking-widest uppercase hover:bg-primary/10"
           aria-label={loading ? "Loading audio" : "Play correct response"}
         >
-            {loading ? <Spinner /> : (speaking ? <AudioVisualizer /> : <span>Play Audio</span>)}
-        </button>
+            {speaking ? <AudioVisualizer /> : "Play Audio"}
+        </Button>
       </div>
     );
   }
@@ -201,16 +199,19 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
       </div>
 
       {/* Full width play button */}
-      <button
+      <Button
          onClick={(e) => {
            e.stopPropagation();
            speak();
          }}
-         className="w-full py-3 rounded-xl border-2 border-primary bg-primary/5 text-primary font-bold text-base tracking-widest uppercase shadow-[0_0_15px_rgba(34,211,238,0.25)] transition-all hover:bg-primary/10 hover:shadow-[0_0_30px_rgba(34,211,238,0.45)] active:scale-[0.98] outline-none flex justify-center items-center"
+         variant="outline"
+         size="md"
+         isLoading={loading}
+         className="w-full border-primary bg-primary/5 text-primary tracking-widest uppercase hover:bg-primary/10"
          aria-label={loading ? "Loading audio" : "Play sentence"}
       >
-          {loading ? <Spinner /> : (speaking ? <AudioVisualizer /> : <span>Play Audio</span>)}
-      </button>
+          {speaking ? <AudioVisualizer /> : "Play Audio"}
+      </Button>
     </div>
   );
 }

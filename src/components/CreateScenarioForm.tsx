@@ -10,6 +10,7 @@ import { collection, addDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 // For preview, we want to see sentences.
 import SentenceCard from "./SentenceCard";
+import { Button } from "@/components/Button";
 
 export default function CreateScenarioForm() {
   const { user } = useAuth();
@@ -155,13 +156,15 @@ export default function CreateScenarioForm() {
                         </div>
 
                         <div className="mt-8">
-                            <button 
+                            <Button 
                                 onClick={handleGenerate}
                                 disabled={!inputs.context || !inputs.plot}
-                                className="w-full py-4 rounded-xl bg-gradient-to-r from-secondary to-primary text-white font-black text-lg tracking-widest uppercase shadow-lg hover:shadow-cyan-500/20 hover:scale-[1.01] active:scale-[0.99] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                variant="primary"
+                                size="xl"
+                                className="w-full bg-gradient-to-r from-secondary to-primary hover:scale-[1.01] active:scale-[0.99] shadow-lg"
                             >
                                 ✨ Generate Scenario
-                            </button>
+                            </Button>
                         </div>
                     </div>
                 </motion.div>
@@ -192,9 +195,15 @@ export default function CreateScenarioForm() {
                 >
                      <div className="bg-card/50 backdrop-blur border border-secondary/30 rounded-3xl p-6 md:p-8 shadow-xl">
                         <div className="flex items-center justify-between mb-6">
-                            <button onClick={handleBack} className="text-sm font-bold text-muted hover:text-foreground transition-colors flex items-center gap-1">
-                                <span>←</span> Edit
-                            </button>
+                            <Button 
+                                onClick={handleBack} 
+                                variant="ghost" 
+                                size="sm" 
+                                leftIcon={<span>←</span>}
+                                className="text-muted hover:text-foreground p-0"
+                            >
+                                Edit
+                            </Button>
                             <h2 className="text-xl md:text-2xl font-bold">Preview Scenario</h2>
                             <div className="w-8" />
                         </div>
@@ -212,13 +221,15 @@ export default function CreateScenarioForm() {
                      </div>
 
                      <div className="sticky bottom-4 pt-4 bg-gradient-to-t from-background via-background/90 to-transparent">
-                        <button 
+                        <Button 
                             onClick={handleSave}
                             disabled={isSaving}
-                            className="w-full py-4 rounded-xl bg-green-500 text-white font-black text-lg tracking-widest uppercase shadow-lg hover:bg-green-600 transition-all hover:scale-[1.01] disabled:opacity-50 disabled:cursor-not-allowed"
+                            variant="primary"
+                            size="xl"
+                            className="w-full bg-green-500 hover:bg-green-600 shadow-lg border-transparent"
                         >
                             {isSaving ? "Saving..." : "💾 Save to My Scenarios"}
-                        </button>
+                        </Button>
                      </div>
                      </div> {/* End of unified card container */}
                 </motion.div>

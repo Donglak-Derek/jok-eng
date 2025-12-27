@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import type { Script } from "@/types";
 import SentenceCard from "@/components/SentenceCard";
 import { motion, AnimatePresence } from "framer-motion";
+import Confetti from "@/components/Confetti";
+import { Button } from "@/components/Button";
 
 type Props = { script: Script };
 
@@ -50,14 +52,7 @@ export default function StandardScriptFlow({ script }: Props) {
 
   const isCompletion = currentIndex === total;
 
-  // Congratulation Sound Effect
-  useEffect(() => {
-    if (isCompletion) {
-      const audio = new Audio("/sounds/good_job.mp3");
-      audio.volume = 0.5;
-      audio.play().catch(e => console.log("Audio play failed (user interaction needed likely)", e));
-    }
-  }, [isCompletion]);
+
 
   const handlePrev = () => {
     if (currentIndex > 0) {
@@ -167,6 +162,7 @@ export default function StandardScriptFlow({ script }: Props) {
                      <div className="text-6xl md:text-7xl animate-bounce mb-2">🎉</div>
                      
                      <div className="flex flex-col gap-2">
+                       <Confetti />
                        <h2 className="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-secondary via-primary to-secondary animate-pulse">
                          Congratulation!
                        </h2>
@@ -174,19 +170,23 @@ export default function StandardScriptFlow({ script }: Props) {
                      </div>
 
                      <div className="w-full flex flex-col gap-3 mt-4">
-                        <button
+                        <Button
+                          variant="primary"
+                          size="xl"
                           onClick={handleRepeat}
-                          className="w-full py-4 rounded-xl bg-primary text-primary-foreground font-black text-xl tracking-widest uppercase shadow-[0_0_25px_rgba(34,211,238,0.4)] transition-all hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(34,211,238,0.6)] active:scale-[0.98]"
+                          className="w-full text-xl shadow-[0_0_25px_rgba(34,211,238,0.4)]"
                         >
                           Repeat
-                        </button>
+                        </Button>
 
-                        <button 
+                        <Button 
+                          variant="outline"
+                          size="md"
                           onClick={handleFinishTraining}
-                          className="w-full py-3 rounded-xl border-2 border-primary/30 text-primary font-bold text-sm tracking-wider uppercase hover:bg-primary/10 hover:border-primary transition-colors"
+                          className="w-full"
                         >
                           Finish
-                        </button>
+                        </Button>
                      </div>
                  </div>
                </motion.div>
@@ -199,37 +199,39 @@ export default function StandardScriptFlow({ script }: Props) {
       <div className="sticky bottom-0 left-0 right-0 p-4 backdrop-blur-md bg-background/80 border-t border-secondary/30 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] z-20">
         <div className="max-w-md md:max-w-2xl lg:max-w-3xl mx-auto flex items-center gap-4">
            {/* Start Over Button */}
-           <button 
+           <Button 
+             variant="ghost"
+             size="sm"
              onClick={handleStartOver}
-             className="px-4 py-3 rounded-xl border border-secondary/30 text-muted bg-card/50 hover:bg-secondary/10 font-bold text-sm transition-colors"
+             className="border border-secondary/30 bg-card/50 text-muted hover:bg-secondary/10"
            >
              ↻ <span className="hidden md:inline">Start Over</span>
-           </button>
+           </Button>
            
            <div className="flex-1 flex items-center gap-3">
              {/* Previous Button */}
              {!isCompletion && (
-             <button
+             <Button
+               variant="outline"
+               size="md"
                onClick={handlePrev}
                disabled={currentIndex === 0}
-               className={`flex-1 px-3 py-3 rounded-xl border-2 font-bold text-xs md:text-sm tracking-wider uppercase transition-all shadow-[0_0_15px_rgba(0,0,0,0)] ${
-                 currentIndex === 0 
-                   ? "border-secondary/20 text-muted/30 cursor-not-allowed" 
-                   : "border-secondary text-secondary hover:bg-secondary/10 hover:shadow-[0_0_20px_var(--color-secondary)] active:scale-[0.98]"
-               }`}
+               className="flex-1 border-secondary text-secondary hover:bg-secondary/10"
              >
                Prev
-             </button>
+             </Button>
              )}
 
              {/* Next Button */}
              {!isCompletion && (
-             <button
+             <Button
+               variant="primary"
+               size="md"
                onClick={handleNext}
-               className="flex-1 px-3 py-3 rounded-xl border-2 border-primary bg-primary/10 text-primary font-bold text-xs md:text-sm tracking-wider uppercase shadow-[0_0_20px_rgba(34,211,238,0.25)] transition-all hover:bg-primary/20 hover:shadow-[0_0_35px_rgba(34,211,238,0.5)] active:scale-[0.98]"
+               className="flex-1"
              >
                Next
-             </button>
+             </Button>
              )}
            </div>
         </div>
