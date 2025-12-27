@@ -20,7 +20,19 @@ export const scripts: Script[] = [
 
 export const categories: Category[] = Array.from(
   new Set(scripts.map((s) => s.categorySlug))
-).map((slug) => ({
-  slug,
-  ...CATEGORY_DETAILS[slug],
-} as Category));
+).map((slug) => {
+  const details = CATEGORY_DETAILS[slug];
+  // Fallback if details are missing to avoid empty src error
+  if (!details) {
+    return {
+       slug,
+       name: "Unknown Category",
+       description: "Description not found",
+       image: "/images/categories/small_talk.svg" // Fallback image
+    } as Category;
+  }
+  return {
+    slug,
+    ...details,
+  } as Category;
+});

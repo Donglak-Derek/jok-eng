@@ -81,8 +81,8 @@ export default function MyScenariosSection() {
             <Button
                 onClick={() => router.push("/create-scenario")}
                 variant="primary"
-                size="xl"
-                className="mt-2 text-sm md:text-xl shadow-lg"
+                size="lg"
+                className="mt-2 text-sm md:text-lg shadow-lg"
             >
                 Create Scenario
             </Button>
