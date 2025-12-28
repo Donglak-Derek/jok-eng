@@ -64,4 +64,5 @@ export type UserScript = Script & {
     otherRole: string;
     plot: string;
   };
+  isPublic?: boolean;
 };

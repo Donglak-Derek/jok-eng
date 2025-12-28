@@ -6,7 +6,9 @@ import StoryFlow from "@/components/StoryFlow";
 import StandardScriptFlow from "@/components/StandardScriptFlow";
 import SignalDecoder from "@/components/SignalDecoder";
 
-type Props = { script: Script };
+type Props = { 
+  script: Script;
+};
 
 export default function ScriptClient({ script }: Props) {
   if (script.type === "story_flow") {

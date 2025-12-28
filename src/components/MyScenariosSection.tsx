@@ -89,9 +89,19 @@ export default function MyScenariosSection() {
   return (
     <section className="mt-6 flex flex-col gap-4">
         <div className="flex items-center justify-between">
-            <h2 className="headline text-xl md:text-4xl lg:text-5xl bg-gradient-to-r from-secondary to-primary text-transparent bg-clip-text">
-                My Scenarios
-            </h2>
+            <Link href="/category/custom" className="group flex items-center gap-2 md:gap-4 hover:opacity-90 transition-all">
+                <h2 className="headline text-xl md:text-4xl lg:text-5xl bg-gradient-to-r from-secondary to-primary text-transparent bg-clip-text cursor-pointer">
+                    My Scenarios
+                </h2>
+                <div className="flex items-center gap-1 text-xs md:text-sm font-bold text-muted uppercase tracking-wider group-hover:text-primary transition-colors">
+                    <span className="hidden md:inline opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">View All</span>
+                    <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-secondary/10 border border-secondary/30 flex items-center justify-center text-secondary group-hover:bg-primary group-hover:border-primary group-hover:text-white group-active:scale-95 transition-all duration-300">
+                        <svg className="w-3 h-3 md:w-4 md:h-4 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                        </svg>
+                    </div>
+                </div>
+            </Link>
             <Link 
                 href="/create-scenario"
                 className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-secondary/10 border border-secondary/30 text-secondary text-xs md:text-sm font-bold hover:bg-secondary/20 hover:border-secondary/50 transition-all active:scale-[0.98]"

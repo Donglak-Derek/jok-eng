@@ -2,7 +2,7 @@
 
 import { useEffect, useState, use } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, deleteDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import ScriptClient from "@/app/script/[id]/ScriptClient";
 import { UserScript } from "@/types";
@@ -77,5 +77,9 @@ export default function ScenarioPage({ params }: Props) {
       );
   }
 
-  return <ScriptClient script={script} />;
+  return (
+    <div className="min-h-dvh bg-background">
+      <ScriptClient script={script} />
+    </div>
+  );
 }

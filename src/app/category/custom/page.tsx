@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
+import { collection, query, orderBy, onSnapshot, deleteDoc, updateDoc, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { UserScript, Script } from "@/types";
 import Link from "next/link";
@@ -87,7 +87,34 @@ export default function CustomCategoryPage() {
                 <Button onClick={() => router.push("/create-scenario")} variant="primary">Create Scenario</Button>
             </div>
         ) : (
-            <ScenarioList scripts={scenarios} />
+            <ScenarioList 
+              scripts={scenarios} 
+              onEdit={(id, e) => {
+                e.preventDefault();
+                router.push(`/scenario/${id}/edit`);
+              }}
+              onDelete={async (id, e) => {
+                e.preventDefault();
+                if (!confirm("Are you sure you want to delete this scenario?")) return;
+                try {
+                  await deleteDoc(doc(db, "users", user.uid, "scenarios", id));
+                } catch (err) {
+                  console.error("Error deleting scenario:", err);
+                  alert("Failed to delete.");
+                }
+              }}
+              onTogglePublic={async (id, current, e) => {
+                e.preventDefault();
+                try {
+                  await updateDoc(doc(db, "users", user.uid, "scenarios", id), {
+                    isPublic: !current
+                  });
+                } catch (err) {
+                  console.error("Error toggling visibility:", err);
+                  alert("Failed to update visibility.");
+                }
+              }}
+            />
         )}
       </div>
     </div>

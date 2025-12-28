@@ -8,9 +8,11 @@ import { motion } from "framer-motion";
 type Props = {
   script: Script;
   index: number;
+  onEdit?: (id: string, e: React.MouseEvent) => void;
+  onDelete?: (id: string, e: React.MouseEvent) => void;
 };
 
-export default function ScenarioCard({ script, index }: Props) {
+export default function ScenarioCard({ script, index, onEdit, onDelete, onTogglePublic }: Props & { onTogglePublic?: (id: string, current: boolean, e: React.MouseEvent) => void }) {
   const [repeats, setRepeats] = useState<number>(0);
   const repeatsKey = `jokeng:repeats:${script.id}`;
 
@@ -18,15 +20,6 @@ export default function ScenarioCard({ script, index }: Props) {
     const v = localStorage.getItem(repeatsKey);
     setRepeats(v ? Number(v) || 0 : 0);
   }, [repeatsKey]);
-
-  // Mastery / Progress Logic (Simple Ring visualization)
-  const getMasteryColor = (count: number) => {
-    if (count >= 10) return "text-yellow-400";
-    if (count >= 5) return "text-cyan-400";
-    if (count >= 1) return "text-pink-400";
-    return "text-muted/30";
-  };
-  const masteryColor = getMasteryColor(repeats);
 
   // Design Theme - Neon Comedy Club Vibe
   const gradients = [
@@ -36,15 +29,13 @@ export default function ScenarioCard({ script, index }: Props) {
   ];
   const theme = gradients[index % gradients.length];
   
-  const icon = script.icon || "📝";
-
   // Type Label Logic
   const isStoryFlow = script.type === "story_flow";
   const isDecoder = script.type === "decoder";
   
-  let typeLabel = "Scenario";
-  if (isStoryFlow) typeLabel = "Story Build";
-  if (isDecoder) typeLabel = "Signal Decoder";
+  let typeLabel = "SCENARIO";
+  if (isStoryFlow) typeLabel = "STORY BUILD";
+  if (isDecoder) typeLabel = "SIGNAL DECODER";
 
   const typeColor = isStoryFlow 
       ? "text-pink-400 border-pink-500/40" 
@@ -52,71 +43,114 @@ export default function ScenarioCard({ script, index }: Props) {
           ? "text-green-400 border-green-500/40" 
           : "text-cyan-400 border-cyan-500/40";
 
-  // Decoder always spins (Radar effect)
-  const shouldSpin = repeats > 0 || isDecoder;
+  // Check if it's a user script for public toggling
+  const isUserScript = 'userId' in script;
+  const isPublic = isUserScript && (script as any).isPublic;
+
+  // Determine correct link path
+  const href = isUserScript ? `/scenario/${script.id}` : `/script/${script.id}`;
 
   return (
-    <Link href={`/script/${script.id}`} className="block h-full">
+    <Link href={href} className="block h-full">
       <motion.div
         whileTap={{ scale: 0.96 }}
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ type: "spring", stiffness: 400, damping: 17 }}
-        className={`relative h-full rounded-2xl border bg-card/60 backdrop-blur-md p-5 flex flex-col justify-between shadow-sm ${theme}`}
+        className={`relative h-full rounded-2xl border bg-card/60 backdrop-blur-md p-5 flex flex-col justify-between shadow-sm ${theme} group`}
       >
-        <div className="flex justify-between items-start mb-3">
-           {/* Icon with Mastery Ring */}
-           <div className="relative">
-             <div className={`absolute inset-0 rounded-full border-2 border-current opacity-30 ${masteryColor}`} />
-             {shouldSpin && <div className={`absolute inset-0 rounded-full border-2 border-current border-t-transparent animate-[spin_3s_linear_infinite] ${masteryColor}`} />}
-             
-             <div className="w-12 h-12 rounded-full bg-background/50 flex items-center justify-center text-2xl shadow-sm relative z-10 m-1">
-               {icon}
-             </div>
+        {/* Top Row: Index Number and Action Buttons */}
+        <div className="flex justify-between items-start mb-4">
+           {/* 1. Number of card instead of icon */}
+           <div className="text-4xl font-black text-white/10 font-mono leading-none select-none">
+             #{String(index + 1).padStart(2, '0')}
            </div>
 
-           <div className="flex flex-col items-end gap-1.5">
-             {/* Type Badge */}
-             <div className={`px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-widest border bg-black/40 shadow-[0_0_8px_rgba(0,0,0,0.5)] ${typeColor}`}>
-               {typeLabel}
-             </div>
-
-             {/* Simple Counter Badge - Neon Style */}
-             {repeats > 0 && (
-               <div className="flex items-center gap-1 px-2 py-1 bg-black/60 rounded-md text-[10px] font-bold text-primary uppercase tracking-wider border border-primary/40 shadow-[0_0_8px_rgba(34,211,238,0.3)]">
-                  <span>{repeats}</span>
-                  <span className="text-[8px] opacity-80">Reps</span>
-               </div>
-             )}
+           <div className="flex items-center gap-2">
+               {/* 4. Share/Private Toggle */}
+               {isUserScript && onTogglePublic && (
+                 <button 
+                    onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        onTogglePublic(script.id, !!isPublic, e);
+                    }}
+                    className={`p-2 rounded-full border transition-all ${isPublic ? "bg-primary/20 border-primary text-primary" : "bg-black/40 border-white/10 text-muted"}`}
+                    title={isPublic ? "Public: Click to make private" : "Private: Click to share"}
+                 >
+                    {isPublic ? (
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    ) : (
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                    )}
+                 </button>
+               )}
+               
+               {/* Edit/Delete Buttons */}
+               {(onEdit || onDelete) && (
+                 <div className="flex items-center gap-1">
+                     {onEdit && (
+                         <button 
+                           onClick={(e) => onEdit(script.id, e)}
+                           className="p-2 rounded-full bg-black/40 border border-white/10 text-secondary hover:text-primary hover:bg-white/10 hover:scale-110 active:scale-95 transition-all"
+                           title="Edit"
+                         >
+                             ✏️
+                         </button>
+                     )}
+                     {onDelete && (
+                         <button 
+                           onClick={(e) => onDelete(script.id, e)}
+                           className="p-2 rounded-full bg-black/40 border border-white/10 text-destructive/70 hover:text-destructive hover:bg-white/10 hover:scale-110 active:scale-95 transition-all"
+                           title="Delete"
+                         >
+                             🗑️
+                         </button>
+                     )}
+                 </div>
+               )}
            </div>
         </div>
 
-        <div className="flex-1 min-h-[80px] md:min-h-[120px] lg:min-h-[140px] flex flex-col justify-center">
-          <div className="flex items-center flex-wrap gap-2 mb-2 md:mb-4">
-            <h3 className="text-lg md:text-3xl lg:text-4xl font-bold leading-tight text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.5)]">
-              {script.title}
-            </h3>
-             {/* Item Count Badge - Now next to Title */}
-             <div className="flex items-center gap-1 px-1.5 py-0.5 md:px-3 md:py-1 rounded-full text-[8px] md:text-xs lg:text-sm font-bold uppercase tracking-wider border bg-white/10 text-muted-foreground border-white/10 whitespace-nowrap">
-                <span>
-                  {script.decoderItems?.length || script.segments?.length || script.sentences?.length || 0}
-                </span>
-                <span className="opacity-70">items</span>
-             </div>
+        <div className="flex-1 flex flex-col gap-3">
+          <h3 className="text-2xl md:text-3xl font-bold leading-tight text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.5)]">
+            {script.title}
+          </h3>
+
+          {/* 2. Move "SCENARIO" under title, left of items count */}
+          <div className="flex items-center gap-3">
+              <div className={`px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-widest border bg-black/40 ${typeColor}`}>
+                {typeLabel}
+              </div>
+
+              {/* Item Count Badge */}
+              <div className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border bg-white/5 text-muted-foreground border-white/10 whitespace-nowrap">
+                 <span>
+                   {script.decoderItems?.length || script.segments?.length || script.sentences?.length || 0}
+                 </span>
+                 <span className="opacity-70">items</span>
+              </div>
           </div>
           
-          <p className="text-xs md:text-lg lg:text-xl text-gray-300 leading-relaxed line-clamp-2 mb-1">
-            {script.cleanedEnglish}
+          {/* 3. Full Explanation (no line clamp) */}
+          <p className="text-sm md:text-base text-gray-300 leading-relaxed mt-2 opacity-90">
+            {script.cleanedEnglish || script.context}
           </p>
         </div>
 
-        {/* Always Visible Action Button - Neon */}
-        <div className="mt-4 flex items-center justify-between">
-            <span className="text-[10px] font-medium text-white/50 uppercase tracking-widest pl-1">
-              Tap to practice
-            </span>
-            <div className="w-8 h-8 rounded-full bg-primary/10 border border-primary/50 text-primary flex items-center justify-center shadow-[0_0_10px_rgba(34,211,238,0.4)]">
-              <svg className="w-4 h-4 fill-current ml-0.5" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        {/* Bottom Actions Row */}
+        <div className="mt-6 flex items-center justify-between border-t border-white/10 pt-4">
+            <div className="flex items-center gap-2">
+                 {/* Repeats Badge */}
+                 <div className="flex items-center gap-1 text-[10px] font-bold text-primary uppercase tracking-wider">
+                    <span className="text-base">{repeats}</span>
+                    <span className="opacity-70">Reps</span>
+                 </div>
+            </div>
+
+            <div className="flex items-center gap-2 text-[10px] font-medium text-white/50 uppercase tracking-widest group-hover:text-primary transition-colors">
+              <span>Practice</span>
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
             </div>
         </div>
       </motion.div>
