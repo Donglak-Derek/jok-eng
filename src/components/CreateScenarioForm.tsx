@@ -198,7 +198,7 @@ export default function CreateScenarioForm() {
                                 onClick={handleGenerate}
                                 disabled={!inputs.context || !inputs.plot}
                                 variant="primary"
-                                size="xl"
+                                size="lg"
                                 className="w-full bg-gradient-to-r from-secondary to-primary hover:scale-[1.01] active:scale-[0.99] shadow-lg"
                             >
                                 ✨ Generate Scenario
@@ -263,7 +263,7 @@ export default function CreateScenarioForm() {
                             onClick={handleSave}
                             disabled={isSaving}
                             variant="primary"
-                            size="xl"
+                            size="lg"
                             className="w-full bg-green-500 hover:bg-green-600 shadow-lg border-transparent"
                         >
                             {isSaving ? "Saving..." : "💾 Save to My Scenarios"}

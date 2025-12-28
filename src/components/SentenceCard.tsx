@@ -116,10 +116,10 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
             <div className="absolute -top-2.5 left-4 px-2 py-0.5 rounded-full bg-destructive/20 border border-destructive/30 backdrop-blur text-[10px] font-bold text-destructive uppercase tracking-wider">
               Mistake
             </div>
-            <div className="text-lg md:text-3xl font-bold text-destructive mb-3 font-mono">
+            <div className="text-lg md:text-2xl font-bold text-destructive mb-3 font-mono">
               &quot;{sentence.badResponse.text}&quot;
             </div>
-            <div className="text-xs md:text-lg text-destructive/70 leading-relaxed">
+            <div className="text-xs md:text-sm text-destructive/70 leading-relaxed">
               {sentence.badResponse.why}
             </div>
           </div>
@@ -129,7 +129,7 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
             <div className="absolute -top-2.5 left-4 px-2 py-0.5 rounded-full bg-success/20 border border-success/30 backdrop-blur text-[10px] font-bold text-success uppercase tracking-wider">
               Better Fix
             </div>
-            <div className="text-lg md:text-3xl font-bold text-success mb-3 font-mono">
+            <div className="text-lg md:text-2xl font-bold text-success mb-3 font-mono">
               &quot;{sentence.goodResponse.text}&quot;
             </div>
             <div className="text-xs md:text-lg text-success/70 leading-relaxed">
@@ -198,7 +198,7 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
 
          {/* Main Sentence */}
          <div className="relative">
-            <h3 className="text-2xl md:text-4xl lg:text-5xl font-bold leading-tight bg-gradient-to-b from-foreground to-foreground/80 text-transparent bg-clip-text drop-shadow-sm">
+            <h3 className="text-xl md:text-2xl lg:text-3xl font-bold leading-tight bg-gradient-to-b from-foreground to-foreground/80 text-transparent bg-clip-text drop-shadow-sm px-4">
               &quot;{sentence.en}&quot;
             </h3>
          </div>

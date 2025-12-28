@@ -72,8 +72,8 @@ export default function MyScenariosSection() {
           <div className="pt-2">
             <Button
               onClick={() => router.push("/login")}
-              className="px-6 md:px-8 shadow-[0_0_20px_rgba(34,211,238,0.4)] hover:shadow-[0_0_30px_rgba(34,211,238,0.6)]"
-              variant="primary"
+              className="px-6 md:px-8"
+              variant="secondary"
               size="lg"
             >
                <span>Get Started for Free</span>

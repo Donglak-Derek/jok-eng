@@ -37,21 +37,21 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const baseStyles = "relative inline-flex items-center justify-center font-bold uppercase tracking-wider rounded-full transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:active:scale-100 outline-none active:scale-[0.98]";
     
     // Sizes (Heights fixed to 8pt grid)
-    // sm: 32px (h-8), md: 48px (h-12), lg: 64px (h-16), xl: 80px (h-20)
+    // sm: 32px (h-8), md: 40px (h-10), lg: 48px (h-12), xl: 56px (h-14)
     const sizeStyles = {
-      sm: "h-8 px-4 text-xs gap-2",
-      md: "h-12 px-6 text-sm gap-2",   // matches standard buttons (py-3 approx)
-      lg: "h-16 px-8 text-lg gap-3",
-      xl: "h-20 px-10 text-xl gap-4"
+      sm: "h-8 px-4 text-xs gap-1.5",
+      md: "h-10 px-5 text-sm gap-2",   
+      lg: "h-12 px-6 text-base gap-2.5",
+      xl: "h-14 px-8 text-lg gap-3"
     };
 
     // Variants
     const variantStyles = {
-      primary: "bg-primary text-primary-foreground shadow-[0_0_20px_rgba(34,211,238,0.25)] hover:bg-primary/90 hover:shadow-[0_0_35px_rgba(34,211,238,0.5)] border-2 border-transparent",
-      secondary: "bg-secondary text-secondary-foreground shadow-lg hover:bg-secondary/90 border-2 border-transparent",
-      outline: "bg-transparent border-2 border-primary/30 text-primary hover:bg-primary/10 hover:border-primary shadow-[0_0_15px_rgba(34,211,238,0.1)]",
+      primary: "bg-gradient-to-r from-tertiary via-secondary to-primary text-white shadow-[0_4px_20px_rgba(168,85,247,0.3)] hover:shadow-[0_8px_30px_rgba(168,85,247,0.45)] hover:scale-[1.01] border border-white/10",
+      secondary: "bg-secondary/10 text-secondary border border-secondary/20 hover:bg-secondary/20 hover:border-secondary/50",
+      outline: "bg-transparent border border-primary/30 text-primary hover:bg-primary/5 hover:border-primary shadow-[0_0_15px_rgba(34,211,238,0.1)]",
       ghost: "bg-transparent text-muted hover:text-foreground hover:bg-white/5",
-      danger: "bg-red-500/10 text-red-500 border-2 border-red-500/30 hover:bg-red-500/20 hover:border-red-500 hover:shadow-[0_0_25px_rgba(239,68,68,0.4)]",
+      danger: "bg-red-500/10 text-red-500 border border-red-500/30 hover:bg-red-500/20 hover:border-red-500",
       glass: "backdrop-blur-md bg-white/5 border border-white/10 text-foreground hover:bg-white/10 hover:border-white/20 shadow-lg"
     };
 

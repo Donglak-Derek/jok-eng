@@ -175,7 +175,7 @@ export default function StoryFlow({ script }: Props) {
                     </div>
                     
                     {/* Main English Text */}
-                    <div className="text-2xl md:text-3xl lg:text-4xl font-medium leading-relaxed my-2 md:my-4">
+                    <div className="text-xl md:text-2xl lg:text-3xl font-medium leading-relaxed my-2 md:my-4 px-4">
                        &quot;{currentSegment.text}&quot;
                     </div>
 

@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "lh5.googleusercontent.com", // anticipating other google domains
       },
+      {
+        protocol: "https",
+        hostname: "www.google.com", 
+      },
     ],
   },
 };
