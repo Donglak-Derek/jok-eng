@@ -83,7 +83,7 @@ export default function ScenarioCard({
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ type: "spring", stiffness: 400, damping: 17 }}
-        className={`relative h-full rounded-2xl border bg-card/60 backdrop-blur-md p-5 pb-24 flex flex-col justify-between shadow-sm ${theme} group`}
+        className={`relative rounded-2xl border bg-card/60 backdrop-blur-md p-5 flex flex-col shadow-sm ${theme} group`}
         // Remove direct onClick here to allow children to handle events
       >
         <Link href={href} className="absolute inset-0 z-0" aria-label="View Scenario" />
@@ -124,7 +124,8 @@ export default function ScenarioCard({
         </div>
 
         {/* MIDDLE CONTENT: Title & Desc */}
-        <div className="flex-1 flex flex-col gap-3 z-10 relative pointer-events-none mb-4">
+        {/* Removed flex-1 to let content stack naturally without filling height (Fixes 'empty space') */}
+        <div className="flex flex-col gap-3 z-10 relative pointer-events-none mb-4">
            {/* Header Group */}
            <div>
              <h3 className="text-2xl md:text-3xl font-bold leading-tight text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.5)] mb-2">
@@ -150,22 +151,31 @@ export default function ScenarioCard({
            </p>
         </div>
 
-        {/* COMMENTS SECTION */}
-        {showComments && isUserScript && (
-          <div className="relative z-20 pointer-events-auto mt-2 mb-4" onClick={(e) => {
-             e.preventDefault(); 
-             e.stopPropagation(); // Explicitly stop propagation
-          }}>
-             <CommentsSection scenario={script as UserScript} />
-          </div>
-        )}
+        {/* STATS ROW (Between Description and Footer) */}
+        {/* Aligned to the right as requested */}
+        <div className="flex items-center justify-end gap-4 text-xs font-medium text-white/40 mb-4 px-1">
+             <div className="flex items-center gap-1.5" title="Comments">
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+                <span>{isUserScript ? ((script as UserScript).commentsCount || 0) : 0}</span>
+             </div>
+             <div className="flex items-center gap-1.5" title="Shares">
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" /></svg>
+                <span>{isUserScript ? ((script as UserScript).shares || 0) : 0}</span>
+             </div>
+             <div className="flex items-center gap-1.5" title="Saves">
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" /></svg>
+                <span>{isUserScript ? ((script as UserScript).saves || 0) : 0}</span>
+             </div>
+        </div>
 
         {/* BOTTOM FOOTER: Practice (Left) & Controls (Right) */}
-        <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between border-t border-white/10 pt-4 z-10 pointer-events-none">
+        {/* Removed mt-auto so it sits naturally below the content, eliminating the 'empty space' gap */}
+        {/* BOTTOM FOOTER: Practice (Left) & Controls (Right) */}
+        {/* Removed mt-auto so it sits naturally below the content, eliminating the 'empty space' gap */}
+        <div className="flex items-center justify-between border-t border-white/10 pt-4 z-10 relative">
            {/* LEFT: Practice Link */}
            <div className="flex items-center gap-2 text-[10px] font-medium text-white/50 uppercase tracking-widest group-hover:text-primary transition-colors">
               <span>Practice</span>
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
            </div>
 
            {/* RIGHT: Action Icons */}
@@ -178,11 +188,10 @@ export default function ScenarioCard({
                            e.stopPropagation();
                            onLike(script.id, e);
                        }}
-                       className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all ${isLiked ? "bg-pink-500/20 border-pink-500 text-pink-500" : "bg-black/40 border-white/10 text-muted hover:text-pink-400 hover:bg-black/60"}`}
+                       className={`p-2 rounded-full border transition-all ${isLiked ? "bg-pink-500/20 border-pink-500 text-pink-500" : "bg-black/40 border-white/10 text-muted hover:text-pink-400 hover:bg-black/60"}`}
                        title={isLiked ? "Unlike" : "Like"}
                    >
                        <svg className={`w-4 h-4 ${isLiked ? "fill-current" : "fill-none stroke-current"}`} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
-                       <span className="text-xs font-bold">{likeCount}</span>
                    </button>
                )}
 
@@ -198,6 +207,23 @@ export default function ScenarioCard({
                        title="Comments"
                    >
                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+                   </button>
+               )}
+               
+               {/* SHARE BUTTON: Hide if private */}
+               {(!isUserScript || isPublic) && (
+                   <button 
+                       onClick={(e) => {
+                           e.preventDefault();
+                           e.stopPropagation();
+                           const url = window.location.origin + href;
+                           navigator.clipboard.writeText(url);
+                           alert("Link copied to clipboard!"); 
+                       }}
+                       className="p-2 rounded-full bg-black/40 border border-white/10 text-muted hover:text-green-400 hover:bg-black/60 transition-all"
+                       title="Share Scenario"
+                   >
+                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" /></svg>
                    </button>
                )}
 
@@ -260,7 +286,17 @@ export default function ScenarioCard({
                )}
            </div>
         </div>
-      </motion.div>
+
+        {/* COMMENTS SECTION - NOW AT THE VERY BOTTOM */}
+        {showComments && isUserScript && (
+          <div className="relative z-20 pointer-events-auto mt-4 pt-4 border-t border-white/5" onClick={(e) => {
+             e.preventDefault(); 
+             e.stopPropagation(); // Explicitly stop propagation for clicks inside comments
+          }}>
+             <h4 className="text-xs font-bold text-muted mb-3 uppercase tracking-wider">Comments</h4>
+             <CommentsSection scenario={script as UserScript} />
+          </div>
+        )}      </motion.div>
     </div>
   );
 }

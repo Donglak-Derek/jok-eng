@@ -72,6 +72,9 @@ export type UserScript = Script & {
   };
   isPublic?: boolean;
   repeats?: number;
+  commentsCount?: number;
+  shares?: number;
+  saves?: number;
 };
 
 export interface Comment {
