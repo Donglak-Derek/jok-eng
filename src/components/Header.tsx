@@ -54,6 +54,13 @@ export default function Header() {
                             <p className="text-xs text-muted truncate">{user.email}</p>
                         </div>
                         <Link 
+                            href="/profile" 
+                            className="block px-4 py-2 text-sm text-foreground hover:bg-secondary/10 transition-colors"
+                            onClick={() => setDropdownOpen(false)}
+                        >
+                            My Profile
+                        </Link>
+                        <Link 
                             href="/my-scenarios" 
                             className="block px-4 py-2 text-sm text-foreground hover:bg-secondary/10 transition-colors"
                             onClick={() => setDropdownOpen(false)}
