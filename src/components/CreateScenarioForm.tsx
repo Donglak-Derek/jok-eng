@@ -6,7 +6,7 @@ import { Script, UserScript } from "@/types";
 import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
 import { db } from "@/lib/firebase";
-import { collection, addDoc, setDoc, doc } from "firebase/firestore";
+import { collection, setDoc, doc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 // For preview, we want to see sentences.
 import SentenceCard from "./SentenceCard";
@@ -124,7 +124,7 @@ export default function CreateScenarioForm() {
          // 2. Increment User Stats
          // Note: We don't block the UI for this stat update, but we do await it to ensure consistency if possible
          try {
-            const { doc, setDoc, increment, updateDoc } = await import("firebase/firestore"); // Dynamic import or use existing from top
+            const { setDoc, increment } = await import("firebase/firestore"); // Dynamic import or use existing from top
             const userRef = doc(db, "users", user.uid);
             
             // Try updating first (if doc exists), else set it

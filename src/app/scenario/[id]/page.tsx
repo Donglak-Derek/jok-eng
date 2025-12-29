@@ -2,7 +2,7 @@
 
 import { useEffect, useState, use } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { doc, getDoc, getDocs, collectionGroup, query, where, documentId } from "firebase/firestore";
+import { doc, getDoc, getDocs, collectionGroup, query, where } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import ScriptClient from "@/app/script/[id]/ScriptClient";
 import { UserScript } from "@/types";

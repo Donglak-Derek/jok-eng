@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { UserScript, Comment as CommentType } from "@/types";
 import { useAuth } from "@/context/AuthContext";
-import { addDoc, collection, onSnapshot, orderBy, query, serverTimestamp } from "firebase/firestore";
+import { addDoc, collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Button } from "./Button";
 
@@ -59,6 +59,7 @@ export default function CommentsSection({ scenario }: CommentsSectionProps) {
         createdAt: Date.now() 
       });
       setNewComment("");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error("Error posting comment:", err);
       // Show the actual error message to the user for debugging
@@ -81,6 +82,7 @@ export default function CommentsSection({ scenario }: CommentsSectionProps) {
             <div key={comment.id} className="flex gap-2">
               <div className="w-8 h-8 rounded-full bg-secondary/10 flex-shrink-0 overflow-hidden">
                 {comment.userPhotoURL ? (
+                  // eslint-disable-next-line @next/next/no-img-element
                   <img src={comment.userPhotoURL} alt={comment.userName} className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-xs font-bold text-secondary">

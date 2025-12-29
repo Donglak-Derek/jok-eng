@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { collectionGroup, query, where, orderBy, limit, getDocs, addDoc, collection, updateDoc, doc, arrayUnion, arrayRemove, increment, setDoc } from "firebase/firestore";
+import { collectionGroup, query, where, orderBy, limit, getDocs, collection, updateDoc, doc, arrayUnion, arrayRemove, increment, setDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { UserScript } from "@/types";
 import ScenarioCard from "./ScenarioCard";
@@ -13,7 +13,7 @@ export default function CommunityScenariosSection() {
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
 
-  const handleToggleLike = async (id: string, e: React.MouseEvent) => {
+  const handleToggleLike = async (id: string) => {
     if (!user) {
         alert("Please login to like scenarios.");
         return;
@@ -63,7 +63,7 @@ export default function CommunityScenariosSection() {
     }
   };
 
-  const handleSave = async (id: string, e: React.MouseEvent) => {
+  const handleSave = async (id: string) => {
       if (!user) {
           alert("Please login to save scenarios.");
           return;
@@ -127,6 +127,7 @@ export default function CommunityScenariosSection() {
         })) as UserScript[];
 
         setScenarios(docs);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         console.error("Error fetching community scenarios:", err);
         // Check for permission error specifically

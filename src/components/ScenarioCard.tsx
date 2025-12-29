@@ -29,7 +29,8 @@ export default function ScenarioCard({
     isLiked 
 }: Props) {
   // Prefer DB repeats if available, otherwise localStorage
-  const dbRepeats = 'repeats' in script ? (script as any).repeats : 0;
+  const dbRepeats = 'repeats' in script ? (script as UserScript).repeats : 0;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [repeats, setRepeats] = useState<number>(dbRepeats || 0);
   const [showComments, setShowComments] = useState(false);
   const repeatsKey = `jokeng:repeats:${script.id}`;
@@ -68,10 +69,10 @@ export default function ScenarioCard({
 
   // Check if it's a user script for public toggling
   const isUserScript = 'userId' in script;
-  const isPublic = isUserScript && (script as any).isPublic;
-  const authorName = (script as any).authorName;
-  const authorPhotoURL = (script as any).authorPhotoURL;
-  const likeCount = (script as any).likes || 0;
+  const isPublic = isUserScript && (script as UserScript).isPublic;
+  const authorName = isUserScript ? (script as UserScript).authorName : undefined;
+  const authorPhotoURL = isUserScript ? (script as UserScript).authorPhotoURL : undefined;
+  const likeCount = isUserScript ? (script as UserScript).likes || 0 : 0;
 
   // Determine correct link path
   const href = isUserScript ? `/scenario/${script.id}` : `/script/${script.id}`;
