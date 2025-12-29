@@ -88,17 +88,50 @@ export default function CommunityScenariosSection() {
                   originalScenarioId: scriptToSave.id, // Track source
                   likes: 0, // Reset likes for the copy
                   likedBy: [], // Reset likedBy
+                  shares: 0,
+                  saves: 0,
+                  commentsCount: 0,
               };
               
               await setDoc(newDocRef, newScript);
+              
+              // Increment 'saves' on the ORIGINAL script
+              try {
+                 const originalRef = doc(db, "users", scriptToSave.userId, "scenarios", scriptToSave.id);
+                 await updateDoc(originalRef, {
+                     saves: increment(1)
+                 });
+                 // Optimistic update locally
+                 setScenarios(prev => prev.map(s => s.id === id ? { ...s, saves: (s.saves || 0) + 1 } : s));
+              } catch (updateErr) {
+                  console.warn("Could not increment save count (likely permission)", updateErr);
+              }
+
               alert("Saved to your scenarios!");
               // Optional: Refresh My Scenarios if valid, or just let user see it next time.
-              window.location.reload(); 
+              // window.location.reload(); 
           } catch (err) {
               console.error("Error saving:", err);
               alert("Failed to save.");
           }
       }
+  };
+
+  const handleShare = async (id: string) => {
+     // Optimistic update
+     setScenarios(prev => prev.map(s => s.id === id ? { ...s, shares: (s.shares || 0) + 1 } : s));
+     
+     try {
+         const script = scenarios.find(s => s.id === id);
+         if (!script) return;
+         
+         const scriptRef = doc(db, "users", script.userId, "scenarios", id);
+         await updateDoc(scriptRef, {
+             shares: increment(1)
+         });
+     } catch (err) {
+         console.error("Error incrementing share count:", err);
+     }
   };
 
   useEffect(() => {
@@ -189,6 +222,7 @@ export default function CommunityScenariosSection() {
                     index={index} 
                     onLike={handleToggleLike}
                     onSave={handleSave}
+                    onShare={handleShare}
                     isLiked={user ? script.likedBy?.includes(user.uid) : false}
                 />
             </motion.div>

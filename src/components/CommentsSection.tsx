@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { UserScript, Comment as CommentType } from "@/types";
 import { useAuth } from "@/context/AuthContext";
-import { addDoc, collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { addDoc, collection, onSnapshot, orderBy, query, updateDoc, doc, increment } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Button } from "./Button";
 
@@ -58,6 +58,17 @@ export default function CommentsSection({ scenario }: CommentsSectionProps) {
         text: newComment.trim(),
         createdAt: Date.now() 
       });
+
+      // Increment comment count on the parent scenario document
+      try {
+          const scenarioRef = doc(db, "users", scenario.userId, "scenarios", scenario.id);
+          await updateDoc(scenarioRef, {
+              commentsCount: increment(1)
+          });
+      } catch (countErr) {
+          console.error("Failed to increment comment count:", countErr);
+      }
+
       setNewComment("");
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
