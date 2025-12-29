@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Confetti from "@/components/Confetti";
 import { Button } from "@/components/Button";
 import { useAuth } from "@/context/AuthContext";
-import { deleteDoc, doc } from "firebase/firestore";
+import { deleteDoc, updateDoc, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { UserScript } from "@/types";
 
@@ -80,11 +80,24 @@ export default function StandardScriptFlow({ script }: Props) {
     }
   };
 
-  const handleFinishTraining = () => {
+  const isOwner = user && 'userId' in script && (script as UserScript).userId === user.uid;
+
+  const handleFinishTraining = async () => {
       // Increment Repeats
       const nextRepeats = repeats + 1;
       setRepeats(nextRepeats);
       localStorage.setItem(repeatsKey, String(nextRepeats));
+      
+      // Save for user script (Firestore persistence)
+      if (isOwner && user) {
+         try {
+           await updateDoc(doc(db, "users", user.uid, "scenarios", script.id), {
+             repeats: nextRepeats
+           });
+         } catch(e) { 
+           console.error("Failed to sync repeats", e); 
+         }
+      }
       
       // Clear progress
       setHeardSet(new Set());
@@ -107,20 +120,9 @@ export default function StandardScriptFlow({ script }: Props) {
   // When at completion (currentIndex === total), it should be 100%
   const progressPercent = (currentIndex / total) * 100;
 
-  const isOwner = user && 'userId' in script && (script as UserScript).userId === user.uid;
 
-  const handleDelete = async () => {
-    if (!confirm("Are you sure you want to delete this scenario?")) return;
-    if (!user) return;
 
-    try {
-      await deleteDoc(doc(db, "users", user.uid, "scenarios", script.id));
-      router.push("/category/custom");
-    } catch (error) {
-      console.error("Error deleting scenario:", error);
-      alert("Failed to delete scenario.");
-    }
-  };
+
 
   return (
     <div className="min-h-dvh text-foreground flex flex-col relative overflow-hidden">
@@ -140,32 +142,9 @@ export default function StandardScriptFlow({ script }: Props) {
             </div>
           </div>
 
-          {isOwner && (
-            <div className="flex items-center gap-1">
-              <button 
-                onClick={() => router.push(`/scenario/${script.id}/edit`)}
-                className="p-2 text-muted hover:text-primary transition-colors"
-                title="Edit Scenario"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                </svg>
-              </button>
 
-              <button 
-                onClick={handleDelete}
-                className="p-2 text-muted hover:text-red-500 transition-colors"
-                title="Delete Scenario"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M3 6h18"></path>
-                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-                </svg>
-              </button>
-            </div>
-          )}
+
+
           
           {/* Full Width Progress Bar */}
           <div className="absolute bottom-0 left-0 right-0 h-1 bg-secondary/20">

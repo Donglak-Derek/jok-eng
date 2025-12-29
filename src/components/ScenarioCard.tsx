@@ -13,13 +13,20 @@ type Props = {
 };
 
 export default function ScenarioCard({ script, index, onEdit, onDelete, onTogglePublic }: Props & { onTogglePublic?: (id: string, current: boolean, e: React.MouseEvent) => void }) {
-  const [repeats, setRepeats] = useState<number>(0);
+  // Prefer DB repeats if available, otherwise localStorage
+  const dbRepeats = 'repeats' in script ? (script as any).repeats : 0;
+  const [repeats, setRepeats] = useState<number>(dbRepeats || 0);
   const repeatsKey = `jokeng:repeats:${script.id}`;
 
   useEffect(() => {
+    // Only use local storage if DB repeats is missing (e.g. for static scripts or sync lag)
+    if (dbRepeats) {
+        setRepeats(dbRepeats);
+        return;
+    }
     const v = localStorage.getItem(repeatsKey);
     setRepeats(v ? Number(v) || 0 : 0);
-  }, [repeatsKey]);
+  }, [repeatsKey, dbRepeats]);
 
   // Design Theme - Neon Comedy Club Vibe
   const gradients = [

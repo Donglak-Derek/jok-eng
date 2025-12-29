@@ -65,4 +65,5 @@ export type UserScript = Script & {
     plot: string;
   };
   isPublic?: boolean;
+  repeats?: number;
 };

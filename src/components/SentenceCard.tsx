@@ -110,7 +110,7 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
         </div>
 
         {/* Content Grid */}
-        <div className="grid md:grid-cols-2 gap-4 md:gap-6">
+        <div className="flex flex-col gap-4 md:gap-6">
           {/* Bad Response (Mistake) */}
           <div className="relative p-4 rounded-2xl bg-destructive/10 border border-destructive/20">
             <div className="absolute -top-2.5 left-4 px-2 py-0.5 rounded-full bg-destructive/20 border border-destructive/30 backdrop-blur text-[10px] font-bold text-destructive uppercase tracking-wider">

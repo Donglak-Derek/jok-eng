@@ -7,6 +7,10 @@ import type { Script } from "@/types";
 import { motion, AnimatePresence } from "framer-motion";
 import Confetti from "@/components/Confetti";
 import { Button } from "@/components/Button";
+import { useAuth } from "@/context/AuthContext";
+import { updateDoc, doc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import { UserScript } from "@/types";
 
 type Props = {
   script: Script;
@@ -44,12 +48,26 @@ export default function StoryFlow({ script }: Props) {
     }
   };
 
-  const handleFinishTraining = () => {
+  const { user } = useAuth();
+  const isOwner = user && 'userId' in script && (script as UserScript).userId === user.uid;
+
+  const handleFinishTraining = async () => {
      // Save repeats
      const nextRepeats = repeats + 1;
      setRepeats(nextRepeats);
      localStorage.setItem(repeatsKey, String(nextRepeats));
      
+     // Save for user script (Firestore persistence)
+      if (isOwner && user) {
+         try {
+           await updateDoc(doc(db, "users", user.uid, "scenarios", script.id), {
+             repeats: nextRepeats
+           });
+         } catch(e) { 
+           console.error("Failed to sync repeats", e); 
+         }
+      }
+
      // Go to next
      handleNext();
   };

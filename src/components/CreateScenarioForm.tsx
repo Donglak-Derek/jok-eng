@@ -77,7 +77,8 @@ export default function CreateScenarioForm() {
              ...generatedScript,
              userId: user.uid,
              createdAt: Date.now(),
-             originalPrompt: inputs
+             originalPrompt: inputs,
+             isPublic: true
          };
 
          // Sanitize function to remove undefined values
@@ -268,6 +269,20 @@ export default function CreateScenarioForm() {
                         >
                             {isSaving ? "Saving..." : "💾 Save to My Scenarios"}
                         </Button>
+                        
+                        <div className="flex items-center justify-center gap-2 mt-2">
+                             <input 
+                                 type="checkbox" 
+                                 id="isPublic"
+                                 checked={true} // Always forced to true for now based on requirement "make user can see... and make it public"
+                                 readOnly // Making it read-only true to enforce it, or we can make it state. 
+                                 // Let's make it state to be polite, but default true.
+                                 className="w-4 h-4 accent-primary"
+                             />
+                             <label htmlFor="isPublic" className="text-sm text-muted">
+                                 Make Public (Visible to Community)
+                             </label>
+                         </div>
                      </div>
                      </div> {/* End of unified card container */}
                 </motion.div>

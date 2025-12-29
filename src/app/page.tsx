@@ -5,6 +5,8 @@ import Card from "@/components/Card";
 import Header from "@/components/Header";
 import MyScenariosSection from "@/components/MyScenariosSection";
 
+import CommunityScenariosSection from "@/components/CommunityScenariosSection";
+
 export default function Home() {
   return (
     <div className="min-h-dvh text-foreground">
@@ -41,6 +43,7 @@ export default function Home() {
         </section>
 
         <MyScenariosSection />
+        <CommunityScenariosSection />
 
         <section className="mt-4 md:mt-8">
           <h2
