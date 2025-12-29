@@ -58,6 +58,12 @@ export type Category = {
 export type UserScript = Script & {
   userId: string;
   createdAt: number; // timestamp
+  authorName?: string;
+  authorPhotoURL?: string;
+  likes?: number; // count
+  likedBy?: string[]; // user IDs
+  originalScenarioId?: string; // For saved copies
+  isRemix?: boolean;
   originalPrompt: {
     context: string;
     myRole: string;
@@ -67,3 +73,20 @@ export type UserScript = Script & {
   isPublic?: boolean;
   repeats?: number;
 };
+
+export interface Comment {
+  id: string;
+  scenarioId: string;
+  userId: string;
+  userName: string;
+  userPhotoURL?: string;
+  text: string;
+  createdAt: number;
+}
+
+export interface UserStats {
+  userId: string;
+  totalScenariosCreated: number;
+  totalPractices: number;
+  totalLikesReceived: number;
+}

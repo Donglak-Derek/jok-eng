@@ -1,15 +1,105 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { collectionGroup, query, where, orderBy, limit, getDocs } from "firebase/firestore";
+import { collectionGroup, query, where, orderBy, limit, getDocs, addDoc, collection, updateDoc, doc, arrayUnion, arrayRemove, increment, setDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { UserScript } from "@/types";
 import ScenarioCard from "./ScenarioCard";
 import { motion } from "framer-motion";
+import { useAuth } from "@/context/AuthContext";
 
 export default function CommunityScenariosSection() {
   const [scenarios, setScenarios] = useState<UserScript[]>([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
+
+  const handleToggleLike = async (id: string, e: React.MouseEvent) => {
+    if (!user) {
+        alert("Please login to like scenarios.");
+        return;
+    }
+    
+    // Optimistic Update
+    setScenarios(prev => prev.map(s => {
+        if (s.id !== id) return s;
+        const isLiked = s.likedBy?.includes(user.uid);
+        const newLikes = (s.likes || 0) + (isLiked ? -1 : 1);
+        const newLikedBy = isLiked 
+            ? s.likedBy?.filter(uid => uid !== user.uid) 
+            : [...(s.likedBy || []), user.uid];
+        return { ...s, likes: newLikes, likedBy: newLikedBy };
+    }));
+
+    try {
+        // Find the scenario to get its reference path.
+        // Since we did a collectionGroup query, we don't know the exact path easily without storing 'path' or iterating.
+        // BUT, we know user ID is usually in the data? OR we need the reference.
+        // The `doc` object from `getDocs` has the ref. We should have stored it?
+        // Wait, for `collectionGroup`, the `doc.ref` is essential.
+        // I didn't store doc.ref in state. I stored data + id.
+        // To update, I need the full path `users/{userId}/scenarios/{scenarioId}`.
+        // Since `UserScript` has `userId`, I can construct the path!
+        
+        const script = scenarios.find(s => s.id === id);
+        if (!script) return;
+        
+        const scriptRef = doc(db, "users", script.userId, "scenarios", id);
+        const isLiked = script.likedBy?.includes(user.uid);
+        
+        if (isLiked) {
+             await updateDoc(scriptRef, {
+                 likes: increment(-1),
+                 likedBy: arrayRemove(user.uid)
+             });
+        } else {
+             await updateDoc(scriptRef, {
+                 likes: increment(1),
+                 likedBy: arrayUnion(user.uid)
+             });
+        }
+    } catch (err) {
+        console.error("Error toggling like:", err);
+        // Revert on error? For now just log.
+    }
+  };
+
+  const handleSave = async (id: string, e: React.MouseEvent) => {
+      if (!user) {
+          alert("Please login to save scenarios.");
+          return;
+      }
+      const scriptToSave = scenarios.find(s => s.id === id);
+      if (!scriptToSave) return;
+
+      if (confirm(`Save "${scriptToSave.title}" to your library?`)) {
+          try {
+              // Create a reference for the new copy
+              const scenariosRef = collection(db, "users", user.uid, "scenarios");
+              const newDocRef = doc(scenariosRef);
+
+              // Create a copy for the current user
+              const newScript = {
+                  ...scriptToSave,
+                  id: newDocRef.id, // Store key ID in document
+                  userId: user.uid,
+                  createdAt: Date.now(),
+                  isPublic: false, // Saved copies are private by default
+                  originalAuthor: scriptToSave.authorName || "Unknown", 
+                  originalScenarioId: scriptToSave.id, // Track source
+                  likes: 0, // Reset likes for the copy
+                  likedBy: [], // Reset likedBy
+              };
+              
+              await setDoc(newDocRef, newScript);
+              alert("Saved to your scenarios!");
+              // Optional: Refresh My Scenarios if valid, or just let user see it next time.
+              window.location.reload(); 
+          } catch (err) {
+              console.error("Error saving:", err);
+              alert("Failed to save.");
+          }
+      }
+  };
 
   useEffect(() => {
     const fetchCommunityScenarios = async () => {
@@ -84,7 +174,7 @@ export default function CommunityScenariosSection() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+      <div className="grid grid-cols-1 gap-4 md:gap-6">
         {scenarios.map((script, index) => (
             <motion.div
                 key={script.id}
@@ -93,7 +183,13 @@ export default function CommunityScenariosSection() {
                 transition={{ delay: index * 0.1 }}
             >
                 {/* Minimal Card Render */}
-                <ScenarioCard script={script} index={index} />
+                <ScenarioCard 
+                    script={script} 
+                    index={index} 
+                    onLike={handleToggleLike}
+                    onSave={handleSave}
+                    isLiked={user ? script.likedBy?.includes(user.uid) : false}
+                />
             </motion.div>
         ))}
       </div>

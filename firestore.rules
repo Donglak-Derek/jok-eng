@@ -2,15 +2,43 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // 1. User Data (Own Scenarios)
+    // 1. User Root Profile (For Stats like totalScenariosCreated)
+    match /users/{userId} {
+      allow read: if request.auth != null; // Allow auth users to read profiles (needed for stats/names)
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // 2. User Scenarios
     match /users/{userId}/scenarios/{scenarioId} {
       // Owner can do everything
       allow write: if request.auth != null && request.auth.uid == userId;
+      
       // Anyone can read if it is Public, otherwise only Owner
       allow read: if (request.auth != null && request.auth.uid == userId) || resource.data.isPublic == true;
+      
+      // Allow authenticated users to update 'likes' and 'likedBy' on public scenarios
+      allow update: if request.auth != null 
+                    && resource.data.isPublic == true
+                    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likes', 'likedBy']);
+      
+      // 3. Comments Sub-collection
+      match /comments/{commentId} {
+         // Read: If parent scenario is public (we assume access through UI logic mostly, but let's allow auth read for community)
+         // Simplified: Allow auth users to read comments
+         allow read: if request.auth != null;
+         
+         // Create: Any auth user can comment
+         allow create: if request.auth != null;
+         
+         // Delete: Only the comment author OR the scenario owner can delete
+         allow delete: if request.auth != null && (
+            request.auth.uid == resource.data.userId || // Comment Author
+            request.auth.uid == userId // Scenario Owner
+         );
+      }
     }
     
-    // 2. Collection Group (For Community Section Query)
+    // 4. Collection Group (For Community Section Query)
     match /{path=**}/scenarios/{scenarioId} {
       allow read: if resource.data.isPublic == true;
     }

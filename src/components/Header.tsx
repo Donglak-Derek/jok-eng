@@ -27,8 +27,11 @@ export default function Header() {
             <div className="relative">
                 <button 
                     onClick={() => setDropdownOpen(!dropdownOpen)}
-                    className="flex items-center gap-2 focus:outline-none"
+                    className="flex items-center gap-3 focus:outline-none"
                 >
+                    <span className="hidden md:block text-sm font-bold text-foreground">
+                        Hi, {user.displayName?.split(' ')[0] || "User"}!
+                    </span>
                     {user.photoURL ? (
                         <Image 
                             src={user.photoURL} 

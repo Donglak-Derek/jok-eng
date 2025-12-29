@@ -2,7 +2,7 @@
 
 import { useEffect, useState, use } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { doc, getDoc, deleteDoc } from "firebase/firestore";
+import { doc, getDoc, getDocs, collectionGroup, query, where, documentId } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import ScriptClient from "@/app/script/[id]/ScriptClient";
 import { UserScript } from "@/types";
@@ -23,23 +23,46 @@ export default function ScenarioPage({ params }: Props) {
   useEffect(() => {
     if (authLoading) return;
     
-    if (!user) {
-        setLoading(false);
-        return;
-    }
+    // Note: Guests can view public scenarios, so we don't return early if !user
 
     async function fetchScenario() {
         try {
-            const docRef = doc(db, "users", user!.uid, "scenarios", id);
-            const docSnap = await getDoc(docRef);
+            let foundScript: UserScript | null = null;
 
-            if (docSnap.exists()) {
-                setScript({ id: docSnap.id, ...docSnap.data() } as UserScript);
+            // 1. If logged in, try finding in own collection first (faster/guaranteed permission)
+            if (user) {
+                const docRef = doc(db, "users", user.uid, "scenarios", id);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    foundScript = { id: docSnap.id, ...docSnap.data() } as UserScript;
+                }
+            }
+
+            // 2. If not found yet (or guest), try searching globally (Community/Public)
+            if (!foundScript) {
+                // Search all 'scenarios' collections for this ID
+                // Note: Firestore Rules will ensure we only get it if it's Public (or ours)
+                // We MUST filter by isPublic to satisfy the security rule condition for list queries
+                const q = query(
+                    collectionGroup(db, "scenarios"), 
+                    where("id", "==", id),
+                    where("isPublic", "==", true)
+                );
+                const querySnapshot = await getDocs(q);
+                
+                if (!querySnapshot.empty) {
+                    const docSnap = querySnapshot.docs[0];
+                    foundScript = { id: docSnap.id, ...docSnap.data() } as UserScript;
+                }
+            }
+
+            if (foundScript) {
+                setScript(foundScript);
             } else {
-                setError("Scenario not found.");
+                setError("Scenario not found or you don't have permission.");
             }
         } catch (err) {
-            console.error(err);
+            console.error("Error fetching scenario:", err);
             setError("Failed to load scenario.");
         } finally {
             setLoading(false);
@@ -57,15 +80,7 @@ export default function ScenarioPage({ params }: Props) {
       );
   }
 
-  if (!user) {
-      return (
-          <div className="min-h-screen flex flex-col items-center justify-center gap-4 text-center p-4">
-              <h1 className="text-2xl font-bold">Please Log In</h1>
-              <p>You need to be logged in to view your saved scenarios.</p>
-              <Button onClick={() => router.push("/login")} variant="primary">Log In</Button>
-          </div>
-      );
-  }
+  // Removed the "Please Log In" block here to allow guests to view public scenarios
 
   if (error || !script) {
       return (

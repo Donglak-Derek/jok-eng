@@ -58,6 +58,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <motion.button
         ref={ref}
+        type={props.type || "button"} // Default to button to avoid accidental submits, unless specified
         className={`${baseStyles} ${sizeStyles[size]} ${variantStyles[variant]} ${className}`}
         disabled={disabled || isLoading}
         whileTap={{ scale: disabled ? 1 : 0.98 }}

@@ -2,20 +2,36 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import type { Script } from "@/types";
+import type { Script, UserScript } from "@/types";
 import { motion } from "framer-motion";
+import CommentsSection from "./CommentsSection";
+import React from "react";
 
 type Props = {
   script: Script;
   index: number;
   onEdit?: (id: string, e: React.MouseEvent) => void;
   onDelete?: (id: string, e: React.MouseEvent) => void;
+  onTogglePublic?: (id: string, current: boolean, e: React.MouseEvent) => void;
+  onLike?: (id: string, e: React.MouseEvent) => void;
+  onSave?: (id: string, e: React.MouseEvent) => void;
+  isLiked?: boolean;
 };
 
-export default function ScenarioCard({ script, index, onEdit, onDelete, onTogglePublic }: Props & { onTogglePublic?: (id: string, current: boolean, e: React.MouseEvent) => void }) {
+export default function ScenarioCard({ 
+    script, 
+    index, 
+    onEdit, 
+    onDelete, 
+    onTogglePublic, 
+    onLike,
+    onSave, 
+    isLiked 
+}: Props) {
   // Prefer DB repeats if available, otherwise localStorage
   const dbRepeats = 'repeats' in script ? (script as any).repeats : 0;
   const [repeats, setRepeats] = useState<number>(dbRepeats || 0);
+  const [showComments, setShowComments] = useState(false);
   const repeatsKey = `jokeng:repeats:${script.id}`;
 
   useEffect(() => {
@@ -53,28 +69,79 @@ export default function ScenarioCard({ script, index, onEdit, onDelete, onToggle
   // Check if it's a user script for public toggling
   const isUserScript = 'userId' in script;
   const isPublic = isUserScript && (script as any).isPublic;
+  const authorName = (script as any).authorName;
+  const authorPhotoURL = (script as any).authorPhotoURL;
+  const likeCount = (script as any).likes || 0;
 
   // Determine correct link path
   const href = isUserScript ? `/scenario/${script.id}` : `/script/${script.id}`;
 
   return (
-    <Link href={href} className="block h-full">
+    <div className="h-full block"> {/* Changed Link to div wrapper to manage nested clicks better if needed, but keeping Structure similar */}
       <motion.div
-        whileTap={{ scale: 0.96 }}
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ type: "spring", stiffness: 400, damping: 17 }}
-        className={`relative h-full rounded-2xl border bg-card/60 backdrop-blur-md p-5 flex flex-col justify-between shadow-sm ${theme} group`}
+        className={`relative h-full rounded-2xl border bg-card/60 backdrop-blur-md p-5 pb-24 flex flex-col justify-between shadow-sm ${theme} group`}
+        // Remove direct onClick here to allow children to handle events
       >
-        {/* Top Row: Index Number and Action Buttons */}
-        <div className="flex justify-between items-start mb-4">
-           {/* 1. Number of card instead of icon */}
+        <Link href={href} className="absolute inset-0 z-0" aria-label="View Scenario" />
+
+        {/* Top Row: Index/Type & Actions -> z-10 to be clickable over the link */}
+        <div className="flex justify-between items-start mb-4 z-10 relative pointer-events-none">
+           {/* Index */}
            <div className="text-4xl font-black text-white/10 font-mono leading-none select-none">
              #{String(index + 1).padStart(2, '0')}
            </div>
 
-           <div className="flex items-center gap-2">
-               {/* 4. Share/Private Toggle */}
+           <div className="flex items-center gap-2 pointer-events-auto">
+               {/* LIKE BUTTON (Counts) */}
+               {onLike && (
+                   <button 
+                       onClick={(e) => {
+                           e.preventDefault();
+                           e.stopPropagation();
+                           onLike(script.id, e);
+                       }}
+                       className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all ${isLiked ? "bg-pink-500/20 border-pink-500 text-pink-500" : "bg-black/40 border-white/10 text-muted hover:text-pink-400 hover:bg-black/60"}`}
+                       title={isLiked ? "Unlike" : "Like"}
+                   >
+                       <svg className={`w-4 h-4 ${isLiked ? "fill-current" : "fill-none stroke-current"}`} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+                       <span className="text-xs font-bold">{likeCount}</span>
+                   </button>
+               )}
+
+               {/* COMMENT BUTTON */}
+               {isUserScript && (
+                   <button 
+                       onClick={(e) => {
+                           e.preventDefault();
+                           e.stopPropagation();
+                           setShowComments(!showComments);
+                       }}
+                       className={`p-2 rounded-full border transition-all ${showComments ? "bg-blue-500/20 border-blue-500 text-blue-500" : "bg-black/40 border-white/10 text-muted hover:text-blue-400 hover:bg-black/60"}`}
+                       title="Comments"
+                   >
+                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+                   </button>
+               )}
+
+               {/* SAVE BUTTON (Copy) */}
+               {onSave && (
+                   <button 
+                       onClick={(e) => {
+                           e.preventDefault();
+                           e.stopPropagation();
+                           onSave(script.id, e);
+                       }}
+                       className="p-2 rounded-full bg-black/40 border border-white/10 text-cyan-400 hover:bg-cyan-400/20 hover:scale-110 active:scale-95 transition-all"
+                       title="Save to My Scenarios"
+                   >
+                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" /></svg>
+                   </button>
+               )}
+
+               {/* Share/Private Toggle */}
                {isUserScript && onTogglePublic && (
                  <button 
                     onClick={(e) => {
@@ -82,7 +149,7 @@ export default function ScenarioCard({ script, index, onEdit, onDelete, onToggle
                         e.stopPropagation();
                         onTogglePublic(script.id, !!isPublic, e);
                     }}
-                    className={`p-2 rounded-full border transition-all ${isPublic ? "bg-primary/20 border-primary text-primary" : "bg-black/40 border-white/10 text-muted"}`}
+                    className={`p-2 rounded-full border transition-all ${isPublic ? "bg-primary/20 border-primary text-primary" : "bg-black/40 border-white/10 text-muted hover:text-primary hover:bg-black/60"}`}
                     title={isPublic ? "Public: Click to make private" : "Private: Click to share"}
                  >
                     {isPublic ? (
@@ -102,16 +169,16 @@ export default function ScenarioCard({ script, index, onEdit, onDelete, onToggle
                            className="p-2 rounded-full bg-black/40 border border-white/10 text-secondary hover:text-primary hover:bg-white/10 hover:scale-110 active:scale-95 transition-all"
                            title="Edit"
                          >
-                             ✏️
+                             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
                          </button>
                      )}
                      {onDelete && (
                          <button 
                            onClick={(e) => onDelete(script.id, e)}
-                           className="p-2 rounded-full bg-black/40 border border-white/10 text-destructive/70 hover:text-destructive hover:bg-white/10 hover:scale-110 active:scale-95 transition-all"
+                           className="p-2 rounded-full bg-black/40 border border-white/10 text-destructive/70 hover:text-red-500 hover:bg-white/10 hover:scale-110 active:scale-95 transition-all"
                            title="Delete"
                          >
-                             🗑️
+                             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                          </button>
                      )}
                  </div>
@@ -119,18 +186,16 @@ export default function ScenarioCard({ script, index, onEdit, onDelete, onToggle
            </div>
         </div>
 
-        <div className="flex-1 flex flex-col gap-3">
+        <div className="flex-1 flex flex-col gap-3 z-10 relative pointer-events-none">
           <h3 className="text-2xl md:text-3xl font-bold leading-tight text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.5)]">
             {script.title}
           </h3>
 
-          {/* 2. Move "SCENARIO" under title, left of items count */}
           <div className="flex items-center gap-3">
               <div className={`px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-widest border bg-black/40 ${typeColor}`}>
                 {typeLabel}
               </div>
 
-              {/* Item Count Badge */}
               <div className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border bg-white/5 text-muted-foreground border-white/10 whitespace-nowrap">
                  <span>
                    {script.decoderItems?.length || script.segments?.length || script.sentences?.length || 0}
@@ -139,28 +204,55 @@ export default function ScenarioCard({ script, index, onEdit, onDelete, onToggle
               </div>
           </div>
           
-          {/* 3. Full Explanation (no line clamp) */}
-          <p className="text-sm md:text-base text-gray-300 leading-relaxed mt-2 opacity-90">
+          <p className="text-sm md:text-base text-gray-300 leading-relaxed mt-2 opacity-90 line-clamp-3">
             {script.cleanedEnglish || script.context}
           </p>
         </div>
 
-        {/* Bottom Actions Row */}
-        <div className="mt-6 flex items-center justify-between border-t border-white/10 pt-4">
-            <div className="flex items-center gap-2">
-                 {/* Repeats Badge */}
-                 <div className="flex items-center gap-1 text-[10px] font-bold text-primary uppercase tracking-wider">
-                    <span className="text-base">{repeats}</span>
-                    <span className="opacity-70">Reps</span>
-                 </div>
-            </div>
+        {/* COMMENTS SECTION */}
+        {showComments && isUserScript && (
+          <div className="relative z-20 pointer-events-auto" onClick={(e) => {
+             e.preventDefault(); 
+             e.stopPropagation(); // Explicitly stop propagation for clicks inside comments
+          }}>
+             <CommentsSection scenario={script as UserScript} />
+          </div>
+        )}
 
-            <div className="flex items-center gap-2 text-[10px] font-medium text-white/50 uppercase tracking-widest group-hover:text-primary transition-colors">
-              <span>Practice</span>
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-            </div>
-        </div>
+        {/* BOTTOM FOOTER: Author Info (Absolute Position for Sticky Feel at Bottom) */}
+        {!showComments && (
+          <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between border-t border-white/10 pt-4 z-10 pointer-events-none">
+              {/* Author Info */}
+              <div className="flex items-center gap-2 pointer-events-auto">
+                {authorName ? (
+                    <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-secondary to-primary p-[1px] shadow-lg">
+                            <div className="w-full h-full rounded-full overflow-hidden bg-black flex items-center justify-center">
+                                {authorPhotoURL ? (
+                                    // eslint-disable-next-line @next/next/no-img-element
+                                    <img src={authorPhotoURL} alt={authorName} className="w-full h-full object-cover" /> 
+                                ) : (
+                                    <span className="text-[10px] font-bold text-white">{authorName[0]?.toUpperCase()}</span>
+                                )}
+                            </div>
+                        </div>
+                        <div className="flex flex-col">
+                            <span className="text-xs font-bold text-white leading-none shadow-black drop-shadow-md">{authorName}</span>
+                            <span className="text-[10px] text-muted leading-none mt-0.5">Creator</span>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="text-xs text-muted italic">Community Scenario</div>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2 text-[10px] font-medium text-white/50 uppercase tracking-widest group-hover:text-primary transition-colors">
+                <span>Practice</span>
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+              </div>
+          </div>
+        )}
       </motion.div>
-    </Link>
+    </div>
   );
 }

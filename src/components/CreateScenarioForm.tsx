@@ -6,7 +6,7 @@ import { Script, UserScript } from "@/types";
 import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
 import { db } from "@/lib/firebase";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, setDoc, doc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 // For preview, we want to see sentences.
 import SentenceCard from "./SentenceCard";
@@ -77,6 +77,8 @@ export default function CreateScenarioForm() {
              ...generatedScript,
              userId: user.uid,
              createdAt: Date.now(),
+             authorName: user.displayName || user.email?.split('@')[0] || "Anonymous",
+             authorPhotoURL: user.photoURL || undefined,
              originalPrompt: inputs,
              isPublic: true
          };
@@ -92,21 +94,48 @@ export default function CreateScenarioForm() {
          const sanitizedScript = sanitize(userScript);
          
          console.log("Saving to Firestore path:", `users/${user.uid}/scenarios`);
-         console.log("Payload summary:", { 
-            title: sanitizedScript.title, 
-            sentencesCount: sanitizedScript.sentences?.length 
-         });
 
          // Race against a timeout
          const timeoutPromise = new Promise((_, reject) => 
             setTimeout(() => reject(new Error("Firestore write timed out (5s)")), 5000)
          );
 
-         const docRef = await Promise.race([
-            addDoc(collection(db, "users", user.uid, "scenarios"), sanitizedScript),
+// ... imports including setDoc
+// import { collection, setDoc, doc } from "firebase/firestore"; // Already at top now
+
+// ... inside CreateScenarioForm
+
+         const scenariosCollectionRef = collection(db, "users", user.uid, "scenarios");
+         const newScriptRef = doc(scenariosCollectionRef); // Generate ID locally
+         
+         const finalScript = {
+             ...sanitizedScript,
+             id: newScriptRef.id // Store ID in doc
+         };
+         
+         // 1. Save the Scenario with explicit ID
+         await Promise.race([
+            setDoc(newScriptRef, finalScript),
             timeoutPromise
-         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-         ]) as any; // Cast to avoid TS error on race result type
+         ]);
+         
+         const docRef = newScriptRef; // Keep variable name for below use
+
+         // 2. Increment User Stats
+         // Note: We don't block the UI for this stat update, but we do await it to ensure consistency if possible
+         try {
+            const { doc, setDoc, increment, updateDoc } = await import("firebase/firestore"); // Dynamic import or use existing from top
+            const userRef = doc(db, "users", user.uid);
+            
+            // Try updating first (if doc exists), else set it
+            // Simple way: setDoc with merge: true handles both creation and update
+            await setDoc(userRef, {
+                totalScenariosCreated: increment(1)
+            }, { merge: true });
+         } catch (statErr) {
+            console.error("Failed to update user stats:", statErr);
+            // Don't fail the whole user flow just for stats
+         }
 
          console.log("Document written with ID: ", docRef.id);
          

@@ -6,9 +6,10 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/Button";
 import { useEffect, useState } from "react";
 import { UserScript } from "@/types";
-import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
+import { collection, query, orderBy, onSnapshot, updateDoc, doc, deleteDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import Card from "./Card";
+import ScenarioCard from "./ScenarioCard";
+import { motion } from "framer-motion";
 
 export default function MyScenariosSection() {
   const { user, loading } = useAuth();
@@ -17,21 +18,17 @@ export default function MyScenariosSection() {
 
   useEffect(() => {
     if (!user) {
-        console.log("No user in MyScenariosSection, clearing scenarios");
         setScenarios([]);
         return;
     }
 
-    console.log("Fetching scenarios for user:", user.uid);
     const q = query(
         collection(db, "users", user.uid, "scenarios"), 
         orderBy("createdAt", "desc")
     );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
-        console.log("Snapshot received! Docs count:", snapshot.docs.length);
         const docs = snapshot.docs.map(doc => ({
-            // Spread data first, so doc.id (Firestore ID) overwrites any 'id' field in the data
             ...doc.data(),
             id: doc.id 
         })) as UserScript[];
@@ -43,7 +40,52 @@ export default function MyScenariosSection() {
     return () => unsubscribe();
   }, [user]);
 
-  if (loading) return null; // Or a subtle skeleton
+  const handleEdit = (id: string, e: React.MouseEvent) => {
+      e.preventDefault();
+      router.push(`/scenario/${id}/edit`); // Redirect to edit page (if exists) or just alert for now
+      // Note: User hasn't implemented full edit page yet, but let's keep the route clean.
+      // If page doesn't exist, Next.js 404s. 
+      // Safe fallback:
+      // alert("Edit feature coming soon!");
+  };
+
+  const handleDelete = async (id: string, e: React.MouseEvent) => {
+      e.preventDefault();
+      if (!user) return;
+      if (confirm("Are you sure you want to delete this scenario?")) {
+          try {
+              await deleteDoc(doc(db, "users", user.uid, "scenarios", id));
+          } catch (err) {
+              console.error("Error deleting:", err);
+              alert("Failed to delete.");
+          }
+      }
+  };
+
+  const handleTogglePublic = async (id: string, currentStatus: boolean, e: React.MouseEvent) => {
+      e.preventDefault();
+      if (!user) return;
+      
+      const script = scenarios.find(s => s.id === id);
+      if (!script) return;
+
+      // Duplicate Prevention Logic
+      if (!currentStatus && script.originalScenarioId && !script.isRemix) {
+          alert("🚫 Original Copy Detected\n\nTo prevent duplicates in the community, you cannot publish an exact copy of another user's scenario.\n\nPlease 'Like' the original to support the creator, or Edit this scenario to create a unique Remix!");
+          return;
+      }
+
+      try {
+          await updateDoc(doc(db, "users", user.uid, "scenarios", id), {
+              isPublic: !currentStatus
+          });
+      } catch (err) {
+          console.error("Error toggling public:", err);
+          alert("Failed to update visibility.");
+      }
+  };
+
+  if (loading) return null;
 
   // Guest View
   if (!user) {
@@ -131,26 +173,22 @@ export default function MyScenariosSection() {
                 </Button>
             </div>
         ) : (
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {scenarios.map((script) => (
-                    <Link key={script.id} href={`/scenario/${script.id}`}>
-                        <Card className="p-5 h-full hover:bg-card/80 transition-colors">
-                            <div className="flex flex-col gap-2 h-full">
-                                <div>
-                                    <h3 className="text-lg font-bold line-clamp-1">{script.title || "Untitled Scenario"}</h3>
-                                    <p className="text-xs text-muted font-mono uppercase tracking-wider mt-1">
-                                        {new Date(script.createdAt).toLocaleDateString()}
-                                    </p>
-                                </div>
-                                <p className="text-sm text-foreground/80 line-clamp-2 mt-2">
-                                    {script.cleanedEnglish}
-                                </p>
-                                <div className="mt-auto pt-4 flex items-center gap-2 text-xs font-medium text-secondary">
-                                    <span>{script.sentences.length} lines</span>
-                                </div>
-                            </div>
-                        </Card>
-                    </Link>
+             <div className="grid grid-cols-1 gap-4">
+                {scenarios.map((script, index) => (
+                    <motion.div 
+                        key={script.id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.05 }}
+                    >
+                        <ScenarioCard 
+                            script={script} 
+                            index={index}
+                            onTogglePublic={handleTogglePublic}
+                            onEdit={handleEdit}
+                            onDelete={handleDelete}
+                        />
+                    </motion.div>
                 ))}
             </div>
         )}
