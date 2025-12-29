@@ -78,7 +78,7 @@ export default function ScenarioCard({
   const href = isUserScript ? `/scenario/${script.id}` : `/script/${script.id}`;
 
   return (
-    <div className="h-full block"> {/* Changed Link to div wrapper to manage nested clicks better if needed, but keeping Structure similar */}
+    <div className="h-full block">
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -88,15 +88,89 @@ export default function ScenarioCard({
       >
         <Link href={href} className="absolute inset-0 z-0" aria-label="View Scenario" />
 
-        {/* Top Row: Index/Type & Actions -> z-10 to be clickable over the link */}
+        {/* TOP ROW: Author (Left) & Index (Right) -> z-10 for interactivity */}
         <div className="flex justify-between items-start mb-4 z-10 relative pointer-events-none">
-           {/* Index */}
+           {/* LEFT: Author Info */}
+           <div className="flex items-center gap-2 pointer-events-auto">
+                {authorName ? (
+                    <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-secondary to-primary p-[1px] shadow-lg">
+                            <div className="w-full h-full rounded-full overflow-hidden bg-black flex items-center justify-center">
+                                {authorPhotoURL ? (
+                                    // eslint-disable-next-line @next/next/no-img-element
+                                    <img src={authorPhotoURL} alt={authorName} className="w-full h-full object-cover" /> 
+                                ) : (
+                                    <span className="text-[10px] font-bold text-white">{authorName[0]?.toUpperCase()}</span>
+                                )}
+                            </div>
+                        </div>
+                        <div className="flex flex-col">
+                            <span className="text-xs font-bold text-white leading-none shadow-black drop-shadow-md">{authorName}</span>
+                            <span className="text-[10px] text-muted leading-none mt-0.5">Creator</span>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="flex flex-col opacity-80">
+                        <span className="text-xs font-bold text-white leading-none">Jok-Eng</span>
+                        <span className="text-[10px] text-muted italic leading-none mt-0.5">Community</span>
+                    </div>
+                )}
+           </div>
+
+           {/* RIGHT: Index */}
            <div className="text-4xl font-black text-white/10 font-mono leading-none select-none">
              #{String(index + 1).padStart(2, '0')}
            </div>
+        </div>
 
+        {/* MIDDLE CONTENT: Title & Desc */}
+        <div className="flex-1 flex flex-col gap-3 z-10 relative pointer-events-none mb-4">
+           {/* Header Group */}
+           <div>
+             <h3 className="text-2xl md:text-3xl font-bold leading-tight text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.5)] mb-2">
+                {script.title}
+             </h3>
+
+             <div className="flex items-center gap-3">
+                 <div className={`px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-widest border bg-black/40 ${typeColor}`}>
+                   {typeLabel}
+                 </div>
+
+                 <div className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border bg-white/5 text-muted-foreground border-white/10 whitespace-nowrap">
+                    <span>
+                      {script.decoderItems?.length || script.segments?.length || script.sentences?.length || 0}
+                    </span>
+                    <span className="opacity-70">items</span>
+                 </div>
+             </div>
+           </div>
+           
+           <p className="text-sm md:text-base text-gray-300 leading-relaxed opacity-90 line-clamp-3">
+             {script.cleanedEnglish || script.context}
+           </p>
+        </div>
+
+        {/* COMMENTS SECTION */}
+        {showComments && isUserScript && (
+          <div className="relative z-20 pointer-events-auto mt-2 mb-4" onClick={(e) => {
+             e.preventDefault(); 
+             e.stopPropagation(); // Explicitly stop propagation
+          }}>
+             <CommentsSection scenario={script as UserScript} />
+          </div>
+        )}
+
+        {/* BOTTOM FOOTER: Practice (Left) & Controls (Right) */}
+        <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between border-t border-white/10 pt-4 z-10 pointer-events-none">
+           {/* LEFT: Practice Link */}
+           <div className="flex items-center gap-2 text-[10px] font-medium text-white/50 uppercase tracking-widest group-hover:text-primary transition-colors">
+              <span>Practice</span>
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+           </div>
+
+           {/* RIGHT: Action Icons */}
            <div className="flex items-center gap-2 pointer-events-auto">
-               {/* LIKE BUTTON (Counts) */}
+               {/* LIKE BUTTON */}
                {onLike && (
                    <button 
                        onClick={(e) => {
@@ -127,7 +201,7 @@ export default function ScenarioCard({
                    </button>
                )}
 
-               {/* SAVE BUTTON (Copy) */}
+               {/* SAVE BUTTON */}
                {onSave && (
                    <button 
                        onClick={(e) => {
@@ -142,7 +216,7 @@ export default function ScenarioCard({
                    </button>
                )}
 
-               {/* Share/Private Toggle */}
+               {/* PUBLIC TOGGLE */}
                {isUserScript && onTogglePublic && (
                  <button 
                     onClick={(e) => {
@@ -161,7 +235,7 @@ export default function ScenarioCard({
                  </button>
                )}
                
-               {/* Edit/Delete Buttons */}
+               {/* EDIT/DELETE */}
                {(onEdit || onDelete) && (
                  <div className="flex items-center gap-1">
                      {onEdit && (
@@ -186,73 +260,6 @@ export default function ScenarioCard({
                )}
            </div>
         </div>
-
-        <div className="flex-1 flex flex-col gap-3 z-10 relative pointer-events-none">
-          <h3 className="text-2xl md:text-3xl font-bold leading-tight text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.5)]">
-            {script.title}
-          </h3>
-
-          <div className="flex items-center gap-3">
-              <div className={`px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-widest border bg-black/40 ${typeColor}`}>
-                {typeLabel}
-              </div>
-
-              <div className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border bg-white/5 text-muted-foreground border-white/10 whitespace-nowrap">
-                 <span>
-                   {script.decoderItems?.length || script.segments?.length || script.sentences?.length || 0}
-                 </span>
-                 <span className="opacity-70">items</span>
-              </div>
-          </div>
-          
-          <p className="text-sm md:text-base text-gray-300 leading-relaxed mt-2 opacity-90 line-clamp-3">
-            {script.cleanedEnglish || script.context}
-          </p>
-        </div>
-
-        {/* COMMENTS SECTION */}
-        {showComments && isUserScript && (
-          <div className="relative z-20 pointer-events-auto" onClick={(e) => {
-             e.preventDefault(); 
-             e.stopPropagation(); // Explicitly stop propagation for clicks inside comments
-          }}>
-             <CommentsSection scenario={script as UserScript} />
-          </div>
-        )}
-
-        {/* BOTTOM FOOTER: Author Info (Absolute Position for Sticky Feel at Bottom) */}
-        {!showComments && (
-          <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between border-t border-white/10 pt-4 z-10 pointer-events-none">
-              {/* Author Info */}
-              <div className="flex items-center gap-2 pointer-events-auto">
-                {authorName ? (
-                    <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-secondary to-primary p-[1px] shadow-lg">
-                            <div className="w-full h-full rounded-full overflow-hidden bg-black flex items-center justify-center">
-                                {authorPhotoURL ? (
-                                    // eslint-disable-next-line @next/next/no-img-element
-                                    <img src={authorPhotoURL} alt={authorName} className="w-full h-full object-cover" /> 
-                                ) : (
-                                    <span className="text-[10px] font-bold text-white">{authorName[0]?.toUpperCase()}</span>
-                                )}
-                            </div>
-                        </div>
-                        <div className="flex flex-col">
-                            <span className="text-xs font-bold text-white leading-none shadow-black drop-shadow-md">{authorName}</span>
-                            <span className="text-[10px] text-muted leading-none mt-0.5">Creator</span>
-                        </div>
-                    </div>
-                ) : (
-                    <div className="text-xs text-muted italic">Community Scenario</div>
-                )}
-              </div>
-
-              <div className="flex items-center gap-2 text-[10px] font-medium text-white/50 uppercase tracking-widest group-hover:text-primary transition-colors">
-                <span>Practice</span>
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-              </div>
-          </div>
-        )}
       </motion.div>
     </div>
   );
