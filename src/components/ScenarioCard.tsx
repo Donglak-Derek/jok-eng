@@ -183,6 +183,12 @@ export default function ScenarioCard({
            {/* LEFT: Practice Link */}
            <div className="flex items-center gap-2 text-[10px] font-medium text-white/50 uppercase tracking-widest group-hover:text-primary transition-colors">
               <span>Practice</span>
+              {repeats > 0 && (
+                  <span className="flex items-center gap-0.5 text-white/30">
+                      <span className="text-white/20">•</span>
+                      <span>{repeats}</span>
+                  </span>
+              )}
            </div>
 
            {/* RIGHT: Action Icons */}

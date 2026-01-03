@@ -51,10 +51,20 @@ export default function CommunityScenariosSection() {
                  likes: increment(-1),
                  likedBy: arrayRemove(user.uid)
              });
+             // Decrease Author's Total Likes
+             const authorRef = doc(db, "users", script.userId);
+             await updateDoc(authorRef, {
+                 totalLikesReceived: increment(-1)
+             });
         } else {
              await updateDoc(scriptRef, {
                  likes: increment(1),
                  likedBy: arrayUnion(user.uid)
+             });
+             // Increase Author's Total Likes
+             const authorRef = doc(db, "users", script.userId);
+             await updateDoc(authorRef, {
+                 totalLikesReceived: increment(1)
              });
         }
     } catch (err) {

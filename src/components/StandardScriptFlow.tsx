@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Confetti from "@/components/Confetti";
 import { Button } from "@/components/Button";
 import { useAuth } from "@/context/AuthContext";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc, increment } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { UserScript } from "@/types";
 
@@ -97,6 +97,18 @@ export default function StandardScriptFlow({ script }: Props) {
          } catch(e) { 
            console.error("Failed to sync repeats", e); 
          }
+      }
+
+      // Increment Global 'Rehearsals Done' (totalPractices) for the User
+      if (user) {
+        try {
+            const userRef = doc(db, "users", user.uid);
+            await updateDoc(userRef, {
+                totalPractices: increment(1)
+            });
+        } catch (practiceErr) {
+            console.error("Failed to update user rehearsals stats", practiceErr);
+        }
       }
       
       // Clear progress
