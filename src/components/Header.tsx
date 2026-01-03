@@ -29,7 +29,7 @@ export default function Header() {
                     onClick={() => setDropdownOpen(!dropdownOpen)}
                     className="flex items-center gap-3 focus:outline-none group"
                 >
-                    <span className="hidden md:block text-sm font-bold text-black border-b-2 border-transparent group-hover:border-primary transition-colors">
+                    <span className="text-sm font-bold text-black border-b-2 border-transparent group-hover:border-primary transition-colors">
                         Hi, {user.displayName?.split(' ')[0] || "User"}!
                     </span>
                     {user.photoURL ? (

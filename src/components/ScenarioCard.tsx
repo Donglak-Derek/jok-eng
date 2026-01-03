@@ -96,7 +96,7 @@ export default function ScenarioCard({
             <div className="p-5 pb-2 flex-1 flex flex-col min-h-[160px]">
                 {/* Top Row: Index & Type Stamp */}
                 <div className="flex justify-between items-start mb-3 pointer-events-none relative z-10">
-                    <span className="font-mono font-bold text-gray-300 text-3xl opacity-50 select-none">
+                    <span className="font-mono font-bold text-gray-400 text-3xl opacity-70 select-none">
                         #{String(index + 1).padStart(2, '0')}
                     </span>
                     <div className={`px-2 py-1 border-2 font-hand font-bold text-xs uppercase tracking-wider transform ${rotateClass} ${typeColor} shadow-sm`}>
@@ -109,7 +109,7 @@ export default function ScenarioCard({
                     <h3 className="font-sans font-black text-2xl md:text-3xl leading-tight text-black mb-2">
                         {script.title}
                     </h3>
-                    <p className="font-hand text-gray-500 text-sm md:text-base leading-snug line-clamp-3 -rotate-1">
+                    <p className="font-hand text-gray-700 font-medium text-sm md:text-base leading-snug line-clamp-3 -rotate-1">
                         {script.cleanedEnglish || script.context}
                     </p>
                 </div>
@@ -133,10 +133,10 @@ export default function ScenarioCard({
                                         </div>
                                     )}
                                 </div>
-                                <span className="text-xs font-bold text-gray-600 truncate max-w-[80px]">{authorName}</span>
+                                <span className="text-xs font-bold text-gray-800 truncate max-w-[80px]">{authorName}</span>
                             </>
                         ) : (
-                            <span className="text-xs font-bold text-gray-400">Official</span>
+                            <span className="text-xs font-bold text-gray-600">Official</span>
                         )}
                      </div>
 

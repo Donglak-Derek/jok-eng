@@ -119,7 +119,7 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
             <div className="text-lg md:text-2xl font-bold text-black mb-2 mt-2 font-hand">
               &quot;{sentence.badResponse.text}&quot;
             </div>
-            <div className="text-sm text-gray-700 leading-snug">
+            <div className="text-sm text-gray-900 font-medium leading-snug">
               {sentence.badResponse.why}
             </div>
           </div>
@@ -132,7 +132,7 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
             <div className="text-lg md:text-2xl font-black text-black mb-2 mt-2 font-sans">
               &quot;{sentence.goodResponse.text}&quot;
             </div>
-            <div className="text-sm md:text-base text-gray-800 leading-snug">
+            <div className="text-sm md:text-base text-black font-medium leading-snug">
               {sentence.goodResponse.why}
             </div>
           </div>
@@ -147,7 +147,7 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
                   className="font-hand text-xs md:text-sm px-3 py-1 bg-yellow-100 border border-black/30 transform hover:-rotate-2 transition-transform cursor-default"
                 >
                 <span className="font-black text-black">{k.word}</span>
-                <span className="text-gray-600">: {k.definition}</span>
+                <span className="text-gray-900 font-medium">: {k.definition}</span>
               </span>
             ))}
            </div>

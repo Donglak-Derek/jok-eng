@@ -207,24 +207,27 @@ export default function CommunityScenariosSection() {
   if (loading) return null; // Or a skeleton
   if (scenarios.length === 0) return null;
 
+  if (scenarios.length === 0) return null;
+
   return (
-    <section className="w-full max-w-5xl mx-auto px-4 md:px-6 py-8 md:py-12 border-t-2 border-dashed border-black/10">
-      <div className="flex items-center gap-4 mb-6 md:mb-8">
+    <section className="w-full mx-auto py-4 md:py-8">
+      <div className="flex flex-row items-center justify-between gap-3 mb-6 px-1">
         <h2 className="font-sans font-black text-2xl md:text-4xl text-black">
-            Community Scenarios
+            Story Feed
         </h2>
-        <div className="bg-primary border-2 border-black text-black text-xs font-black px-3 py-1 transform -rotate-2 hard-shadow">
+        <div className="bg-primary border-2 border-black text-black text-[10px] md:text-xs font-black px-2 py-1 transform -rotate-2 hard-shadow whitespace-nowrap">
             HOT & NEW
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 md:gap-6">
+      <div className="grid grid-cols-1 gap-6 md:gap-8">
         {scenarios.map((script, index) => (
             <motion.div
                 key={script.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
+                className="w-full"
             >
                 {/* Minimal Card Render */}
                 <ScenarioCard 

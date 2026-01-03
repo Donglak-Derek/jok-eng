@@ -126,21 +126,18 @@ export default function MyScenariosSection() {
 
   // Logged In View
   return (
-    <section className="mt-8 flex flex-col gap-6">
-        <div className="flex items-center justify-between border-b-2 border-black pb-2">
+    <section className="mt-4 flex flex-col gap-6">
+        <div className="flex items-center justify-between border-b-2 border-black/10 pb-4">
             <Link href="/category/custom" className="group flex items-center gap-2 hover:opacity-100 transition-all">
-                <h2 className="font-sans font-black text-2xl md:text-4xl text-black">
+                <h2 className="font-sans font-black text-xl md:text-3xl text-black leading-none">
                     My Scenarios
                 </h2>
-                <div className="flex items-center gap-1 text-xs font-bold text-gray-400 uppercase tracking-wider group-hover:text-primary transition-colors">
-                    <span className="hidden md:inline opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">View All</span>
-                </div>
             </Link>
             <Link 
                 href="/create-scenario"
-                className="flex items-center gap-2 px-5 py-2 rounded-full border-2 border-black bg-black text-white text-sm font-bold hover:bg-primary hover:text-black transition-all shadow-[4px_4px_0px_rgba(0,0,0,0.2)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg border-2 border-black bg-black text-white text-xs font-bold hover:bg-primary hover:text-black transition-all shadow-[2px_2px_0px_rgba(0,0,0,0.2)] hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px]"
             >
-                <span className="text-lg leading-none font-black">＋</span> Create New
+                <span className="text-sm leading-none font-black">＋</span> Create
             </Link>
         </div>
 
