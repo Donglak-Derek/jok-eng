@@ -208,13 +208,13 @@ export default function CommunityScenariosSection() {
   if (scenarios.length === 0) return null;
 
   return (
-    <section className="w-full max-w-5xl mx-auto px-4 md:px-6 py-8 md:py-12 border-t border-white/5">
-      <div className="flex items-center gap-3 mb-6 md:mb-8">
-        <h2 className="headline text-2xl md:text-3xl lg:text-4xl bg-gradient-to-r from-green-300 to-emerald-500 text-transparent bg-clip-text">
+    <section className="w-full max-w-5xl mx-auto px-4 md:px-6 py-8 md:py-12 border-t-2 border-dashed border-black/10">
+      <div className="flex items-center gap-4 mb-6 md:mb-8">
+        <h2 className="font-sans font-black text-2xl md:text-4xl text-black">
             Community Scenarios
         </h2>
-        <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
-            New
+        <div className="bg-primary border-2 border-black text-black text-xs font-black px-3 py-1 transform -rotate-2 hard-shadow">
+            HOT & NEW
         </div>
       </div>
 

@@ -90,31 +90,28 @@ export default function MyScenariosSection() {
   // Guest View
   if (!user) {
     return (
-      <section className="relative overflow-hidden rounded-3xl border border-secondary/40 bg-gradient-to-br from-card/90 to-background shadow-[0_10px_60px_rgba(34,19,74,0.5)] px-5 md:px-7 lg:px-8 py-7 md:py-9 mt-6 group">
-        <div className="absolute inset-0 pointer-events-none opacity-50">
-           <div className="absolute top-0 rights-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2" />
-        </div>
+      <section className="relative overflow-hidden rounded-xl border-2 border-black bg-yellow-100 shadow-[8px_8px_0px_rgba(0,0,0,1)] px-5 md:px-8 py-8 md:py-10 mt-6 group transform rotate-1 transition-transform hover:rotate-0">
+        <div className="absolute inset-0 pointer-events-none opacity-5 bg-[url('https://www.transparenttextures.com/patterns/graphy.png')]"></div>
         
         <div className="relative flex flex-col gap-4">
           <div className="flex items-center gap-2 mb-1">
-             <span className="text-2xl md:text-4xl">✨</span>
-             <p className="text-xs md:text-lg font-bold uppercase tracking-widest text-primary">
-                Personalize & Practice
-             </p>
+             <div className="bg-black text-white px-2 py-0.5 text-xs font-bold uppercase tracking-widest transform -rotate-2">
+                Personalize
+             </div>
           </div>
           
-          <h2 className="headline text-2xl md:text-5xl lg:text-6xl tracking-wide">
-             Create scenarios for <span className="text-primary italic">your</span> life.
+          <h2 className="font-sans font-black text-3xl md:text-5xl lg:text-6xl tracking-tight text-black leading-none">
+             Create scenarios for <span className="text-secondary underline decoration-4 decoration-black/10">your</span> life.
           </h2>
           
-          <p className="text-sm md:text-xl lg:text-2xl text-muted max-w-2xl leading-relaxed">
+          <p className="font-hand text-lg md:text-2xl text-gray-700 max-w-2xl leading-relaxed">
              From awkward tinder dates to answering &quot;What do you do?&quot;—build custom practice decks tailored to your exact situations.
           </p>
           
-          <div className="pt-2">
+          <div className="pt-4">
             <Button
               onClick={() => router.push("/login")}
-              className="px-6 md:px-8"
+              className="px-8 py-6 text-xl border-2 border-black hard-shadow font-black bg-white text-black hover:bg-secondary hover:text-white"
               variant="secondary"
               size="lg"
             >
@@ -129,37 +126,32 @@ export default function MyScenariosSection() {
 
   // Logged In View
   return (
-    <section className="mt-6 flex flex-col gap-4">
-        <div className="flex items-center justify-between">
-            <Link href="/category/custom" className="group flex items-center gap-2 md:gap-4 hover:opacity-90 transition-all">
-                <h2 className="headline text-xl md:text-4xl lg:text-5xl bg-gradient-to-r from-secondary to-primary text-transparent bg-clip-text cursor-pointer">
+    <section className="mt-8 flex flex-col gap-6">
+        <div className="flex items-center justify-between border-b-2 border-black pb-2">
+            <Link href="/category/custom" className="group flex items-center gap-2 hover:opacity-100 transition-all">
+                <h2 className="font-sans font-black text-2xl md:text-4xl text-black">
                     My Scenarios
                 </h2>
-                <div className="flex items-center gap-1 text-xs md:text-sm font-bold text-muted uppercase tracking-wider group-hover:text-primary transition-colors">
+                <div className="flex items-center gap-1 text-xs font-bold text-gray-400 uppercase tracking-wider group-hover:text-primary transition-colors">
                     <span className="hidden md:inline opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">View All</span>
-                    <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-secondary/10 border border-secondary/30 flex items-center justify-center text-secondary group-hover:bg-primary group-hover:border-primary group-hover:text-white group-active:scale-95 transition-all duration-300">
-                        <svg className="w-3 h-3 md:w-4 md:h-4 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-                        </svg>
-                    </div>
                 </div>
             </Link>
             <Link 
                 href="/create-scenario"
-                className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-secondary/10 border border-secondary/30 text-secondary text-xs md:text-sm font-bold hover:bg-secondary/20 hover:border-secondary/50 transition-all active:scale-[0.98]"
+                className="flex items-center gap-2 px-5 py-2 rounded-full border-2 border-black bg-black text-white text-sm font-bold hover:bg-primary hover:text-black transition-all shadow-[4px_4px_0px_rgba(0,0,0,0.2)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]"
             >
-                <span className="text-base leading-none">＋</span> Create New
+                <span className="text-lg leading-none font-black">＋</span> Create New
             </Link>
         </div>
 
         {scenarios.length === 0 ? (
-            <div className="p-8 rounded-3xl border border-dashed border-secondary/30 bg-card/40 flex flex-col items-center justify-center text-center gap-4 transition-colors hover:bg-card/60">
-                <div className="w-16 h-16 md:w-24 md:h-24 rounded-full bg-secondary/10 flex items-center justify-center text-3xl md:text-5xl mb-1">
+            <div className="p-10 rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 flex flex-col items-center justify-center text-center gap-4 transition-colors hover:bg-white hover:border-primary">
+                <div className="w-20 h-20 rounded-full bg-white border-2 border-gray-200 flex items-center justify-center text-4xl mb-1 shadow-sm">
                     📝
                 </div>
-                <div className="flex flex-col gap-1 md:gap-2">
-                    <h3 className="text-lg md:text-3xl font-bold text-foreground">Write your first script</h3>
-                    <p className="text-sm md:text-xl text-muted max-w-md mx-auto">
+                <div className="flex flex-col gap-2">
+                    <h3 className="font-sans font-bold text-2xl text-black">Write your first script</h3>
+                    <p className="font-hand text-xl text-gray-500 max-w-md mx-auto">
                         Turn your real-life awkward moments into practice gold.
                     </p>
                 </div>
@@ -167,7 +159,7 @@ export default function MyScenariosSection() {
                     onClick={() => router.push("/create-scenario")}
                     variant="primary"
                     size="lg"
-                    className="mt-2 text-sm md:text-lg shadow-lg"
+                    className="mt-4 text-lg border-2 border-black hard-shadow font-bold"
                 >
                     Create Scenario
                 </Button>

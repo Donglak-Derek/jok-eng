@@ -21,15 +21,15 @@ export default function Home() {
   if (loading) return null; // Or a nice splash screen
 
   return (
-    <div className="min-h-dvh text-foreground">
-      <div className="max-w-md md:max-w-3xl lg:max-w-5xl mx-auto px-4 md:px-6 lg:px-8 py-5 md:py-8 flex flex-col gap-5 md:gap-6">
+    <div className="min-h-dvh flex flex-col">
+      <div className="max-w-md md:max-w-3xl lg:max-w-5xl mx-auto px-4 md:px-6 lg:px-8 py-5 md:py-8 flex flex-col gap-6 md:gap-10 w-full">
         <Header />
 
         {/* LOGGED IN VIEW: Dashboard Mode */}
         {user ? (
           <>
-            {/* Tab Navigation (Top of Dashboard) */}
-            <div className="flex items-center justify-center md:justify-start gap-2 md:gap-4 border-b border-white/10 pb-4 mt-2 overflow-x-auto">
+            {/* Tab Navigation (Notebook Tabs) */}
+            <div className="flex items-end justify-start gap-2 border-b-4 border-black pb-0 px-2 overflow-x-auto">
                 <TabButton 
                     label="Categories" 
                     isActive={activeTab === "categories"} 
@@ -37,7 +37,7 @@ export default function Home() {
                     icon="🗂️"
                 />
                 <TabButton 
-                    label="Community Scenarios" 
+                    label="Community" 
                     isActive={activeTab === "community"} 
                     onClick={() => setActiveTab("community")} 
                     icon="🌍"
@@ -58,45 +58,46 @@ export default function Home() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.2 }}
-                    className="min-h-[400px]"
+                    className="min-h-[400px] bg-white border-x-2 border-b-2 border-dashed border-black/10 rounded-b-2xl p-6 md:p-8"
                 >
                     {activeTab === "categories" && (
-                        <section className="mt-4">
+                        <section>
                         <div className="flex items-center gap-3 mb-6">
-                            <h2 className="headline text-2xl md:text-3xl lg:text-4xl bg-gradient-to-r from-secondary to-primary text-transparent bg-clip-text">
+                            <h2 className="font-sans font-black text-3xl md:text-4xl text-black">
                             Categories
                             </h2>
+                            <span className="font-hand text-xl text-primary -rotate-2">Pick your vibe!</span>
                         </div>
-                        <div className="grid grid-cols-1 gap-3 md:gap-4">
+                        <div className="grid grid-cols-1 gap-4 md:gap-6">
                             {categories.map((c) => (
                             <Link
                                 key={c.slug}
                                 href={`/category/${c.slug}`}
                                 className="active:scale-[0.98] transition group"
                             >
-                                <Card className="p-4 md:p-5 lg:p-6 overflow-hidden relative">
+                                <Card className="p-4 md:p-6 overflow-hidden relative group-hover:bg-yellow-50 transition-colors">
                                 <div className="flex items-center gap-4 md:gap-6">
-                                    <div className="relative w-20 h-20 md:w-24 md:h-24 flex-shrink-0 rounded-2xl overflow-hidden bg-card shadow-inner border border-secondary/20">
+                                    <div className="relative w-20 h-20 md:w-24 md:h-24 flex-shrink-0 rounded-xl overflow-hidden border-2 border-black hard-shadow bg-secondary">
                                     <Image
                                         src={c.image}
                                         alt={c.name}
                                         fill
-                                        className="object-cover transition-transform duration-500 group-hover:scale-110"
+                                        className="object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
                                     />
                                     </div>
                                     <div className="flex-1 min-w-0">
                                     <div className="flex items-start justify-between gap-2">
-                                        <div className="headline text-2xl md:text-3xl lg:text-4xl tracking-[0.02em] truncate pr-2">
+                                        <div className="font-sans font-bold text-2xl md:text-3xl tracking-tight truncate pr-2">
                                         {c.name}
                                         </div>
-                                        <div className="text-primary/70 text-lg md:text-xl drop-shadow-[0_0_18px_rgba(34,211,238,0.35)] transition-transform group-hover:translate-x-1">
-                                        ›
+                                        <div className="text-black font-black text-xl group-hover:translate-x-1 transition-transform">
+                                        →
                                         </div>
                                     </div>
-                                    <p className="text-sm md:text-lg lg:text-xl text-foreground/80 my-2 leading-relaxed line-clamp-2">
+                                    <p className="font-hand text-gray-600 text-sm md:text-lg my-1 leading-relaxed line-clamp-2">
                                         {c.description}
                                     </p>
-                                    <div className="text-xs md:text-sm lg:text-base text-muted font-medium">
+                                    <div className="inline-block px-2 py-0.5 bg-black text-white text-xs font-bold uppercase rounded-sm mt-2 transform -rotate-1">
                                         {
                                         scripts.filter((s) => s.categorySlug === c.slug)
                                             .length
@@ -124,56 +125,60 @@ export default function Home() {
           </>
         ) : (
           /* GUEST VIEW: Marketing & Info */
-          <div className="flex flex-col gap-12 md:gap-20 pb-20">
+          <div className="flex flex-col gap-16 md:gap-24 pb-20">
              
-             {/* HERO SECTION */}
-             <section className="relative overflow-hidden rounded-3xl border border-secondary/40 bg-card/85 shadow-[0_20px_80px_rgba(34,19,74,0.7)] px-5 md:px-7 lg:px-8 py-10 md:py-16 text-center">
-                <div className="absolute inset-0 pointer-events-none">
-                    <div className="absolute -top-10 -right-6 w-44 h-44 md:w-60 md:h-60 bg-primary/25 blur-3xl animate-pulse" />
-                    <div className="absolute -bottom-12 -left-8 w-48 h-48 md:w-64 md:h-64 bg-tertiary/25 blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
-                </div>
-                <div className="relative flex flex-col items-center gap-6 max-w-2xl mx-auto">
-                    <p className="text-xs md:text-sm uppercase tracking-[0.3em] text-cyan-400 font-bold">
-                    Cool Late Starter
-                    </p>
-                    <h2 className="headline text-5xl md:text-7xl lg:text-8xl tracking-[0.05em] drop-shadow-[0_0_26px_rgba(168,85,247,0.45)] leading-tight">
-                    Stop Nodding.<br/>Start Joking.
+             {/* HERO SECTION - Notebook Doodle Style */}
+             <section className="relative overflow-hidden rounded-3xl border-4 border-black bg-primary p-6 md:p-12 text-center hard-shadow transform rotate-1">
+                {/* Background Pattern */}
+                <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/graphy.png')]"></div>
+
+                <div className="relative flex flex-col items-center gap-6 max-w-3xl mx-auto py-10">
+                    <div className="font-hand font-bold text-xl md:text-2xl bg-white px-4 py-2 border-2 border-black -rotate-2 hard-shadow mb-4">
+                        For the Cool Late Starters
+                    </div>
+                    
+                    <h2 className="font-sans font-black text-6xl md:text-8xl leading-[0.9] text-black drop-shadow-sm">
+                        Stop Nodding.<br/>
+                        <span className="text-white text-stroke-3 text-stroke-black">Start Joking.</span>
                     </h2>
-                    <p className="text-base md:text-xl text-muted leading-relaxed">
-                    Textbooks taught you how to be polite. We teach you how to be interesting. 
-                    Master sarcasm, banter, and the jokes you missed.
+                    
+                    <p className="font-sans text-lg md:text-2xl text-black font-medium leading-relaxed max-w-xl">
+                        Textbooks taught you to be polite. <br/>
+                        <span className="font-hand text-secondary font-bold -rotate-1 inline-block">We teach you to be interesting.</span>
                     </p>
-                    <div className="pt-4">
+                    
+                    <div className="pt-8 transform hover:scale-105 transition-transform duration-200">
                         <Link href="/login" passHref>
-                           <Button variant="primary" size="xl" className="text-lg px-8 py-6 rounded-full shadow-[0_10px_40px_rgba(34,211,238,0.4)]">
-                               Get Started Free →
+                           <Button variant="secondary" size="xl" className="text-2xl px-10 py-8 rounded-full border-4 border-black hard-shadow font-black uppercase tracking-wider bg-white text-black hover:bg-secondary hover:text-white">
+                               Start Being Funny →
                            </Button>
                         </Link>
                     </div>
                 </div>
              </section>
 
-             {/* HOW IT WORKS */}
-             <section className="text-center space-y-10">
-                 <div className="space-y-2">
-                    <h3 className="headline text-3xl md:text-4xl text-transparent bg-clip-text bg-gradient-to-r from-secondary to-primary">
-                        How It Works
+             {/* HOW IT WORKS - Sticky Notes */}
+             <section className="text-center space-y-12">
+                 <div className="space-y-4">
+                    <h3 className="font-sans font-black text-4xl md:text-5xl -rotate-1">
+                        The &quot;Vibe&quot; Method
                     </h3>
-                    <p className="text-muted max-w-xl mx-auto">
-                        A simple method to internalize the vibe, not just the vocabulary.
+                    <p className="text-gray-500 text-xl font-hand max-w-xl mx-auto">
+                        Don&apos;t memorialize vocabulary. Internalize the attitude.
                     </p>
                  </div>
                  
-                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-4">
                      {[
-                         { icon: "👀", title: "Read", desc: "Absorb the context and nuance of real-world scenarios." },
-                         { icon: "🎧", title: "Listen", desc: "Hear standard English TTS to catch the rhythm and tone." },
-                         { icon: "🔁", title: "Repeat", desc: "Practice until the phrase becomes your natural reflex." }
+                         { icon: "👀", title: "Read", desc: "See the context. Get the joke before you say it.", color: "bg-yellow-100", rotate: "rotate-1" },
+                         { icon: "🎧", title: "Listen", desc: "Hear standard English TTS. It&apos;s about timing.", color: "bg-pink-100", rotate: "-rotate-2" },
+                         { icon: "🔁", title: "Repeat", desc: "Muscle memory. Say it until it feels weird NOT to say it.", color: "bg-blue-100", rotate: "rotate-2" }
                      ].map((step, i) => (
-                         <div key={i} className="bg-card/40 border border-white/5 rounded-2xl p-6 hover:bg-card/60 transition-colors">
-                             <div className="text-4xl mb-4">{step.icon}</div>
-                             <h4 className="text-xl font-bold text-foreground mb-2">{step.title}</h4>
-                             <p className="text-sm text-muted">{step.desc}</p>
+                         <div key={i} className={`relative p-8 ${step.color} hard-shadow border-2 border-black transform ${step.rotate} transition-transform hover:scale-105 hover:rotate-0`}>
+                             <div className="text-6xl mb-6">{step.icon}</div>
+                             <h4 className="font-sans font-black text-2xl text-black mb-3 uppercase">{step.title}</h4>
+                             <p className="font-hand text-lg text-gray-700 leading-snug">{step.desc}</p>
+                             <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-black/10"></div>
                          </div>
                      ))}
                  </div>
@@ -182,50 +187,44 @@ export default function Home() {
              {/* FEATURES EXPLAINER */}
              <section className="space-y-12">
                  <div className="text-center">
-                     <h3 className="headline text-3xl md:text-4xl">Everything You Need</h3>
+                     <h3 className="font-sans font-black text-4xl">Everything Included</h3>
                  </div>
 
                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                      {/* Feature 1 */}
-                     <div className="space-y-4">
-                         <div className="aspect-video rounded-xl bg-gradient-to-br from-purple-900/50 to-black border border-purple-500/20 flex items-center justify-center text-4xl shadow-lg">
-                             🗂️
-                         </div>
-                         <h4 className="text-xl font-bold">Categories</h4>
-                         <p className="text-sm text-muted leading-relaxed">
-                            Curated packs of scripts for specific vibes: "Office Banter", "Dating Disasters", or "Street Slang". Pick your battle.
+                     <div className="space-y-4 p-6 border-l-4 border-black bg-white">
+                         <div className="text-5xl mb-2">🗂️</div>
+                         <h4 className="font-bold text-xl uppercase tracking-wider">Categories</h4>
+                         <p className="text-gray-500 leading-relaxed">
+                            Curated packs for specific vibes: &quot;Office Banter&quot;, &quot;Dating Disasters&quot;, or &quot;Street Slang&quot;.
                          </p>
                      </div>
 
                      {/* Feature 2 */}
-                     <div className="space-y-4">
-                         <div className="aspect-video rounded-xl bg-gradient-to-br from-cyan-900/50 to-black border border-cyan-500/20 flex items-center justify-center text-4xl shadow-lg">
-                             🌍
-                         </div>
-                         <h4 className="text-xl font-bold">Community Scenarios</h4>
-                         <p className="text-sm text-muted leading-relaxed">
-                            See what others are roasting. Browse, like, and save scenarios created by other "Cool Late Starters" like you.
+                     <div className="space-y-4 p-6 border-l-4 border-secondary bg-white">
+                         <div className="text-5xl mb-2">🌍</div>
+                         <h4 className="font-bold text-xl uppercase tracking-wider text-secondary">Community</h4>
+                         <p className="text-gray-500 leading-relaxed">
+                            See what others are roasting. Browse, like, and save scenarios from the community.
                          </p>
                      </div>
 
                      {/* Feature 3 */}
-                     <div className="space-y-4">
-                         <div className="aspect-video rounded-xl bg-gradient-to-br from-pink-900/50 to-black border border-pink-500/20 flex items-center justify-center text-4xl shadow-lg">
-                             👤
-                         </div>
-                         <h4 className="text-xl font-bold">My Scenarios</h4>
-                         <p className="text-sm text-muted leading-relaxed">
-                            Your personal library. Save your favorites, write your own AI-assisted scripts, and track your practice stats.
+                     <div className="space-y-4 p-6 border-l-4 border-primary bg-white">
+                         <div className="text-5xl mb-2">👤</div>
+                         <h4 className="font-bold text-xl uppercase tracking-wider text-black">Your Studio</h4>
+                         <p className="text-gray-500 leading-relaxed">
+                            Your personal library. Save your favorites and track your transformation.
                          </p>
                      </div>
                  </div>
              </section>
 
              {/* FINAL CTA */}
-             <section className="text-center py-12 rounded-3xl bg-gradient-to-b from-transparent to-primary/10 border border-white/5">
-                 <h2 className="headline text-3xl md:text-5xl mb-6">Ready to find your voice?</h2>
+             <section className="text-center py-16">
+                 <h2 className="font-sans font-black text-4xl md:text-6xl mb-8">Ready to find your voice?</h2>
                  <Link href="/login" passHref>
-                    <Button variant="secondary" size="lg" className="px-10 py-4 text-lg rounded-full">
+                    <Button variant="primary" size="lg" className="px-12 py-5 text-xl rounded-full border-4 border-black hard-shadow font-black hover:-translate-y-1 hover:shadow-[8px_8px_0px_rgba(0,0,0,1)] transition-all">
                         Join Now
                     </Button>
                  </Link>
@@ -242,20 +241,14 @@ function TabButton({ label, isActive, onClick, icon }: { label: string, isActive
         <button
             onClick={onClick}
             className={`
-                relative px-4 md:px-6 py-2 rounded-full text-sm md:text-base font-bold transition-all whitespace-nowrap flex items-center gap-2
+                relative px-6 py-3 text-sm md:text-base font-bold transition-all whitespace-nowrap flex items-center gap-2
+                rounded-t-xl border-x-2 border-t-2 
                 ${isActive 
-                    ? "text-white shadow-[0_0_20px_rgba(168,85,247,0.4)]" 
-                    : "text-muted hover:text-foreground hover:bg-white/5"
+                    ? "bg-white border-black text-black z-10 -mb-0.5 pb-3.5" 
+                    : "bg-gray-100 border-transparent text-gray-400 hover:bg-gray-200 hover:text-gray-600"
                 }
             `}
         >
-            {isActive && (
-                <motion.div
-                    layoutId="activeTab"
-                    className="absolute inset-0 bg-gradient-to-r from-tertiary via-secondary to-primary rounded-full z-0"
-                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                />
-            )}
             <span className="relative z-10 flex items-center gap-2">
                 <span>{icon}</span>
                 {label}

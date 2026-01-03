@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Confetti from "@/components/Confetti";
 import { Button } from "@/components/Button";
 import { useAuth } from "@/context/AuthContext";
-import { doc, getDoc, updateDoc, increment } from "firebase/firestore";
+import { doc, updateDoc, increment } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { UserScript } from "@/types";
 
@@ -137,31 +137,25 @@ export default function StandardScriptFlow({ script }: Props) {
 
 
   return (
-    <div className="min-h-dvh text-foreground flex flex-col relative overflow-hidden">
-      {/* Stage Spotlight Effect */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-indigo-600/20 blur-[120px] rounded-full pointer-events-none z-0 mix-blend-screen" />
+    <div className="min-h-dvh flex flex-col relative overflow-hidden bg-background">
       
       <div className="flex-1 max-w-md md:max-w-2xl lg:max-w-3xl mx-auto px-4 md:px-6 lg:px-8 py-5 md:py-8 flex flex-col gap-5 md:gap-6 w-full relative z-10">
-        {/* Header - Matching StoryFlow */}
-        <header className="sticky top-0 z-20 -mx-4 md:-mx-6 lg:-mx-8 px-4 md:px-6 lg:px-8 py-3 md:py-4 backdrop-blur-xl bg-background/60 flex items-center gap-3 border-b border-white/5 shadow-[0_10px_30px_rgba(0,0,0,0.5)] relative">
-          <Link href={`/category/${script.categorySlug}`} className="text-lg md:text-xl leading-none text-primary drop-shadow-[0_0_18px_rgba(34,211,238,0.35)]">←</Link>
+        {/* Header - Notebook Style */}
+        <header className="sticky top-0 z-20 -mx-4 md:-mx-6 lg:-mx-8 px-4 md:px-6 lg:px-8 py-3 md:py-4 bg-white/90 backdrop-blur-md flex items-center gap-3 border-b-2 border-black/5 shadow-sm relative">
+          <Link href={`/category/${script.categorySlug}`} className="text-lg md:text-xl leading-none text-black hover:text-primary transition-colors font-bold">←</Link>
           <div className="flex-1 min-w-0">
-            <h1 className="headline text-2xl md:text-5xl lg:text-6xl tracking-[0.05em] bg-gradient-to-r from-tertiary via-secondary to-primary text-transparent bg-clip-text truncate">
+            <h1 className="font-sans font-black text-2xl md:text-4xl tracking-tight text-black truncate leading-none">
               {script.title}
             </h1>
-            <div className="flex items-center gap-3">
-              <p className="text-xs md:text-sm text-muted line-clamp-1">{script.cleanedEnglish}</p>
+            <div className="flex items-center gap-3 mt-1">
+              <p className="font-hand text-sm md:text-base text-gray-500 line-clamp-1 -rotate-1">{script.cleanedEnglish}</p>
             </div>
           </div>
 
-
-
-
-          
-          {/* Full Width Progress Bar */}
-          <div className="absolute bottom-0 left-0 right-0 h-1 bg-secondary/20">
+          {/* Highlighter Progress Bar */}
+          <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-gray-100">
              <div 
-               className="h-full bg-primary shadow-[0_0_10px_rgba(34,211,238,0.6)] transition-all duration-300 ease-out"
+               className="h-full bg-primary transition-all duration-300 ease-out border-r-2 border-white"
                style={{ width: `${progressPercent}%` }}
              />
           </div>
@@ -173,10 +167,10 @@ export default function StandardScriptFlow({ script }: Props) {
              {!isCompletion ? (
                <motion.div
                  key={currentIndex}
-                 initial={{ opacity: 0, x: 20 }}
-                 animate={{ opacity: 1, x: 0 }}
-                 exit={{ opacity: 0, x: -20 }}
-                 transition={{ duration: 0.3 }}
+                 initial={{ opacity: 0, x: 20, rotate: 2 }}
+                 animate={{ opacity: 1, x: 0, rotate: 0 }}
+                 exit={{ opacity: 0, x: -20, rotate: -2 }}
+                 transition={{ duration: 0.3, type: "spring" }}
                  className="w-full"
                >
                  {currentSentence && (
@@ -192,21 +186,21 @@ export default function StandardScriptFlow({ script }: Props) {
              ) : (
                <motion.div
                  key="completion"
-                 initial={{ opacity: 0, scale: 0.9 }}
-                 animate={{ opacity: 1, scale: 1 }}
+                 initial={{ opacity: 0, scale: 0.9, rotate: -3 }}
+                 animate={{ opacity: 1, scale: 1, rotate: 0 }}
                  exit={{ opacity: 0, scale: 0.9 }}
-                 transition={{ duration: 0.4 }}
+                 transition={{ duration: 0.4, type: "spring" }}
                  className="w-full"
                >
-                 <div className="relative rounded-3xl border border-primary/50 p-6 md:p-8 lg:p-10 flex flex-col gap-6 md:gap-8 transition duration-200 bg-card/90 shadow-[0_0_60px_rgba(34,211,238,0.3)] text-center items-center">
-                     <div className="text-6xl md:text-7xl animate-bounce mb-2">🎉</div>
+                 <div className="relative rounded-xl border-2 border-black bg-white p-6 md:p-10 flex flex-col gap-6 md:gap-8 hard-shadow text-center items-center transform rotate-1">
+                     <div className="absolute -top-6 -right-6 text-6xl md:text-7xl animate-bounce">🏆</div>
                      
                      <div className="flex flex-col gap-2">
                        <Confetti />
-                       <h2 className="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-secondary via-primary to-secondary animate-pulse">
-                         Congratulation!
+                       <h2 className="font-sans font-black text-4xl md:text-5xl text-black">
+                         Nailed It!
                        </h2>
-                       <p className="text-lg text-muted">You finished this scenario.</p>
+                       <p className="font-hand text-xl text-gray-500 rotate-1">You finished this scenario.</p>
                      </div>
 
                      <div className="w-full flex flex-col gap-3 mt-4">
@@ -214,18 +208,18 @@ export default function StandardScriptFlow({ script }: Props) {
                           variant="primary"
                           size="xl"
                           onClick={handleRepeat}
-                          className="w-full text-xl shadow-[0_0_25px_rgba(34,211,238,0.4)]"
+                          className="w-full text-xl border-2 border-black hard-shadow font-bold hover:-translate-y-1 hover:shadow-lg transition-transform active:translate-y-0 active:shadow-none"
                         >
-                          Repeat
+                          Repeat Training
                         </Button>
 
                         <Button 
                           variant="outline"
                           size="md"
                           onClick={handleFinishTraining}
-                          className="w-full"
+                          className="w-full border-2 border-gray-200 text-gray-500 hover:text-black hover:border-black font-bold"
                         >
-                          Finish
+                          Finish & Exit
                         </Button>
                      </div>
                  </div>
@@ -236,16 +230,16 @@ export default function StandardScriptFlow({ script }: Props) {
       </div>
       
       {/* Bottom Action Bar */}
-      <div className="sticky bottom-0 left-0 right-0 p-4 backdrop-blur-md bg-background/80 border-t border-secondary/30 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] z-20">
+      <div className="sticky bottom-0 left-0 right-0 p-4 bg-white/90 backdrop-blur-md border-t-2 border-black/5 z-20">
         <div className="max-w-md md:max-w-2xl lg:max-w-3xl mx-auto flex items-center gap-4">
            {/* Start Over Button */}
            <Button 
              variant="ghost"
              size="sm"
              onClick={handleStartOver}
-             className="border border-secondary/30 bg-card/50 text-muted hover:bg-secondary/10"
+             className="text-gray-400 hover:text-black font-bold"
            >
-             ↻ <span className="hidden md:inline">Start Over</span>
+             ↻ <span className="hidden md:inline">Restart</span>
            </Button>
            
            <div className="flex-1 flex items-center gap-3">
@@ -256,7 +250,7 @@ export default function StandardScriptFlow({ script }: Props) {
                size="md"
                onClick={handlePrev}
                disabled={currentIndex === 0}
-               className="flex-1 border-secondary text-secondary hover:bg-secondary/10"
+               className="flex-1 border-2 border-gray-200 text-gray-400 hover:text-black hover:border-black font-bold"
              >
                Prev
              </Button>
@@ -268,9 +262,9 @@ export default function StandardScriptFlow({ script }: Props) {
                variant="primary"
                size="md"
                onClick={handleNext}
-               className="flex-1"
+               className="flex-1 border-2 border-black hard-shadow font-black text-lg hover:-translate-y-0.5 active:translate-y-0 shadow-none"
              >
-               Next
+               Next →
              </Button>
              )}
            </div>

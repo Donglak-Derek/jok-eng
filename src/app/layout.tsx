@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
 import { AuthProvider } from "@/context/AuthContext";
-import { Geist, Geist_Mono, Bebas_Neue } from "next/font/google";
-import ParticlesBackground from "@/components/ParticlesBackground";
+import { Inter, Permanent_Marker, Bebas_Neue } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const permanentMarker = Permanent_Marker({
+  variable: "--font-hand",
+  weight: "400",
   subsets: ["latin"],
 });
 
@@ -35,10 +35,10 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         suppressHydrationWarning
-        className={`${geistSans.variable} ${geistMono.variable} ${posterHeadings.variable} antialiased`}
+        className={`${inter.variable} ${permanentMarker.variable} ${posterHeadings.variable} antialiased font-sans`}
       >
         <AuthProvider>
-            <ParticlesBackground />
+            {/* ParticlesBackground removed in favor of CSS Grid */}
             {children}
         </AuthProvider>
       </body>

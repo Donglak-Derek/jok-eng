@@ -1,88 +1,74 @@
 @import "tailwindcss";
 
 :root {
-  --background: #05030f;
-  --foreground: #f5f4ff;
-  --muted: #b7b3d8;
-  --card-bg: #0d0a21;
-  --accent-purple: #a855f7;
-  --accent-pink: #ec4899;
-  --accent-blue: #22d3ee;
-  --glow-strong: 0 0 30px rgba(168, 85, 247, 0.35);
-  --glow-soft: 0 20px 60px rgba(34, 19, 74, 0.7);
-  color-scheme: dark;
+  /* High Energy Palette */
+  --primary: #FFE600; /* Electric Yellow - Action/Correct */
+  --secondary: #FF6B6B; /* Soft Coral - Mistake/Broken */
+  --accent: #0F172A; /* Deep Navy - Ink/Text */
+  
+  --background: #F8F9FA; /* Paper White */
+  --foreground: #0F172A; /* Deep Navy */
+  --card-bg: #FFFFFF;
+  --muted: #64748B; /* Slate 500 */
+  
+  --font-sans: var(--font-inter);
+  --font-hand: var(--font-hand);
+  
+  color-scheme: light;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter);
+  --font-hand: var(--font-hand);
   
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
   --color-card: var(--card-bg);
   --color-muted: var(--muted);
-  --color-primary: var(--accent-blue);
-  --color-secondary: var(--accent-purple);
-  --color-tertiary: var(--accent-pink);
-  
-  /* Preserve original names as aliases if needed, or primarily use semantic names */
-  --color-accent-blue: var(--accent-blue);
-  --color-accent-purple: var(--accent-purple);
-  --color-accent-pink: var(--accent-pink);
-
-  --color-destructive: #ef4444; /* red-500 */
-  --color-success: #10b981; /* emerald-500 */
 }
 
 body {
   background-color: var(--background);
-  background-image:
-    radial-gradient(120% 120% at 15% 20%, rgba(168, 85, 247, 0.14), transparent),
-    radial-gradient(90% 90% at 80% 10%, rgba(34, 211, 238, 0.12), transparent),
-    radial-gradient(100% 90% at 70% 70%, rgba(236, 72, 153, 0.12), transparent);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  font-family: var(--font-sans), sans-serif;
   min-height: 100vh;
+  
+  /* Paper Grid Pattern */
+  background-image: 
+    linear-gradient(#E2E8F0 1px, transparent 1px),
+    linear-gradient(90deg, #E2E8F0 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 
+.font-hand {
+  font-family: var(--font-hand), cursive;
+}
+
+/* Comic Strip / Sticker Styles */
+.sticker-shadow {
+  box-shadow: 4px 4px 0px rgba(15, 23, 42, 0.15);
+}
+
+.hard-shadow {
+  box-shadow: 4px 4px 0px var(--accent);
+}
+
+.speech-bubble {
+  position: relative;
+  background: white;
+  border: 2px solid var(--accent);
+  border-radius: 1rem;
+}
+
+/* Utilities */
 .headline {
-  font-family: var(--font-headline), var(--font-geist-sans), system-ui, sans-serif;
+  font-family: var(--font-headline), var(--font-sans), sans-serif;
   letter-spacing: 0.02em;
 }
 
 a {
   color: inherit;
-}
-
-::selection {
-  background: rgba(236, 72, 153, 0.3);
-  color: var(--foreground);
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: 200% center;
-  }
-  100% {
-    background-position: -200% center;
-  }
-}
-
-.animate-shimmer {
-  background: linear-gradient(
-    110deg,
-    var(--accent-pink) 0%,
-    var(--accent-purple) 20%,
-    #ffffff 25%,
-    var(--accent-purple) 30%,
-    var(--accent-blue) 50%,
-    var(--accent-pink) 70%,
-    var(--accent-purple) 90%,
-    var(--accent-blue) 100%
-  );
-  background-size: 200% auto;
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-  animation: shimmer 8s linear infinite;
 }
