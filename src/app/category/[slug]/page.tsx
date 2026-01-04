@@ -3,7 +3,24 @@ import { scripts } from "@/data";
 import ScenarioList from "@/components/ScenarioList";
 import { notFound } from "next/navigation";
 
+import { Metadata, ResolvingMetadata } from "next";
+
 type Props = { params: Promise<{ slug: string }> };
+
+export async function generateMetadata(
+  { params }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const { slug } = await params;
+  const list = scripts.filter((s) => s.categorySlug === slug);
+  const categoryName = list[0]?.categoryName ?? slug;
+ 
+  return {
+    title: `${categoryName} English Scripts | Jok-Eng`,
+    description: `Browse ${list.length} scenarios for ${categoryName}. Master the vocabulary and gain confidence in this topic.`,
+    keywords: [categoryName, "English Scripts", "ESL", "Conversation Practice"],
+  };
+}
 
 export default async function CategoryPage({ params }: Props) {
   const { slug } = await params;

@@ -61,15 +61,15 @@ export default function Home() {
                 >
                     {activeTab === "categories" && (
                         <section>
-                        <div className="flex flex-row items-baseline justify-between gap-3 mb-6 flex-wrap">
+                        <div className="flex flex-row items-center justify-start gap-4 mb-6 flex-wrap">
                             <h2 className="font-sans font-black text-2xl md:text-4xl text-black leading-none">
                                 Categories
                             </h2>
-                            <span className="font-hand text-base md:text-xl text-black -rotate-2 bg-yellow-300 px-2 py-0.5 hard-shadow border border-black transform whitespace-nowrap">
+                            <span className="font-hand text-sm md:text-lg text-black -rotate-2 bg-yellow-300 px-3 py-1 hard-shadow border border-black transform whitespace-nowrap">
                                 Pick your vibe!
                             </span>
                         </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 gap-6">
                             {categories.map((c) => (
                             <Link
                                 key={c.slug}
@@ -78,12 +78,12 @@ export default function Home() {
                             >
                                 <div className="h-full flex flex-col bg-white border-2 border-black rounded-xl overflow-hidden shadow-sm hover:hard-shadow transition-all">
                                     {/* Image Area - Top 50% */}
-                                    <div className="relative w-full aspect-[16/9] border-b-2 border-black bg-gray-100">
+                                    <div className="relative w-full aspect-[16/9] border-b-2 border-black bg-gray-100 overflow-hidden">
                                         <Image
                                             src={c.image}
                                             alt={c.name}
                                             fill
-                                            className="object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
+                                            className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
                                         />
                                         <div className="absolute top-2 right-2 bg-black text-white text-xs font-bold uppercase px-2 py-1 rounded-sm transform rotate-1 shadow-sm">
                                             {scripts.filter((s) => s.categorySlug === c.slug).length} scripts
@@ -98,7 +98,7 @@ export default function Home() {
                                             </h3>
                                             <span className="text-lg group-hover:translate-x-1 transition-transform">→</span>
                                         </div>
-                                        <p className="font-hand text-gray-800 font-medium text-xs leading-relaxed line-clamp-2">
+                                        <p className="font-hand text-gray-800 font-medium text-lg leading-relaxed line-clamp-2">
                                             {c.description}
                                         </p>
                                     </div>
