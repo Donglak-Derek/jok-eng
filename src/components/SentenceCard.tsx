@@ -144,10 +144,10 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
             {keywords.map((k) => (
                 <span
                   key={k.word}
-                  className="font-hand text-xs md:text-sm px-3 py-1 bg-yellow-100 border border-black/30 transform hover:-rotate-2 transition-transform cursor-default"
+                  className="text-xs md:text-sm px-3 py-1.5 rounded-xl bg-sky-100 border border-sky-200 text-sky-900 shadow-sm cursor-default"
                 >
-                <span className="font-black text-black">{k.word}</span>
-                <span className="text-gray-900 font-medium">: {k.definition}</span>
+                <span className="font-bold">{k.word}</span>
+                <span className="opacity-80 font-medium">: {k.definition}</span>
               </span>
             ))}
            </div>
@@ -159,7 +159,6 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
             speak();
           }}
           variant="primary"
-          size="xl"
           isLoading={loading}
           className="w-full border-2 border-black hard-shadow text-black font-black uppercase tracking-wider hover:-translate-y-1 hover:shadow-lg transition-all"
           aria-label={loading ? "Loading audio" : "Play correct response"}

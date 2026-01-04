@@ -119,9 +119,7 @@ export default function StandardScriptFlow({ script }: Props) {
       router.push(`/category/${script.categorySlug}`);
   };
   
-  const handleRepeat = () => {
-    setCurrentIndex(0);
-  };
+
 
   const handleStartOver = () => {
     setCurrentIndex(0);
@@ -130,7 +128,7 @@ export default function StandardScriptFlow({ script }: Props) {
   const currentSentence = script.sentences[currentIndex];
   // Calculate progress percent (0 to 100)
   // When at completion (currentIndex === total), it should be 100%
-  const progressPercent = (currentIndex / total) * 100;
+
 
 
 
@@ -139,121 +137,112 @@ export default function StandardScriptFlow({ script }: Props) {
   return (
     <div className="min-h-dvh flex flex-col relative overflow-hidden bg-background">
       
-      <div className="flex-1 max-w-md md:max-w-2xl lg:max-w-3xl mx-auto px-4 md:px-6 lg:px-8 py-5 md:py-8 flex flex-col gap-5 md:gap-6 w-full relative z-10">
-        {/* Header - Notebook Style */}
-        <header className="sticky top-0 z-20 -mx-4 md:-mx-6 lg:-mx-8 px-4 md:px-6 lg:px-8 py-3 md:py-4 bg-white/90 backdrop-blur-md flex items-center gap-3 border-b-2 border-black/5 shadow-sm relative">
-          <Link href={`/category/${script.categorySlug}`} className="text-lg md:text-xl leading-none text-black hover:text-primary transition-colors font-bold">←</Link>
-          <div className="flex-1 min-w-0">
-            <h1 className="font-sans font-black text-2xl md:text-4xl tracking-tight text-black truncate leading-none">
-              {script.title}
-            </h1>
-            <div className="flex items-center gap-3 mt-1">
-              <p className="font-hand text-sm md:text-base text-gray-500 line-clamp-1 -rotate-1">{script.cleanedEnglish}</p>
-            </div>
-          </div>
-
-          {/* Highlighter Progress Bar */}
-          <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-gray-100">
-             <div 
-               className="h-full bg-primary transition-all duration-300 ease-out border-r-2 border-white"
-               style={{ width: `${progressPercent}%` }}
-             />
-          </div>
-        </header>
-
-        {/* Card Area */}
-        <div className="flex-1 flex flex-col justify-center min-h-[400px]">
-           <AnimatePresence mode="wait">
-             {!isCompletion ? (
-               <motion.div
-                 key={currentIndex}
-                 initial={{ opacity: 0, x: 20, rotate: 2 }}
-                 animate={{ opacity: 1, x: 0, rotate: 0 }}
-                 exit={{ opacity: 0, x: -20, rotate: -2 }}
-                 transition={{ duration: 0.3, type: "spring" }}
-                 className="w-full"
-               >
-                 {currentSentence && (
-                  <SentenceCard
-                    key={currentSentence.id}
-                    sentence={currentSentence}
-                    index={currentIndex}
-                    heard={heardSet.has(currentIndex)}
-                    onHeard={() => {}} // No-op, handled by Next button now
-                  />
-                 )}
-               </motion.div>
-             ) : (
-               <motion.div
-                 key="completion"
-                 initial={{ opacity: 0, scale: 0.9, rotate: -3 }}
-                 animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                 exit={{ opacity: 0, scale: 0.9 }}
-                 transition={{ duration: 0.4, type: "spring" }}
-                 className="w-full"
-               >
-                 <div className="relative rounded-xl border-2 border-black bg-white p-6 md:p-10 flex flex-col gap-6 md:gap-8 hard-shadow text-center items-center transform rotate-1">
-                     <div className="absolute -top-6 -right-6 text-6xl md:text-7xl animate-bounce">🏆</div>
-                     
-                     <div className="flex flex-col gap-2">
-                       <Confetti />
-                       <h2 className="font-sans font-black text-4xl md:text-5xl text-black">
-                         Nailed It!
-                       </h2>
-                       <p className="font-hand text-xl text-gray-500 rotate-1">You finished this scenario.</p>
-                     </div>
-
-                     <div className="w-full flex flex-col gap-3 mt-4">
-                        <Button
-                          variant="primary"
-                          size="xl"
-                          onClick={handleRepeat}
-                          className="w-full text-xl border-2 border-black hard-shadow font-bold hover:-translate-y-1 hover:shadow-lg transition-transform active:translate-y-0 active:shadow-none"
-                        >
-                          Repeat Training
-                        </Button>
-
-                        <Button 
-                          variant="outline"
-                          size="md"
-                          onClick={handleFinishTraining}
-                          className="w-full border-2 border-gray-200 text-gray-500 hover:text-black hover:border-black font-bold"
-                        >
-                          Finish & Exit
-                        </Button>
-                     </div>
+      <div className="flex-1 max-w-md md:max-w-2xl lg:max-w-3xl mx-auto px-4 py-8 flex flex-col gap-6 w-full">
+        
+        {/* Sticky Header */}
+        <div className="sticky top-0 z-10 -mx-4 md:-mx-6 lg:-mx-8 px-4 md:px-6 lg:px-8 py-3 md:py-4 bg-white flex items-center gap-3 border-b-2 border-black shadow-sm mb-4">
+             <Link href={`/category/${script.categorySlug}`} className="text-xl text-black font-black hover:scale-110 transition-transform">←</Link>
+             <div className="flex-1">
+                 <h1 className="text-xl md:text-3xl font-black text-black leading-none">
+                   {script.title}
+                 </h1>
+                 <p className="text-xs md:text-sm text-gray-600 font-bold line-clamp-1">{script.context || script.cleanedEnglish}</p>
+             </div>
+             
+             {/* Simple Repeats Badges */}
+             <div className="flex items-center gap-2">
+                 <div className="px-3 py-1 bg-black text-white text-xs font-bold rounded-full border-2 border-black transform rotate-2">
+                     {repeats} 🔄
                  </div>
-               </motion.div>
-             )}
-           </AnimatePresence>
+                 {/* <div className="w-12 text-right font-black text-black">
+                     {currentIndex}/{total}
+                 </div> */}
+             </div>
+             
+             {/* Progress Bar absolute bottom */}
+             <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-gray-100">
+                <div 
+                    className="h-full bg-primary border-r-2 border-black transition-all duration-300" 
+                    style={{ width: `${(currentIndex / total) * 100}%` }} 
+                />
+             </div>
         </div>
-      </div>
-      
+
+        {/* Content Area */}
+        <div className="flex-1 flex flex-col justify-center min-h-[400px]">
+             <AnimatePresence mode="wait">
+                 {!isCompletion ? (
+                     <motion.div
+                         key={currentIndex} 
+                         initial={{ opacity: 0, x: 20 }}
+                         animate={{ opacity: 1, x: 0 }}
+                         exit={{ opacity: 0, x: -20 }}
+                         transition={{ duration: 0.2 }}
+                         className="w-full"
+                     >
+                         <SentenceCard 
+                            sentence={currentSentence} 
+                            index={currentIndex}
+                            heard={heardSet.has(currentIndex)}
+                            onHeard={() => {
+                                setHeardSet(prev => {
+                                    const next = new Set(prev);
+                                    next.add(currentIndex);
+                                    return next;
+                                });
+                            }}
+                         />
+                     </motion.div>
+                 ) : (
+                     <motion.div
+                         key="completion"
+                         initial={{ opacity: 0, scale: 0.9 }}
+                         animate={{ opacity: 1, scale: 1 }}
+                         className="w-full p-8 rounded-3xl border-4 border-black bg-white hard-shadow text-center flex flex-col gap-6 items-center"
+                     >
+                         <Confetti />
+                         <div className="text-6xl animate-bounce">🎉</div>
+                         <div>
+                             <h2 className="text-3xl font-black text-black mb-2">Training Complete!</h2>
+                             <p className="text-gray-600 font-medium">You&apos;ve drilled this scenario {repeats + 1} times.</p>
+                         </div>
+                         <div className="flex flex-col w-full gap-3">
+                              <Button onClick={handleFinishTraining} className="w-full py-4 text-xl font-black rounded-2xl">
+                                  Complete & Repeat
+                              </Button>
+                              <Link href={`/category/${script.categorySlug}`} className="w-full flex justify-center">
+                                  <button className="py-2 px-4 text-sm font-bold text-gray-400 hover:text-black transition-colors">
+                                     Back to Menu
+                                  </button>
+                              </Link>
+                         </div>
+                     </motion.div>
+                 )}
+             </AnimatePresence>
+        </div>
       {/* Bottom Action Bar */}
-      <div className="sticky bottom-0 left-0 right-0 p-4 bg-white/90 backdrop-blur-md border-t-2 border-black/5 z-20">
+      <div className="sticky bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-100 z-20">
         <div className="max-w-md md:max-w-2xl lg:max-w-3xl mx-auto flex items-center gap-4">
            {/* Start Over Button */}
            <Button 
              variant="ghost"
-             size="sm"
              onClick={handleStartOver}
-             className="text-gray-400 hover:text-black font-bold"
+             className="text-black font-bold opacity-50 hover:opacity-100"
            >
              ↻ <span className="hidden md:inline">Restart</span>
            </Button>
            
-           <div className="flex-1 flex items-center gap-3">
+           <div className="flex-1 flex items-center justify-end gap-3">
              {/* Previous Button */}
              {!isCompletion && (
              <Button
-               variant="outline"
-               size="md"
-               onClick={handlePrev}
-               disabled={currentIndex === 0}
-               className="flex-1 border-2 border-gray-200 text-gray-400 hover:text-black hover:border-black font-bold"
-             >
-               Prev
-             </Button>
+                variant="ghost"
+                onClick={handlePrev}
+                disabled={currentIndex === 0}
+                className={`flex-1 md:flex-none border-2 transition-all font-bold ${currentIndex === 0 ? 'border-transparent text-gray-300' : 'border-black text-black bg-white'}`}
+              >
+                Prev
+              </Button>
              )}
 
              {/* Next Button */}
@@ -262,13 +251,14 @@ export default function StandardScriptFlow({ script }: Props) {
                variant="primary"
                size="md"
                onClick={handleNext}
-               className="flex-1 border-2 border-black hard-shadow font-black text-lg hover:-translate-y-0.5 active:translate-y-0 shadow-none"
+               className="flex-1 md:flex-none md:min-w-[120px] font-bold"
              >
                Next →
              </Button>
              )}
            </div>
         </div>
+      </div>
       </div>
     </div>
   );

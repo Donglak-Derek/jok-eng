@@ -39,7 +39,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     // Sizes (Heights fixed to 8pt grid)
     // sm: 32px (h-8), md: 40px (h-10), lg: 48px (h-12), xl: 56px (h-14)
     const sizeStyles = {
-      sm: "h-8 px-4 text-xs gap-1.5",
+      sm: "h-4 px-4 text-xs gap-1",
       md: "h-10 px-5 text-sm gap-2",   
       lg: "h-12 px-6 text-base gap-2.5",
       xl: "h-14 px-8 text-lg gap-3"
@@ -47,7 +47,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     // Variants
     const variantStyles = {
-      primary: "bg-gradient-to-br from-tertiary via-secondary to-primary text-white shadow-[0_4px_20px_rgba(168,85,247,0.3)] hover:shadow-[0_8px_30px_rgba(168,85,247,0.45)] hover:scale-[1.01] border-none",
+      primary: "bg-black text-white border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none",
       secondary: "bg-secondary/10 text-secondary border border-secondary/20 hover:bg-secondary/20 hover:border-secondary/50",
       outline: "bg-transparent border border-primary/30 text-primary hover:bg-primary/5 hover:border-primary shadow-[0_0_15px_rgba(34,211,238,0.1)]",
       ghost: "bg-transparent text-muted hover:text-foreground hover:bg-white/5",

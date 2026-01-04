@@ -3,7 +3,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { categories, scripts } from "@/data";
-import Card from "@/components/Card";
 import Header from "@/components/Header";
 import MyScenariosSection from "@/components/MyScenariosSection";
 import CommunityScenariosSection from "@/components/CommunityScenariosSection";

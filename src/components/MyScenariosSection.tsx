@@ -128,14 +128,12 @@ export default function MyScenariosSection() {
   return (
     <section className="mt-4 flex flex-col gap-6">
         <div className="flex items-center justify-between border-b-2 border-black/10 pb-4">
-            <Link href="/category/custom" className="group flex items-center gap-2 hover:opacity-100 transition-all">
-                <h2 className="font-sans font-black text-xl md:text-3xl text-black leading-none">
-                    My Scenarios
-                </h2>
-            </Link>
+            <h2 className="font-sans font-black text-xl md:text-3xl text-black leading-none">
+                My Scenarios
+            </h2>
             <Link 
                 href="/create-scenario"
-                className="flex items-center gap-1.5 px-3 py-2 rounded-lg border-2 border-black bg-black text-white text-xs font-bold hover:bg-primary hover:text-black transition-all shadow-[2px_2px_0px_rgba(0,0,0,0.2)] hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px]"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg border-2 border-black bg-white text-black text-xs font-bold hover:bg-primary hover:text-black transition-all shadow-[2px_2px_0px_rgba(0,0,0,0.2)] hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px]"
             >
                 <span className="text-sm leading-none font-black">＋</span> Create
             </Link>
