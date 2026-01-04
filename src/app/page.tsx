@@ -98,7 +98,7 @@ export default function Home() {
                                             </h3>
                                             <span className="text-lg group-hover:translate-x-1 transition-transform">→</span>
                                         </div>
-                                        <p className="font-hand text-gray-800 font-medium text-lg leading-relaxed line-clamp-2">
+                                        <p className="font-sans text-gray-600 text-lg leading-relaxed line-clamp-3">
                                             {c.description}
                                         </p>
                                     </div>
