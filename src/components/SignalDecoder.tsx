@@ -376,7 +376,12 @@ export default function SignalDecoder({ script }: Props) {
                         }
                     `}
                  >
-                     ← Prev
+                     <div className="flex items-center gap-2 justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                        </svg>
+                        Prev
+                     </div>
                  </button>
                  
                  {isRevealed && (
@@ -384,7 +389,16 @@ export default function SignalDecoder({ script }: Props) {
                         onClick={handleNext}
                         className="py-3 px-4 rounded-xl font-bold text-lg border-2 border-black bg-black text-white shadow-[4px_4px_0px_rgba(0,0,0,0.2)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all flex items-center justify-center gap-2"
                      >
-                         {isLastItem ? "Finish" : "Next →"}
+                         {isLastItem ? (
+                             "Finish"
+                         ) : (
+                             <>
+                                Next 
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                                </svg>
+                             </>
+                         )}
                      </button>
                  )}
             </div>

@@ -12,6 +12,7 @@ import { useAuth } from "@/context/AuthContext";
 import { doc, updateDoc, increment } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { UserScript } from "@/types";
+import { ArrowLeft, ChevronLeft, ChevronRight, RotateCw, Repeat, PartyPopper } from "lucide-react";
 
 type Props = { 
   script: Script;
@@ -141,19 +142,24 @@ export default function StandardScriptFlow({ script }: Props) {
         
         {/* Sticky Header */}
         <div className="sticky top-0 z-10 -mx-4 md:-mx-6 lg:-mx-8 px-4 md:px-6 lg:px-8 py-3 md:py-4 bg-white flex items-center gap-3 border-b-2 border-black shadow-sm mb-4">
-             <Link href={`/category/${script.categorySlug}`} className="text-xl text-black font-black hover:scale-110 transition-transform">←</Link>
+             <Link href={`/category/${script.categorySlug}`} className="text-black hover:scale-110 transition-transform">
+                <ChevronLeft className="w-6 h-6" />
+             </Link>
              <div className="flex-1">
                  <h1 className="text-xl md:text-3xl font-black text-black leading-none">
                    {script.title}
                  </h1>
-                 <p className="text-xs md:text-sm text-gray-600 font-bold line-clamp-1">{script.context || script.cleanedEnglish}</p>
+                 {/* <p className="text-xs md:text-sm text-gray-600 font-bold line-clamp-1">{script.context || script.cleanedEnglish}</p> */}
              </div>
              
              {/* Simple Repeats Badges */}
-             <div className="flex items-center gap-2">
-                 <div className="px-3 py-1 bg-black text-white text-xs font-bold rounded-full border-2 border-black transform rotate-2">
-                     {repeats} 🔄
-                 </div>
+              <div className="flex items-center gap-2">
+                  <div className="px-3 py-1 bg-black text-white text-xs font-bold rounded-full border-2 border-black flex items-center gap-1">
+                      {repeats} 
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-3 h-3">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                      </svg>
+                  </div>
                  {/* <div className="w-12 text-right font-black text-black">
                      {currentIndex}/{total}
                  </div> */}
@@ -201,14 +207,17 @@ export default function StandardScriptFlow({ script }: Props) {
                          className="w-full p-8 rounded-3xl border-4 border-black bg-white hard-shadow text-center flex flex-col gap-6 items-center"
                      >
                          <Confetti />
-                         <div className="text-6xl animate-bounce">🎉</div>
+                         <PartyPopper className="w-16 h-16 text-yellow-500 animate-bounce" />
                          <div>
                              <h2 className="text-3xl font-black text-black mb-2">Training Complete!</h2>
                              <p className="text-gray-600 font-medium">You&apos;ve drilled this scenario {repeats + 1} times.</p>
                          </div>
-                         <div className="flex flex-col w-full gap-3">
-                              <Button onClick={handleFinishTraining} className="w-full py-4 text-xl font-black rounded-2xl">
-                                  Complete & Repeat
+                          <div className="flex flex-col w-full gap-3">
+                              <Button onClick={handleFinishTraining} className="w-full py-4 text-xl font-black rounded-2xl flex items-center justify-center gap-2">
+                                  Complete & Repeat 
+                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                                  </svg>
                               </Button>
                               <Link href={`/category/${script.categorySlug}`} className="w-full flex justify-center">
                                   <button className="py-2 px-4 text-sm font-bold text-gray-400 hover:text-black transition-colors">
@@ -221,15 +230,18 @@ export default function StandardScriptFlow({ script }: Props) {
              </AnimatePresence>
         </div>
       {/* Bottom Action Bar */}
-      <div className="sticky bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-100 z-20">
+      <div className="sticky bottom-0 left-0 right-0 p-0 bg-white border-t border-gray-100 z-20">
         <div className="max-w-md md:max-w-2xl lg:max-w-3xl mx-auto flex items-center gap-4">
            {/* Start Over Button */}
            <Button 
              variant="ghost"
              onClick={handleStartOver}
-             className="text-black font-bold opacity-50 hover:opacity-100"
+             className="text-black font-bold opacity-50 hover:opacity-100 flex items-center gap-2"
            >
-             ↻ <span className="hidden md:inline">Restart</span>
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
+               <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+             </svg>
+             <span className="hidden md:inline">Restart</span>
            </Button>
            
            <div className="flex-1 flex items-center justify-end gap-3">
@@ -239,7 +251,8 @@ export default function StandardScriptFlow({ script }: Props) {
                 variant="ghost"
                 onClick={handlePrev}
                 disabled={currentIndex === 0}
-                className={`flex-1 md:flex-none border-2 transition-all font-bold ${currentIndex === 0 ? 'border-transparent text-gray-300' : 'border-black text-black bg-white'}`}
+                className={`flex-1 md:flex-none border-2 transition-all font-bold disabled:opacity-100 ${currentIndex === 0 ? '!border-transparent !text-gray-400' : '!border-black !text-black !bg-white'}`}
+                leftIcon={<ChevronLeft className="w-4 h-4" />}
               >
                 Prev
               </Button>
@@ -252,8 +265,9 @@ export default function StandardScriptFlow({ script }: Props) {
                size="md"
                onClick={handleNext}
                className="flex-1 md:flex-none md:min-w-[120px] font-bold"
+               rightIcon={<ChevronRight className="w-4 h-4" />}
              >
-               Next →
+               Next
              </Button>
              )}
            </div>

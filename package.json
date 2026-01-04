@@ -20,7 +20,8 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "utf-8-validate": "^6.0.5",
-    "uuid": "^13.0.0"
+    "uuid": "^13.0.0",
+    "lucide-react": "^0.469.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

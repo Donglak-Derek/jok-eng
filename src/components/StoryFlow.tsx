@@ -198,8 +198,10 @@ export default function StoryFlow({ script }: Props) {
                     </div>
 
                     {/* Coaching Note */}
-                    <div className="w-full text-black italic text-sm md:text-lg lg:text-xl bg-gray-50 px-4 md:px-6 py-3 md:py-4 rounded-xl border-2 border-black/10 flex gap-2 items-start justify-center">
-                       <span>💡</span>
+                    <div className="w-full text-black italic text-sm md:text-lg lg:text-xl bg-gray-50 px-4 md:px-6 py-3 md:py-4 rounded-xl border-2 border-black/10 flex gap-3 items-start justify-center">
+                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-yellow-500 flex-shrink-0">
+                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 18v-1.946l-.318-.08a5.972 5.972 0 01-3.606-4.996C8.076 7.376 9.924 5 12 5c2.076 0 3.924 2.376 3.924 5.979 0 2.226-1.503 4.15-3.606 4.996L12 16.054V18zm0 0v2.054a2.977 2.977 0 01-2 2.898 2.977 2.977 0 01-2-2.898V18m4 0h-4" />
+                       </svg>
                        <span className="font-medium">{currentSegment.note}</span>
                     </div>
                   </div>
@@ -231,8 +233,9 @@ export default function StoryFlow({ script }: Props) {
                      className="mt-4 w-full md:w-auto self-center px-8"
                      leftIcon={
                        !loading && (
-                         <svg aria-hidden viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                           <path d="M8 5v14l11-7z" />
+                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                           <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                           <path strokeLinecap="round" strokeLinejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.328l5.603 3.113z" />
                          </svg>
                        )
                      }

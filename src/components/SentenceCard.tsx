@@ -3,6 +3,7 @@
 import { useCallback, useMemo, useState } from "react";
 import type { Sentence } from "@/types";
 import { Button } from "@/components/Button";
+import { Play, AudioLines } from "lucide-react";
 
 type Props = {
   sentence: Sentence;
@@ -79,11 +80,11 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
   // Audio Visualizer Component
   const AudioVisualizer = () => (
     <div className="flex items-end justify-center gap-1 h-5">
-      <div className="w-1 bg-current animate-[bounce_0.5s_infinite] h-2"></div>
-      <div className="w-1 bg-current animate-[bounce_0.7s_infinite] h-4"></div>
-      <div className="w-1 bg-current animate-[bounce_0.6s_infinite] h-3"></div>
-      <div className="w-1 bg-current animate-[bounce_0.8s_infinite] h-5"></div>
-      <div className="w-1 bg-current animate-[bounce_0.55s_infinite] h-2"></div>
+      <div className="w-1 bg-black animate-[bounce_0.5s_infinite] h-2"></div>
+      <div className="w-1 bg-black animate-[bounce_0.7s_infinite] h-4"></div>
+      <div className="w-1 bg-black animate-[bounce_0.6s_infinite] h-3"></div>
+      <div className="w-1 bg-black animate-[bounce_0.8s_infinite] h-5"></div>
+      <div className="w-1 bg-black animate-[bounce_0.55s_infinite] h-2"></div>
     </div>
   );
 
@@ -163,7 +164,7 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
           className="w-full border-2 border-black hard-shadow text-black font-black uppercase tracking-wider hover:-translate-y-1 hover:shadow-lg transition-all"
           aria-label={loading ? "Loading audio" : "Play correct response"}
         >
-            {speaking ? <AudioVisualizer /> : "Play Audio"}
+            {speaking ? <AudioVisualizer /> : <span className="flex items-center gap-2 text-base"><Play className="w-4 h-4 fill-current" /> Play Audio</span>}
         </Button>
       </div>
     );
@@ -186,7 +187,7 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
       
       <div className="min-w-0 relative z-10 flex flex-col gap-6 text-center items-center py-4">
          {/* Index Badge */}
-         <div className="inline-flex items-center justify-center px-3 py-1 border-2 border-black bg-gray-100 text-xs font-bold uppercase tracking-widest text-gray-500 shadow-[2px_2px_0px_rgba(0,0,0,1)]">
+         <div className="inline-flex items-center justify-center px-3 py-1 border-2 border-black bg-primary text-xs font-bold uppercase tracking-widest text-black shadow-[2px_2px_0px_rgba(0,0,0,1)]">
             Card {index + 1}
          </div>
 
@@ -198,7 +199,7 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
          </div>
 
          {/* Divider */}
-         <div className="w-20 h-1.5 bg-primary/30 rounded-full transform -rotate-1" />
+         <div className="w-20 h-1 bg-black/20 rounded-full transform -rotate-1" />
       </div>
 
       <div className="flex flex-wrap justify-center gap-3 relative z-10">
@@ -225,7 +226,7 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
          className={"w-full relative z-10 font-bold border-2 border-black hard-shadow transition-all " + (speaking ? "bg-white text-black" : "active:translate-y-0 active:shadow-none")}
          aria-label={loading ? "Loading audio" : "Play sentence"}
       >
-          {speaking ? <AudioVisualizer /> : <span className="flex items-center gap-2 text-base">🔊 Play Audio</span>}
+          {speaking ? <AudioVisualizer /> : <span className="flex items-center gap-2 text-base"><AudioLines className="w-5 h-5" /> Play Audio</span>}
       </Button>
     </div>
   );
