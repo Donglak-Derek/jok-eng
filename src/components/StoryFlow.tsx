@@ -11,6 +11,7 @@ import { useAuth } from "@/context/AuthContext";
 import { updateDoc, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { UserScript } from "@/types";
+import { ArrowRight, RotateCcw, Volume2, ArrowLeft, Lightbulb, ChevronLeft } from "lucide-react";
 
 type Props = {
   script: Script;
@@ -135,37 +136,34 @@ export default function StoryFlow({ script }: Props) {
   }, [segments, currentStep, speaking, loading]);
 
 
-
-
-
   const isLastSegment = currentStep === total - 1;
   const currentSegment = segments[currentStep];
 
-
-
   return (
-    <div className="min-h-dvh text-foreground flex flex-col">
-      <div className="flex-1 max-w-md md:max-w-2xl lg:max-w-3xl mx-auto px-4 md:px-6 lg:px-8 py-5 md:py-8 flex flex-col gap-5 md:gap-6 w-full">
-        {/* Header - Matching StandardScriptFlow */}
-        <header className="sticky top-0 z-10 -mx-4 md:-mx-6 lg:-mx-8 px-4 md:px-6 lg:px-8 py-3 md:py-4 bg-white flex items-center gap-3 border-b-2 border-black shadow-sm relative">
-          <Link href={`/category/${script.categorySlug}`} className="text-lg md:text-xl leading-none text-black hover:text-primary transition-colors font-black">←</Link>
-          <div className="flex-1 min-w-0">
-            <h1 className="headline text-2xl md:text-3xl lg:text-4xl tracking-tight text-black truncate leading-none font-black">
-              {script.title}
-            </h1>
-            <div className="flex items-center gap-3">
-              <p className="text-xs md:text-sm text-gray-600 font-bold line-clamp-1">{script.context}</p>
+    <div className="min-h-screen text-foreground flex flex-col bg-background">
+      <div className="flex-1 max-w-3xl mx-auto px-4 py-8 md:px-6 md:py-12 flex flex-col gap-6 md:gap-8 w-full">
+        {/* Header */}
+        <div className="flex flex-col gap-6">
+            <div className="flex items-center gap-4">
+              <Link href={`/category/${script.categorySlug}`} className="text-muted-foreground hover:text-foreground transition-colors">
+                  <ChevronLeft className="w-6 h-6" />
+              </Link>
+              <div className="flex-1 min-w-0">
+                <h1 className="text-2xl font-bold tracking-tight text-foreground truncate">
+                  {script.title}
+                </h1>
+                <p className="text-sm text-muted-foreground truncate">{script.context}</p>
+              </div>
             </div>
-          </div>
-          
-          {/* Full Width Progress Bar */}
-          <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-gray-100">
-             <div 
-               className="h-full bg-primary border-r-2 border-black transition-all duration-300 ease-out"
-               style={{ width: `${(currentStep / total) * 100}%` }}
-             />
-          </div>
-        </header>
+            
+             {/* Progress Bar */}
+             <div className="w-full h-1 bg-secondary rounded-full overflow-hidden">
+                 <div 
+                   className="h-full bg-primary transition-all duration-300 ease-out"
+                   style={{ width: `${(currentStep / total) * 100}%` }}
+                 />
+            </div>
+        </div>
 
         {/* Card Area */}
         <div className="flex-1 flex flex-col justify-center min-h-[400px]">
@@ -179,43 +177,34 @@ export default function StoryFlow({ script }: Props) {
                transition={{ duration: 0.3 }}
                className="w-full"
              >
-                <div 
-                  className={
-                    "relative rounded-3xl border-2 border-black p-6 md:p-8 lg:p-10 flex flex-col gap-6 md:gap-8 transition duration-200 bg-white hard-shadow " +
-                    (speaking
-                      ? "ring-4 ring-primary "
-                      : "")
-                  }
-                >
-                  <div className="flex flex-col gap-4 text-center items-center">
-                    <div className="text-sm md:text-base font-black uppercase tracking-widest text-black border-2 border-black px-3 py-1 rounded-full bg-yellow-300">
+                <div className="bg-white rounded-lg border border-border shadow-sm p-6 md:p-12 flex flex-col gap-6 md:gap-8">
+                  <div className="flex flex-col gap-6 text-center items-center">
+                    <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground border border-border px-3 py-1 rounded-full bg-secondary/50">
                       Step {currentSegment.step}
-                    </div>
+                    </span>
                     
                     {/* Main English Text */}
-                    <div className="text-xl md:text-2xl lg:text-3xl font-black leading-relaxed my-2 md:my-4 px-4 text-black">
+                    <div className="text-2xl md:text-3xl font-bold leading-relaxed text-foreground">
                        &quot;{currentSegment.text}&quot;
                     </div>
 
                     {/* Coaching Note */}
-                    <div className="w-full text-black italic text-sm md:text-lg lg:text-xl bg-gray-50 px-4 md:px-6 py-3 md:py-4 rounded-xl border-2 border-black/10 flex gap-3 items-start justify-center">
-                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-yellow-500 flex-shrink-0">
-                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 18v-1.946l-.318-.08a5.972 5.972 0 01-3.606-4.996C8.076 7.376 9.924 5 12 5c2.076 0 3.924 2.376 3.924 5.979 0 2.226-1.503 4.15-3.606 4.996L12 16.054V18zm0 0v2.054a2.977 2.977 0 01-2 2.898 2.977 2.977 0 01-2-2.898V18m4 0h-4" />
-                       </svg>
+                    <div className="w-full text-foreground/80 italic text-lg bg-secondary/20 px-6 py-4 rounded-lg border border-secondary flex gap-3 items-start justify-center">
+                       <Lightbulb className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-1" />
                        <span className="font-medium">{currentSegment.note}</span>
                     </div>
                   </div>
 
                   {/* Keywords (Heads Up) */}
                   {currentSegment.keywords && currentSegment.keywords.length > 0 && (
-                     <div className="flex flex-wrap justify-center gap-2 mt-2 pt-4 border-t-2 border-black/5 border-dashed">
+                     <div className="flex flex-wrap justify-center gap-2 pt-6 border-t border-border border-dashed">
                       {currentSegment.keywords.map((k) => (
                         <span
                           key={k.word}
-                          className="text-xs md:text-base px-3 md:px-4 py-1.5 rounded-xl bg-sky-100 border border-sky-200 text-sky-900 shadow-sm"
+                          className="text-sm px-3 py-1 rounded-md bg-blue-50 text-blue-700 border border-blue-100"
                         >
-                          <span className="font-bold">{k.word}</span>
-                          <span className="opacity-80 font-medium">: {k.definition}</span>
+                          <span className="font-semibold">{k.word}</span>
+                          <span className="opacity-75">: {k.definition}</span>
                         </span>
                       ))}
                      </div>
@@ -227,18 +216,11 @@ export default function StoryFlow({ script }: Props) {
                        e.stopPropagation();
                        speak();
                      }}
-                     variant="primary"
-                     size="md"
+                     variant="outline"
+                     size="lg"
                      isLoading={loading}
-                     className="mt-4 w-full md:w-auto self-center px-8"
-                     leftIcon={
-                       !loading && (
-                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                           <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                           <path strokeLinecap="round" strokeLinejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.328l5.603 3.113z" />
-                         </svg>
-                       )
-                     }
+                     className="mt-2 w-full md:w-auto self-center"
+                     leftIcon={<Volume2 className="w-5 h-5" />}
                   >
                       Play Audio
                   </Button>
@@ -247,29 +229,29 @@ export default function StoryFlow({ script }: Props) {
            ) : (
              <motion.div
                key="completion"
-               initial={{ opacity: 0, scale: 0.9 }}
+               initial={{ opacity: 0, scale: 0.95 }}
                animate={{ opacity: 1, scale: 1 }}
-               exit={{ opacity: 0, scale: 0.9 }}
+               exit={{ opacity: 0, scale: 0.95 }}
                transition={{ duration: 0.4 }}
                className="w-full"
              >
-                <div className="relative rounded-3xl border-2 border-black p-6 md:p-8 lg:p-10 flex flex-col gap-6 md:gap-8 transition duration-200 bg-white shadow-[8px_8px_0px_rgba(0,0,0,1)] text-center items-center">
+                <div className="bg-white rounded-lg border border-border shadow-sm p-8 md:p-12 flex flex-col items-center text-center gap-6">
                     <Confetti />
-                    <div className="text-6xl md:text-7xl animate-bounce mb-2">🎉</div>
+                    <div className="text-6xl mb-2">🎉</div>
                     
-                    <div className="flex flex-col gap-2">
-                      <h2 className="text-3xl md:text-4xl font-black text-black">
+                    <div className="space-y-2">
+                      <h2 className="text-3xl font-bold text-foreground">
                         Story Complete!
                       </h2>
-                      <p className="text-lg text-gray-500 font-medium">You&apos;ve mastered this flow.</p>
+                      <p className="text-lg text-muted-foreground">You&apos;ve mastered this flow.</p>
                     </div>
 
-                    <div className="w-full flex flex-col gap-3 mt-4">
+                    <div className="w-full max-w-sm flex flex-col gap-3 mt-4">
                        <Button
                          variant="primary"
-                         size="xl"
+                         size="lg"
                          onClick={handleRepeat}
-                         className="w-full text-xl"
+                         className="w-full"
                        >
                          Repeat
                        </Button>
@@ -278,7 +260,8 @@ export default function StoryFlow({ script }: Props) {
                          variant="ghost"
                          size="md"
                          onClick={handleFinishTraining}
-                         className="w-full text-sm text-gray-400 hover:text-black font-bold"
+                         className="w-full text-muted-foreground"
+                         rightIcon={<ArrowRight className="w-4 h-4" />}
                        >
                          Finish & Return
                        </Button>
@@ -291,44 +274,42 @@ export default function StoryFlow({ script }: Props) {
       </div>
       
       {/* Bottom Action Bar */}
-      <div className="sticky bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-100 z-20">
-        <div className="max-w-md md:max-w-2xl lg:max-w-3xl mx-auto flex items-center gap-4">
-           {/* Start Over Button */}
-           <Button 
-             variant="ghost"
-             size="sm"
-             onClick={handleStartOver}
-             className="text-black font-bold opacity-50 hover:opacity-100"
-           >
-             ↻ <span className="hidden md:inline">Restart</span>
-           </Button>
-           
-           <div className="flex-1 flex items-center justify-end gap-3">
-              {/* Previous Button */}
-              {!isCompletion && (
-              <Button
-                onClick={handlePrev}
-                disabled={currentStep === 0}
-                className={`flex-1 md:flex-none border-2 transition-all font-bold ${currentStep === 0 ? 'border-transparent text-gray-300' : 'border-black text-black bg-white'}`}
-              >
-                Prev
-              </Button>
-              )}
+      {!isCompletion && (
+        <div className="sticky bottom-0 left-0 right-0 p-6 bg-background border-t border-border z-20">
+          <div className="max-w-3xl mx-auto flex items-center justify-between">
+             {/* Start Over Button */}
+             <Button 
+               variant="ghost"
+               size="sm"
+               onClick={handleStartOver}
+               className="text-muted-foreground hover:text-foreground"
+               leftIcon={<RotateCcw className="w-4 h-4" />}
+             >
+               Restart
+             </Button>
+             
+             <div className="flex items-center gap-3">
+                <Button
+                  variant="ghost"
+                  onClick={handlePrev}
+                  disabled={currentStep === 0}
+                  className={currentStep === 0 ? "invisible" : ""}
+                  leftIcon={<ArrowLeft className="w-4 h-4" />}
+                >
+                  Prev
+                </Button>
 
-              {/* Next / Finish Button */}
-              {!isCompletion && (
-              <Button
-                variant="primary"
-                size="md"
-                onClick={handleNext}
-                className="flex-1 md:flex-none md:min-w-[120px] font-bold"
-              >
-                {isLastSegment ? "Finish" : "Next →"}
-              </Button>
-              )}
-           </div>
+                <Button
+                  variant="primary"
+                  onClick={handleNext}
+                  rightIcon={isLastSegment ? undefined : <ArrowRight className="w-4 h-4" />}
+                >
+                  {isLastSegment ? "Finish" : "Next"}
+                </Button>
+             </div>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

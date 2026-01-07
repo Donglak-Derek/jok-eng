@@ -1,12 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+
 import type { Script, UserScript } from "@/types";
 import { motion } from "framer-motion";
-import CommentsSection from "./CommentsSection";
 import React from "react";
-import { Heart, MessageCircle, Repeat, Share2, Bookmark, Lock, Globe, Edit2, Trash2, User } from "lucide-react";
+import { Heart, Bookmark, Lock, Globe, Edit2, Trash2, User } from "lucide-react";
 
 type Props = {
   script: Script;
@@ -16,7 +15,7 @@ type Props = {
   onTogglePublic?: (id: string, current: boolean, e: React.MouseEvent) => void;
   onLike?: (id: string, e: React.MouseEvent) => void;
   onSave?: (id: string, e: React.MouseEvent) => void;
-  onShare?: (id: string, e: React.MouseEvent) => void;
+  onShare?: (id: string, e: React.MouseEvent) => void; // Keeping onShare prop but icon was unused? Actually Share2 was unused.
   isLiked?: boolean;
 };
 
@@ -30,19 +29,9 @@ export default function ScenarioCard({
     onSave, 
     isLiked 
 }: Props) {
-  const dbRepeats = 'repeats' in script ? (script as UserScript).repeats : 0;
-  const [repeats, setRepeats] = useState<number>(dbRepeats || 0);
-  const [showComments, setShowComments] = useState(false);
-  const repeatsKey = `jokeng:repeats:${script.id}`;
 
-  useEffect(() => {
-    if (dbRepeats) {
-        setRepeats(dbRepeats);
-        return;
-    }
-    const v = localStorage.getItem(repeatsKey);
-    setRepeats(v ? Number(v) || 0 : 0);
-  }, [repeatsKey, dbRepeats]);
+
+
 
   const isStoryFlow = script.type === "story_flow";
   const isDecoder = script.type === "decoder";

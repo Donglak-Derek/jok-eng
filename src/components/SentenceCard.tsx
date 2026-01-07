@@ -3,7 +3,7 @@
 import { useCallback, useMemo, useState } from "react";
 import type { Sentence } from "@/types";
 import { Button } from "@/components/Button";
-import { Play, AudioLines } from "lucide-react";
+import { AudioLines } from "lucide-react";
 
 type Props = {
   sentence: Sentence;

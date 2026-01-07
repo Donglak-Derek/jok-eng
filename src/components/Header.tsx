@@ -10,79 +10,82 @@ export default function Header() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 -mx-4 md:-mx-6 lg:-mx-8 px-4 md:px-6 lg:px-8 py-3 md:py-4 bg-white/95 backdrop-blur-sm flex items-center justify-between border-b-2 border-black/5 shadow-sm">
-      <div className="flex items-center gap-3">
-        <Link href="/">
-            <h1 className="font-sans font-black text-2xl md:text-4xl tracking-tight text-black flex items-center gap-2">
+    <header className="sticky top-0 z-50 w-full px-4 md:px-6 py-3 bg-white/80 backdrop-blur-md border-b border-border flex items-center justify-center md:justify-between">
+      <div className="flex-1 flex justify-start">
+        <Link href="/" className="group flex items-center gap-2">
+            <h1 className="font-sans font-bold text-xl tracking-tight text-foreground group-hover:opacity-80 transition-opacity">
                 Jok-eng
-                <div className="hidden md:inline-block md:text-sm font-hand text-gray-500 font-normal px-2 py-0.5 border border-black/20 rounded-sm -rotate-2">
-                    beta
-                </div>
             </h1>
+            <span className="px-2 py-0.5 text-[10px] uppercase tracking-wider font-bold bg-secondary text-secondary-foreground rounded-full">
+                Beta
+            </span>
         </Link>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 md:gap-4">
         {user ? (
             <div className="relative">
                 <button 
                     onClick={() => setDropdownOpen(!dropdownOpen)}
-                    className="flex items-center gap-3 focus:outline-none group"
+                    className="flex items-center gap-2 md:gap-3 focus:outline-none group"
                 >
-                    <span className="text-sm font-bold text-black border-b-2 border-transparent group-hover:border-primary transition-colors">
-                        Hi, {user.displayName?.split(' ')[0] || "User"}!
+                    <span className="hidden md:block text-sm font-medium text-foreground group-hover:text-primary transition-colors">
+                        {user.displayName?.split(' ')[0] || "User"}
                     </span>
                     {user.photoURL ? (
                         <Image 
                             src={user.photoURL} 
                             alt={user.displayName || "User"} 
-                            width={36} 
-                            height={36} 
-                            className="rounded-full border-2 border-black group-hover:scale-110 transition-transform"
+                            width={32} 
+                            height={32} 
+                            className="rounded-full ring-2 ring-transparent group-hover:ring-border transition-all"
                         />
                     ) : (
-                        <div className="w-9 h-9 rounded-full bg-primary border-2 border-black flex items-center justify-center text-black font-bold group-hover:scale-110 transition-transform">
+                        <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-secondary-foreground text-xs font-bold group-hover:ring-2 group-hover:ring-border transition-all">
                             {user.displayName?.charAt(0) || "U"}
                         </div>
                     )}
                 </button>
 
                 {dropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-56 bg-white border-2 border-black rounded-lg hard-shadow py-2 z-50">
-                        <div className="px-4 py-2 border-b-2 border-black/5 mb-2 border-dashed">
-                            <p className="font-bold text-black truncate">{user.displayName}</p>
-                            <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                    <>
+                        <div className="fixed inset-0 z-40 bg-transparent" onClick={() => setDropdownOpen(false)} />
+                        <div className="absolute right-0 mt-2 w-56 bg-white border border-border rounded-lg shadow-lg py-1 z-50 overflow-hidden">
+                            <div className="px-4 py-3 border-b border-border bg-secondary/30">
+                                <p className="font-medium text-sm text-foreground truncate">{user.displayName}</p>
+                                <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                            </div>
+                            <Link 
+                                href="/profile" 
+                                className="block px-4 py-2 text-sm text-foreground hover:bg-secondary transition-colors"
+                                onClick={() => setDropdownOpen(false)}
+                            >
+                                My Profile
+                            </Link>
+                            <Link 
+                                href="/my-scenarios" 
+                                className="block px-4 py-2 text-sm text-foreground hover:bg-secondary transition-colors"
+                                onClick={() => setDropdownOpen(false)}
+                            >
+                                My Scenarios
+                            </Link>
+                            <button
+                                onClick={() => {
+                                    logout();
+                                    setDropdownOpen(false);
+                                }}
+                                className="w-full text-left block px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                            >
+                                Logout
+                            </button>
                         </div>
-                        <Link 
-                            href="/profile" 
-                            className="block px-4 py-2 text-sm text-black font-bold hover:bg-yellow-100 transition-colors"
-                            onClick={() => setDropdownOpen(false)}
-                        >
-                            My Profile
-                        </Link>
-                        <Link 
-                            href="/my-scenarios" 
-                            className="block px-4 py-2 text-sm text-black font-bold hover:bg-yellow-100 transition-colors"
-                            onClick={() => setDropdownOpen(false)}
-                        >
-                            My Scenarios
-                        </Link>
-                        <button
-                            onClick={() => {
-                                logout();
-                                setDropdownOpen(false);
-                            }}
-                            className="w-full text-left block px-4 py-2 text-sm text-red-500 font-bold hover:bg-red-50 transition-colors"
-                        >
-                            Logout
-                        </button>
-                    </div>
+                    </>
                 )}
             </div>
         ) : (
             <Link 
                 href="/login"
-                className="px-5 py-2 rounded-full border-2 border-black bg-white text-black text-sm font-black hover:bg-black hover:text-white transition-all hard-shadow hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]"
+                className="px-4 py-2 rounded-full bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity"
             >
                 Login
             </Link>

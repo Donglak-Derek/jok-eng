@@ -21,14 +21,14 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground selection:bg-black selection:text-white">
-      <div className="container-minimal py-8 flex flex-col gap-12">
+      <div className="container-minimal pt-0 pb-8 flex flex-col gap-6">
         <Header />
 
         {/* LOGGED IN VIEW: Dashboard Mode */}
         {user ? (
           <>
             {/* Minimal Tab Navigation */}
-            <div className="flex border-b border-border mb-8">
+            <div className="flex border-b border-border mb-6 overflow-x-auto scrollbar-hide">
                 <TabButton 
                     label="Categories" 
                     isActive={activeTab === "categories"} 
@@ -113,7 +113,7 @@ export default function Home() {
              
              {/* HERO SECTION */}
              <section className="text-center max-w-4xl mx-auto space-y-8">
-                <h1 className="text-6xl md:text-8xl font-bold tracking-tighter text-balance">
+                <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter text-balance">
                     Stop Nodding. <br/>
                     <span className="text-muted">Start Joking.</span>
                 </h1>
@@ -159,7 +159,7 @@ export default function Home() {
                          <ul className="space-y-4 text-lg">
                             <li className="flex items-center gap-3">
                                 <span className="w-2 h-2 rounded-full bg-primary"></span>
-                                Curated "Vibe" Packs
+                                Curated &quot;Vibe&quot; Packs
                             </li>
                             <li className="flex items-center gap-3">
                                 <span className="w-2 h-2 rounded-full bg-primary"></span>

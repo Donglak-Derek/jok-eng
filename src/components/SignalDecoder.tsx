@@ -7,6 +7,7 @@ import type { Script } from "@/types";
 import { motion, AnimatePresence } from "framer-motion";
 import Confetti from "@/components/Confetti";
 import { Button } from "@/components/Button";
+import { ChevronLeft, Volume2, ArrowRight, RotateCcw, CheckCircle2 } from "lucide-react";
 
 type Props = {
   script: Script;
@@ -39,8 +40,8 @@ export default function SignalDecoder({ script }: Props) {
     if (l.includes("critical") || l.includes("run") || l.includes("red flag") || l.includes("high")) return 90;
     if (l.includes("medium") || l.includes("caution") || l.includes("flake")) return 50;
     if (l.includes("low") || l.includes("safe")) return 15;
-    if (l.includes("rejection")) return 80; // High but distinct
-    return 50; // Default fallback
+    if (l.includes("rejection")) return 80;
+    return 50;
   };
 
   const resetCard = () => {
@@ -88,21 +89,16 @@ export default function SignalDecoder({ script }: Props) {
     const actual = getDangerValue(currentItem.dangerLevel);
     const diff = Math.abs(userGuess - actual);
     
-    // Logic: 
-    // If actual is HIGH (>=70) and user guessed LOW (<40) -> "You Died"
-    // If actual is LOW (<40) and user guessed HIGH (>=70) -> "Overthinking"
-    // If within 25 points -> "Nailed it"
-    
     if (diff <= 25) {
-      return { msg: "Nailed it! 🎯", color: "text-green-500", bg: "bg-green-500/10" };
+      return { msg: "Spot on! 🎯", color: "text-green-600", bg: "bg-green-50" };
     }
     if (actual >= 70 && userGuess < 50) {
-      return { msg: "RIP. You missed the Red Flag. 💀", color: "text-red-500", bg: "bg-red-500/10" };
+      return { msg: "Missed the Red Flag completely.", color: "text-red-600", bg: "bg-red-50" };
     }
     if (actual < 40 && userGuess >= 60) {
-       return { msg: "Relax, it's not that deep. 😅", color: "text-blue-500", bg: "bg-blue-500/10" };
+       return { msg: "You're overthinking it.", color: "text-blue-600", bg: "bg-blue-50" };
     }
-    return { msg: "Not quite... look closer. 🤔", color: "text-yellow-500", bg: "bg-yellow-500/10" };
+    return { msg: "Not quite, look closer.", color: "text-orange-600", bg: "bg-orange-50" };
   };
 
   const speak = useCallback(async (text: string) => {
@@ -142,7 +138,6 @@ export default function SignalDecoder({ script }: Props) {
     }, [speaking, loading]);
 
 
-
   // Scroll to top on slide change
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -152,33 +147,35 @@ export default function SignalDecoder({ script }: Props) {
   // If no items, show error or return null
   if (total === 0) return <div>No items found.</div>;
 
-
-
   return (
-    <div className="min-h-dvh text-foreground flex flex-col bg-background">
-      <div className="flex-1 max-w-md md:max-w-2xl lg:max-w-3xl mx-auto px-4 py-8 flex flex-col gap-6 w-full">
+    <div className="min-h-screen text-foreground flex flex-col bg-background">
+      <div className="flex-1 max-w-3xl mx-auto px-4 py-8 md:px-6 md:py-12 flex flex-col gap-6 md:gap-8 w-full">
         
-        {/* Sticky Header */}
-        <header className="sticky top-0 z-10 -mx-4 md:-mx-6 lg:-mx-8 px-4 md:px-6 lg:px-8 py-3 md:py-4 bg-white flex items-center gap-3 border-b-2 border-black shadow-sm relative mb-6">
-             <Link href={`/category/${script.categorySlug}`} className="text-xl text-black font-black hover:scale-110 transition-transform">←</Link>
-             <div className="flex-1">
-                 <h1 className="text-2xl md:text-3xl font-black text-black leading-none">
-                   {script.title}
-                 </h1>
-                 <p className="text-sm text-gray-600 font-bold">{script.context || script.cleanedEnglish}</p>
-             </div>
+        {/* Header */}
+        <div className="flex flex-col gap-6">
+            <div className="flex items-center gap-4">
+              <Link href={`/category/${script.categorySlug}`} className="text-muted-foreground hover:text-foreground transition-colors">
+                  <ChevronLeft className="w-6 h-6" />
+              </Link>
+              <div className="flex-1 min-w-0">
+                <h1 className="text-2xl font-bold tracking-tight text-foreground truncate">
+                  {script.title}
+                </h1>
+                <p className="text-sm text-muted-foreground truncate">{script.context || script.cleanedEnglish}</p>
+              </div>
+            </div>
 
-             {/* Progress Bar moved to bottom of header */}
-             <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-gray-100">
+             {/* Progress Bar */}
+             <div className="w-full h-1 bg-secondary rounded-full overflow-hidden">
                 <div 
-                    className="h-full bg-red-500 border-r-2 border-black transition-all duration-300" 
+                    className="h-full bg-red-500 transition-all duration-300 ease-out" 
                     style={{ width: `${(currentIndex / total) * 100}%` }} 
                 />
              </div>
-        </header>
+        </div>
 
         {/* Decoder Card Area */}
-        <div className="flex-1 flex flex-col justify-center">
+        <div className="flex-1 flex flex-col justify-center min-h-[400px]">
             <AnimatePresence mode="wait">
                 {!isCompletion ? (
                     <motion.div
@@ -186,16 +183,17 @@ export default function SignalDecoder({ script }: Props) {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.3 }}
                         className="w-full"
                     >
-                        <div className="border-4 border-black bg-white rounded-3xl p-6 md:p-8 flex flex-col gap-6 hard-shadow relative overflow-hidden">
+                        <div className="bg-white rounded-lg border border-border shadow-sm p-6 md:p-12 flex flex-col gap-6 md:gap-8 relative overflow-hidden">
                             
-                            {/* The Phrase */}
-                            <div className="flex flex-col gap-3 text-center pt-4">
-                                <span className="text-xs font-bold uppercase tracking-widest text-gray-500 md:text-sm lg:text-base border-b-2 border-gray-200 self-center pb-1">
+                            {/* The Signal (Phrase) */}
+                            <div className="flex flex-col gap-4 text-center items-center">
+                                <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground border-b border-border pb-1">
                                     The Signal
                                 </span>
-                                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold leading-tight text-black">
+                                <h2 className="text-3xl md:text-4xl font-bold leading-tight text-foreground">
                                     &quot;{currentItem.phrase}&quot;
                                 </h2>
                                 
@@ -205,39 +203,44 @@ export default function SignalDecoder({ script }: Props) {
                                     variant="ghost"
                                     onClick={() => speak(currentItem.phrase)}
                                     isLoading={loading}
-                                     className="self-center mt-2 px-8 py-6 text-lg border-2 border-black bg-primary text-black hover:bg-black hover:text-white rounded-full font-black transition-all hard-shadow hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none"
+                                    className="text-muted-foreground"
+                                    leftIcon={<Volume2 className="w-4 h-4" />}
                                  >
-                                    {!loading && "🔊 Play Audio"}
+                                    Listen
                                  </Button>
                             </div>
 
-                            <hr className="border-black/10 border-dashed" />
+                            <hr className="border-border border-dashed" />
 
                             {/* Game / Reveal Section */}
-                            <div className="min-h-[300px] flex flex-col">
+                            <div className="flex flex-col gap-6">
                                 {!isRevealed ? (
-                                    <div className="flex-1 flex flex-col items-center justify-center py-6 gap-8">
+                                    <div className="flex flex-col items-center justify-center py-6 gap-8">
                                         <div className="text-center space-y-2">
-                                            <h3 className="text-xl md:text-3xl lg:text-4xl font-black uppercase tracking-tight text-black">Danger Check</h3>
-                                            <p className="text-gray-600 font-bold text-sm md:text-lg lg:text-xl">How dangerous is this phrase?</p>
+                                            <h3 className="text-xl font-bold uppercase tracking-tight text-foreground">Danger Check</h3>
+                                            <p className="text-muted-foreground">How dangerous is this phrase?</p>
                                         </div>
 
-                                        {/* Danger Slider Game */}
-                                        <div className="w-full max-w-sm md:max-w-md lg:max-w-lg px-4">
-                                            <div className="flex justify-between text-xs md:text-sm font-black uppercase mb-2">
-                                                <span className="text-green-600">Green Flag (Safe)</span>
-                                                <span className="text-red-600">Red Flag (Run)</span>
+                                        {/* Danger Slider Game - Minimalist */}
+                                        <div className="w-full max-w-md px-4">
+                                            <div className="flex justify-between text-xs font-bold uppercase mb-4 text-muted-foreground">
+                                                <span className="text-green-600">Safe</span>
+                                                <span className="text-red-600">Run</span>
                                             </div>
+                                            
                                             <input 
                                                 type="range" 
                                                 min="0" 
                                                 max="100" 
                                                 value={userGuess} 
                                                 onChange={(e) => setUserGuess(Number(e.target.value))}
-                                                className="w-full h-4 bg-gradient-to-r from-green-500 via-yellow-400 to-red-500 rounded-lg appearance-none cursor-pointer accent-black border-2 border-black hard-shadow"
+                                                className="w-full h-2 bg-gradient-to-r from-green-500 via-yellow-400 to-red-500 rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
                                             />
-                                            <div className="text-center mt-4 font-mono text-xl md:text-3xl font-black text-black bg-gray-100 border-2 border-black px-4 py-2 rounded-lg inline-block transform -rotate-1">
-                                                {userGuess < 33 ? "Safe" : userGuess < 66 ? "Caution" : "Danger!"} ({userGuess}%)
+                                            
+                                            <div className="text-center mt-6">
+                                                 <span className="inline-block px-4 py-1.5 rounded-full bg-secondary text-secondary-foreground font-mono text-sm font-bold">
+                                                    {userGuess < 33 ? "Safe" : userGuess < 66 ? "Caution" : "Danger"} ({userGuess}%)
+                                                 </span>
                                             </div>
                                         </div>
 
@@ -245,14 +248,14 @@ export default function SignalDecoder({ script }: Props) {
                                             variant="primary"
                                             size="lg"
                                             onClick={handleLockInGuess}
-                                            className="w-full md:w-auto text-xl md:text-2xl border-4 border-black hard-shadow bg-blue-500 text-white hover:bg-blue-600 hover:-translate-y-1 hover:shadow-[6px_6px_0px_black] transition-all"
+                                            className="w-full md:w-auto px-8"
                                         >
-                                            🕵️ Lock In Guess
+                                            Lock In Guess
                                         </Button>
                                     </div>
                                 ) : (
                                     <motion.div
-                                        initial={{ opacity: 0, scale: 0.95 }}
+                                        initial={{ opacity: 0, scale: 0.98 }}
                                         animate={{ opacity: 1, scale: 1 }}
                                         className="flex flex-col gap-6"
                                     >
@@ -261,55 +264,57 @@ export default function SignalDecoder({ script }: Props) {
                                             const fb = getFeedback();
                                             if (!fb) return null;
                                             return (
-                                                <div className={`p-4 rounded-xl border-4 border-black ${fb.bg} flex items-center justify-center text-center hard-shadow transform -rotate-1 bg-white`}>
-                                                    <h3 className={`text-xl md:text-3xl lg:text-4xl font-black uppercase tracking-tight ${fb.color}`}>
-                                                        {fb.msg}
-                                                    </h3>
+                                                <div className={`p-4 rounded-lg flex items-center justify-center text-center ${fb.bg} ${fb.color} font-bold text-lg`}>
+                                                    {fb.msg}
                                                 </div>
                                             );
                                         })()}
 
                                         {/* Comparison Grid */}
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                                            <div className="p-4 md:p-6 rounded-xl bg-white border-2 border-black hard-shadow-sm">
-                                                <h3 className="text-sm md:text-base lg:text-lg font-black text-gray-500 uppercase mb-2">Literal Meaning</h3>
-                                                <p className="text-lg md:text-xl lg:text-2xl leading-snug font-medium text-black">{currentItem.literalMeaning}</p>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div className="p-6 rounded-lg bg-secondary/30">
+                                                <h3 className="text-xs font-bold text-muted-foreground uppercase mb-2">Literal Meaning</h3>
+                                                <p className="text-lg font-medium text-foreground leading-relaxed">{currentItem.literalMeaning}</p>
                                             </div>
-                                            <div className="p-4 md:p-6 rounded-xl bg-yellow-50 border-2 border-black hard-shadow-sm">
-                                                <h3 className="text-sm md:text-base lg:text-lg font-black text-black uppercase mb-2">Actual Meaning (Subtext)</h3>
-                                                <p className="text-lg md:text-xl lg:text-2xl font-black leading-snug transform -rotate-1 text-black">{currentItem.actualMeaning}</p>
+                                            <div className="p-6 rounded-lg bg-yellow-50/80 border border-yellow-100">
+                                                <h3 className="text-xs font-bold text-yellow-700 uppercase mb-2">Actual Meaning (Subtext)</h3>
+                                                <p className="text-lg font-bold text-yellow-950 leading-relaxed">{currentItem.actualMeaning}</p>
                                             </div>
                                         </div>
                                         
-                                        {/* Danger Level & Tip */}
-                                        <div className="flex flex-col gap-2 p-4 md:p-6 rounded-xl bg-red-50 border-2 border-black hard-shadow-sm">
+                                        {/* Danger Level Visual */}
+                                        <div className="flex flex-col gap-3 p-6 rounded-lg bg-red-50/50 border border-red-100">
                                             <div className="flex items-center justify-between">
-                                                <span className="font-black text-red-600 md:text-lg lg:text-xl uppercase">ACTUAL DANGER LEVEL</span>
-                                                <span className="font-black text-red-600 text-lg md:text-2xl lg:text-3xl">{currentItem.dangerLevel}</span>
+                                                <span className="text-xs font-bold text-red-700 uppercase">Actual Danger Level</span>
+                                                <span className="font-bold text-red-700 text-xl">{currentItem.dangerLevel}</span>
                                             </div>
-                                            {/* Show comparison bar */}
-                                            <div className="w-full h-4 md:h-5 bg-white border-2 border-black rounded-full overflow-hidden mt-1 relative">
-                                                {/* Actual Marker */}
+                                            
+                                            {/* Comparison Bar */}
+                                            <div className="relative h-2 bg-gray-200 rounded-full w-full mt-2">
+                                                {/* Markers */}
                                                 <div 
-                                                    className="absolute top-0 bottom-0 w-1 md:w-2 bg-red-600 z-10" 
-                                                    style={{ left: `${getDangerValue(currentItem.dangerLevel)}%` }} 
+                                                  className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-red-500 rounded-full border-2 border-white shadow-sm z-10"
+                                                  style={{ left: `${getDangerValue(currentItem.dangerLevel)}%`, marginLeft: '-8px' }}
+                                                  title="Actual"
                                                 />
-                                                {/* User Guess Marker */}
                                                 <div 
-                                                    className="absolute top-0 bottom-0 w-1 md:w-2 bg-blue-500 z-10 opacity-70" 
-                                                    style={{ left: `${userGuess}%` }} 
+                                                  className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-blue-500 rounded-full border-2 border-white shadow-sm z-10 opacity-70"
+                                                  style={{ left: `${userGuess}%`, marginLeft: '-6px' }}
+                                                  title="Your Guess"
                                                 />
-                                                <div className="w-full h-full bg-gradient-to-r from-green-500/50 via-yellow-400/50 to-red-500/50" />
                                             </div>
-                                            <div className="flex justify-between text-[10px] md:text-sm text-black uppercase font-bold mt-1">
-                                                <span className="text-blue-600">Your Guess: {userGuess}%</span>
+                                            
+                                            <div className="flex justify-between text-xs font-medium text-muted-foreground mt-1">
+                                                <span className="text-blue-600">You: {userGuess}%</span>
                                                 <span className="text-red-600">Actual: {getDangerValue(currentItem.dangerLevel)}%</span>
                                             </div>
                                         </div>
 
-                                        <div className="p-4 md:p-6 rounded-xl bg-green-50 border-2 border-black hard-shadow-sm">
-                                             <h3 className="text-sm md:text-base lg:text-lg font-black text-green-700 uppercase mb-2">Survival Tip</h3>
-                                             <p className="text-md md:text-xl lg:text-2xl leading-relaxed font-medium text-black">{currentItem.survivalTip}</p>
+                                        <div className="p-6 rounded-lg bg-green-50/50 border border-green-100">
+                                             <h3 className="text-xs font-bold text-green-700 uppercase mb-2 flex items-center gap-2">
+                                                <CheckCircle2 className="w-4 h-4" /> Survival Tip
+                                             </h3>
+                                             <p className="text-lg font-medium text-green-900 leading-relaxed">{currentItem.survivalTip}</p>
                                         </div>
                                     </motion.div>
                                 )}
@@ -320,40 +325,40 @@ export default function SignalDecoder({ script }: Props) {
                 ) : (
                     <motion.div
                          key="completion"
-                         initial={{ opacity: 0, scale: 0.9 }}
+                         initial={{ opacity: 0, scale: 0.95 }}
                          animate={{ opacity: 1, scale: 1 }}
-                         exit={{ opacity: 0, scale: 0.9 }}
+                         exit={{ opacity: 0, scale: 0.95 }}
                          transition={{ duration: 0.4 }}
                          className="w-full"
                     >
-                         <div className="relative rounded-3xl border-4 border-black p-6 md:p-8 lg:p-10 flex flex-col gap-6 md:gap-8 transition duration-200 bg-white hard-shadow text-center items-center">
+                         <div className="bg-white rounded-lg border border-border shadow-sm p-8 md:p-12 flex flex-col items-center text-center gap-6">
                              <Confetti />
-                             <div className="text-6xl md:text-7xl animate-bounce mb-2">🎉</div>
+                             <div className="text-6xl mb-2">🎉</div>
                              
-                             <div className="flex flex-col gap-2">
-                               <h2 className="text-3xl md:text-4xl font-black text-black animate-pulse">
-                                 Congratulation!
+                             <div className="space-y-2">
+                               <h2 className="text-3xl font-bold text-foreground">
+                                 Mission Accomplished!
                                </h2>
-                               <p className="text-lg text-gray-600 font-bold">You have decoded all the signals.</p>
+                               <p className="text-lg text-muted-foreground">You have decoded all the signals.</p>
                              </div>
 
-                             <div className="w-full flex flex-col gap-3 mt-4">
+                             <div className="w-full max-w-sm flex flex-col gap-3 mt-4">
                                 <Button
                                   variant="primary"
-                                  size="xl"
+                                  size="lg"
                                   onClick={handleRepeat}
-                                  className="w-full text-xl bg-black text-white border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,0.2)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]"
+                                  className="w-full"
                                 >
-                                  Repeat
+                                  Repeat Training
                                 </Button>
 
                                 <Button 
-                                  variant="outline"
+                                  variant="ghost"
                                   size="md"
                                   onClick={handleFinish}
-                                  className="w-full border-4 border-black font-black text-lg hover:bg-gray-100"
+                                  className="w-full text-muted-foreground"
                                 >
-                                  Finish
+                                  Finish & Return
                                 </Button>
                              </div>
                          </div>
@@ -362,45 +367,42 @@ export default function SignalDecoder({ script }: Props) {
             </AnimatePresence>
         </div>
 
-        {/* Navigation - Hide on completion or handle logic */}
+        {/* Navigation - Bottom Bar */}
         {!isCompletion && (
-            <div className="grid grid-cols-2 gap-4 mt-6 pb-6">
-                 <button
-                    onClick={handlePrev}
-                    disabled={currentIndex === 0}
-                    className={`
-                        py-3 px-4 rounded-xl font-bold text-lg border-2 transition-all
-                        ${currentIndex === 0 
-                            ? "border-transparent text-gray-300 cursor-not-allowed" 
-                            : "border-black text-black bg-white hover:bg-gray-50"
-                        }
-                    `}
+            <div className="sticky bottom-0 left-0 right-0 p-6 bg-background border-t border-border z-20">
+              <div className="max-w-3xl mx-auto flex items-center justify-between">
+                 <Button 
+                   variant="ghost"
+                   size="sm"
+                   onClick={handleRepeat}
+                   className="text-muted-foreground hover:text-foreground"
+                   leftIcon={<RotateCcw className="w-4 h-4" />}
                  >
-                     <div className="flex items-center gap-2 justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-                        </svg>
-                        Prev
-                     </div>
-                 </button>
+                   Restart
+                 </Button>
                  
-                 {isRevealed && (
-                     <button
+                 <div className="flex items-center gap-3">
+                    <Button
+                      variant="ghost"
+                      onClick={handlePrev}
+                      disabled={currentIndex === 0}
+                      className={currentIndex === 0 ? "invisible" : ""}
+                      leftIcon={<ChevronLeft className="w-4 h-4" />}
+                    >
+                      Prev
+                    </Button>
+
+                    {isRevealed && (
+                      <Button
+                        variant="primary"
                         onClick={handleNext}
-                        className="py-3 px-4 rounded-xl font-bold text-lg border-2 border-black bg-black text-white shadow-[4px_4px_0px_rgba(0,0,0,0.2)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all flex items-center justify-center gap-2"
-                     >
-                         {isLastItem ? (
-                             "Finish"
-                         ) : (
-                             <>
-                                Next 
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
-                                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                                </svg>
-                             </>
-                         )}
-                     </button>
-                 )}
+                        rightIcon={isLastItem ? undefined : <ArrowRight className="w-4 h-4" />}
+                      >
+                         {isLastItem ? "Finish" : "Next"}
+                      </Button>
+                    )}
+                 </div>
+              </div>
             </div>
         )}
 

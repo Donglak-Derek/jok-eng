@@ -122,15 +122,15 @@ export default function StandardScriptFlow({ script }: Props) {
   return (
     <div className="min-h-screen flex flex-col relative bg-background text-foreground">
       
-      <div className="flex-1 max-w-3xl mx-auto px-6 py-12 flex flex-col w-full">
+      <div className="flex-1 max-w-3xl mx-auto px-4 py-8 md:px-6 md:py-12 flex flex-col w-full">
         
         {/* Minimal Header */}
-        <div className="flex items-center gap-4 mb-8">
+        <div className="flex items-center gap-4 mb-6 md:mb-8">
              <Link href={`/category/${script.categorySlug}`} className="text-muted-foreground hover:text-foreground transition-colors">
                 <ChevronLeft className="w-6 h-6" />
              </Link>
              <div className="flex-1">
-                 <h1 className="text-2xl font-bold tracking-tight">
+                 <h1 className="text-xl md:text-2xl font-bold tracking-tight">
                    {script.title}
                  </h1>
              </div>
@@ -142,7 +142,7 @@ export default function StandardScriptFlow({ script }: Props) {
         </div>
 
         {/* Progress Line */}
-        <div className="w-full h-1 bg-secondary rounded-full mb-12 overflow-hidden">
+        <div className="w-full h-1 bg-secondary rounded-full mb-8 md:mb-12 overflow-hidden">
             <div 
                 className="h-full bg-primary transition-all duration-300 ease-out" 
                 style={{ width: `${(currentIndex / total) * 100}%` }} 

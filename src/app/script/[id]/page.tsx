@@ -1,7 +1,7 @@
 import { scripts } from "@/data";
 import ScriptClient from "./ScriptClient";
 import { notFound } from "next/navigation";
-import { Metadata, ResolvingMetadata } from "next";
+import { Metadata } from "next";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -9,8 +9,7 @@ type Props = {
 };
 
 export async function generateMetadata(
-  { params }: Props,
-  parent: ResolvingMetadata
+  { params }: Props
 ): Promise<Metadata> {
   const { id } = await params;
   const script = scripts.find((s) => s.id === id);
