@@ -75,37 +75,26 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
 
   const keywords = useMemo(() => sentence.keywords, [sentence.keywords]);
 
-
-
-  // Audio Visualizer Component
+  // Audio Visualizer Component - Minimalist Lines
   const AudioVisualizer = () => (
-    <div className="flex items-end justify-center gap-1 h-5">
-      <div className="w-1 bg-black animate-[bounce_0.5s_infinite] h-2"></div>
-      <div className="w-1 bg-black animate-[bounce_0.7s_infinite] h-4"></div>
-      <div className="w-1 bg-black animate-[bounce_0.6s_infinite] h-3"></div>
-      <div className="w-1 bg-black animate-[bounce_0.8s_infinite] h-5"></div>
-      <div className="w-1 bg-black animate-[bounce_0.55s_infinite] h-2"></div>
+    <div className="flex items-center justify-center gap-1 h-4">
+      <div className="w-0.5 bg-current animate-[pulse_0.5s_infinite] h-2"></div>
+      <div className="w-0.5 bg-current animate-[pulse_0.7s_infinite] h-4"></div>
+      <div className="w-0.5 bg-current animate-[pulse_0.6s_infinite] h-3"></div>
+      <div className="w-0.5 bg-current animate-[pulse_0.8s_infinite] h-2"></div>
     </div>
   );
 
-  // New "Mistake -> Fix" Layout (Comic/Notebook Style)
+  // New "Mistake -> Fix" Layout (Minimalist)
   if (sentence.scenario && sentence.badResponse && sentence.goodResponse) {
     return (
-      <div
-        className={
-          "relative rounded-xl border-2 border-black bg-white p-6 md:p-8 flex flex-col gap-8 transition duration-200 hard-shadow " +
-          (speaking
-            ? "ring-2 ring-primary "
-            : "") +
-          (heard ? "opacity-90" : "")
-        }
-      >
+      <div className="bg-white rounded-lg border border-border p-6 md:p-8 flex flex-col gap-8 shadow-sm transition-shadow hover:shadow-md">
         {/* Scenario Header */}
-        <div className="pb-3 border-b-2 border-black/5 border-dashed">
-          <div className="font-hand text-xs font-bold tracking-widest text-gray-500 uppercase mb-1 -rotate-1">
+        <div className="pb-4 border-b border-border">
+          <div className="text-xs font-semibold tracking-wider text-muted uppercase mb-2">
             Scenario
           </div>
-          <div className="font-sans text-xl md:text-2xl font-black text-black">
+          <div className="text-xl md:text-2xl font-semibold text-foreground">
             {sentence.scenario}
           </div>
         </div>
@@ -113,42 +102,42 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
         {/* Content Grid */}
         <div className="flex flex-col gap-6">
           {/* Bad Response (Mistake) */}
-          <div className="relative p-5 rounded-lg border-2 border-secondary bg-secondary/10 transform -rotate-1">
-            <div className="absolute -top-3 left-4 px-3 py-1 rounded-sm bg-secondary border-2 border-black text-xs font-black text-white uppercase tracking-wider shadow-sm transform -rotate-2">
-              Mistake
+          <div className="p-5 rounded-md bg-secondary/50">
+            <div className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-2">
+              Don&apos;t say
             </div>
-            <div className="text-lg md:text-2xl font-bold text-black mb-2 mt-2 font-hand">
+            <div className="text-lg md:text-xl text-muted-foreground mb-2 line-through decoration-muted-foreground/30">
               &quot;{sentence.badResponse.text}&quot;
             </div>
-            <div className="text-sm text-gray-900 font-medium leading-snug">
+            <div className="text-sm text-muted-foreground">
               {sentence.badResponse.why}
             </div>
           </div>
 
           {/* Good Response (Fix) */}
-          <div className="relative p-5 rounded-lg border-2 border-primary bg-primary/10 transform rotate-1">
-            <div className="absolute -top-3 left-4 px-3 py-1 rounded-sm bg-primary border-2 border-black text-xs font-black text-black uppercase tracking-wider shadow-sm transform -rotate-2">
-              Better Fix
+          <div className="p-5 rounded-md bg-primary/5 border-l-2 border-primary">
+            <div className="text-xs font-bold text-primary uppercase tracking-wide mb-2">
+              Better
             </div>
-            <div className="text-lg md:text-2xl font-black text-black mb-2 mt-2 font-sans">
+            <div className="text-xl md:text-2xl font-bold text-foreground mb-2">
               &quot;{sentence.goodResponse.text}&quot;
             </div>
-            <div className="text-sm md:text-base text-black font-medium leading-snug">
+            <div className="text-base text-foreground/80">
               {sentence.goodResponse.why}
             </div>
           </div>
         </div>
 
-        {/* Play Hint */}
+        {/* Keywords hint */}
         {keywords.length > 0 && (
-           <div className="flex flex-wrap gap-2 mt-1 pt-3 border-t-2 border-black/5 border-dashed mb-2">
+           <div className="flex flex-wrap gap-2 mt-2">
             {keywords.map((k) => (
                 <span
                   key={k.word}
-                  className="text-xs md:text-sm px-3 py-1.5 rounded-xl bg-sky-100 border border-sky-200 text-sky-900 shadow-sm cursor-default"
+                  className="text-xs px-2 py-1 rounded bg-secondary text-secondary-foreground"
                 >
-                <span className="font-bold">{k.word}</span>
-                <span className="opacity-80 font-medium">: {k.definition}</span>
+                <span className="font-semibold">{k.word}</span>
+                <span className="opacity-70">: {k.definition}</span>
               </span>
             ))}
            </div>
@@ -159,12 +148,11 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
             e.stopPropagation();
             speak();
           }}
+          className="w-full mt-2 h-12 text-base font-medium rounded-md"
           variant="primary"
           isLoading={loading}
-          className="w-full border-2 border-black hard-shadow text-black font-black uppercase tracking-wider hover:-translate-y-1 hover:shadow-lg transition-all"
-          aria-label={loading ? "Loading audio" : "Play correct response"}
         >
-            {speaking ? <AudioVisualizer /> : <span className="flex items-center gap-2 text-base"><Play className="w-4 h-4 fill-current" /> Play Audio</span>}
+            {speaking ? <AudioVisualizer /> : <span className="flex items-center gap-2">Play Audio</span>}
         </Button>
       </div>
     );
@@ -172,44 +160,30 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
 
   // Original Layout (Flashcard Fallback)
   return (
-    <div
-      className={
-        "relative rounded-xl border-2 border-black bg-white p-6 md:p-10 flex flex-col gap-6 md:gap-10 transition duration-300 hard-shadow group " +
-        (speaking
-          ? "ring-4 ring-primary/30"
-          : "hover:-translate-y-1 hover:shadow-[8px_8px_0px_rgba(0,0,0,1)]")
-      }
-    >
-      {/* Decorative Scribble */}
-      <div className="absolute top-4 right-4 text-black/5 opacity-50 font-hand text-9xl leading-none pointer-events-none select-none">
-        “
-      </div>
+    <div className="bg-white rounded-lg border border-border p-8 md:p-12 flex flex-col gap-8 shadow-sm transition-all hover:shadow-md text-center">
       
-      <div className="min-w-0 relative z-10 flex flex-col gap-6 text-center items-center py-4">
+      <div className="flex flex-col gap-6 items-center">
          {/* Index Badge */}
-         <div className="inline-flex items-center justify-center px-3 py-1 border-2 border-black bg-primary text-xs font-bold uppercase tracking-widest text-black shadow-[2px_2px_0px_rgba(0,0,0,1)]">
-            Card {index + 1}
+         <div className="text-xs font-semibold text-muted uppercase tracking-widest">
+            Sentence {index + 1}
          </div>
 
          {/* Main Sentence */}
          <div className="relative">
-            <h3 className="text-2xl md:text-3xl lg:text-4xl font-black leading-tight text-black px-4 font-sans">
+            <h3 className="text-3xl md:text-4xl font-bold leading-tight text-foreground">
               &quot;{sentence.en}&quot;
             </h3>
          </div>
-
-         {/* Divider */}
-         <div className="w-20 h-1 bg-black/20 rounded-full transform -rotate-1" />
       </div>
 
-      <div className="flex flex-wrap justify-center gap-3 relative z-10">
+      <div className="flex flex-wrap justify-center gap-2">
         {keywords.map((k) => (
           <span
             key={k.word}
-            className="text-sm md:text-base px-3 py-1.5 bg-yellow-50 border border-black/20 font-hand transform hover:rotate-2 transition-transform"
+            className="text-sm px-3 py-1 bg-secondary text-secondary-foreground rounded-full"
           >
-            <span className="font-bold text-black border-b-2 border-primary/50">{k.word}</span>
-            <span className="text-gray-500 ml-1">{k.definition}</span>
+            <span className="font-semibold">{k.word}</span>
+            <span className="text-muted-foreground ml-1">{k.definition}</span>
           </span>
         ))}
       </div>
@@ -223,10 +197,9 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
          variant={speaking ? "outline" : "primary"}
          size="lg"
          isLoading={loading}
-         className={"w-full relative z-10 font-bold border-2 border-black hard-shadow transition-all " + (speaking ? "bg-white text-black" : "active:translate-y-0 active:shadow-none")}
-         aria-label={loading ? "Loading audio" : "Play sentence"}
+         className="w-full h-14 text-lg font-medium rounded-md mt-4"
       >
-          {speaking ? <AudioVisualizer /> : <span className="flex items-center gap-2 text-base"><AudioLines className="w-5 h-5" /> Play Audio</span>}
+          {speaking ? <AudioVisualizer /> : <span className="flex items-center gap-2"><AudioLines className="w-5 h-5" /> Play Audio</span>}
       </Button>
     </div>
   );

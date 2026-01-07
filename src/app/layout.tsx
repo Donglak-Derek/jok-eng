@@ -1,24 +1,11 @@
 import type { Metadata } from "next";
 import { AuthProvider } from "@/context/AuthContext";
-import { Inter, Permanent_Marker, Bebas_Neue } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
-});
-
-const permanentMarker = Permanent_Marker({
-  variable: "--font-hand",
-  weight: "400",
-  subsets: ["latin"],
-});
-
-const posterHeadings = Bebas_Neue({
-  variable: "--font-headline",
-  weight: "400",
-  subsets: ["latin"],
-  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -35,10 +22,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         suppressHydrationWarning
-        className={`${inter.variable} ${permanentMarker.variable} ${posterHeadings.variable} antialiased font-sans`}
+        className={`${inter.variable} antialiased font-sans bg-background text-foreground`}
       >
         <AuthProvider>
-            {/* ParticlesBackground removed in favor of CSS Grid */}
             {children}
         </AuthProvider>
       </body>

@@ -17,47 +17,32 @@ export default function Home() {
   const { user, loading } = useAuth();
   const [activeTab, setActiveTab] = useState<Tab>("categories");
 
-  if (loading) return null; // Or a nice splash screen
+  if (loading) return null;
 
   return (
-    <div className="min-h-dvh flex flex-col">
-      <div className="max-w-md md:max-w-3xl lg:max-w-5xl mx-auto px-4 md:px-6 lg:px-8 py-5 md:py-8 flex flex-col gap-6 md:gap-10 w-full">
+    <div className="min-h-screen flex flex-col bg-background text-foreground selection:bg-black selection:text-white">
+      <div className="container-minimal py-8 flex flex-col gap-12">
         <Header />
 
         {/* LOGGED IN VIEW: Dashboard Mode */}
         {user ? (
           <>
-            {/* Tab Navigation (Mobile App Navbar Style) */}
-            <div className="grid grid-cols-3 gap-2 w-full mb-4">
+            {/* Minimal Tab Navigation */}
+            <div className="flex border-b border-border mb-8">
                 <TabButton 
                     label="Categories" 
                     isActive={activeTab === "categories"} 
                     onClick={() => setActiveTab("categories")} 
-                    icon={
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
-                      </svg>
-                    }
                 />
                 <TabButton 
-                    label="Story Feed" 
+                    label="Community" 
                     isActive={activeTab === "community"} 
                     onClick={() => setActiveTab("community")} 
-                    icon={
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S12 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S12 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
-                      </svg>
-                    }
                 />
                 <TabButton 
-                    label="My Scenarios" 
+                    label="My Studio" 
                     isActive={activeTab === "personal"} 
                     onClick={() => setActiveTab("personal")} 
-                    icon={
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                    }
                 />
             </div>
 
@@ -65,56 +50,47 @@ export default function Home() {
             <AnimatePresence mode="wait">
                 <motion.div
                     key={activeTab}
-                    initial={{ opacity: 0, y: 10 }}
+                    initial={{ opacity: 0, y: 5 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.2 }}
-                    className="min-h-[400px] bg-white border-2 border-black hard-shadow rounded-2xl p-4 md:p-8"
+                    exit={{ opacity: 0, y: -5 }}
+                    transition={{ duration: 0.15 }}
+                    className="min-h-[400px]"
                 >
                     {activeTab === "categories" && (
                         <section>
-                        <div className="flex flex-row items-center justify-start gap-4 mb-6 flex-wrap">
-                            <h2 className="font-sans font-black text-2xl md:text-4xl text-black leading-none">
-                                Categories
+                        <div className="mb-10">
+                            <h2 className="text-3xl font-bold tracking-tight mb-2">
+                                Pick your vibe
                             </h2>
-                            <span className="font-hand text-sm md:text-lg text-black -rotate-2 bg-yellow-300 px-3 py-1 hard-shadow border border-black transform whitespace-nowrap">
-                                Pick your vibe!
-                            </span>
+                            <p className="text-muted text-lg">Choose a context to start practicing.</p>
                         </div>
-                        <div className="grid grid-cols-1 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                             {categories.map((c) => (
                             <Link
                                 key={c.slug}
                                 href={`/category/${c.slug}`}
-                                className="active:scale-[0.98] transition group h-full"
+                                className="group block"
                             >
-                                <div className="h-full flex flex-col bg-white border-2 border-black rounded-xl overflow-hidden shadow-sm hover:hard-shadow transition-all">
-                                    {/* Image Area - Top 50% */}
-                                    <div className="relative w-full aspect-[16/9] border-b-2 border-black bg-gray-100 overflow-hidden">
-                                        <Image
-                                            src={c.image}
-                                            alt={c.name}
-                                            fill
-                                            className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-                                        />
-                                        <div className="absolute top-2 right-2 bg-black text-white text-xs font-bold uppercase px-2 py-1 rounded-sm transform rotate-1 shadow-sm">
-                                            {scripts.filter((s) => s.categorySlug === c.slug).length} scripts
-                                        </div>
-                                    </div>
-                                    
-                                    {/* Content Area - Bottom */}
-                                    <div className="p-4 flex-1 flex flex-col gap-1 bg-white">
-                                        <div className="flex items-center justify-between">
-                                            <h3 className="font-sans font-black text-xl tracking-tight leading-none text-black">
-                                                {c.name}
-                                            </h3>
-                                            <span className="text-lg group-hover:translate-x-1 transition-transform">→</span>
-                                        </div>
-                                        <p className="font-sans text-gray-600 text-lg leading-relaxed line-clamp-3">
-                                            {c.description}
-                                        </p>
-                                    </div>
+                                <div className="relative aspect-[3/2] overflow-hidden rounded-lg bg-secondary mb-4">
+                                    <Image
+                                        src={c.image}
+                                        alt={c.name}
+                                        fill
+                                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                                    />
                                 </div>
+                                
+                                <div className="flex justify-between items-baseline">
+                                    <h3 className="text-xl font-semibold group-hover:underline decoration-1 underline-offset-4">
+                                        {c.name}
+                                    </h3>
+                                    <span className="text-sm text-muted">
+                                        {scripts.filter((s) => s.categorySlug === c.slug).length} scripts
+                                    </span>
+                                </div>
+                                <p className="text-muted mt-1 leading-relaxed">
+                                    {c.description}
+                                </p>
                             </Link>
                             ))}
                         </div>
@@ -133,132 +109,85 @@ export default function Home() {
           </>
         ) : (
           /* GUEST VIEW: Marketing & Info */
-          <div className="flex flex-col gap-16 md:gap-24 pb-20">
+          <div className="flex flex-col gap-24 py-12">
              
-             {/* HERO SECTION - Notebook Doodle Style */}
-             <section className="relative overflow-hidden rounded-3xl border-4 border-black bg-primary p-6 md:p-12 text-center hard-shadow transform rotate-1">
-                {/* Background Pattern */}
-                <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/graphy.png')]"></div>
-
-                <div className="relative flex flex-col items-center gap-6 max-w-3xl mx-auto py-6 md:py-10">
-                    <div className="font-hand font-bold text-lg md:text-2xl bg-white px-4 py-2 border-2 border-black -rotate-2 hard-shadow mb-2 md:mb-4">
-                        For the Cool Late Starters
-                    </div>
-                    
-                    <h2 className="font-sans font-black text-5xl md:text-8xl leading-[0.9] text-black drop-shadow-sm">
-                        Stop Nodding.<br/>
-                        <span className="text-white drop-shadow-[2px_2px_0px_rgba(0,0,0,1)] paint-order-stroke stroke-black stroke-2">Start Joking.</span>
-                    </h2>
-                    
-                    <p className="font-sans text-lg md:text-2xl text-black font-medium leading-relaxed max-w-xl">
-                        Textbooks taught you to be polite. <br/>
-                        <span className="font-hand text-secondary font-bold -rotate-1 inline-block mt-1">We teach you to be interesting.</span>
-                    </p>
-
-                    <p className="text-sm md:text-base font-bold text-gray-600 mt-2 max-w-sm mx-auto border-t-2 border-black/10 pt-4 border-dashed">
-                        Create custom scenarios with AI, practice with native audio, and share your best roasts.
-                    </p>
-                    
-                    <div className="pt-6 md:pt-8 transform hover:scale-105 transition-transform duration-200 w-full flex justify-center">
-                        <Link href="/login" passHref className="w-full max-w-xs md:max-w-none">
-                           <Button variant="secondary" size="xl" className="w-full md:w-auto whitespace-nowrap text-lg md:text-2xl px-6 py-4 md:px-10 md:py-6 rounded-full border-4 border-black hard-shadow font-black uppercase tracking-wider bg-white text-black hover:bg-secondary hover:text-white flex items-center justify-center gap-2">
-                               Start Being Funny <span>→</span>
-                           </Button>
-                        </Link>
-                    </div>
+             {/* HERO SECTION */}
+             <section className="text-center max-w-4xl mx-auto space-y-8">
+                <h1 className="text-6xl md:text-8xl font-bold tracking-tighter text-balance">
+                    Stop Nodding. <br/>
+                    <span className="text-muted">Start Joking.</span>
+                </h1>
+                
+                <p className="text-xl md:text-2xl text-muted font-medium max-w-2xl mx-auto text-balance">
+                    Textbooks taught you to be polite. We teach you to be interesting.
+                </p>
+                
+                <div className="pt-8">
+                    <Link href="/login" passHref>
+                       <Button className="rounded-full px-8 py-6 text-lg font-medium bg-primary text-white hover:opacity-90 transition-opacity">
+                           Start Being Funny
+                       </Button>
+                    </Link>
                 </div>
              </section>
 
-             {/* HOW IT WORKS - Sticky Notes */}
-             <section className="text-center space-y-12">
-                 <div className="space-y-4">
-                    <h3 className="font-sans font-black text-4xl md:text-5xl -rotate-1">
-                        The &quot;Vibe&quot; Method
-                    </h3>
-                    <p className="text-black text-xl font-hand max-w-xl mx-auto font-medium">
-                        Don&apos;t memorialize vocabulary. Internalize the attitude.
-                    </p>
-                 </div>
-                 
-                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-4">
+             {/* HOW IT WORKS */}
+             <section className="py-16 border-t border-border">
+                 <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
                      {[
-                         { icon: "👀", title: "Read", desc: "See the context. Get the joke before you say it.", color: "bg-yellow-100", rotate: "rotate-1" },
-                         { icon: "🎧", title: "Listen", desc: "Hear standard English TTS. It&apos;s about timing.", color: "bg-pink-100", rotate: "-rotate-2" },
-                         { icon: "🔁", title: "Repeat", desc: "Muscle memory. Say it until it feels weird NOT to say it.", color: "bg-blue-100", rotate: "rotate-2" }
+                         { title: "Read", desc: "See the context. Get the joke before you say it." },
+                         { title: "Listen", desc: "Hear natural intonation. It's about timing." },
+                         { title: "Repeat", desc: "Muscle memory. Say it until it feels real." }
                      ].map((step, i) => (
-                         <div key={i} className={`relative p-8 ${step.color} hard-shadow border-2 border-black transform ${step.rotate} transition-transform hover:scale-105 hover:rotate-0`}>
-                             <div className="text-6xl mb-6">{step.icon}</div>
-                             <h4 className="font-sans font-black text-2xl text-black mb-3 uppercase">{step.title}</h4>
-                             <p className="font-hand text-xl text-black leading-snug font-medium">{step.desc}</p>
-                             <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-black/10"></div>
+                         <div key={i} className="space-y-4">
+                             <h4 className="text-sm font-bold uppercase tracking-widest text-muted">Step 0{i+1}</h4>
+                             <h3 className="text-3xl font-bold">{step.title}</h3>
+                             <p className="text-lg text-muted max-w-xs mx-auto">{step.desc}</p>
                          </div>
                      ))}
                  </div>
              </section>
 
-             {/* FEATURES EXPLAINER */}
-             <section className="space-y-12">
-                 <div className="text-center">
-                     <h3 className="font-sans font-black text-4xl">Everything Included</h3>
-                 </div>
-
-                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                     {/* Feature 1 */}
-                     <div className="space-y-4 p-6 border-l-4 border-black bg-white">
-                         <div className="text-5xl mb-2">🗂️</div>
-                         <h4 className="font-bold text-xl uppercase tracking-wider">Categories</h4>
-                         <p className="text-gray-800 leading-relaxed font-medium">
-                            Curated packs for specific vibes: &quot;Office Banter&quot;, &quot;Dating Disasters&quot;, or &quot;Street Slang&quot;.
+             {/* FEATURES */}
+             <section className="py-16">
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                     <div className="space-y-6">
+                         <h2 className="text-4xl font-bold tracking-tight">Everything you need to sound local.</h2>
+                         <p className="text-lg text-muted">
+                            Forget generic phrases. Our curated packs cover the actual conversations you happen in offices, bars, and awkward dates.
                          </p>
+                         <ul className="space-y-4 text-lg">
+                            <li className="flex items-center gap-3">
+                                <span className="w-2 h-2 rounded-full bg-primary"></span>
+                                Curated "Vibe" Packs
+                            </li>
+                            <li className="flex items-center gap-3">
+                                <span className="w-2 h-2 rounded-full bg-primary"></span>
+                                Community Scenarios
+                            </li>
+                            <li className="flex items-center gap-3">
+                                <span className="w-2 h-2 rounded-full bg-primary"></span>
+                                AI Scenario Director
+                            </li>
+                         </ul>
                      </div>
-
-                     {/* Feature 2 */}
-                     <div className="space-y-4 p-6 border-l-4 border-secondary bg-white">
-                         <div className="text-5xl mb-2">🌍</div>
-                         <h4 className="font-bold text-xl uppercase tracking-wider text-secondary">Community</h4>
-                         <p className="text-gray-800 leading-relaxed font-medium">
-                            See what others are roasting. Browse, like, and save scenarios from the community.
-                         </p>
-                     </div>
-
-                     {/* Feature 3 */}
-                     <div className="space-y-4 p-6 border-l-4 border-primary bg-white">
-                         <div className="text-5xl mb-2">👤</div>
-                         <h4 className="font-bold text-xl uppercase tracking-wider text-black">Your Studio</h4>
-                         <p className="text-gray-800 leading-relaxed font-medium">
-                            Your personal library. Save your favorites and track your transformation.
-                         </p>
+                     <div className="aspect-square bg-secondary rounded-2xl p-8 flex items-center justify-center">
+                        {/* Abstract Feature Graphic placeholder */}
+                        <div className="text-9xl opacity-10">🎙️</div>
                      </div>
                  </div>
-             </section>
-
-             {/* FINAL CTA */}
-             <section className="text-center py-16">
-                 <h2 className="font-sans font-black text-4xl md:text-6xl mb-8">Ready to find your voice?</h2>
-                 <Link href="/login" passHref>
-                    <Button variant="primary" size="lg" className="px-12 py-5 text-xl rounded-full border-4 border-black hard-shadow font-black uppercase tracking-wider bg-white text-black hover:bg-secondary hover:text-white hover:-translate-y-1 hover:shadow-[8px_8px_0px_rgba(0,0,0,1)] transition-all">
-                        Join Now
-                    </Button>
-                 </Link>
              </section>
 
              {/* FOOTER */}
-             <footer className="border-t-4 border-black bg-gray-50 p-10 md:p-16 text-center">
-                <div className="max-w-2xl mx-auto space-y-6">
-                    <div className="font-sans font-black text-2xl">JOK-ENG</div>
-                    <p className="text-gray-600 font-medium max-w-sm mx-auto">
-                        We help you say what you actually mean, with the attitude you actually have.
-                    </p>
-                    <div className="flex justify-center gap-6 font-bold text-sm underline decoration-2 underline-offset-4">
-                        <a href="#" className="hover:text-primary">About</a>
-                        <a href="#" className="hover:text-primary">Pricing</a>
-                        <a href="#" className="hover:text-primary">Contact</a>
-                        <a href="#" className="hover:text-primary">Terms</a>
-                    </div>
-                    <div className="text-xs text-gray-400 font-mono mt-8">
-                        © {new Date().getFullYear()} JOK-ENG Inc. All rights reserved.
-                    </div>
+             <footer className="border-t border-border pt-16 pb-8 text-center text-sm text-muted">
+                <div className="flex justify-center gap-8 mb-8 font-medium text-foreground">
+                    <Link href="#">About</Link>
+                    <Link href="#">Pricing</Link>
+                    <Link href="#">Terms</Link>
                 </div>
+                <p>
+                    © {new Date().getFullYear()} JOK-ENG. Built for the cool late starters.
+                </p>
              </footer>
           </div>
         )}
@@ -267,20 +196,19 @@ export default function Home() {
   );
 }
 
-function TabButton({ label, isActive, onClick, icon }: { label: string, isActive: boolean, onClick: () => void, icon: React.ReactNode }) {
+function TabButton({ label, isActive, onClick }: { label: string, isActive: boolean, onClick: () => void }) {
     return (
         <button
             onClick={onClick}
             className={`
-                flex flex-col items-center justify-center py-2 md:py-3 px-2 rounded-xl border-2 transition-all duration-200 w-full h-full
+                pb-3 px-6 text-sm font-medium tracking-wide transition-all border-b-2
                 ${isActive 
-                    ? "bg-black border-black text-white hard-shadow transform -translate-y-1" 
-                    : "bg-white border-black/10 text-gray-400 hover:border-black hover:text-black"
+                    ? "border-primary text-primary" 
+                    : "border-transparent text-muted hover:text-foreground"
                 }
             `}
         >
-            <span className="text-xl md:text-2xl mb-1">{icon}</span>
-            <span className={`text-[10px] md:text-xs font-bold uppercase tracking-wider ${isActive ? "text-white" : "text-gray-500"}`}>{label}</span>
+            {label}
         </button>
     );
 }

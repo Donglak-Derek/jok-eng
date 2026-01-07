@@ -1,18 +1,35 @@
 @import "tailwindcss";
 
 :root {
-  /* High Energy Palette */
-  --primary: #FFE600; /* Electric Yellow - Action/Correct */
-  --secondary: #FF6B6B; /* Soft Coral - Mistake/Broken */
-  --accent: #0F172A; /* Deep Navy - Ink/Text */
+  /* Strategic Minimalism Palette */
   
-  --background: #F8F9FA; /* Paper White */
-  --foreground: #0F172A; /* Deep Navy */
-  --card-bg: #FFFFFF;
-  --muted: #64748B; /* Slate 500 */
+  /* Base - Pure basics */
+  --background: #ffffff;
+  --foreground: #0a0a0a; /* Almost black for softer high-contrast reading */
   
+  /* Primary Action - Intentional & Powerful */
+  --primary: #000000;
+  --primary-foreground: #ffffff;
+  
+  /* Secondary / Muted - For hierarchy */
+  --secondary: #f4f4f5; /* Zinc 100 */
+  --secondary-foreground: #18181b; /* Zinc 900 */
+  --muted: #71717a; /* Zinc 500 */
+  --muted-light: #f4f4f5; /* Zinc 100 - backgrounds for cards/sections */
+  
+  /* Borders - Subtle separation */
+  --border: #e4e4e7; /* Zinc 200 */
+  
+  /* States */
+  --ring: #0a0a0a; /* Focus ring color */
+  
+  /* Radius - Moderate for a modern but clean feel */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  
+  /* Typography Variables */
   --font-sans: var(--font-inter);
-  --font-hand: var(--font-hand);
   
   color-scheme: light;
 }
@@ -20,55 +37,54 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter);
-  --font-hand: var(--font-hand);
-  
   --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
-  --color-accent: var(--accent);
-  --color-card: var(--card-bg);
+  --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
+  --color-muted-light: var(--muted-light);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  
+  --font-sans: var(--font-inter);
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), sans-serif;
-  min-height: 100vh;
-  
-  /* Paper Grid Pattern */
-  background-image: 
-    linear-gradient(#E2E8F0 1px, transparent 1px),
-    linear-gradient(90deg, #E2E8F0 1px, transparent 1px);
-  background-size: 24px 24px;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
 }
 
-.font-hand {
-  font-family: var(--font-hand), cursive;
+/* Base Overrides for Strategic Minimalism */
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  letter-spacing: -0.02em; /* Tightens headlines for a modern look */
+  line-height: 1.2;
 }
 
-/* Comic Strip / Sticker Styles */
-.sticker-shadow {
-  box-shadow: 4px 4px 0px rgba(15, 23, 42, 0.15);
-}
-
-.hard-shadow {
-  box-shadow: 4px 4px 0px var(--accent);
-}
-
-.speech-bubble {
-  position: relative;
-  background: white;
-  border: 2px solid var(--accent);
-  border-radius: 1rem;
-}
-
-/* Utilities */
-.headline {
-  font-family: var(--font-headline), var(--font-sans), sans-serif;
-  letter-spacing: 0.02em;
-}
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.75rem; }
 
 a {
-  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  opacity: 0.7;
+}
+
+/* Utilities for Focus & Interaction */
+.focus-ring {
+  @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+}
+
+/* Layout Container - Centralized max-width for consistency */
+.container-minimal {
+  @apply max-w-5xl mx-auto px-6 w-full;
 }

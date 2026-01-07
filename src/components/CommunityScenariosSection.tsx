@@ -7,6 +7,7 @@ import { UserScript } from "@/types";
 import ScenarioCard from "./ScenarioCard";
 import { motion } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
+import { Flame } from "lucide-react";
 
 export default function CommunityScenariosSection() {
   const [scenarios, setScenarios] = useState<UserScript[]>([]);
@@ -31,15 +32,6 @@ export default function CommunityScenariosSection() {
     }));
 
     try {
-        // Find the scenario to get its reference path.
-        // Since we did a collectionGroup query, we don't know the exact path easily without storing 'path' or iterating.
-        // BUT, we know user ID is usually in the data? OR we need the reference.
-        // The `doc` object from `getDocs` has the ref. We should have stored it?
-        // Wait, for `collectionGroup`, the `doc.ref` is essential.
-        // I didn't store doc.ref in state. I stored data + id.
-        // To update, I need the full path `users/{userId}/scenarios/{scenarioId}`.
-        // Since `UserScript` has `userId`, I can construct the path!
-        
         const script = scenarios.find(s => s.id === id);
         if (!script) return;
         
@@ -51,7 +43,6 @@ export default function CommunityScenariosSection() {
                  likes: increment(-1),
                  likedBy: arrayRemove(user.uid)
              });
-             // Decrease Author's Total Likes
              const authorRef = doc(db, "users", script.userId);
              await updateDoc(authorRef, {
                  totalLikesReceived: increment(-1)
@@ -61,7 +52,6 @@ export default function CommunityScenariosSection() {
                  likes: increment(1),
                  likedBy: arrayUnion(user.uid)
              });
-             // Increase Author's Total Likes
              const authorRef = doc(db, "users", script.userId);
              await updateDoc(authorRef, {
                  totalLikesReceived: increment(1)
@@ -69,7 +59,6 @@ export default function CommunityScenariosSection() {
         }
     } catch (err) {
         console.error("Error toggling like:", err);
-        // Revert on error? For now just log.
     }
   };
 
@@ -83,21 +72,19 @@ export default function CommunityScenariosSection() {
 
       if (confirm(`Save "${scriptToSave.title}" to your library?`)) {
           try {
-              // Create a reference for the new copy
               const scenariosRef = collection(db, "users", user.uid, "scenarios");
               const newDocRef = doc(scenariosRef);
 
-              // Create a copy for the current user
               const newScript = {
                   ...scriptToSave,
-                  id: newDocRef.id, // Store key ID in document
+                  id: newDocRef.id,
                   userId: user.uid,
                   createdAt: Date.now(),
-                  isPublic: false, // Saved copies are private by default
+                  isPublic: false,
                   originalAuthor: scriptToSave.authorName || "Unknown", 
-                  originalScenarioId: scriptToSave.id, // Track source
-                  likes: 0, // Reset likes for the copy
-                  likedBy: [], // Reset likedBy
+                  originalScenarioId: scriptToSave.id,
+                  likes: 0,
+                  likedBy: [],
                   shares: 0,
                   saves: 0,
                   commentsCount: 0,
@@ -105,21 +92,17 @@ export default function CommunityScenariosSection() {
               
               await setDoc(newDocRef, newScript);
               
-              // Increment 'saves' on the ORIGINAL script
               try {
                  const originalRef = doc(db, "users", scriptToSave.userId, "scenarios", scriptToSave.id);
                  await updateDoc(originalRef, {
                      saves: increment(1)
                  });
-                 // Optimistic update locally
                  setScenarios(prev => prev.map(s => s.id === id ? { ...s, saves: (s.saves || 0) + 1 } : s));
               } catch (updateErr) {
                   console.warn("Could not increment save count (likely permission)", updateErr);
               }
 
               alert("Saved to your scenarios!");
-              // Optional: Refresh My Scenarios if valid, or just let user see it next time.
-              // window.location.reload(); 
           } catch (err) {
               console.error("Error saving:", err);
               alert("Failed to save.");
@@ -128,9 +111,7 @@ export default function CommunityScenariosSection() {
   };
 
   const handleShare = async (id: string) => {
-     // Optimistic update
      setScenarios(prev => prev.map(s => s.id === id ? { ...s, shares: (s.shares || 0) + 1 } : s));
-     
      try {
          const script = scenarios.find(s => s.id === id);
          if (!script) return;
@@ -147,18 +128,9 @@ export default function CommunityScenariosSection() {
   useEffect(() => {
     const fetchCommunityScenarios = async () => {
       try {
-        // Query across all 'scenarios' subcollections where isPublic is true
-        // Note: This requires a composite index on Firestore: isPublic ASC, createdAt DESC
-        // If not created, console will show a link to create it.
         const q = query(
             collectionGroup(db, "scenarios"),
             where("isPublic", "==", true),
-            // We want latest first. 
-            // orderBy("createdAt", "desc"), // Keeping it simple to avoid index requirement for now if possible? 
-            // actually, 'where' + 'orderBy' different fields usually requires index.
-            // Let's try just getting them and sorting client side if list is small, 
-            // OR risking the index error (which provides a helpful link).
-            // User asked to "create the section", so I'll try to do it right.
              orderBy("createdAt", "desc"),
              limit(10)
         );
@@ -173,12 +145,10 @@ export default function CommunityScenariosSection() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         console.error("Error fetching community scenarios:", err);
-        // Check for permission error specifically
         if (err?.code === 'permission-denied') {
              console.warn("Permission denied. Check Firestore Security Rules.");
         }
         
-        // Fallback: simple query if index is missing (often just one field works without index)
         try {
             const fallbackQ = query(
                 collectionGroup(db, "scenarios"),
@@ -190,7 +160,6 @@ export default function CommunityScenariosSection() {
                 ...doc.data(),
                 id: doc.id
             })) as UserScript[];
-            // Sort client side
             fallbackDocs.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
             setScenarios(fallbackDocs);
         } catch (e2) {
@@ -204,23 +173,22 @@ export default function CommunityScenariosSection() {
     fetchCommunityScenarios();
   }, []);
 
-  if (loading) return null; // Or a skeleton
-  if (scenarios.length === 0) return null;
-
+  if (loading) return null;
   if (scenarios.length === 0) return null;
 
   return (
-    <section className="w-full mx-auto py-4 md:py-8">
+    <section className="w-full mx-auto py-4">
       <div className="flex flex-row items-center justify-between gap-3 mb-6 px-1">
-        <h2 className="font-sans font-black text-2xl md:text-4xl text-black">
+        <h2 className="text-2xl font-bold tracking-tight text-foreground">
             Story Feed
         </h2>
-        <div className="bg-primary border-2 border-black text-black text-[10px] md:text-xs font-black px-2 py-1 transform -rotate-2 hard-shadow whitespace-nowrap">
-            HOT & NEW
+        <div className="flex items-center gap-1 bg-red-50 text-red-600 px-2 py-1 rounded-full text-xs font-semibold">
+            <Flame className="w-3.5 h-3.5" />
+            Trending
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 md:gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {scenarios.map((script, index) => (
             <motion.div
                 key={script.id}
@@ -229,7 +197,6 @@ export default function CommunityScenariosSection() {
                 transition={{ delay: index * 0.1 }}
                 className="w-full"
             >
-                {/* Minimal Card Render */}
                 <ScenarioCard 
                     script={script} 
                     index={index} 

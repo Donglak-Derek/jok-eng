@@ -10,6 +10,7 @@ import { collection, query, orderBy, onSnapshot, updateDoc, doc, deleteDoc } fro
 import { db } from "@/lib/firebase";
 import ScenarioCard from "./ScenarioCard";
 import { motion } from "framer-motion";
+import { Plus } from "lucide-react";
 
 export default function MyScenariosSection() {
   const { user, loading } = useAuth();
@@ -42,11 +43,7 @@ export default function MyScenariosSection() {
 
   const handleEdit = (id: string, e: React.MouseEvent) => {
       e.preventDefault();
-      router.push(`/scenario/${id}/edit`); // Redirect to edit page (if exists) or just alert for now
-      // Note: User hasn't implemented full edit page yet, but let's keep the route clean.
-      // If page doesn't exist, Next.js 404s. 
-      // Safe fallback:
-      // alert("Edit feature coming soon!");
+      router.push(`/scenario/${id}/edit`);
   };
 
   const handleDelete = async (id: string, e: React.MouseEvent) => {
@@ -90,36 +87,23 @@ export default function MyScenariosSection() {
   // Guest View
   if (!user) {
     return (
-      <section className="relative overflow-hidden rounded-xl border-2 border-black bg-yellow-100 shadow-[8px_8px_0px_rgba(0,0,0,1)] px-5 md:px-8 py-8 md:py-10 mt-6 group transform rotate-1 transition-transform hover:rotate-0">
-        <div className="absolute inset-0 pointer-events-none opacity-5 bg-[url('https://www.transparenttextures.com/patterns/graphy.png')]"></div>
-        
-        <div className="relative flex flex-col gap-4">
-          <div className="flex items-center gap-2 mb-1">
-             <div className="bg-black text-white px-2 py-0.5 text-xs font-bold uppercase tracking-widest transform -rotate-2">
-                Personalize
-             </div>
-          </div>
-          
-          <h2 className="font-sans font-black text-3xl md:text-5xl lg:text-6xl tracking-tight text-black leading-none">
-             Create scenarios for <span className="text-secondary underline decoration-4 decoration-black/10">your</span> life.
-          </h2>
-          
-          <p className="font-hand text-lg md:text-2xl text-gray-700 max-w-2xl leading-relaxed">
-             From awkward tinder dates to answering &quot;What do you do?&quot;—build custom practice decks tailored to your exact situations.
-          </p>
-          
-          <div className="pt-4">
-            <Button
-              onClick={() => router.push("/login")}
-              className="px-8 py-6 text-xl border-2 border-black hard-shadow font-black bg-white text-black hover:bg-secondary hover:text-white"
-              variant="secondary"
-              size="lg"
-            >
-               <span>Get Started for Free</span>
-               <span className="ml-2">→</span>
-            </Button>
-          </div>
-        </div>
+      <section className="bg-secondary/30 rounded-xl p-8 md:p-12 text-center flex flex-col items-center gap-6 border border-border">
+         <div className="max-w-2xl space-y-4">
+             <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-foreground">
+                 Create scenarios for <span className="text-primary italic">your</span> life.
+             </h2>
+             <p className="text-lg text-muted-foreground leading-relaxed">
+                 From awkward tinder dates to answering &quot;What do you do?&quot;—build custom practice decks tailored to your exact situations.
+             </p>
+         </div>
+         <Button
+             onClick={() => router.push("/login")}
+             className="px-8 py-6 text-lg rounded-full"
+             variant="primary"
+             size="lg"
+         >
+             Get Started
+         </Button>
       </section>
     );
   }
@@ -127,40 +111,38 @@ export default function MyScenariosSection() {
   // Logged In View
   return (
     <section className="mt-4 flex flex-col gap-6">
-        <div className="flex items-center justify-between border-b-2 border-black/10 pb-4">
-            <h2 className="font-sans font-black text-xl md:text-3xl text-black leading-none">
+        <div className="flex items-center justify-between pb-4 border-b border-border">
+            <h2 className="text-2xl font-bold text-foreground">
                 My Scenarios
             </h2>
             <Link 
                 href="/create-scenario"
-                className="flex items-center gap-1.5 px-3 py-2 rounded-lg border-2 border-black bg-white text-black text-xs font-bold hover:bg-primary hover:text-black transition-all shadow-[2px_2px_0px_rgba(0,0,0,0.2)] hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px]"
             >
-                <span className="text-sm leading-none font-black">＋</span> Create
+                <Button size="sm" className="gap-2">
+                    <Plus className="w-4 h-4" /> Create
+                </Button>
             </Link>
         </div>
 
         {scenarios.length === 0 ? (
-            <div className="p-10 rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 flex flex-col items-center justify-center text-center gap-4 transition-colors hover:bg-white hover:border-primary">
-                <div className="w-20 h-20 rounded-full bg-white border-2 border-gray-200 flex items-center justify-center text-4xl mb-1 shadow-sm">
-                    📝
+            <div className="py-16 text-center text-muted-foreground flex flex-col items-center gap-4 border-dashed border-2 border-border rounded-lg bg-secondary/10">
+                <div className="p-4 bg-background rounded-full border border-border">
+                   <Plus className="w-8 h-8 text-primary" />
                 </div>
-                <div className="flex flex-col gap-2">
-                    <h3 className="font-sans font-bold text-2xl text-black">Write your first script</h3>
-                    <p className="font-hand text-xl text-gray-500 max-w-md mx-auto">
-                        Turn your real-life awkward moments into practice gold.
-                    </p>
+                <div>
+                   <h3 className="text-lg font-semibold text-foreground">No scenarios yet</h3>
+                   <p className="max-w-xs mx-auto">Create your first custom script to start practicing.</p>
                 </div>
                 <Button
                     onClick={() => router.push("/create-scenario")}
                     variant="primary"
-                    size="lg"
-                    className="mt-4 text-lg border-2 border-black hard-shadow font-bold"
+                    className="mt-2"
                 >
                     Create Scenario
                 </Button>
             </div>
         ) : (
-             <div className="grid grid-cols-1 gap-4">
+             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {scenarios.map((script, index) => (
                     <motion.div 
                         key={script.id}

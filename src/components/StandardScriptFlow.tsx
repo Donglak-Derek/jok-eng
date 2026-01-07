@@ -12,7 +12,7 @@ import { useAuth } from "@/context/AuthContext";
 import { doc, updateDoc, increment } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { UserScript } from "@/types";
-import { ArrowLeft, ChevronLeft, ChevronRight, RotateCw, Repeat, PartyPopper } from "lucide-react";
+import { ChevronLeft, ChevronRight, PartyPopper } from "lucide-react";
 
 type Props = { 
   script: Script;
@@ -35,12 +35,7 @@ export default function StandardScriptFlow({ script }: Props) {
     if (raw) {
       try {
         const arr: number[] = JSON.parse(raw);
-        // If we have saved progress, restore it
-        const set = new Set(arr);
-        setHeardSet(set);
-        
-        // Optional: Jump to the first uncompleted card?
-        // For now, let's start at 0 unless we want to be smart. 
+        setHeardSet(new Set(arr));
       } catch {
         setHeardSet(new Set());
       }
@@ -59,8 +54,6 @@ export default function StandardScriptFlow({ script }: Props) {
   }, [repeatsKey]);
 
   const isCompletion = currentIndex === total;
-
-
 
   const handlePrev = () => {
     if (currentIndex > 0) {
@@ -120,58 +113,40 @@ export default function StandardScriptFlow({ script }: Props) {
       router.push(`/category/${script.categorySlug}`);
   };
   
-
-
   const handleStartOver = () => {
     setCurrentIndex(0);
   };
 
   const currentSentence = script.sentences[currentIndex];
-  // Calculate progress percent (0 to 100)
-  // When at completion (currentIndex === total), it should be 100%
-
-
-
-
-
 
   return (
-    <div className="min-h-dvh flex flex-col relative overflow-hidden bg-background">
+    <div className="min-h-screen flex flex-col relative bg-background text-foreground">
       
-      <div className="flex-1 max-w-md md:max-w-2xl lg:max-w-3xl mx-auto px-4 py-8 flex flex-col gap-6 w-full">
+      <div className="flex-1 max-w-3xl mx-auto px-6 py-12 flex flex-col w-full">
         
-        {/* Sticky Header */}
-        <div className="sticky top-0 z-10 -mx-4 md:-mx-6 lg:-mx-8 px-4 md:px-6 lg:px-8 py-3 md:py-4 bg-white flex items-center gap-3 border-b-2 border-black shadow-sm mb-4">
-             <Link href={`/category/${script.categorySlug}`} className="text-black hover:scale-110 transition-transform">
+        {/* Minimal Header */}
+        <div className="flex items-center gap-4 mb-8">
+             <Link href={`/category/${script.categorySlug}`} className="text-muted-foreground hover:text-foreground transition-colors">
                 <ChevronLeft className="w-6 h-6" />
              </Link>
              <div className="flex-1">
-                 <h1 className="text-xl md:text-3xl font-black text-black leading-none">
+                 <h1 className="text-2xl font-bold tracking-tight">
                    {script.title}
                  </h1>
-                 {/* <p className="text-xs md:text-sm text-gray-600 font-bold line-clamp-1">{script.context || script.cleanedEnglish}</p> */}
              </div>
              
-             {/* Simple Repeats Badges */}
-              <div className="flex items-center gap-2">
-                  <div className="px-3 py-1 bg-black text-white text-xs font-bold rounded-full border-2 border-black flex items-center gap-1">
-                      {repeats} 
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-3 h-3">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
-                      </svg>
-                  </div>
-                 {/* <div className="w-12 text-right font-black text-black">
-                     {currentIndex}/{total}
-                 </div> */}
-             </div>
-             
-             {/* Progress Bar absolute bottom */}
-             <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-gray-100">
-                <div 
-                    className="h-full bg-primary border-r-2 border-black transition-all duration-300" 
-                    style={{ width: `${(currentIndex / total) * 100}%` }} 
-                />
-             </div>
+             {/* Simple Repeats counter */}
+              <div className="bg-secondary px-3 py-1 rounded-full text-xs font-medium text-secondary-foreground">
+                  {repeats} completions
+              </div>
+        </div>
+
+        {/* Progress Line */}
+        <div className="w-full h-1 bg-secondary rounded-full mb-12 overflow-hidden">
+            <div 
+                className="h-full bg-primary transition-all duration-300 ease-out" 
+                style={{ width: `${(currentIndex / total) * 100}%` }} 
+            />
         </div>
 
         {/* Content Area */}
@@ -180,9 +155,9 @@ export default function StandardScriptFlow({ script }: Props) {
                  {!isCompletion ? (
                      <motion.div
                          key={currentIndex} 
-                         initial={{ opacity: 0, x: 20 }}
-                         animate={{ opacity: 1, x: 0 }}
-                         exit={{ opacity: 0, x: -20 }}
+                         initial={{ opacity: 0, y: 10 }}
+                         animate={{ opacity: 1, y: 0 }}
+                         exit={{ opacity: 0, y: -10 }}
                          transition={{ duration: 0.2 }}
                          className="w-full"
                      >
@@ -202,77 +177,66 @@ export default function StandardScriptFlow({ script }: Props) {
                  ) : (
                      <motion.div
                          key="completion"
-                         initial={{ opacity: 0, scale: 0.9 }}
+                         initial={{ opacity: 0, scale: 0.95 }}
                          animate={{ opacity: 1, scale: 1 }}
-                         className="w-full p-8 rounded-3xl border-4 border-black bg-white hard-shadow text-center flex flex-col gap-6 items-center"
+                         className="w-full py-16 text-center flex flex-col items-center"
                      >
                          <Confetti />
-                         <PartyPopper className="w-16 h-16 text-yellow-500 animate-bounce" />
-                         <div>
-                             <h2 className="text-3xl font-black text-black mb-2">Training Complete!</h2>
-                             <p className="text-gray-600 font-medium">You&apos;ve drilled this scenario {repeats + 1} times.</p>
+                         <div className="w-20 h-20 bg-secondary rounded-full flex items-center justify-center mb-6">
+                            <PartyPopper className="w-10 h-10 text-primary" />
                          </div>
-                          <div className="flex flex-col w-full gap-3">
-                              <Button onClick={handleFinishTraining} className="w-full py-4 text-xl font-black rounded-2xl flex items-center justify-center gap-2">
-                                  Complete & Repeat 
-                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
-                                  </svg>
+                         <h2 className="text-3xl font-bold mb-2">Training Complete</h2>
+                         <p className="text-muted-foreground text-lg mb-8">You&apos;ve drilled this scenario {repeats + 1} times.</p>
+                         
+                         <div className="flex flex-col w-full max-w-xs gap-3">
+                              <Button onClick={handleFinishTraining} className="w-full h-12 text-base font-medium rounded-md">
+                                  Finish & Save
                               </Button>
-                              <Link href={`/category/${script.categorySlug}`} className="w-full flex justify-center">
-                                  <button className="py-2 px-4 text-sm font-bold text-gray-400 hover:text-black transition-colors">
+                              <Link href={`/category/${script.categorySlug}`} className="w-full">
+                                  <Button variant="ghost" className="w-full h-12 text-muted-foreground hover:text-foreground">
                                      Back to Menu
-                                  </button>
+                                  </Button>
                               </Link>
                          </div>
                      </motion.div>
                  )}
              </AnimatePresence>
         </div>
-      {/* Bottom Action Bar */}
-      <div className="sticky bottom-0 left-0 right-0 p-0 bg-white border-t border-gray-100 z-20">
-        <div className="max-w-md md:max-w-2xl lg:max-w-3xl mx-auto flex items-center gap-4">
-           {/* Start Over Button */}
-           <Button 
-             variant="ghost"
-             onClick={handleStartOver}
-             className="text-black font-bold opacity-50 hover:opacity-100 flex items-center gap-2"
-           >
-             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
-               <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
-             </svg>
-             <span className="hidden md:inline">Restart</span>
-           </Button>
-           
-           <div className="flex-1 flex items-center justify-end gap-3">
-             {/* Previous Button */}
-             {!isCompletion && (
-             <Button
-                variant="ghost"
-                onClick={handlePrev}
-                disabled={currentIndex === 0}
-                className={`flex-1 md:flex-none border-2 transition-all font-bold disabled:opacity-100 ${currentIndex === 0 ? '!border-transparent !text-gray-400' : '!border-black !text-black !bg-white'}`}
-                leftIcon={<ChevronLeft className="w-4 h-4" />}
-              >
-                Prev
-              </Button>
-             )}
 
-             {/* Next Button */}
-             {!isCompletion && (
-             <Button
-               variant="primary"
-               size="md"
-               onClick={handleNext}
-               className="flex-1 md:flex-none md:min-w-[120px] font-bold"
-               rightIcon={<ChevronRight className="w-4 h-4" />}
-             >
-               Next
-             </Button>
-             )}
-           </div>
-        </div>
-      </div>
+        {/* Bottom Action Bar */}
+        {!isCompletion && (
+            <div className="mt-8 flex items-center justify-between border-t border-border pt-6">
+                <Button 
+                    variant="ghost"
+                    onClick={handleStartOver}
+                    className="text-muted-foreground hover:text-foreground text-sm"
+                >
+                    Restart
+                </Button>
+                
+                <div className="flex items-center gap-3">
+                    <Button
+                        variant="ghost"
+                        onClick={handlePrev}
+                        disabled={currentIndex === 0}
+                        className="text-base font-medium"
+                        leftIcon={<ChevronLeft className="w-4 h-4" />}
+                    >
+                        Prev
+                    </Button>
+
+                    <Button
+                        variant="primary"
+                        onClick={handleNext}
+                        className="px-6"
+                        rightIcon={<ChevronRight className="w-4 h-4" />}
+                    >
+                        Next
+                    </Button>
+                </div>
+            </div>
+        )}
+        
       </div>
     </div>
   );
