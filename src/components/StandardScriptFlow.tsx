@@ -12,7 +12,8 @@ import { useAuth } from "@/context/AuthContext";
 import { doc, updateDoc, increment } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { UserScript } from "@/types";
-import { ChevronLeft, ChevronRight, PartyPopper } from "lucide-react";
+import { ChevronLeft, ChevronRight, PartyPopper, FileText } from "lucide-react";
+import StandardFullView from "./StandardFullView";
 
 type Props = { 
   script: Script;
@@ -26,6 +27,7 @@ export default function StandardScriptFlow({ script }: Props) {
   const repeatsKey = `jokeng:repeats:${script.id}`;
   
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [viewMode, setViewMode] = useState<"flow" | "full">("flow");
   const [heardSet, setHeardSet] = useState<Set<number>>(new Set());
   const [repeats, setRepeats] = useState<number>(0);
 
@@ -119,35 +121,55 @@ export default function StandardScriptFlow({ script }: Props) {
 
   const currentSentence = script.sentences[currentIndex];
 
+  if (viewMode === "full") {
+      return <StandardFullView script={script} onBack={() => setViewMode("flow")} />;
+  }
+
   return (
     <div className="min-h-screen flex flex-col relative bg-background text-foreground">
       
-      <div className="flex-1 max-w-3xl mx-auto px-4 py-8 md:px-6 md:py-12 flex flex-col w-full">
-        
-        {/* Minimal Header */}
-        <div className="flex items-center gap-4 mb-6 md:mb-8">
-             <Link href={`/category/${script.categorySlug}`} className="text-muted-foreground hover:text-foreground transition-colors">
-                <ChevronLeft className="w-6 h-6" />
-             </Link>
-             <div className="flex-1">
-                 <h1 className="text-xl md:text-2xl font-bold tracking-tight">
-                   {script.title}
-                 </h1>
-             </div>
-             
-             {/* Simple Repeats counter */}
-              <div className="bg-secondary px-3 py-1 rounded-full text-xs font-medium text-secondary-foreground">
-                  {repeats} completions
-              </div>
-        </div>
+      {/* Sticky Header */}
+      <header className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-border">
+         <div className="max-w-3xl mx-auto px-4 py-3 md:px-6 md:py-4 flex flex-col gap-4">
+             <div className="flex items-center gap-4">
+                 <Link href={`/category/${script.categorySlug}`} className="text-muted-foreground hover:text-foreground transition-colors">
+                     <ChevronLeft className="w-6 h-6" />
+                 </Link>
+                 <div className="flex-1 min-w-0">
+                     <h1 className="text-xl md:text-2xl font-bold tracking-tight truncate">
+                       {script.title}
+                     </h1>
+                 </div>
+                 
+                 <div className="flex items-center gap-3">
+                     {/* Repeats Badge - Compact */}
+                      <div className="bg-secondary px-3 py-1 rounded-full text-xs font-medium text-secondary-foreground hidden md:block">
+                          {repeats} runs
+                      </div>
 
-        {/* Progress Line */}
-        <div className="w-full h-1 bg-secondary rounded-full mb-8 md:mb-12 overflow-hidden">
-            <div 
-                className="h-full bg-primary transition-all duration-300 ease-out" 
-                style={{ width: `${(currentIndex / total) * 100}%` }} 
-            />
-        </div>
+                     {/* Full View Toggle */}
+                      <button 
+                        onClick={() => setViewMode("full")}
+                        className="p-2 -mr-2 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-full transition-colors"
+                        title="View Full Content"
+                        aria-label="View Full Content"
+                      >
+                          <FileText className="w-6 h-6" />
+                      </button>
+                 </div>
+            </div>
+
+            {/* Progress Line */}
+            <div className="w-full h-1 bg-secondary rounded-full overflow-hidden">
+                <div 
+                    className="h-full bg-primary transition-all duration-300 ease-out" 
+                    style={{ width: `${(currentIndex / total) * 100}%` }} 
+                />
+            </div>
+         </div>
+      </header>
+
+      <div className="flex-1 max-w-3xl mx-auto px-4 py-8 md:px-6 md:py-12 flex flex-col w-full">
 
         {/* Content Area */}
         <div className="flex-1 flex flex-col justify-center min-h-[400px]">

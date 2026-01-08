@@ -7,7 +7,8 @@ import type { Script } from "@/types";
 import { motion, AnimatePresence } from "framer-motion";
 import Confetti from "@/components/Confetti";
 import { Button } from "@/components/Button";
-import { ChevronLeft, Volume2, ArrowRight, RotateCcw, CheckCircle2 } from "lucide-react";
+import { ChevronLeft, Volume2, ArrowRight, RotateCcw, CheckCircle2, FileText } from "lucide-react";
+import SignalFullView from "./SignalFullView";
 
 type Props = {
   script: Script;
@@ -18,6 +19,7 @@ export default function SignalDecoder({ script }: Props) {
   const items = script.decoderItems || [];
   const total = items.length;
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [viewMode, setViewMode] = useState<"flow" | "full">("flow");
   
   // Game State
   const [isRevealed, setIsRevealed] = useState(false);
@@ -147,32 +149,48 @@ export default function SignalDecoder({ script }: Props) {
   // If no items, show error or return null
   if (total === 0) return <div>No items found.</div>;
 
+  if (viewMode === "full") {
+      return <SignalFullView script={script} onBack={() => setViewMode("flow")} />;
+  }
+
   return (
     <div className="min-h-screen text-foreground flex flex-col bg-background">
-      <div className="flex-1 max-w-3xl mx-auto px-4 py-8 md:px-6 md:py-12 flex flex-col gap-6 md:gap-8 w-full">
-        
-        {/* Header */}
-        <div className="flex flex-col gap-6">
-            <div className="flex items-center gap-4">
-              <Link href={`/category/${script.categorySlug}`} className="text-muted-foreground hover:text-foreground transition-colors">
-                  <ChevronLeft className="w-6 h-6" />
-              </Link>
-              <div className="flex-1 min-w-0">
-                <h1 className="text-2xl font-bold tracking-tight text-foreground truncate">
-                  {script.title}
-                </h1>
-                <p className="text-sm text-muted-foreground truncate">{script.context || script.cleanedEnglish}</p>
-              </div>
+      
+      {/* Sticky Header */}
+      <header className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-border">
+         <div className="max-w-3xl mx-auto px-4 py-3 md:px-6 md:py-4 flex flex-col gap-4">
+             <div className="flex items-center gap-4">
+                 <Link href={`/category/${script.categorySlug}`} className="text-muted-foreground hover:text-foreground transition-colors">
+                     <ChevronLeft className="w-6 h-6" />
+                 </Link>
+                 <div className="flex-1 min-w-0">
+                     <h1 className="text-xl md:text-2xl font-bold tracking-tight text-foreground truncate">
+                       {script.title}
+                     </h1>
+                 </div>
+                 
+                 {/* Full View Toggle */}
+                  <button 
+                    onClick={() => setViewMode("full")}
+                    className="p-2 -mr-2 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-full transition-colors"
+                    title="View Full Content"
+                    aria-label="View Full Content"
+                  >
+                      <FileText className="w-6 h-6" />
+                  </button>
             </div>
 
-             {/* Progress Bar */}
+            {/* Progress Line */}
              <div className="w-full h-1 bg-secondary rounded-full overflow-hidden">
                 <div 
                     className="h-full bg-red-500 transition-all duration-300 ease-out" 
                     style={{ width: `${(currentIndex / total) * 100}%` }} 
                 />
              </div>
-        </div>
+         </div>
+      </header>
+
+      <div className="flex-1 max-w-3xl mx-auto px-4 py-8 md:px-6 md:py-12 flex flex-col gap-6 md:gap-8 w-full">
 
         {/* Decoder Card Area */}
         <div className="flex-1 flex flex-col justify-center min-h-[400px]">
