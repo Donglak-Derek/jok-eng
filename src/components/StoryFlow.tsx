@@ -11,7 +11,8 @@ import { useAuth } from "@/context/AuthContext";
 import { updateDoc, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { UserScript } from "@/types";
-import { ArrowRight, RotateCcw, Volume2, ArrowLeft, Lightbulb, ChevronLeft } from "lucide-react";
+import { ArrowRight, RotateCcw, Volume2, ArrowLeft, Lightbulb, ChevronLeft, FileText } from "lucide-react";
+import StoryFullView from "./StoryFullView";
 
 type Props = {
   script: Script;
@@ -20,6 +21,7 @@ type Props = {
 export default function StoryFlow({ script }: Props) {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(0);
+  const [viewMode, setViewMode] = useState<"flow" | "full">("flow"); // New State
   const segments = useMemo(() => script.segments || [], [script.segments]);
   const total = segments.length;
   const repeatsKey = `jokeng:repeats:${script.id}`;
@@ -139,21 +141,35 @@ export default function StoryFlow({ script }: Props) {
   const isLastSegment = currentStep === total - 1;
   const currentSegment = segments[currentStep];
 
+  // Full View Mode
+  if (viewMode === "full") {
+    return <StoryFullView script={script} onBack={() => setViewMode("flow")} />;
+  }
+
   return (
     <div className="min-h-screen text-foreground flex flex-col bg-background">
-      <div className="flex-1 max-w-3xl mx-auto px-4 py-8 md:px-6 md:py-12 flex flex-col gap-6 md:gap-8 w-full">
-        {/* Header */}
-        <div className="flex flex-col gap-6">
+      {/* Sticky Header */}
+      <header className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-border">
+        <div className="max-w-3xl mx-auto px-4 py-3 md:px-6 md:py-4 flex flex-col gap-4">
             <div className="flex items-center gap-4">
               <Link href={`/category/${script.categorySlug}`} className="text-muted-foreground hover:text-foreground transition-colors">
                   <ChevronLeft className="w-6 h-6" />
               </Link>
               <div className="flex-1 min-w-0">
-                <h1 className="text-2xl font-bold tracking-tight text-foreground truncate">
+                <h1 className="text-xl md:text-2xl font-bold tracking-tight text-foreground truncate">
                   {script.title}
                 </h1>
-                <p className="text-sm text-muted-foreground truncate">{script.context}</p>
               </div>
+
+              {/* Full View Toggle */}
+              <button 
+                onClick={() => setViewMode("full")}
+                className="p-2 -mr-2 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-full transition-colors"
+                title="View Full Content"
+                aria-label="View Full Content"
+              >
+                  <FileText className="w-6 h-6" />
+              </button>
             </div>
             
              {/* Progress Bar */}
@@ -164,6 +180,9 @@ export default function StoryFlow({ script }: Props) {
                  />
             </div>
         </div>
+      </header>
+
+      <div className="flex-1 max-w-3xl mx-auto px-4 py-8 md:px-6 md:py-12 flex flex-col gap-6 md:gap-8 w-full">
 
         {/* Card Area */}
         <div className="flex-1 flex flex-col justify-center min-h-[400px]">
