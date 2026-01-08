@@ -7,6 +7,7 @@ export const loudNeighbor: Script = {
   categorySlug: "the_polite_fight",
   categoryName: CATEGORY_NAMES["the_polite_fight"],
   cleanedEnglish: "Asking your neighbor to turn it down without starting a war.",
+    imageUrl: "/images/scenarios/polite_generic.png",
   sentences: [
     {
       id: "neighbor-1-rude",

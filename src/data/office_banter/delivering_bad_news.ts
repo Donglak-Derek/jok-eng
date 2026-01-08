@@ -6,6 +6,7 @@ export const deliveringBadNews: Script = {
   categorySlug: "office_banter",
   categoryName: "Career & Office Talk",
   cleanedEnglish: "How to tell your boss things are going wrong.",
+    imageUrl: "/images/scenarios/networking_coffee.png",
   sentences: [
     {
       id: "news-1",

@@ -8,6 +8,7 @@ export const explainingProblems: Script = {
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish:
     "Learn how to report issues clearly in work or daily life. These sentences help you explain what’s wrong and what needs to be done.",
+    imageUrl: "/images/scenarios/small_talk_generic.png",
   sentences: [
     {
       id: "s1",

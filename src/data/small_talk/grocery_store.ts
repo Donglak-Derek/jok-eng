@@ -8,6 +8,7 @@ export const groceryStore: Script = {
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish:
     "A quick trip becomes a language workout: finding items, asking staff, and resisting the snack aisle.",
+    imageUrl: "/images/scenarios/small_talk_generic.png",
   sentences: [
     {
       id: "s1",

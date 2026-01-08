@@ -8,6 +8,7 @@ export const verbTensesConsistency: Script = {
   categoryName: CATEGORY_NAMES["the_sarcasm_detector"],
   cleanedEnglish:
     "Practice keeping your verb tenses consistent. Focus on present simple vs present continuous, and past simple vs present perfect.",
+    imageUrl: "/images/scenarios/sarcasm_generic.png",
   sentences: [
     {
       id: "s1",

@@ -8,6 +8,7 @@ export const emojiGuide: Script = {
   categoryName: CATEGORY_NAMES["texting_decoder"],
   cleanedEnglish:
     "Decoding the hidden meanings of emojis. Mistake -> Fix format.",
+    imageUrl: "/images/scenarios/texting_generic.png",
   sentences: [
     {
       id: "e1",

@@ -8,6 +8,7 @@ export const healthAndFeelings: Script = {
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish:
     "Practice talking about how you feel—tired, sick, happy, or stressed. These phrases help you share your condition and emotions in daily life.",
+    imageUrl: "/images/scenarios/small_talk_generic.png",
   sentences: [
     {
       id: "s1",

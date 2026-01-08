@@ -277,7 +277,7 @@ export default function CreateScenarioForm() {
                         </div>
 
                      <div className="space-y-4">
-                        {generatedScript.sentences.map((sentence, idx) => (
+                        {(generatedScript.sentences || []).map((sentence, idx) => (
                             <SentenceCard 
                                 key={sentence.id} 
                                 sentence={sentence} 

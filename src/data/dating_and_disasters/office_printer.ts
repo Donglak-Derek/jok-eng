@@ -8,6 +8,7 @@ export const officePrinter: Script = {
   categoryName: CATEGORY_NAMES["dating_and_disasters"],
   cleanedEnglish:
     "A short scene about a first date planned by an app that keeps crashing—relatable, awkward, and easy to tell at parties.",
+    imageUrl: "/images/scenarios/dating_generic.png",
   sentences: [
     {
       id: "s1",

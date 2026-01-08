@@ -8,6 +8,7 @@ export const grammarArticles: Script = {
   categoryName: CATEGORY_NAMES["the_sarcasm_detector"],
   cleanedEnglish:
     "Short add-ons that make sarcasm and banter feel safe—useful for emails and chats.",
+    imageUrl: "/images/scenarios/sarcasm_generic.png",
   sentences: [
     {
       id: "s1",

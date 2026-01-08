@@ -8,6 +8,7 @@ export const techInterview: Script = {
   categoryName: CATEGORY_NAMES["office_banter"],
   cleanedEnglish:
     "Use light jokes about standups, bugs, and meetings to survive office banter without sounding negative.",
+    imageUrl: "/images/scenarios/networking_coffee.png",
   sentences: [
     {
       id: "s1",

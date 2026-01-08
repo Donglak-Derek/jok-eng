@@ -8,6 +8,7 @@ export const landlordNegotiator: Script = {
   categoryName: CATEGORY_NAMES["the_polite_fight"],
   cleanedEnglish:
     "How to ask for repairs firmly. Alternates between aggressive demands (Rude) and cooperative requests (Polite).",
+    imageUrl: "/images/scenarios/polite_generic.png",
   sentences: [
     {
       id: "s1_rude",

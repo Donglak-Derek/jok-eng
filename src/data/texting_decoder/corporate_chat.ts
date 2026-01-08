@@ -7,6 +7,7 @@ export const corporateChat: Script = {
   categorySlug: "texting_decoder",
   categoryName: CATEGORY_NAMES["texting_decoder"],
   cleanedEnglish: "Slack/Teams rules to save your career.",
+    imageUrl: "/images/scenarios/texting_generic.png",
   sentences: [
     {
       id: "corp-1",

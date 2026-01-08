@@ -6,6 +6,7 @@ export const resignationGraceful: Script = {
   categorySlug: "office_banter",
   categoryName: "Career & Office Talk",
   cleanedEnglish: "How to quit like a pro.",
+    imageUrl: "/images/scenarios/networking_coffee.png",
   sentences: [
     {
       id: "quit-1",

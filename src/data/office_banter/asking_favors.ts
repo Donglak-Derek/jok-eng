@@ -6,6 +6,38 @@ export const askingFavors: Script = {
   categorySlug: "office_banter",
   categoryName: "Career & Office Talk",
   cleanedEnglish: "How to get help without being 'that annoying guy'.",
+  
+  // Engagement
+  culturalNote: {
+    title: "The 'Soft Ask' vs. The Command",
+    content: "In many Western workplaces, direct commands ('Do this') are seen as rude, even from bosses. We use 'Soft Asks' ('Do you have a second?', 'Could you possibly...') to show respect for the other person's time and autonomy. It allows them to say 'no' or 'not now' without conflict."
+  },
+  quizItems: [
+    {
+      question: "You need a coworker to check your report ASAP. What is the best approach?",
+      options: [
+        "Send it with 'URGENT: READ NOW' subject line.",
+        "Walk to their desk and start talking immediately.",
+        "Slack them: 'Hey, are you heads-down or do you have 5 mins for a quick sanity check?'",
+        "Email their boss to complain they haven't checked it yet."
+      ],
+      correctIndex: 2,
+      explanation: "Checking their status ('heads-down') first shows respect. Using 'sanity check' makes the request feel smaller and collaborative."
+    },
+    {
+      question: "Why is 'I'm waiting on you' considered a bad phrase?",
+      options: [
+        "It's too short.",
+        "It sounds accusatory, like you are blaming them for your delay.",
+        "It's grammatically incorrect.",
+        "It's too formal."
+      ],
+      correctIndex: 1,
+      explanation: "It focuses on *their* failure. Better to say 'I'm blocked on X' (focusing on the workflow) or 'When do you think X might be ready?' (focusing on the schedule)."
+    }
+  ],
+
+  imageUrl: "/images/scenarios/asking_favors.png",
   sentences: [
     {
       id: "favor-1",

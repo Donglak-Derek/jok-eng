@@ -8,6 +8,7 @@ export const comparativesSuperlatives: Script = {
   categoryName: CATEGORY_NAMES["the_sarcasm_detector"],
   cleanedEnglish:
     "Comparatives compare two things, and superlatives show the highest level. They are useful in interviews, presentations, and daily conversations.",
+    imageUrl: "/images/scenarios/sarcasm_generic.png",
   sentences: [
     {
       id: "s1",

@@ -7,6 +7,7 @@ export const punctuationPsychology: Script = {
   categorySlug: "texting_decoder",
   categoryName: CATEGORY_NAMES["texting_decoder"],
   cleanedEnglish: "What one little dot (.) actually means in a text.",
+    imageUrl: "/images/scenarios/texting_generic.png",
   sentences: [
     {
       id: "punc-1",

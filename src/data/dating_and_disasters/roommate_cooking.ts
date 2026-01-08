@@ -8,6 +8,7 @@ export const roommateCooking: Script = {
   categoryName: CATEGORY_NAMES["dating_and_disasters"],
   cleanedEnglish:
     "A date that turns into a cooking-show fail—great for telling friends because it’s self-aware and still sweet.",
+    imageUrl: "/images/scenarios/dating_generic.png",
   sentences: [
     {
       id: "s1",

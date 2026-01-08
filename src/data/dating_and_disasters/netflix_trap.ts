@@ -9,6 +9,7 @@ export const netflixTrap: Script = {
   categoryName: CATEGORY_NAMES["dating_and_disasters"],
   cleanedEnglish: "Dating in English is about subtext. This helps you read between the lines.", /* Context summary */
   sentences: [], // Empty because we use decoderItems
+    imageUrl: "/images/scenarios/dating_generic.png",
   decoderItems: [
     {
       id: "item_1",

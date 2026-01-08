@@ -8,6 +8,7 @@ export const customerServiceBasics: Script = {
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish:
     "Useful phrases for helping customers politely and clearly. These sentences focus on giving directions, explaining items, and offering help.",
+    imageUrl: "/images/scenarios/small_talk_generic.png",
   sentences: [
     {
       id: "s1",

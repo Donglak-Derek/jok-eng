@@ -7,6 +7,7 @@ export const genZSlang: Script = {
   categorySlug: "texting_decoder",
   categoryName: CATEGORY_NAMES["texting_decoder"],
   cleanedEnglish: "Don't sound 'cringe'. Basic slang you should know.",
+    imageUrl: "/images/scenarios/texting_generic.png",
   sentences: [
     {
       id: "genz-1",

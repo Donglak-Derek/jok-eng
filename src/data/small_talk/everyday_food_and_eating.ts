@@ -8,6 +8,7 @@ export const foodAndEating: Script = {
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish:
     "Practice sentences for ordering food, talking about meals, and sharing food preferences in daily life.",
+    imageUrl: "/images/scenarios/small_talk_generic.png",
   sentences: [
     {
       id: "s1",

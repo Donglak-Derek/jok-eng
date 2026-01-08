@@ -8,6 +8,7 @@ export const toolsAndFurniture: Script = {
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish:
     "Practice useful sentences with tools, furniture parts, and common actions. These will help at work and in daily life.",
+    imageUrl: "/images/scenarios/small_talk_generic.png",
   sentences: [
     {
       id: "s1",

@@ -8,6 +8,7 @@ export const relativeClauses: Script = {
   categoryName: CATEGORY_NAMES["the_sarcasm_detector"],
   cleanedEnglish:
     "Relative clauses use words like who, which, and that to connect ideas smoothly and add more detail about a person or thing.",
+    imageUrl: "/images/scenarios/sarcasm_generic.png",
   sentences: [
     {
       id: "s1",

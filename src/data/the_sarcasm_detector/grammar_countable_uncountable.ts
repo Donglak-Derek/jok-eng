@@ -8,6 +8,7 @@ export const countableUncountable: Script = {
   categoryName: CATEGORY_NAMES["the_sarcasm_detector"],
   cleanedEnglish:
     "Practice using countable and uncountable nouns. Learn when to use many, much, a few, and a little with natural sentences.",
+    imageUrl: "/images/scenarios/sarcasm_generic.png",
   sentences: [
     {
       id: "s1",

@@ -10,11 +10,70 @@ type Props = {
   index: number;
   heard: boolean;
   onHeard: (index: number) => void;
+  mode?: "standard" | "cloze";
 };
 
-export default function SentenceCard({ sentence, index, heard, onHeard }: Props) {
+export default function SentenceCard(props: Props) {
+  const { sentence, index, heard, onHeard } = props;
   const [speaking, setSpeaking] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const [revealed, setRevealed] = useState(false);
+
+  // Helper to render text with cloze deletions
+  const renderClozeText = (text: string, keywords: { word: string; definition: string }[]) => {
+      // Find parts that match keywords
+      let parts = [{ text, isCloze: false }];
+      
+      keywords.forEach(k => {
+          if (k.definition.startsWith("Hidden:")) {
+              const target = k.word; 
+              const regex = new RegExp(`(${target})`, "gi");
+              
+              const newParts: { text: string; isCloze: boolean }[] = [];
+              parts.forEach(p => {
+                  if (p.isCloze) {
+                      newParts.push(p);
+                  } else {
+                      const split = p.text.split(regex);
+                      split.forEach(s => {
+                         if (s.toLowerCase() === target.toLowerCase()) {
+                             newParts.push({ text: s, isCloze: true });
+                         } else if (s) {
+                             newParts.push({ text: s, isCloze: false });
+                         }
+                      });
+                  }
+              });
+              parts = newParts; 
+          }
+      });
+
+      return (
+          <span>
+              {parts.map((part, i) => {
+                  if (part.isCloze) {
+                      return (
+                          <span 
+                            key={i} 
+                            onClick={(e) => { e.stopPropagation(); setRevealed(true); }}
+                            className={`
+                               transition-all duration-300 cursor-pointer px-1 rounded
+                               ${revealed ? "bg-yellow-200 text-foreground font-bold" : "bg-foreground text-transparent select-none blur-sm hover:blur-none hover:bg-foreground/80"}
+                            `}
+                            title={revealed ? "" : "Click to reveal"}
+                          >
+                              {part.text}
+                          </span>
+                      );
+                  }
+                  return <span key={i}>{part.text}</span>;
+              })}
+          </span>
+      );
+  };
+ 
+  const isClozeMode = props.mode === "cloze";
 
   const speak = useCallback(async () => {
     if (typeof window === "undefined") return;
@@ -158,7 +217,7 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
     );
   }
 
-  // Original Layout (Flashcard Fallback)
+  // Original Layout (Flashcard Fallback) modified for Cloze
   return (
     <div className="bg-white rounded-lg border border-border p-8 md:p-12 flex flex-col gap-8 shadow-sm transition-all hover:shadow-md text-center">
       
@@ -170,23 +229,49 @@ export default function SentenceCard({ sentence, index, heard, onHeard }: Props)
 
          {/* Main Sentence */}
          <div className="relative">
-            <h3 className="text-3xl md:text-4xl font-bold leading-tight text-foreground">
-              &quot;{sentence.en}&quot;
+            <h3 className="text-2xl md:text-4xl font-bold leading-relaxed text-foreground">
+              {isClozeMode ? renderClozeText(sentence.en, keywords) : `"${sentence.en}"`}
             </h3>
          </div>
       </div>
 
-      <div className="flex flex-wrap justify-center gap-2">
-        {keywords.map((k) => (
-          <span
-            key={k.word}
-            className="text-sm px-3 py-1 bg-secondary text-secondary-foreground rounded-full"
-          >
-            <span className="font-semibold">{k.word}</span>
-            <span className="text-muted-foreground ml-1">{k.definition}</span>
-          </span>
-        ))}
-      </div>
+      {isClozeMode ? (
+          <div className="min-h-[24px] flex flex-col items-center gap-4">
+              <div className="text-sm text-muted-foreground italic">
+                {!revealed ? "Click the blurred text to reveal the punchline." : "Nice work! Here's the breakdown:"}
+              </div>
+              
+              {/* Show keywords only after reveal in cloze mode */}
+              {revealed && (
+                  <div className="flex flex-wrap justify-center gap-2 animate-in fade-in slide-in-from-bottom-2 duration-500">
+                    {keywords.map((k) => (
+                      <span
+                        key={k.word}
+                        className="text-sm px-3 py-1 bg-yellow-200 text-foreground rounded-full border border-yellow-300"
+                      >
+                        <span className="font-semibold">{k.word}</span>
+                        <span className="text-muted-foreground ml-1">
+                            {/* Strip 'Hidden:' prefix for clean display */}
+                            {k.definition.replace(/^Hidden:\s*/, "")}
+                        </span>
+                      </span>
+                    ))}
+                  </div>
+              )}
+          </div>
+      ) : (
+          <div className="flex flex-wrap justify-center gap-2">
+            {keywords.map((k) => (
+              <span
+                key={k.word}
+                className="text-sm px-3 py-1 bg-secondary text-secondary-foreground rounded-full"
+              >
+                <span className="font-semibold">{k.word}</span>
+                <span className="text-muted-foreground ml-1">{k.definition}</span>
+              </span>
+            ))}
+          </div>
+      )}
 
       {/* Full width play button */}
       <Button

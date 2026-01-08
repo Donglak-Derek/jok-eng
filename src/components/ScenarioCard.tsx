@@ -64,8 +64,23 @@ export default function ScenarioCard({
         transition={{ duration: 0.2 }}
         className="group h-full flex flex-col bg-white rounded-lg border border-border shadow-sm hover:shadow-md transition-shadow overflow-hidden"
       >
-        <Link href={href} className="flex-1 p-5 flex flex-col gap-3">
-             {/* Header */}
+        <Link href={href} className="flex-1 flex flex-col">
+             {/* Cover Image */}
+             {script.imageUrl && (
+                 <div className="relative w-full aspect-[2/1] bg-secondary overflow-hidden">
+                     {/* eslint-disable-next-line @next/next/no-img-element */}
+                     <img 
+                        src={script.imageUrl} 
+                        alt={script.title} 
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                     />
+                     {/* Overlay gradient for text readability if needed, or just style */}
+                     <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                 </div>
+             )}
+
+             <div className="p-5 flex flex-col gap-3 flex-1">
+                 {/* Header */}
             <div className="flex justify-between items-start">
                 <span className="text-xs font-mono text-muted-foreground/60">
                     #{String(index + 1).padStart(2, '0')}
@@ -86,6 +101,7 @@ export default function ScenarioCard({
             </div>
             
             <div className="flex-1" /> {/* Spacer */}
+            </div>
         </Link>
             
         {/* Footer */}

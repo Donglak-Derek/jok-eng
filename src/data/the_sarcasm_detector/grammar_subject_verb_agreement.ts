@@ -8,6 +8,7 @@ export const subjectVerbAgreement: Script = {
   categoryName: CATEGORY_NAMES["the_sarcasm_detector"],
   cleanedEnglish:
     "Practice making the subject and verb match correctly. This helps your English sound natural, even when speaking fast.",
+    imageUrl: "/images/scenarios/sarcasm_generic.png",
   sentences: [
     {
       id: "s1",

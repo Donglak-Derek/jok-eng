@@ -7,6 +7,7 @@ export const lineCutter: Script = {
   categorySlug: "the_polite_fight",
   categoryName: CATEGORY_NAMES["the_polite_fight"],
   cleanedEnglish: "How to stop someone from skipping the line without causing a scene.",
+    imageUrl: "/images/scenarios/polite_generic.png",
   sentences: [
     {
       id: "line-1-rude",

@@ -35,9 +35,11 @@ export type Script = {
   categoryName: string;
   cleanedEnglish: string; // Used as summary
   icon?: string;
-  sentences: Sentence[];
+  sentences?: Sentence[];
   // New fields for story_flow and decoder
   type?: "script" | "story_flow" | "decoder";
+  mode?: "standard" | "cloze"; // New mode for StoryTeller
+  difficulty?: "Mild 🌶️" | "Medium 🌶️🌶️" | "Spicy 🌶️🌶️🌶️";
   context?: string;
   segments?: {
     step: string;
@@ -46,6 +48,19 @@ export type Script = {
     note: string;
   }[];
   decoderItems?: DecoderItem[];
+  // Phase 1: New Engagement Fields
+  imageUrl?: string; 
+  culturalNote?: {
+    title: string;
+    content: string;
+  };
+  quizItems?: {
+    question: string;
+    options: string[];
+    correctIndex: number;
+    explanation: string;
+  }[];
+  summaryPoints?: string[]; // For Signal Decoder review
 };
 
 export type Category = {
@@ -53,6 +68,7 @@ export type Category = {
   name: string;
   description: string;
   image: string;
+  color?: string; // Phase 1: Accent Color
 };
 
 export type UserScript = Script & {

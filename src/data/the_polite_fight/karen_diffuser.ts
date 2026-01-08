@@ -8,6 +8,7 @@ export const karenDiffuser: Script = {
   categoryName: CATEGORY_NAMES["the_polite_fight"],
   cleanedEnglish:
     "How to complain to customer service without being a 'Karen'. Alternates between what NOT to say (Rude) and what TO say (Polite).",
+    imageUrl: "/images/scenarios/polite_generic.png",
   sentences: [
     {
       id: "s1_rude",

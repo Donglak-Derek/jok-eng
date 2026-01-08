@@ -7,6 +7,7 @@ export const gymHog: Script = {
   categorySlug: "the_polite_fight",
   categoryName: CATEGORY_NAMES["the_polite_fight"],
   cleanedEnglish: "Getting the machine you need when someone has been texting on it for 10 minutes.",
+    imageUrl: "/images/scenarios/polite_generic.png",
   sentences: [
     {
       id: "gym-1-rude",

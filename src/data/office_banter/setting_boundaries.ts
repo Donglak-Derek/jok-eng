@@ -6,6 +6,7 @@ export const settingBoundaries: Script = {
   categorySlug: "office_banter",
   categoryName: "Career & Office Talk",
   cleanedEnglish: "Protect your time without looking lazy.",
+    imageUrl: "/images/scenarios/networking_coffee.png",
   sentences: [
     {
       id: "bound-1",

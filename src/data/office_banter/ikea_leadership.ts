@@ -6,6 +6,7 @@ export const ikeaLeadership: Script = {
   categorySlug: "office_banter",
   categoryName: "Career & Office Talk",
   cleanedEnglish: "Leading with 'Togetherness' and 'Cost-consciousness'.",
+    imageUrl: "/images/scenarios/networking_coffee.png",
   sentences: [
     {
       id: "ikea-1",

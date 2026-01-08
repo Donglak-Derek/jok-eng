@@ -16,7 +16,7 @@ export default function EditScenarioForm({ script, userId }: Props) {
   const router = useRouter();
   const [title, setTitle] = useState(script.title);
   const [context, setContext] = useState(script.context);
-  const [sentences, setSentences] = useState<Sentence[]>(script.sentences);
+  const [sentences, setSentences] = useState<Sentence[]>(script.sentences || []);
   const [isSaving, setIsSaving] = useState(false);
 
   const handleSentenceChange = (index: number, field: string, value: string) => {

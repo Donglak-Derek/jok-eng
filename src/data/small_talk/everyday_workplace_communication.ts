@@ -8,6 +8,7 @@ export const workplaceCommunication: Script = {
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish:
     "Simple sentences for asking help, giving updates, and saying you finished something at work.",
+    imageUrl: "/images/scenarios/small_talk_generic.png",
   sentences: [
     {
       id: "s1",

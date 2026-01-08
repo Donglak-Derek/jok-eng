@@ -9,6 +9,7 @@ export const theBusyTrap: Script = {
   categoryName: CATEGORY_NAMES["dating_and_disasters"],
   cleanedEnglish: "Is he ghosting you or just CEO of a Fortune 500 company? (Spoiler: He's ghosting you).",
   sentences: [],
+    imageUrl: "/images/scenarios/dating_generic.png",
   decoderItems: [
     {
       id: "busy_1",

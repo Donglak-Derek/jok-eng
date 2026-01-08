@@ -8,6 +8,7 @@ export const timeAndSchedules: Script = {
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish:
     "Light lines for the awkward two minutes before a call starts—keep it breezy, then land on the agenda.",
+    imageUrl: "/images/scenarios/small_talk_generic.png",
   sentences: [
     {
       id: "s1",

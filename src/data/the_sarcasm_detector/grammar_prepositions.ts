@@ -8,6 +8,7 @@ export const prepositionsPractice: Script = {
   categoryName: CATEGORY_NAMES["the_sarcasm_detector"],
   cleanedEnglish:
     "Practice common prepositions like at, in, on, to, for, about, and of. These small words change meaning a lot, so correct use is important.",
+    imageUrl: "/images/scenarios/sarcasm_generic.png",
   sentences: [
     {
       id: "s1",

@@ -8,6 +8,7 @@ export const interviewSmartQuestion: Script = {
   categoryName: CATEGORY_NAMES["office_banter"],
   cleanedEnglish:
     "How to joke with a PM about bugs, show you’re not defensive, and still look like the teammate they want to work with.",
+    imageUrl: "/images/scenarios/networking_coffee.png",
   sentences: [
     {
       id: "s1",

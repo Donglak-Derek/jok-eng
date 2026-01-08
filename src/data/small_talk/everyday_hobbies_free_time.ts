@@ -8,6 +8,7 @@ export const hobbiesFreeTime: Script = {
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish:
     "Practice talking about hobbies and free time. Share what you like to do after work or on weekends.",
+    imageUrl: "/images/scenarios/small_talk_generic.png",
   sentences: [
     {
       id: "s1",

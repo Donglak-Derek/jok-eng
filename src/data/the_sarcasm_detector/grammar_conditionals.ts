@@ -8,6 +8,7 @@ export const conditionalsPractice: Script = {
   categoryName: CATEGORY_NAMES["the_sarcasm_detector"],
   cleanedEnglish:
     "Conditionals are 'if sentences.' They help you talk about facts, plans, and imagination. Practice zero, first, and second conditionals for daily and work situations.",
+    imageUrl: "/images/scenarios/sarcasm_generic.png",
   sentences: [
     {
       id: "s1",

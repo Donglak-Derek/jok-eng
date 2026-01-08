@@ -7,6 +7,7 @@ export const wrongOrder: Script = {
   categorySlug: "the_polite_fight",
   categoryName: CATEGORY_NAMES["the_polite_fight"],
   cleanedEnglish: "You ordered iced. They gave you hot. How to fix it without feeling guilty.",
+    imageUrl: "/images/scenarios/polite_generic.png",
   sentences: [
     {
       id: "order-1-rude",

@@ -8,6 +8,7 @@ export const modalVerbsPractice: Script = {
   categoryName: CATEGORY_NAMES["the_sarcasm_detector"],
   cleanedEnglish:
     "Modal verbs like can, could, would, should, and might help you sound polite, flexible, and professional in English. Practice them with many examples.",
+    imageUrl: "/images/scenarios/sarcasm_generic.png",
   sentences: [
     {
       id: "s1",

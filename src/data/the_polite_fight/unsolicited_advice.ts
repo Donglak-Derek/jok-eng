@@ -7,6 +7,7 @@ export const unsolicitedAdvice: Script = {
   categorySlug: "the_polite_fight",
   categoryName: CATEGORY_NAMES["the_polite_fight"],
   cleanedEnglish: "Shutting down nosy comments about your life/diet/dating.",
+    imageUrl: "/images/scenarios/polite_generic.png",
   sentences: [
     {
       id: "advice-1-rude",

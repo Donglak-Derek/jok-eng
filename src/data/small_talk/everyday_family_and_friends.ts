@@ -8,6 +8,7 @@ export const familyAndFriends: Script = {
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish:
     "Talk about your family and friends in daily life, and ask others politely about theirs. Short, natural lines for real conversations.",
+    imageUrl: "/images/scenarios/small_talk_generic.png",
   sentences: [
     {
       id: "s1",

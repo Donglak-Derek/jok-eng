@@ -8,6 +8,7 @@ export const directionsAndLocations: Script = {
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish:
     "Learn how to ask and give directions at work or outside. These sentences help you talk about places and locations clearly.",
+    imageUrl: "/images/scenarios/small_talk_generic.png",
   sentences: [
     {
       id: "s1",

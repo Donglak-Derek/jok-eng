@@ -1,13 +1,27 @@
 import { Script } from "@/types";
-import { CATEGORY_NAMES } from "@/data/categories";
 
 export const greetingsSmallTalk: Script = {
-  id: "everyday-greetings-small-talk",
-  title: "Elevator Armor",
+  id: "casual_small_talk_1",
+  title: "Casual Small Talk",
   categorySlug: "small_talk",
-  categoryName: CATEGORY_NAMES["small_talk"],
-  cleanedEnglish:
-    "Small talk that buys you 60 seconds in an elevator, hallway, or lobby—friendly, light, and easy to exit.",
+  categoryName: "Small Talk",
+  cleanedEnglish: "Simple greetings and questions to start a friendly conversation.",
+  
+  // Engagement Data
+  imageUrl: "/images/categories/small_talk.svg", // Using placeholder for now
+  culturalNote: {
+    title: "The 'How are you?' Trap",
+    content: "In Western culture, 'How are you?' is often just a greeting, not a real question. A simple 'Good, you?' is usually expected unless you're talking to a close friend."
+  },
+  quizItems: [
+    {
+      question: "If someone says 'How's it going?', what is a natural response?",
+      options: ["I am 70kg.", "Not bad, you?", "Yes, I am going.", "My existential dread is rising."],
+      correctIndex: 1,
+      explanation: "'Not bad, you?' is the most natural, low-pressure response to a casual greeting."
+    }
+  ],
+
   sentences: [
     {
       id: "s1",

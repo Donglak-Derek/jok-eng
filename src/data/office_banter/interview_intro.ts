@@ -6,6 +6,7 @@ export const interviewIntro: Script = {
   categorySlug: "office_banter",
   categoryName: "Career & Office Talk",
   cleanedEnglish: "Master the 2-minute elevator pitch of your career.",
+    imageUrl: "/images/scenarios/networking_coffee.png",
   sentences: [
     {
       id: "intro-1",

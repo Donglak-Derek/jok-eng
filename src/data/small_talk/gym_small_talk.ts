@@ -8,6 +8,7 @@ export const gymSmallTalk: Script = {
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish:
     "We talk about reps, rest, and reality: pretending the treadmill isn't judging us.",
+    imageUrl: "/images/scenarios/small_talk_generic.png",
   sentences: [
     {
       id: "s1",

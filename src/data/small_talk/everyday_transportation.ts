@@ -8,6 +8,7 @@ export const transportation: Script = {
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish:
     "Light lines for rideshares—fast small talk that makes you sound friendly without oversharing.",
+    imageUrl: "/images/scenarios/small_talk_generic.png",
   sentences: [
     {
       id: "s1",

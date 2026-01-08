@@ -8,6 +8,7 @@ export const dailyRoutines: Script = {
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish:
     "Daily routines are about talking simply and clearly about your schedule, meals, and habits. These sentences help you explain your everyday life.",
+    imageUrl: "/images/scenarios/small_talk_generic.png",
   sentences: [
     {
       id: "s1",

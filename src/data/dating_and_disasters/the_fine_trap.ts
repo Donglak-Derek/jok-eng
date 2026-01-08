@@ -9,6 +9,7 @@ export const theFineTrap: Script = {
   categoryName: CATEGORY_NAMES["dating_and_disasters"],
   cleanedEnglish: "Passive-aggression is a love language nobody wants to speak. Learn to decode the silence.",
   sentences: [],
+    imageUrl: "/images/scenarios/dating_generic.png",
   decoderItems: [
     {
       id: "fine_1",

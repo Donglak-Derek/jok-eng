@@ -8,6 +8,7 @@ export const basicsTenses: Script = {
   categoryName: CATEGORY_NAMES["the_sarcasm_detector"],
   cleanedEnglish:
     "Spot when someone is being sarcastic and reply without sounding offended or confused.",
+    imageUrl: "/images/scenarios/sarcasm_generic.png",
   sentences: [
     {
       id: "s1",

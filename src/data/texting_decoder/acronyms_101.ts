@@ -8,6 +8,7 @@ export const acronyms101: Script = {
   categoryName: CATEGORY_NAMES["texting_decoder"],
   cleanedEnglish:
     "Common acronyms and simple hacks to stop sounding like a robot (Mistake -> Fix format).",
+    imageUrl: "/images/scenarios/texting_generic.png",
   sentences: [
     {
       id: "a1",

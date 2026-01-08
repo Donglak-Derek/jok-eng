@@ -8,6 +8,7 @@ export const shoppingAndMoney: Script = {
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish:
     "Friendly lines for ordering coffee and joking about prices without sounding rude.",
+    imageUrl: "/images/scenarios/small_talk_generic.png",
   sentences: [
     {
       id: "s1",

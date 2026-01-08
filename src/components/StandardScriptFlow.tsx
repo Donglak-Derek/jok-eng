@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Script } from "@/types";
@@ -14,6 +15,8 @@ import { db } from "@/lib/firebase";
 import { UserScript } from "@/types";
 import { ChevronLeft, ChevronRight, PartyPopper, FileText } from "lucide-react";
 import StandardFullView from "./StandardFullView";
+import CulturalNoteCard from "@/components/CulturalNoteCard";
+import QuizCard from "@/components/QuizCard";
 
 type Props = { 
   script: Script;
@@ -22,7 +25,18 @@ type Props = {
 export default function StandardScriptFlow({ script }: Props) {
   const router = useRouter();
   const { user } = useAuth();
-  const total = script.sentences.length;
+  
+  // Script structure logic
+  const sentences = script.sentences || [];
+  const sentencesCount = sentences.length;
+  const hasCulturalNote = !!script.culturalNote;
+  const hasQuiz = !!script.quizItems && script.quizItems.length > 0;
+  
+  // Step indices
+  const culturalNoteIndex = hasCulturalNote ? sentencesCount : -1;
+  const quizIndex = hasQuiz ? (sentencesCount + (hasCulturalNote ? 1 : 0)) : -1;
+  const totalSteps = sentencesCount + (hasCulturalNote ? 1 : 0) + (hasQuiz ? 1 : 0);
+
   const storageKey = `jokeng:progress:${script.id}`;
   const repeatsKey = `jokeng:repeats:${script.id}`;
   
@@ -55,7 +69,7 @@ export default function StandardScriptFlow({ script }: Props) {
     setRepeats(v ? Number(v) || 0 : 0);
   }, [repeatsKey]);
 
-  const isCompletion = currentIndex === total;
+  const isCompletion = currentIndex >= totalSteps;
 
   const handlePrev = () => {
     if (currentIndex > 0) {
@@ -64,14 +78,16 @@ export default function StandardScriptFlow({ script }: Props) {
   };
 
   const handleNext = () => {
-    // Mark current card as heard
-    setHeardSet((prev) => {
-      const next = new Set(prev);
-      next.add(currentIndex);
-      return next;
-    });
+    // Mark current sentence as heard if we are in sentence range
+    if (currentIndex < sentencesCount) {
+        setHeardSet((prev) => {
+            const next = new Set(prev);
+            next.add(currentIndex);
+            return next;
+        });
+    }
 
-    if (currentIndex < total) {
+    if (currentIndex < totalSteps) {
       setCurrentIndex((prev) => prev + 1);
     }
   };
@@ -119,7 +135,83 @@ export default function StandardScriptFlow({ script }: Props) {
     setCurrentIndex(0);
   };
 
-  const currentSentence = script.sentences[currentIndex];
+  // Render content based on current index
+  let content = null;
+  let showControls = true;
+
+  if (isCompletion) {
+      showControls = false;
+      content = (
+         <motion.div
+             key="completion"
+             initial={{ opacity: 0, scale: 0.95 }}
+             animate={{ opacity: 1, scale: 1 }}
+             className="w-full py-16 text-center flex flex-col items-center"
+         >
+             <Confetti />
+             <div className="w-20 h-20 bg-secondary rounded-full flex items-center justify-center mb-6">
+                <PartyPopper className="w-10 h-10 text-primary" />
+             </div>
+             <h2 className="text-3xl font-bold mb-2">Training Complete</h2>
+             <p className="text-muted-foreground text-lg mb-8">You&apos;ve drilled this scenario {repeats + 1} times.</p>
+             
+             <div className="flex flex-col w-full max-w-xs gap-3">
+                  <Button onClick={handleFinishTraining} className="w-full h-12 text-base font-medium rounded-md">
+                      Finish & Save
+                  </Button>
+                  <Link href={`/category/${script.categorySlug}`} className="w-full">
+                      <Button variant="ghost" className="w-full h-12 text-muted-foreground hover:text-foreground">
+                         Back to Menu
+                      </Button>
+                  </Link>
+             </div>
+         </motion.div>
+      );
+  } else if (currentIndex === culturalNoteIndex && script.culturalNote) {
+      showControls = false; // Hide bottom controls, card has its own button
+      content = (
+          <CulturalNoteCard 
+             title={script.culturalNote.title}
+             content={script.culturalNote.content}
+             onNext={handleNext}
+          />
+      );
+  } else if (currentIndex === quizIndex && script.quizItems) {
+      showControls = false; // Quiz has its own flow
+      content = (
+          <QuizCard 
+             items={script.quizItems}
+             onFinish={handleNext}
+          />
+      );
+  } else {
+      // Sentence Card
+      const currentSentence = sentences[currentIndex];
+      content = (
+          <motion.div
+             key={currentIndex} 
+             initial={{ opacity: 0, y: 10 }}
+             animate={{ opacity: 1, y: 0 }}
+             exit={{ opacity: 0, y: -10 }}
+             transition={{ duration: 0.2 }}
+             className="w-full"
+         >
+             <SentenceCard 
+                sentence={currentSentence} 
+                index={currentIndex}
+                heard={heardSet.has(currentIndex)}
+                mode={script.mode || "standard"} // Pass cloze mode
+                onHeard={() => {
+                    setHeardSet(prev => {
+                        const next = new Set(prev);
+                        next.add(currentIndex);
+                        return next;
+                    });
+                }}
+             />
+         </motion.div>
+      );
+  }
 
   if (viewMode === "full") {
       return <StandardFullView script={script} onBack={() => setViewMode("flow")} />;
@@ -140,6 +232,24 @@ export default function StandardScriptFlow({ script }: Props) {
                        {script.title}
                      </h1>
                  </div>
+                  {/* Optional Scenario Image */}
+                  {script.imageUrl && (
+                      <div className="w-12 h-12 relative rounded-md overflow-hidden border border-border hidden md:block">
+                          <Image 
+                              src={script.imageUrl} 
+                              alt={script.title}
+                              fill
+                              className="object-cover"
+                          />
+                      </div>
+                  )}
+
+                  {/* Difficulty Badge */}
+                   {script.difficulty && (
+                      <div className="bg-secondary/50 px-3 py-1 rounded-full text-xs font-bold border border-secondary text-secondary-foreground hidden md:block">
+                          {script.difficulty}
+                      </div>
+                   )}
                  
                  <div className="flex items-center gap-3">
                      {/* Repeats Badge - Compact */}
@@ -159,74 +269,27 @@ export default function StandardScriptFlow({ script }: Props) {
                  </div>
             </div>
 
-            {/* Progress Line */}
-            <div className="w-full h-1 bg-secondary rounded-full overflow-hidden">
-                <div 
-                    className="h-full bg-primary transition-all duration-300 ease-out" 
-                    style={{ width: `${(currentIndex / total) * 100}%` }} 
-                />
-            </div>
-         </div>
-      </header>
+          </div>
+       {/* Progress Line - Locked to bottom of sticky header */}
+       <div className="w-full h-1 bg-secondary">
+           <div 
+               className="h-full bg-primary transition-all duration-300 ease-out" 
+               style={{ width: `${(currentIndex / totalSteps) * 100}%` }} 
+           />
+       </div>
+    </header>
 
       <div className="flex-1 max-w-3xl mx-auto px-4 py-8 md:px-6 md:py-12 flex flex-col w-full">
 
         {/* Content Area */}
         <div className="flex-1 flex flex-col justify-center min-h-[400px]">
              <AnimatePresence mode="wait">
-                 {!isCompletion ? (
-                     <motion.div
-                         key={currentIndex} 
-                         initial={{ opacity: 0, y: 10 }}
-                         animate={{ opacity: 1, y: 0 }}
-                         exit={{ opacity: 0, y: -10 }}
-                         transition={{ duration: 0.2 }}
-                         className="w-full"
-                     >
-                         <SentenceCard 
-                            sentence={currentSentence} 
-                            index={currentIndex}
-                            heard={heardSet.has(currentIndex)}
-                            onHeard={() => {
-                                setHeardSet(prev => {
-                                    const next = new Set(prev);
-                                    next.add(currentIndex);
-                                    return next;
-                                });
-                            }}
-                         />
-                     </motion.div>
-                 ) : (
-                     <motion.div
-                         key="completion"
-                         initial={{ opacity: 0, scale: 0.95 }}
-                         animate={{ opacity: 1, scale: 1 }}
-                         className="w-full py-16 text-center flex flex-col items-center"
-                     >
-                         <Confetti />
-                         <div className="w-20 h-20 bg-secondary rounded-full flex items-center justify-center mb-6">
-                            <PartyPopper className="w-10 h-10 text-primary" />
-                         </div>
-                         <h2 className="text-3xl font-bold mb-2">Training Complete</h2>
-                         <p className="text-muted-foreground text-lg mb-8">You&apos;ve drilled this scenario {repeats + 1} times.</p>
-                         
-                         <div className="flex flex-col w-full max-w-xs gap-3">
-                              <Button onClick={handleFinishTraining} className="w-full h-12 text-base font-medium rounded-md">
-                                  Finish & Save
-                              </Button>
-                              <Link href={`/category/${script.categorySlug}`} className="w-full">
-                                  <Button variant="ghost" className="w-full h-12 text-muted-foreground hover:text-foreground">
-                                     Back to Menu
-                                  </Button>
-                              </Link>
-                         </div>
-                     </motion.div>
-                 )}
+                 {content}
              </AnimatePresence>
         </div>
 
         {/* Bottom Action Bar */}
-        {!isCompletion && (
+        {showControls && (
             <div className="mt-8 flex items-center justify-between border-t border-border pt-6">
                 <Button 
                     variant="ghost"

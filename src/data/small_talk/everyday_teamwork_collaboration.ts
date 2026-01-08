@@ -8,6 +8,7 @@ export const teamworkCollaboration: Script = {
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish:
     "Practice how to work together by offering help, asking politely, and suggesting ideas. These sentences are useful at work and in daily life.",
+    imageUrl: "/images/scenarios/small_talk_generic.png",
   sentences: [
     {
       id: "s1",

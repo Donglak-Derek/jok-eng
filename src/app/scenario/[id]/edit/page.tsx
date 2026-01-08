@@ -54,7 +54,7 @@ export default function EditScenarioPage({ params }: Props) {
   // Handle Updates
   const handleSentenceChange = (index: number, field: keyof Sentence, value: string) => {
     if (!script) return;
-    const newSentences = [...script.sentences];
+    const newSentences = [...(script.sentences || [])];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (newSentences[index] as any)[field] = value;
     setScript({ ...script, sentences: newSentences });
@@ -121,7 +121,7 @@ export default function EditScenarioPage({ params }: Props) {
       </header>
 
       <div className="max-w-2xl mx-auto px-4 py-8 flex flex-col gap-6">
-         {script.sentences.map((sentence, index) => (
+         {(script.sentences || []).map((sentence, index) => (
              <div key={sentence.id} className="p-4 rounded-xl border border-secondary/20 bg-card/40 flex flex-col gap-3">
                  <div className="flex justify-between items-center text-sm text-muted">
                     <span>Card {index + 1}</span>

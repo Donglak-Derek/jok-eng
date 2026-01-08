@@ -8,6 +8,7 @@ export const questionForms: Script = {
   categoryName: CATEGORY_NAMES["the_sarcasm_detector"],
   cleanedEnglish:
     "Questions that politely check tone—useful when you’re not sure if someone is serious or sarcastic.",
+    imageUrl: "/images/scenarios/sarcasm_generic.png",
   sentences: [
     {
       id: "s1",

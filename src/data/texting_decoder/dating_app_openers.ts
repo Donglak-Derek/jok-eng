@@ -2,79 +2,53 @@ import { Script } from "@/types";
 import { CATEGORY_NAMES } from "@/data/categories";
 
 export const datingAppOpeners: Script = {
-  id: "texting-dating-apps",
-  title: "Dating App Openers",
+  id: "dating_app_openers",
+  title: "Dating App Decoding",
   categorySlug: "texting_decoder",
   categoryName: CATEGORY_NAMES["texting_decoder"],
-  cleanedEnglish: "What to say when 'Hey' isn't enough.",
-  sentences: [
+  cleanedEnglish: "Decode common dating app opening lines.",
+  type: "decoder",
+
+  // Engagement Data
+  imageUrl: "/images/categories/dating.svg",
+  summaryPoints: [
+     "Low effort = Low interest. 'Hey' usually means they are mass-messaging.",
+     "Overly specific compliments (about your body) are often red flags.",
+     "Humor is the best filter. If they don't get your joke, move on."
+  ],
+
+  decoderItems: [
     {
       id: "date-1",
-      en: "The 'Hey' Problem",
-      keywords: [
-        { word: "Low effort", definition: "Not trying very hard" },
-        { word: "Generic", definition: "Lacking imagination or individuality" }
-      ],
-      scenario: "You match with someone cute.",
-      badResponse: {
-        text: "Hey.",
-        why: "They have 50 other messages saying 'Hey'. You will be ignored."
-      },
-      goodResponse: {
-        text: "Hey [Name], that hiking photo is epic! Is that in [Location]?",
-        why: "Use their name + comment on a specific photo + ask a question."
-      }
+      phrase: "Hey",
+      literalMeaning: "Hello",
+      actualMeaning: "I am boring, lazy, or sending this to 50 people.",
+      dangerLevel: "Medium - Boring",
+      survivalTip: "Reply with a specific question about their profile to see if they're real."
     },
     {
       id: "date-2",
-      en: "The 'How are you?' Trap",
-      keywords: [
-        { word: "Boring", definition: "Not interesting; tedious" },
-        { word: "Dead end", definition: "A situation offering no prospects of progress" }
-      ],
-      scenario: "Starting the conversation.",
-      badResponse: {
-        text: "How are you?",
-        why: "The answer is always 'Good, you?'. Conversation dies immediately."
-      },
-      goodResponse: {
-        text: "How's your week going? Anything exciting happen or just surviving?",
-        why: "Gives them two prompts (exciting or surviving) to elaborate on."
-      }
+      phrase: "You smile with your eyes",
+      literalMeaning: "Your eyes form a crescent shape when you smile.",
+      actualMeaning: "I read a pickup artist book from 2005.",
+      dangerLevel: "High - Cringe",
+      survivalTip: "Ignore the compliment, ask what they do for work."
     },
     {
       id: "date-3",
-      en: "The 'Gif' Opener",
-      keywords: [
-        { word: "Visual", definition: "Relating to seeing or sight" },
-        { word: "Personality", definition: "Characteristics that form an individual's distinctive character" }
-      ],
-      scenario: "You don't know what to write.",
-      badResponse: {
-        text: "(Sending a random generic gif)",
-        why: "Can be hit or miss."
-      },
-      goodResponse: {
-        text: "(Send a funny gif relevant to their bio) + 'This is literally me if we went to [Place in their bio]'.",
-        why: "Contextualizes the image."
-      }
+      phrase: "I'm fluent in sarcasm",
+      literalMeaning: "I speak ironically.",
+      actualMeaning: "I will be mean to you and call it a joke.",
+      dangerLevel: "Critical - Run",
+      survivalTip: "Test them early. If they get offended easily, unmatch."
     },
     {
       id: "date-4",
-      en: "The 'Or' Question",
-      keywords: [
-        { word: "Debate", definition: "Argue about (a subject), especially in a formal manner" },
-        { word: "Engagement", definition: "The action of engaging or being engaged" }
-      ],
-      scenario: "Trying to get a reply.",
-      badResponse: {
-        text: "You look nice.",
-        why: "A compliment is nice, but doesn't *demand* a reply."
-      },
-      goodResponse: {
-        text: "Important debate: Pineapple on pizza. Yes or jail?",
-        why: "Low stakes, fun controversy. Easy to answer."
-      }
+      phrase: "School of Hard Knocks",
+      literalMeaning: "Life taught me lessons.",
+      actualMeaning: "I am unemployed and angry about it.",
+      dangerLevel: "High - Red Flag",
+      survivalTip: "Ask about their goals. If they just complain, exit."
     }
   ]
 };

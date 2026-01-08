@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import type { Script } from "@/types";
 import { motion, AnimatePresence } from "framer-motion";
@@ -9,6 +10,7 @@ import Confetti from "@/components/Confetti";
 import { Button } from "@/components/Button";
 import { ChevronLeft, Volume2, ArrowRight, RotateCcw, CheckCircle2, FileText } from "lucide-react";
 import SignalFullView from "./SignalFullView";
+import SignalSummaryCard from "@/components/SignalSummaryCard";
 
 type Props = {
   script: Script;
@@ -17,7 +19,12 @@ type Props = {
 export default function SignalDecoder({ script }: Props) {
   const router = useRouter();
   const items = script.decoderItems || [];
-  const total = items.length;
+  const itemsCount = items.length;
+  // Summary card is the last step before completion
+  const summaryIndex = itemsCount; 
+  // Total active steps = Items + Summary
+  const total = itemsCount + 1;
+  
   const [currentIndex, setCurrentIndex] = useState(0);
   const [viewMode, setViewMode] = useState<"flow" | "full">("flow");
   
@@ -28,13 +35,15 @@ export default function SignalDecoder({ script }: Props) {
   const [speaking, setSpeaking] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // Completion State
+  // Completion State: When index reaches total (which is N+1), we are done with all active cards (inc summary)
   const isCompletion = currentIndex === total;
 
-  // Use currentItem only if not completed
-  const currentItem = items[currentIndex];
-  // isLastItem refers to the last actual content card
-  const isLastItem = currentIndex === total - 1;
+  // Use currentItem only if we are in items range
+  const currentItem = currentIndex < itemsCount ? items[currentIndex] : items[itemsCount - 1];
+  
+  // isLastItem refers to the actual last item card OR the summary card
+  // Actually, "Next" on the last item should go to Summary. "Next" on Summary should go to Completion.
+  const isLastActiveStep = currentIndex === total - 1;
 
   // Helper to normalize danger levels from data strings to 0-100
   const getDangerValue = (level: string): number => {
@@ -147,10 +156,215 @@ export default function SignalDecoder({ script }: Props) {
 
 
   // If no items, show error or return null
-  if (total === 0) return <div>No items found.</div>;
+  if (itemsCount === 0) return <div>No items found.</div>;
 
   if (viewMode === "full") {
       return <SignalFullView script={script} onBack={() => setViewMode("flow")} />;
+  }
+  
+  let content = null;
+  const showControls = !isCompletion && currentIndex !== summaryIndex;
+  
+  if (isCompletion) {
+       content = (
+           <motion.div
+               key="completion"
+               initial={{ opacity: 0, scale: 0.95 }}
+               animate={{ opacity: 1, scale: 1 }}
+               exit={{ opacity: 0, scale: 0.95 }}
+               transition={{ duration: 0.4 }}
+               className="w-full"
+           >
+               <div className="bg-white rounded-lg border border-border shadow-sm p-8 md:p-12 flex flex-col items-center text-center gap-6">
+                   <Confetti />
+                   <div className="text-6xl mb-2">🎉</div>
+                   
+                   <div className="space-y-2">
+                     <h2 className="text-3xl font-bold text-foreground">
+                       Mission Accomplished!
+                     </h2>
+                     <p className="text-lg text-muted-foreground">You have decoded all the signals.</p>
+                   </div>
+
+                   <div className="w-full max-w-sm flex flex-col gap-3 mt-4">
+                      <Button
+                        variant="primary"
+                        size="lg"
+                        onClick={handleRepeat}
+                        className="w-full"
+                      >
+                        Repeat Training
+                      </Button>
+
+                      <Button 
+                        variant="ghost"
+                        size="md"
+                        onClick={handleFinish}
+                        className="w-full text-muted-foreground"
+                      >
+                        Finish & Return
+                      </Button>
+                   </div>
+               </div>
+           </motion.div>
+       );
+  } else if (currentIndex === summaryIndex) {
+       // Summary Card
+       content = (
+           <SignalSummaryCard 
+               items={script.decoderItems || []}
+               summaryPoints={script.summaryPoints}
+               onFinish={handleNext}
+           />
+       );
+  } else {
+       // Regular Item Card
+       content = (
+           <motion.div
+                key={currentItem.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+                className="w-full"
+            >
+                <div className="bg-white rounded-lg border border-border shadow-sm p-6 md:p-12 flex flex-col gap-6 md:gap-8 relative overflow-hidden">
+                    
+                    {/* The Signal (Phrase) */}
+                    <div className="flex flex-col gap-4 text-center items-center">
+                        <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground border-b border-border pb-1">
+                            The Signal
+                        </span>
+                        <h2 className="text-3xl md:text-4xl font-bold leading-tight text-foreground">
+                            &quot;{currentItem.phrase}&quot;
+                        </h2>
+                        
+                        {/* Audio Button */}
+                         <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => speak(currentItem.phrase)}
+                            isLoading={loading}
+                            className="text-muted-foreground"
+                            leftIcon={<Volume2 className="w-4 h-4" />}
+                         >
+                            Listen
+                         </Button>
+                    </div>
+
+                    <hr className="border-border border-dashed" />
+
+                    {/* Game / Reveal Section */}
+                    <div className="flex flex-col gap-6">
+                        {!isRevealed ? (
+                            <div className="flex flex-col items-center justify-center py-6 gap-8">
+                                <div className="text-center space-y-2">
+                                    <h3 className="text-xl font-bold uppercase tracking-tight text-foreground">Danger Check</h3>
+                                    <p className="text-muted-foreground">How dangerous is this phrase?</p>
+                                </div>
+
+                                {/* Danger Slider Game - Minimalist */}
+                                <div className="w-full max-w-md px-4">
+                                    <div className="flex justify-between text-xs font-bold uppercase mb-4 text-muted-foreground">
+                                        <span className="text-green-600">Safe</span>
+                                        <span className="text-red-600">Run</span>
+                                    </div>
+                                    
+                                    <input 
+                                        type="range" 
+                                        min="0" 
+                                        max="100" 
+                                        value={userGuess} 
+                                        onChange={(e) => setUserGuess(Number(e.target.value))}
+                                        className="w-full h-2 bg-gradient-to-r from-green-500 via-yellow-400 to-red-500 rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                                    />
+                                    
+                                    <div className="text-center mt-6">
+                                         <span className="inline-block px-4 py-1.5 rounded-full bg-secondary text-secondary-foreground font-mono text-sm font-bold">
+                                            {userGuess < 33 ? "Safe" : userGuess < 66 ? "Caution" : "Danger"} ({userGuess}%)
+                                         </span>
+                                    </div>
+                                </div>
+
+                                <Button
+                                    variant="primary"
+                                    size="lg"
+                                    onClick={handleLockInGuess}
+                                    className="w-full md:w-auto px-8"
+                                >
+                                    Lock In Guess
+                                </Button>
+                            </div>
+                        ) : (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.98 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className="flex flex-col gap-6"
+                            >
+                                {/* Feedback Banner */}
+                                {(() => {
+                                    const fb = getFeedback();
+                                    if (!fb) return null;
+                                    return (
+                                        <div className={`p-4 rounded-lg flex items-center justify-center text-center ${fb.bg} ${fb.color} font-bold text-lg`}>
+                                            {fb.msg}
+                                        </div>
+                                    );
+                                })()}
+
+                                {/* Comparison Grid */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="p-6 rounded-lg bg-secondary/30">
+                                        <h3 className="text-xs font-bold text-muted-foreground uppercase mb-2">Literal Meaning</h3>
+                                        <p className="text-lg font-medium text-foreground leading-relaxed">{currentItem.literalMeaning}</p>
+                                    </div>
+                                    <div className="p-6 rounded-lg bg-yellow-50/80 border border-yellow-100">
+                                        <h3 className="text-xs font-bold text-yellow-700 uppercase mb-2">Actual Meaning (Subtext)</h3>
+                                        <p className="text-lg font-bold text-yellow-950 leading-relaxed">{currentItem.actualMeaning}</p>
+                                    </div>
+                                </div>
+                                
+                                {/* Danger Level Visual */}
+                                <div className="flex flex-col gap-3 p-6 rounded-lg bg-red-50/50 border border-red-100">
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-xs font-bold text-red-700 uppercase">Actual Danger Level</span>
+                                        <span className="font-bold text-red-700 text-xl">{currentItem.dangerLevel}</span>
+                                    </div>
+                                    
+                                    {/* Comparison Bar */}
+                                    <div className="relative h-2 bg-gray-200 rounded-full w-full mt-2">
+                                        {/* Markers */}
+                                        <div 
+                                          className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-red-500 rounded-full border-2 border-white shadow-sm z-10"
+                                          style={{ left: `${getDangerValue(currentItem.dangerLevel)}%`, marginLeft: '-8px' }}
+                                          title="Actual"
+                                        />
+                                        <div 
+                                          className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-blue-500 rounded-full border-2 border-white shadow-sm z-10 opacity-70"
+                                          style={{ left: `${userGuess}%`, marginLeft: '-6px' }}
+                                          title="Your Guess"
+                                        />
+                                    </div>
+                                    
+                                    <div className="flex justify-between text-xs font-medium text-muted-foreground mt-1">
+                                        <span className="text-blue-600">You: {userGuess}%</span>
+                                        <span className="text-red-600">Actual: {getDangerValue(currentItem.dangerLevel)}%</span>
+                                    </div>
+                                </div>
+
+                                <div className="p-6 rounded-lg bg-green-50/50 border border-green-100">
+                                     <h3 className="text-xs font-bold text-green-700 uppercase mb-2 flex items-center gap-2">
+                                        <CheckCircle2 className="w-4 h-4" /> Survival Tip
+                                     </h3>
+                                     <p className="text-lg font-medium text-green-900 leading-relaxed">{currentItem.survivalTip}</p>
+                                </div>
+                            </motion.div>
+                        )}
+                    </div>
+
+                </div>
+            </motion.div>
+       );
   }
 
   return (
@@ -168,6 +382,18 @@ export default function SignalDecoder({ script }: Props) {
                        {script.title}
                      </h1>
                  </div>
+
+                  {/* Optional Scenario Image */}
+                  {script.imageUrl && (
+                      <div className="w-12 h-12 relative rounded-md overflow-hidden border border-border hidden md:block">
+                          <Image 
+                              src={script.imageUrl} 
+                              alt={script.title}
+                              fill
+                              className="object-cover"
+                          />
+                      </div>
+                  )}
                  
                  {/* Full View Toggle */}
                   <button 
@@ -195,198 +421,12 @@ export default function SignalDecoder({ script }: Props) {
         {/* Decoder Card Area */}
         <div className="flex-1 flex flex-col justify-center min-h-[400px]">
             <AnimatePresence mode="wait">
-                {!isCompletion ? (
-                    <motion.div
-                        key={currentItem.id}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        transition={{ duration: 0.3 }}
-                        className="w-full"
-                    >
-                        <div className="bg-white rounded-lg border border-border shadow-sm p-6 md:p-12 flex flex-col gap-6 md:gap-8 relative overflow-hidden">
-                            
-                            {/* The Signal (Phrase) */}
-                            <div className="flex flex-col gap-4 text-center items-center">
-                                <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground border-b border-border pb-1">
-                                    The Signal
-                                </span>
-                                <h2 className="text-3xl md:text-4xl font-bold leading-tight text-foreground">
-                                    &quot;{currentItem.phrase}&quot;
-                                </h2>
-                                
-                                {/* Audio Button */}
-                                 <Button
-                                    size="sm"
-                                    variant="ghost"
-                                    onClick={() => speak(currentItem.phrase)}
-                                    isLoading={loading}
-                                    className="text-muted-foreground"
-                                    leftIcon={<Volume2 className="w-4 h-4" />}
-                                 >
-                                    Listen
-                                 </Button>
-                            </div>
-
-                            <hr className="border-border border-dashed" />
-
-                            {/* Game / Reveal Section */}
-                            <div className="flex flex-col gap-6">
-                                {!isRevealed ? (
-                                    <div className="flex flex-col items-center justify-center py-6 gap-8">
-                                        <div className="text-center space-y-2">
-                                            <h3 className="text-xl font-bold uppercase tracking-tight text-foreground">Danger Check</h3>
-                                            <p className="text-muted-foreground">How dangerous is this phrase?</p>
-                                        </div>
-
-                                        {/* Danger Slider Game - Minimalist */}
-                                        <div className="w-full max-w-md px-4">
-                                            <div className="flex justify-between text-xs font-bold uppercase mb-4 text-muted-foreground">
-                                                <span className="text-green-600">Safe</span>
-                                                <span className="text-red-600">Run</span>
-                                            </div>
-                                            
-                                            <input 
-                                                type="range" 
-                                                min="0" 
-                                                max="100" 
-                                                value={userGuess} 
-                                                onChange={(e) => setUserGuess(Number(e.target.value))}
-                                                className="w-full h-2 bg-gradient-to-r from-green-500 via-yellow-400 to-red-500 rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
-                                            />
-                                            
-                                            <div className="text-center mt-6">
-                                                 <span className="inline-block px-4 py-1.5 rounded-full bg-secondary text-secondary-foreground font-mono text-sm font-bold">
-                                                    {userGuess < 33 ? "Safe" : userGuess < 66 ? "Caution" : "Danger"} ({userGuess}%)
-                                                 </span>
-                                            </div>
-                                        </div>
-
-                                        <Button
-                                            variant="primary"
-                                            size="lg"
-                                            onClick={handleLockInGuess}
-                                            className="w-full md:w-auto px-8"
-                                        >
-                                            Lock In Guess
-                                        </Button>
-                                    </div>
-                                ) : (
-                                    <motion.div
-                                        initial={{ opacity: 0, scale: 0.98 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        className="flex flex-col gap-6"
-                                    >
-                                        {/* Feedback Banner */}
-                                        {(() => {
-                                            const fb = getFeedback();
-                                            if (!fb) return null;
-                                            return (
-                                                <div className={`p-4 rounded-lg flex items-center justify-center text-center ${fb.bg} ${fb.color} font-bold text-lg`}>
-                                                    {fb.msg}
-                                                </div>
-                                            );
-                                        })()}
-
-                                        {/* Comparison Grid */}
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            <div className="p-6 rounded-lg bg-secondary/30">
-                                                <h3 className="text-xs font-bold text-muted-foreground uppercase mb-2">Literal Meaning</h3>
-                                                <p className="text-lg font-medium text-foreground leading-relaxed">{currentItem.literalMeaning}</p>
-                                            </div>
-                                            <div className="p-6 rounded-lg bg-yellow-50/80 border border-yellow-100">
-                                                <h3 className="text-xs font-bold text-yellow-700 uppercase mb-2">Actual Meaning (Subtext)</h3>
-                                                <p className="text-lg font-bold text-yellow-950 leading-relaxed">{currentItem.actualMeaning}</p>
-                                            </div>
-                                        </div>
-                                        
-                                        {/* Danger Level Visual */}
-                                        <div className="flex flex-col gap-3 p-6 rounded-lg bg-red-50/50 border border-red-100">
-                                            <div className="flex items-center justify-between">
-                                                <span className="text-xs font-bold text-red-700 uppercase">Actual Danger Level</span>
-                                                <span className="font-bold text-red-700 text-xl">{currentItem.dangerLevel}</span>
-                                            </div>
-                                            
-                                            {/* Comparison Bar */}
-                                            <div className="relative h-2 bg-gray-200 rounded-full w-full mt-2">
-                                                {/* Markers */}
-                                                <div 
-                                                  className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-red-500 rounded-full border-2 border-white shadow-sm z-10"
-                                                  style={{ left: `${getDangerValue(currentItem.dangerLevel)}%`, marginLeft: '-8px' }}
-                                                  title="Actual"
-                                                />
-                                                <div 
-                                                  className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-blue-500 rounded-full border-2 border-white shadow-sm z-10 opacity-70"
-                                                  style={{ left: `${userGuess}%`, marginLeft: '-6px' }}
-                                                  title="Your Guess"
-                                                />
-                                            </div>
-                                            
-                                            <div className="flex justify-between text-xs font-medium text-muted-foreground mt-1">
-                                                <span className="text-blue-600">You: {userGuess}%</span>
-                                                <span className="text-red-600">Actual: {getDangerValue(currentItem.dangerLevel)}%</span>
-                                            </div>
-                                        </div>
-
-                                        <div className="p-6 rounded-lg bg-green-50/50 border border-green-100">
-                                             <h3 className="text-xs font-bold text-green-700 uppercase mb-2 flex items-center gap-2">
-                                                <CheckCircle2 className="w-4 h-4" /> Survival Tip
-                                             </h3>
-                                             <p className="text-lg font-medium text-green-900 leading-relaxed">{currentItem.survivalTip}</p>
-                                        </div>
-                                    </motion.div>
-                                )}
-                            </div>
-
-                        </div>
-                    </motion.div>
-                ) : (
-                    <motion.div
-                         key="completion"
-                         initial={{ opacity: 0, scale: 0.95 }}
-                         animate={{ opacity: 1, scale: 1 }}
-                         exit={{ opacity: 0, scale: 0.95 }}
-                         transition={{ duration: 0.4 }}
-                         className="w-full"
-                    >
-                         <div className="bg-white rounded-lg border border-border shadow-sm p-8 md:p-12 flex flex-col items-center text-center gap-6">
-                             <Confetti />
-                             <div className="text-6xl mb-2">🎉</div>
-                             
-                             <div className="space-y-2">
-                               <h2 className="text-3xl font-bold text-foreground">
-                                 Mission Accomplished!
-                               </h2>
-                               <p className="text-lg text-muted-foreground">You have decoded all the signals.</p>
-                             </div>
-
-                             <div className="w-full max-w-sm flex flex-col gap-3 mt-4">
-                                <Button
-                                  variant="primary"
-                                  size="lg"
-                                  onClick={handleRepeat}
-                                  className="w-full"
-                                >
-                                  Repeat Training
-                                </Button>
-
-                                <Button 
-                                  variant="ghost"
-                                  size="md"
-                                  onClick={handleFinish}
-                                  className="w-full text-muted-foreground"
-                                >
-                                  Finish & Return
-                                </Button>
-                             </div>
-                         </div>
-                    </motion.div>
-                )}
+                {content}
             </AnimatePresence>
         </div>
 
         {/* Navigation - Bottom Bar */}
-        {!isCompletion && (
+        {showControls && (
             <div className="sticky bottom-0 left-0 right-0 p-6 bg-background border-t border-border z-20">
               <div className="max-w-3xl mx-auto flex items-center justify-between">
                  <Button 
@@ -410,13 +450,15 @@ export default function SignalDecoder({ script }: Props) {
                       Prev
                     </Button>
 
+                    {/* Only show Next if revealed */}
                     {isRevealed && (
                       <Button
                         variant="primary"
                         onClick={handleNext}
-                        rightIcon={isLastItem ? undefined : <ArrowRight className="w-4 h-4" />}
+                        rightIcon={isLastActiveStep ? undefined : <ArrowRight className="w-4 h-4" />}
                       >
-                         {isLastItem ? "Finish" : "Next"}
+                         {/* Text based on step */}
+                         {isLastActiveStep ? "Review Mission" : "Next"}
                       </Button>
                     )}
                  </div>
