@@ -44,10 +44,16 @@ export default function StandardScriptFlow({ script }: Props) {
   const [viewMode, setViewMode] = useState<"flow" | "full">("flow");
   const [isGlobalRevealed, setIsGlobalRevealed] = useState(false); // Default hidden
 
+  const [isAutoPlayEnabled, setIsAutoPlayEnabled] = useState(false); // Default off
+  const toggleAutoPlay = () => setIsAutoPlayEnabled(prev => !prev);
+
   // Toggle for the whole deck
   const toggleGlobalReveal = () => setIsGlobalRevealed(prev => !prev);
   const [heardSet, setHeardSet] = useState<Set<number>>(new Set());
   const [repeats, setRepeats] = useState<number>(0);
+
+  // ... (existing code)
+
 
   // Load progress
   useEffect(() => {
@@ -207,6 +213,8 @@ export default function StandardScriptFlow({ script }: Props) {
                 mode={script.mode || "standard"} 
                 isGlobalRevealed={isGlobalRevealed}
                 onToggleGlobalReveal={toggleGlobalReveal}
+                isAutoPlayEnabled={isAutoPlayEnabled}
+                onToggleAutoPlay={toggleAutoPlay}
                 onHeard={() => {
                     setHeardSet(prev => {
                         const next = new Set(prev);

@@ -1,9 +1,10 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, useEffect } from "react";
 import type { Sentence } from "@/types";
 import { Button } from "@/components/Button";
-import { Play, Volume2, CheckCircle2, AlertCircle, Eye, EyeOff, AudioLines } from "lucide-react";
+import { Play, Volume2, CheckCircle2, AlertCircle, Eye, EyeOff, AudioLines, Headphones } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 type Props = {
   sentence: Sentence;
@@ -13,10 +14,12 @@ type Props = {
   mode?: "standard" | "cloze";
   isGlobalRevealed?: boolean;
   onToggleGlobalReveal?: () => void;
+  isAutoPlayEnabled?: boolean;
+  onToggleAutoPlay?: () => void;
 };
 
 export default function SentenceCard(props: Props) {
-  const { sentence, index, heard, onHeard, mode, isGlobalRevealed, onToggleGlobalReveal } = props;
+  const { sentence, index, heard, onHeard, mode, isGlobalRevealed, onToggleGlobalReveal, isAutoPlayEnabled, onToggleAutoPlay } = props;
   const [speaking, setSpeaking] = useState(false);
   const [loading, setLoading] = useState(false);
   const [localRevealed, setLocalRevealed] = useState<Set<string>>(new Set());
@@ -31,16 +34,40 @@ export default function SentenceCard(props: Props) {
     // Regex to find content inside square brackets, e.g., [hello world]
     const parts = sentence.en.split(/(\[.*?\])/g);
     
+    // Animation variants for the container (stagger effect)
+    const containerVariants = {
+      hidden: { opacity: 1 },
+      visible: {
+        opacity: 1,
+        transition: {
+          staggerChildren: 0.05, // Rapid ripple
+          delayChildren: 0.1
+        }
+      }
+    };
+    
+    // Variants for individual words
+    const wordVariants = {
+      hidden: { opacity: 1, y: 0 },
+      visible: { opacity: 1, y: 0 }
+    };
+
     return (
-      <p className="text-xl md:text-2xl font-medium leading-relaxed text-slate-700">
+      <motion.p 
+        className="text-xl md:text-2xl font-medium leading-relaxed text-slate-700"
+        variants={containerVariants}
+        initial="hidden"
+        animate={isGlobalRevealed ? "visible" : "hidden"}
+      >
         {parts.map((part, i) => {
           if (part.startsWith("[") && part.endsWith("]")) {
             const content = part.slice(1, -1); // Remove []
             const isRevealed = isGlobalRevealed || localRevealed.has(content);
             
             return (
-              <span 
+              <motion.span 
                 key={i}
+                variants={wordVariants}  // Part of stagger if global
                 onClick={(e) => {
                     e.stopPropagation();
                     const next = new Set(localRevealed);
@@ -48,20 +75,28 @@ export default function SentenceCard(props: Props) {
                     setLocalRevealed(next);
                 }}
                 className={`
-                  cursor-pointer transition-all duration-300 px-1 rounded mx-0.5 border-b-2
+                  inline-block cursor-pointer px-1 rounded mx-0.5 border-b-2
                   ${isRevealed 
                     ? "bg-yellow-200 border-yellow-400 text-slate-900" 
                     : "bg-slate-200 border-slate-300 text-transparent select-none hover:bg-slate-300 transition-all duration-300"
                   }
                 `}
+                // Pop animation on reveal
+                animate={{ 
+                    scale: isRevealed ? [1, 1.1, 1] : 1,
+                    backgroundColor: isRevealed ? "#fef08a" : "#e2e8f0",
+                    borderColor: isRevealed ? "#facc15" : "#cbd5e1",
+                    color: isRevealed ? "#0f172a" : "transparent"
+                }}
+                transition={{ duration: 0.2 }}
               >
                 {content}
-              </span>
+              </motion.span>
             );
           }
           return <span key={i}>{part}</span>;
         })}
-      </p>
+      </motion.p>
     );
   };
 
@@ -120,6 +155,17 @@ export default function SentenceCard(props: Props) {
       setLoading(false);
     }
   }, [heard, index, onHeard, sentence, setLoading, setSpeaking]);
+
+  // Auto-play effect
+  useEffect(() => {
+      // Small timeout to allow transition to settle
+      const timer = setTimeout(() => {
+          if (isAutoPlayEnabled && !speaking && !loading) {
+              handlePlay();
+          }
+      }, 500);
+      return () => clearTimeout(timer);
+  }, [isAutoPlayEnabled, index]); // Trigger on mount (index change) or toggle
 
   const isClozeMode = mode === "cloze";
   const anyRevealed = isGlobalRevealed || localRevealed.size > 0;
@@ -223,10 +269,23 @@ export default function SentenceCard(props: Props) {
             </button>
          )}
 
-         {/* Index Badge */}
-         <div className="text-xs font-semibold text-muted uppercase tracking-widest bg-slate-100 px-3 py-1 rounded-full">
-            Card {index + 1}
-         </div>
+         {/* Auto-Play Toggle (Headphones) - Centered */}
+         {onToggleAutoPlay && (
+            <button 
+                onClick={onToggleAutoPlay}
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-full transition-all duration-300 ${
+                  isAutoPlayEnabled 
+                    ? "bg-primary text-primary-foreground shadow-md scale-105" 
+                    : "bg-slate-100 text-slate-500 hover:bg-slate-200"
+                }`}
+                title={isAutoPlayEnabled ? "Listening Mode On" : "Enable Listening Mode"}
+            >
+                <Headphones className={`w-4 h-4 ${isAutoPlayEnabled ? "animate-pulse" : ""}`} />
+                <span className="text-xs font-semibold uppercase tracking-wide">
+                    {isAutoPlayEnabled ? "Listening Mode" : "Auto-Play Off"}
+                </span>
+            </button>
+         )}
       </div>
 
       <div className="flex flex-col gap-6 items-center mt-4 md:mt-8">
