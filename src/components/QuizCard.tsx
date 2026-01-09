@@ -59,7 +59,7 @@ export default function QuizCard({ items, onFinish }: Props) {
 
   if (isCompleted) {
       return (
-        <div className="w-full max-w-md mx-auto h-[600px] flex flex-col justify-center px-4">
+        <div className="w-full max-w-md mx-auto min-h-[50vh] flex flex-col justify-center px-4 py-8">
              <motion.div 
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -84,13 +84,13 @@ export default function QuizCard({ items, onFinish }: Props) {
   }
 
   return (
-    <div className="w-full max-w-md mx-auto h-[600px] flex flex-col justify-center px-4">
+      <div className="w-full max-w-md mx-auto min-h-[50vh] flex flex-col justify-center px-4 py-4">
       <motion.div
         key={currentIndex}
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: -20 }}
-        className="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 flex flex-col h-full max-h-[550px]"
+        className="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 flex flex-col max-h-[85vh]"
       >
         {/* Header */}
         <div className="bg-slate-50 p-6 border-b border-slate-100 flex justify-between items-center">

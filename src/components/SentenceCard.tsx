@@ -3,7 +3,7 @@
 import { useCallback, useMemo, useState } from "react";
 import type { Sentence } from "@/types";
 import { Button } from "@/components/Button";
-import { AudioLines } from "lucide-react";
+import { Play, Volume2, CheckCircle2, AlertCircle, Eye, EyeOff, AudioLines } from "lucide-react";
 
 type Props = {
   sentence: Sentence;
@@ -11,78 +11,68 @@ type Props = {
   heard: boolean;
   onHeard: (index: number) => void;
   mode?: "standard" | "cloze";
+  isGlobalRevealed?: boolean;
+  onToggleGlobalReveal?: () => void;
 };
 
 export default function SentenceCard(props: Props) {
-  const { sentence, index, heard, onHeard } = props;
+  const { sentence, index, heard, onHeard, mode, isGlobalRevealed, onToggleGlobalReveal } = props;
   const [speaking, setSpeaking] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [localRevealed, setLocalRevealed] = useState<Set<string>>(new Set());
 
-  const [revealed, setRevealed] = useState(false);
+  // Clean text helper: remove [...] brackets for TTS and clean display
+  const cleanText = (text: string) => text.replace(/\[|\]/g, "");
 
-  // Helper to render text with cloze deletions
-  const renderClozeText = (text: string, keywords: { word: string; definition: string }[]) => {
-      // Find parts that match keywords
-      let parts = [{ text, isCloze: false }];
-      
-      keywords.forEach(k => {
-          if (k.definition.startsWith("Hidden:")) {
-              const target = k.word; 
-              const regex = new RegExp(`(${target})`, "gi");
-              
-              const newParts: { text: string; isCloze: boolean }[] = [];
-              parts.forEach(p => {
-                  if (p.isCloze) {
-                      newParts.push(p);
-                  } else {
-                      const split = p.text.split(regex);
-                      split.forEach(s => {
-                         if (s.toLowerCase() === target.toLowerCase()) {
-                             newParts.push({ text: s, isCloze: true });
-                         } else if (s) {
-                             newParts.push({ text: s, isCloze: false });
-                         }
-                      });
+  const keywords = useMemo(() => sentence.keywords || [], [sentence.keywords]);
+
+  // Helper to render text with clickable cloze gaps
+  const renderClozeText = () => {
+    // Regex to find content inside square brackets, e.g., [hello world]
+    const parts = sentence.en.split(/(\[.*?\])/g);
+    
+    return (
+      <p className="text-xl md:text-2xl font-medium leading-relaxed text-slate-700">
+        {parts.map((part, i) => {
+          if (part.startsWith("[") && part.endsWith("]")) {
+            const content = part.slice(1, -1); // Remove []
+            const isRevealed = isGlobalRevealed || localRevealed.has(content);
+            
+            return (
+              <span 
+                key={i}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    const next = new Set(localRevealed);
+                    if (next.has(content)) next.delete(content); else next.add(content);
+                    setLocalRevealed(next);
+                }}
+                className={`
+                  cursor-pointer transition-all duration-300 px-1 rounded mx-0.5 border-b-2
+                  ${isRevealed 
+                    ? "bg-yellow-200 border-yellow-400 text-slate-900" 
+                    : "bg-slate-200 border-slate-300 text-transparent select-none hover:bg-slate-300 transition-all duration-300"
                   }
-              });
-              parts = newParts; 
+                `}
+              >
+                {content}
+              </span>
+            );
           }
-      });
-
-      return (
-          <span>
-              {parts.map((part, i) => {
-                  if (part.isCloze) {
-                      return (
-                          <span 
-                            key={i} 
-                            onClick={(e) => { e.stopPropagation(); setRevealed(true); }}
-                            className={`
-                               transition-all duration-300 cursor-pointer px-1 rounded
-                               ${revealed ? "bg-yellow-200 text-foreground font-bold" : "bg-foreground text-transparent select-none blur-sm hover:blur-none hover:bg-foreground/80"}
-                            `}
-                            title={revealed ? "" : "Click to reveal"}
-                          >
-                              {part.text}
-                          </span>
-                      );
-                  }
-                  return <span key={i}>{part.text}</span>;
-              })}
-          </span>
-      );
+          return <span key={i}>{part}</span>;
+        })}
+      </p>
+    );
   };
- 
-  const isClozeMode = props.mode === "cloze";
 
-  const speak = useCallback(async () => {
+  const handlePlay = useCallback(async () => {
     if (typeof window === "undefined") return;
-    if (speaking || loading) return; // avoid restarting while speaking/loading
     if (!heard) {
       onHeard(index);
     }
     
-    const textToSpeak = sentence.goodResponse ? sentence.goodResponse.text : sentence.en;
+    // Use goodResponse text or English text, stripped of brackets
+    const textToSpeak = cleanText(sentence.goodResponse ? sentence.goodResponse.text : sentence.en);
     setLoading(true);
 
     try {
@@ -115,7 +105,6 @@ export default function SentenceCard(props: Props) {
        
        // Fallback to Web Speech API
        await new Promise<void>((resolve) => {
-         // Reset explicit loading since fallback is instant
          setLoading(false);
          setSpeaking(true);
          
@@ -130,9 +119,10 @@ export default function SentenceCard(props: Props) {
       setSpeaking(false);
       setLoading(false);
     }
-  }, [heard, index, onHeard, sentence.en, sentence.goodResponse, speaking, loading]);
+  }, [heard, index, onHeard, sentence, setLoading, setSpeaking]);
 
-  const keywords = useMemo(() => sentence.keywords, [sentence.keywords]);
+  const isClozeMode = mode === "cloze";
+  const anyRevealed = isGlobalRevealed || localRevealed.size > 0;
 
   // Audio Visualizer Component - Minimalist Lines
   const AudioVisualizer = () => (
@@ -205,7 +195,7 @@ export default function SentenceCard(props: Props) {
         <Button
           onClick={(e) => {
             e.stopPropagation();
-            speak();
+            handlePlay();
           }}
           className="w-full mt-2 h-12 text-base font-medium rounded-md"
           variant="primary"
@@ -221,28 +211,41 @@ export default function SentenceCard(props: Props) {
   return (
     <div className="bg-white rounded-lg border border-border p-8 md:p-12 flex flex-col gap-8 shadow-sm transition-all hover:shadow-md text-center">
       
-      <div className="flex flex-col gap-6 items-center">
-         {/* Index Badge */}
-         <div className="text-xs font-semibold text-muted uppercase tracking-widest">
-            Sentence {index + 1}
-         </div>
+      <div className="relative flex items-center justify-center w-full mb-2 md:mb-6 min-h-[32px]">
+         {/* Global Reveal Toggle (Eye) - Left aligned absolute */}
+         {isClozeMode && onToggleGlobalReveal && (
+            <button 
+                onClick={onToggleGlobalReveal}
+                className="absolute left-0 top-1/2 -translate-y-1/2 p-2 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-full transition-colors"
+                title={isGlobalRevealed ? "Hide Highlighting" : "Reveal All"}
+            >
+                {isGlobalRevealed ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
+            </button>
+         )}
 
+         {/* Index Badge */}
+         <div className="text-xs font-semibold text-muted uppercase tracking-widest bg-slate-100 px-3 py-1 rounded-full">
+            Card {index + 1}
+         </div>
+      </div>
+
+      <div className="flex flex-col gap-6 items-center mt-4 md:mt-8">
          {/* Main Sentence */}
          <div className="relative">
-            <h3 className="text-2xl md:text-4xl font-bold leading-relaxed text-foreground">
-              {isClozeMode ? renderClozeText(sentence.en, keywords) : `"${sentence.en}"`}
-            </h3>
+            <div className="text-2xl md:text-4xl font-bold leading-relaxed text-foreground">
+              {isClozeMode ? renderClozeText() : `"${sentence.en}"`}
+            </div>
          </div>
       </div>
 
       {isClozeMode ? (
           <div className="min-h-[24px] flex flex-col items-center gap-4">
               <div className="text-sm text-muted-foreground italic">
-                {!revealed ? "Click the blurred text to reveal the punchline." : "Nice work! Here's the breakdown:"}
+                {!anyRevealed ? "Click the boxes to reveal the punchline." : "Nice work! Here's the breakdown:"}
               </div>
               
-              {/* Show keywords only after reveal in cloze mode */}
-              {revealed && (
+              {/* Show keywords if any revealed or global reveal */}
+              {anyRevealed && keywords.length > 0 && (
                   <div className="flex flex-wrap justify-center gap-2 animate-in fade-in slide-in-from-bottom-2 duration-500">
                     {keywords.map((k) => (
                       <span
@@ -277,7 +280,7 @@ export default function SentenceCard(props: Props) {
       <Button
          onClick={(e) => {
            e.stopPropagation();
-           speak();
+           handlePlay();
          }}
          variant={speaking ? "outline" : "primary"}
          size="lg"

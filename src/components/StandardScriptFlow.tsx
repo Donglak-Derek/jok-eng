@@ -42,6 +42,10 @@ export default function StandardScriptFlow({ script }: Props) {
   
   const [currentIndex, setCurrentIndex] = useState(0);
   const [viewMode, setViewMode] = useState<"flow" | "full">("flow");
+  const [isGlobalRevealed, setIsGlobalRevealed] = useState(false); // Default hidden
+
+  // Toggle for the whole deck
+  const toggleGlobalReveal = () => setIsGlobalRevealed(prev => !prev);
   const [heardSet, setHeardSet] = useState<Set<number>>(new Set());
   const [repeats, setRepeats] = useState<number>(0);
 
@@ -200,7 +204,9 @@ export default function StandardScriptFlow({ script }: Props) {
                 sentence={currentSentence} 
                 index={currentIndex}
                 heard={heardSet.has(currentIndex)}
-                mode={script.mode || "standard"} // Pass cloze mode
+                mode={script.mode || "standard"} 
+                isGlobalRevealed={isGlobalRevealed}
+                onToggleGlobalReveal={toggleGlobalReveal}
                 onHeard={() => {
                     setHeardSet(prev => {
                         const next = new Set(prev);
