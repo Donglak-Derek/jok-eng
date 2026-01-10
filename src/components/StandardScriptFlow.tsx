@@ -105,12 +105,12 @@ export default function StandardScriptFlow({ script }: Props) {
   const isOwner = user && 'userId' in script && (script as UserScript).userId === user.uid;
 
   const handleFinishTraining = async () => {
-      // Increment Repeats
+      // Increment Repeats (Local)
       const nextRepeats = repeats + 1;
       setRepeats(nextRepeats);
       localStorage.setItem(repeatsKey, String(nextRepeats));
       
-      // Save for user script (Firestore persistence)
+      // Save for user script (Firestore persistence - Legacy / Script Owner)
       if (isOwner && user) {
          try {
            await updateDoc(doc(db, "users", user.uid, "scenarios", script.id), {
@@ -121,15 +121,25 @@ export default function StandardScriptFlow({ script }: Props) {
          }
       }
 
-      // Increment Global 'Rehearsals Done' (totalPractices) for the User
+      // NEW: Save to global User Progress (for Streak/Fire/Gamification)
       if (user) {
         try {
+            // Write to users/{uid}/progress/{scriptId}
+            // Use setDoc with merge: true to create if not exists
+            const { doc, setDoc, serverTimestamp, increment } = await import("firebase/firestore");
+            const progressRef = doc(db, "users", user.uid, "progress", script.id);
+            await setDoc(progressRef, {
+                repeats: increment(1),
+                lastPracticedAt: serverTimestamp()
+            }, { merge: true });
+
+            // Increment Global 'Rehearsals Done' (totalPractices) for the User
             const userRef = doc(db, "users", user.uid);
             await updateDoc(userRef, {
                 totalPractices: increment(1)
             });
         } catch (practiceErr) {
-            console.error("Failed to update user rehearsals stats", practiceErr);
+            console.error("Failed to update user progress stats", practiceErr);
         }
       }
       

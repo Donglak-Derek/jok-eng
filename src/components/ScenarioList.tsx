@@ -32,7 +32,7 @@ export default function ScenarioList({ scripts, onEdit, onDelete, onTogglePublic
 
           return (
             <div key={sectionKey}>
-              <h2 className="text-2xl font-bold mb-6 text-foreground/90 pl-1 border-l-4 border-primary/50">
+              <h2 className="text-xl md:text-2xl font-bold mb-6 text-foreground/90 pl-1 border-l-4 border-primary/50">
                 {sections[sectionKey] || sectionKey}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 md:gap-6">
@@ -59,7 +59,7 @@ export default function ScenarioList({ scripts, onEdit, onDelete, onTogglePublic
         {/* Render any scripts without a section at the bottom */}
         {scripts.filter(s => !s.section).length > 0 && (
           <div>
-            <h2 className="text-2xl font-bold mb-6 text-foreground/90 pl-1 border-l-4 border-gray-300">
+            <h2 className="text-xl md:text-2xl font-bold mb-6 text-foreground/90 pl-1 border-l-4 border-gray-300">
               Other Scenarios
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 md:gap-6">

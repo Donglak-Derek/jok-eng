@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { useProgress } from "@/context/ProgressContext";
 
 import type { Script, UserScript } from "@/types";
 import { motion } from "framer-motion";
 import React from "react";
-import { Heart, Bookmark, Lock, Globe, Edit2, Trash2, User } from "lucide-react";
+import { Heart, Bookmark, Lock, Globe, Edit2, Trash2, User, Repeat } from "lucide-react";
 
 type Props = {
   script: Script;
@@ -15,7 +16,7 @@ type Props = {
   onTogglePublic?: (id: string, current: boolean, e: React.MouseEvent) => void;
   onLike?: (id: string, e: React.MouseEvent) => void;
   onSave?: (id: string, e: React.MouseEvent) => void;
-  onShare?: (id: string, e: React.MouseEvent) => void; // Keeping onShare prop but icon was unused? Actually Share2 was unused.
+  onShare?: (id: string, e: React.MouseEvent) => void;
   isLiked?: boolean;
 };
 
@@ -53,6 +54,12 @@ export default function ScenarioCard({
   const authorName = isUserScript ? (script as UserScript).authorName : undefined;
   const authorPhotoURL = isUserScript ? (script as UserScript).authorPhotoURL : undefined;
   const likeCount = isUserScript ? (script as UserScript).likes || 0 : 0;
+  
+  const { getRepeats } = useProgress();
+  // Repeats for user scripts (or if added to standard scripts later)
+  // Priority: Firestore (via context) -> Props -> 0
+  const contextRepeats = getRepeats(script.id);
+  const repeats = contextRepeats > 0 ? contextRepeats : ('repeats' in script ? (script as any).repeats : 0);
 
   const href = isUserScript ? `/scenario/${script.id}` : `/script/${script.id}`;
 
@@ -82,12 +89,16 @@ export default function ScenarioCard({
              <div className="p-5 flex flex-col gap-3 flex-1">
                  {/* Header */}
             <div className="flex justify-between items-start">
-                <span className="text-xs font-mono text-muted-foreground/60">
-                    #{String(index + 1).padStart(2, '0')}
-                </span>
                 <span className={`px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider border ${typeColor}`}>
                     {typeLabel}
                 </span>
+                {/* Repeat Count Display */}
+                {repeats > 0 && (
+                     <div className="flex items-center gap-1 text-[10px] font-medium text-muted-foreground bg-secondary/50 px-1.5 py-0.5 rounded-full" title="Practice Reps">
+                         <Repeat className="w-3 h-3" />
+                         <span>{repeats}</span>
+                     </div>
+                )}
             </div>
 
             {/* Title & Context */}
@@ -123,7 +134,7 @@ export default function ScenarioCard({
                         <span className="text-xs font-medium text-foreground/80 truncate max-w-[80px]">{authorName}</span>
                     </>
                 ) : (
-                   <span className="text-xs font-medium text-muted-foreground">Official</span>
+                   <span className="text-xs font-bold text-primary/80">Jok-Eng</span>
                 )}
              </div>
 

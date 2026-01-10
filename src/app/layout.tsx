@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { AuthProvider } from "@/context/AuthContext";
+import { ProgressProvider } from "@/context/ProgressContext";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
@@ -25,7 +26,9 @@ export default function RootLayout({
         className={`${inter.variable} antialiased font-sans bg-background text-foreground`}
       >
         <AuthProvider>
+          <ProgressProvider>
             {children}
+          </ProgressProvider>
         </AuthProvider>
       </body>
     </html>
