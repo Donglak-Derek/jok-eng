@@ -11,12 +11,26 @@ type Props = {
 
 export default function CulturalNoteCard({ title, content, onNext }: Props) {
   return (
-    <div className="w-full max-w-md mx-auto flex flex-col justify-center px-4 py-4 min-h-[50vh]">
+    <div 
+      className="w-full max-w-md mx-auto flex flex-col justify-center px-4 py-4 min-h-[50vh] cursor-pointer"
+      onClick={onNext}
+      title="Tap anywhere to continue"
+    >
       <motion.div
+        drag="x"
+        dragConstraints={{ left: 0, right: 0 }}
+        dragElastic={0.2}
+        onDragEnd={(e, { offset, velocity }) => {
+          const swipe = offset.x; // detected swipe distance
+          if (swipe < -100 || swipe > 100) {
+            onNext();
+          }
+        }}
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.9 }}
-        className="bg-white rounded-3xl shadow-xl overflow-hidden border border-indigo-100 flex flex-col max-h-[85vh]"
+        exit={{ opacity: 0, scale: 0.9, x: -100 }} // Animate out left
+        onClick={(e) => e.stopPropagation()} // Stop backdrop click from firing on content tap
+        className="bg-white rounded-3xl shadow-xl overflow-hidden border border-indigo-100 flex flex-col max-h-[85vh] cursor-auto relative"
       >
         <div className="bg-indigo-50 p-6 flex flex-col items-center justify-center text-center border-b border-indigo-100 shrink-0">
           <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mb-3 text-indigo-600">
@@ -28,6 +42,9 @@ export default function CulturalNoteCard({ title, content, onNext }: Props) {
           <span className="text-[10px] uppercase tracking-widest text-indigo-500 font-bold mt-1">
             Cultural Context
           </span>
+          <div className="absolute top-4 right-4 md:hidden text-indigo-300 text-xs animate-pulse">
+             Swipe ↔
+          </div>
         </div>
 
         <div className="p-6 flex-1 flex flex-col items-center overflow-y-auto">
@@ -43,6 +60,9 @@ export default function CulturalNoteCard({ title, content, onNext }: Props) {
           >
             Got it <ArrowRight className="w-5 h-5" />
           </button>
+          <p className="text-center text-xs text-muted-foreground mt-2 md:hidden">
+              Swipe or Tap outside to dismiss
+          </p>
         </div>
       </motion.div>
     </div>

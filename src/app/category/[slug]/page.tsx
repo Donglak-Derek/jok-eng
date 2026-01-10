@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { scripts } from "@/data";
 import ScenarioList from "@/components/ScenarioList";
+import CategoryHero from "@/components/CategoryHero";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { CATEGORY_DETAILS } from "@/data/categories";
@@ -47,12 +48,19 @@ export default async function CategoryPage({ params }: Props) {
   return (
     <div className="min-h-dvh text-foreground">
       <div className="max-w-md md:max-w-3xl lg:max-w-5xl mx-auto px-4 md:px-6 lg:px-8 py-5 md:py-8 flex flex-col gap-5 md:gap-6">
-        <header className="sticky top-0 z-50 -mx-4 md:-mx-6 lg:-mx-8 px-4 md:px-6 lg:px-8 py-3 md:py-4 bg-white/90 backdrop-blur border-b-2 border-black/5 shadow-sm flex items-center gap-4">
-          <Link href="/" className="text-lg md:text-2xl font-bold text-black hover:opacity-70 transition-opacity">←</Link>
-          <h1 className={`font-sans font-black text-xl md:text-5xl tracking-tight ${accentClass}`}>
-            {categoryName}
-          </h1>
-        </header>
+        <div className="mb-6">
+          <Link href="/" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors mb-4">
+            ← Back to Categories
+          </Link>
+          
+          <CategoryHero 
+            categoryName={categoryName}
+            categorySlug={slug}
+            scripts={list}
+            colorName={colorName}
+            description={categoryDetails?.description}
+          />
+        </div>
 
         <ScenarioList scripts={list} />
       </div>

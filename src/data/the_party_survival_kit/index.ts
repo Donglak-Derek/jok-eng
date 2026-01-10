@@ -11,6 +11,13 @@ import { replyAllApocalypse } from "./reply_all";
 import { nameForget } from "./name_forget";
 import { doorHoldDilemma } from "./door_hold";
 
+import { theIrishGoodbye } from "./the_irish_goodbye";
+import { potluckPanic } from "./potluck_panic";
+import { karaokeFear } from "./karaoke_fear";
+import { giftFace } from "./gift_face";
+import { bathroomLine } from "./bathroom_line";
+import { doubleDip } from "./double_dip";
+
 export const standupScripts = [
   tacoTuesday,
   tippingTrap,
@@ -22,4 +29,10 @@ export const standupScripts = [
   replyAllApocalypse,
   nameForget,
   doorHoldDilemma,
+  theIrishGoodbye,
+  potluckPanic,
+  karaokeFear,
+  giftFace,
+  bathroomLine,
+  doubleDip,
 ];
