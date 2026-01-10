@@ -27,74 +27,87 @@ export default function SentenceCard(props: Props) {
   // Clean text helper: remove [...] brackets for TTS and clean display
   const cleanText = (text: string) => text.replace(/\[|\]/g, "");
 
+  // Unified Logic: Standard mode is just Cloze mode with everything revealed by default
+  const isEffectiveGlobalReveal = mode === "standard" || isGlobalRevealed;
+  const anyRevealed = isEffectiveGlobalReveal || localRevealed.size > 0;
+
   const keywords = useMemo(() => sentence.keywords || [], [sentence.keywords]);
+
+  // Constants for animations
+  const containerVariants = {
+    hidden: { opacity: 1 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.05, delayChildren: 0.1 }
+    }
+  };
+  
+  const wordVariants = {
+    hidden: { opacity: 1, y: 0 },
+    visible: { opacity: 1, y: 0 }
+  };
 
   // Helper to render text with clickable cloze gaps
   const renderClozeText = () => {
     // Regex to find content inside square brackets, e.g., [hello world]
     const parts = sentence.en.split(/(\[.*?\])/g);
     
-    // Animation variants for the container (stagger effect)
-    const containerVariants = {
-      hidden: { opacity: 1 },
-      visible: {
-        opacity: 1,
-        transition: {
-          staggerChildren: 0.05, // Rapid ripple
-          delayChildren: 0.1
-        }
-      }
-    };
-    
-    // Variants for individual words
-    const wordVariants = {
-      hidden: { opacity: 1, y: 0 },
-      visible: { opacity: 1, y: 0 }
-    };
+    // If no brackets found (standard text), just render it
+    if (parts.length === 1) {
+        return <span className="text-2xl md:text-4xl font-bold leading-relaxed text-foreground">{cleanText(sentence.en)}</span>;
+    }
 
     return (
       <motion.p 
-        className="text-xl md:text-2xl font-medium leading-relaxed text-slate-700"
+        className="text-2xl md:text-4xl font-bold leading-relaxed text-foreground leading-snug"
         variants={containerVariants}
         initial="hidden"
-        animate={isGlobalRevealed ? "visible" : "hidden"}
+        animate={isEffectiveGlobalReveal ? "visible" : "hidden"}
       >
         {parts.map((part, i) => {
           if (part.startsWith("[") && part.endsWith("]")) {
             const content = part.slice(1, -1); // Remove []
-            const isRevealed = isGlobalRevealed || localRevealed.has(content);
+            const isRevealed = isEffectiveGlobalReveal || localRevealed.has(content);
             
             return (
               <motion.span 
                 key={i}
-                variants={wordVariants}  // Part of stagger if global
+                variants={wordVariants}
                 onClick={(e) => {
                     e.stopPropagation();
+                    // Allow toggling only if NOT in forced standard mode (optional, but good for interaction)
+                    if (mode === "standard") return;
+                    
                     const next = new Set(localRevealed);
                     if (next.has(content)) next.delete(content); else next.add(content);
                     setLocalRevealed(next);
                 }}
                 className={`
-                  inline-block cursor-pointer px-1 rounded mx-0.5 border-b-2
+                  inline-block rounded mx-1 px-1.5 border-b-4 transition-all duration-300
                   ${isRevealed 
-                    ? "bg-yellow-200 border-yellow-400 text-slate-900" 
-                    : "bg-slate-200 border-slate-300 text-transparent select-none hover:bg-slate-300 transition-all duration-300"
+                    ? "bg-yellow-100 border-yellow-300 text-foreground cursor-default" 
+                    : "bg-slate-100 border-slate-300 text-transparent cursor-pointer hover:bg-slate-200 select-none min-w-[3ch] text-center"
                   }
+                  ${mode !== "standard" && !isRevealed ? "active:scale-95" : ""}
                 `}
-                // Pop animation on reveal
                 animate={{ 
-                    scale: isRevealed ? [1, 1.1, 1] : 1,
-                    backgroundColor: isRevealed ? "#fef08a" : "#e2e8f0",
-                    borderColor: isRevealed ? "#facc15" : "#cbd5e1",
+                    scale: isRevealed ? [1, 1.05, 1] : 1,
+                    backgroundColor: isRevealed ? "#fef9c3" : "#f1f5f9",
+                    borderColor: isRevealed ? "#fde047" : "#cbd5e1",
                     color: isRevealed ? "#0f172a" : "transparent"
                 }}
-                transition={{ duration: 0.2 }}
+                transition={{ 
+                    duration: 0.3, 
+                    // Use tween for scale keyframes to avoid "2 keyframes" error with spring
+                    scale: { type: "tween", duration: 0.2 },
+                    default: { type: "spring", stiffness: 300 } 
+                }}
               >
                 {content}
               </motion.span>
             );
           }
-          return <span key={i}>{part}</span>;
+          return <span key={i} className="mx-0.5">{part}</span>;
         })}
       </motion.p>
     );
@@ -204,18 +217,24 @@ export default function SentenceCard(props: Props) {
   }, [heard, index, onHeard, sentence, setLoading, setSpeaking]);
 
   // Auto-play effect
+  // We use a ref to prevent re-triggering when playback state changes
+  const hasAutoPlayedRef = useRef(false);
+
   useEffect(() => {
-      // Small timeout to allow transition to settle
+      hasAutoPlayedRef.current = false;
+  }, [index]);
+
+  useEffect(() => {
+      // Only play if enabled and we haven't played for this index yet
+      // We purposefully DO NOT include speaking/loading/handlePlay to avoid infinite loops
       const timer = setTimeout(() => {
-          if (isAutoPlayEnabled && !speaking && !loading) {
-              handlePlay();
+          if (isAutoPlayEnabled && !hasAutoPlayedRef.current) {
+               hasAutoPlayedRef.current = true;
+               handlePlay();
           }
       }, 500);
       return () => clearTimeout(timer);
   }, [isAutoPlayEnabled, index]); // Trigger on mount (index change) or toggle
-
-  const isClozeMode = mode === "cloze";
-  const anyRevealed = isGlobalRevealed || localRevealed.size > 0;
 
   // Audio Visualizer Component - Minimalist Lines
   const AudioVisualizer = () => (
@@ -301,13 +320,13 @@ export default function SentenceCard(props: Props) {
     );
   }
 
-  // Original Layout (Flashcard Fallback) modified for Cloze
+  // UNIFIED CARD LAYOUT (Standard + Cloze)
   return (
     <div className="bg-white rounded-lg border border-border p-8 md:p-12 flex flex-col gap-8 shadow-sm transition-all hover:shadow-md text-center">
       
       <div className="relative flex items-center justify-center w-full mb-2 md:mb-6 min-h-[32px]">
-         {/* Global Reveal Toggle (Eye) - Left aligned absolute */}
-         {isClozeMode && onToggleGlobalReveal && (
+         {/* Global Reveal Toggle (Eye) - Only in Cloze mode */}
+         {mode === "cloze" && onToggleGlobalReveal && (
             <button 
                 onClick={onToggleGlobalReveal}
                 className="absolute left-0 top-1/2 -translate-y-1/2 p-2 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-full transition-colors"
@@ -349,69 +368,57 @@ export default function SentenceCard(props: Props) {
       </div>
 
       <div className="flex flex-col gap-6 items-center mt-4 md:mt-8">
-         {/* Main Sentence */}
-         <div className="relative">
-            <div className="text-2xl md:text-4xl font-bold leading-relaxed text-foreground">
-              {isClozeMode ? renderClozeText() : `"${sentence.en}"`}
-            </div>
+         {/* Main Sentence - Unified Renderer */}
+         <div className="relative w-full">
+            {renderClozeText()}
          </div>
       </div>
 
-      {isClozeMode ? (
-          <div className="min-h-[24px] flex flex-col items-center gap-4">
-              <AnimatePresence>
-                {index < 3 && !anyRevealed && (
-                    <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="text-sm text-muted-foreground italic overflow-hidden"
-                    >
-                        Click the boxes to reveal the punchline.
-                    </motion.div>
-                )}
-                {anyRevealed && (
-                    <motion.div
-                         initial={{ opacity: 0 }}
-                         animate={{ opacity: 1 }}
-                         className="text-sm text-muted-foreground italic"
-                    >
-                        Nice work! Here&apos;s the breakdown:
-                    </motion.div>
-                )}
-              </AnimatePresence>
-              
-              {/* Show keywords if any revealed or global reveal */}
-              {anyRevealed && keywords.length > 0 && (
-                  <div className="flex flex-wrap justify-center gap-2 animate-in fade-in slide-in-from-bottom-2 duration-500">
-                    {keywords.map((k) => (
-                      <span
-                        key={k.word}
-                        className="text-sm px-3 py-1 bg-yellow-200 text-foreground rounded-full border border-yellow-300"
-                      >
-                        <span className="font-semibold">{k.word}</span>
-                        <span className="text-muted-foreground ml-1">
-                            {/* Strip 'Hidden:' prefix for clean display */}
-                            {k.definition.replace(/^Hidden:\s*/, "")}
-                        </span>
-                      </span>
-                    ))}
-                  </div>
-              )}
-          </div>
-      ) : (
-          <div className="flex flex-wrap justify-center gap-2">
-            {keywords.map((k) => (
-              <span
-                key={k.word}
-                className="text-sm px-3 py-1 bg-secondary text-secondary-foreground rounded-full"
-              >
-                <span className="font-semibold">{k.word}</span>
-                <span className="text-muted-foreground ml-1">{k.definition}</span>
-              </span>
-            ))}
-          </div>
-      )}
+      {/* Unified Bottom Section */}
+      <div className="min-h-[24px] flex flex-col items-center gap-4">
+          {/* Instructions: Only for Cloze mode and early index */}
+          <AnimatePresence>
+            {mode === "cloze" && index < 3 && !anyRevealed && (
+                <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="text-sm text-muted-foreground italic overflow-hidden"
+                >
+                    Click the boxes to reveal the punchline.
+                </motion.div>
+            )}
+            
+            {/* Praise: Only show in Cloze mode when solved to avoid Standard mode clutter */}
+            {mode === "cloze" && anyRevealed && (
+                <motion.div
+                     initial={{ opacity: 0 }}
+                     animate={{ opacity: 1 }}
+                     className="text-sm text-muted-foreground italic"
+                >
+                    Nice work! Here&apos;s the breakdown:
+                </motion.div>
+            )}
+          </AnimatePresence>
+          
+          {/* Keywords: Show if revealed (Standard = always revealed) */}
+          {anyRevealed && keywords.length > 0 && (
+              <div className="flex flex-wrap justify-center gap-2 animate-in fade-in slide-in-from-bottom-2 duration-500">
+                {keywords.map((k) => (
+                  <span
+                    key={k.word}
+                    className="text-sm px-3 py-1 bg-yellow-100/50 text-foreground rounded-full border border-yellow-200/50"
+                  >
+                    <span className="font-semibold">{k.word}</span>
+                    <span className="text-muted-foreground ml-1">
+                        {/* Strip 'Hidden:' prefix for clean display */}
+                        {k.definition.replace(/^Hidden:\s*/, "")}
+                    </span>
+                  </span>
+                ))}
+              </div>
+          )}
+      </div>
 
       {/* Full width play button */}
       <Button
