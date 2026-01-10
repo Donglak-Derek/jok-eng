@@ -87,6 +87,26 @@ export const theApologyDecoder: Script = {
       }
     }
   ],
+  quizItems: [
+    {
+      question: "Why is 'I'm sorry you feel that way' a bad apology?",
+      options: ["It's too long", "It blames your feelings instead of their actions", "It's grammatically incorrect", "It sounds too nice"],
+      correctIndex: 1,
+      explanation: "A real apology takes responsibility for actions ('I'm sorry I did X'). This phrase deflects blame to your reaction."
+    },
+    {
+      question: "What does 'It's not you, it's me' usually mean?",
+      options: ["They have a medical issue", "It is definitely you", "They are moving to Mars", "They are confusing you with someone else"],
+      correctIndex: 1,
+      explanation: "It's a cliché used to end a relationship without having a difficult conversation about compatibility."
+    },
+    {
+      question: "If someone says 'I was just joking' after insulting you, they are...",
+      options: ["A comedian", "Gaslighting you", "Trying to be funny", "Misunderstood"],
+      correctIndex: 1,
+      explanation: "Retracting a statement as a 'joke' when it lands poorly is a common manipulation tactic."
+    }
+  ],
   summaryPoints: [
       "An apology without change is just manipulation.",
       "'It's not you, it's me' means it's over.",

@@ -87,6 +87,26 @@ export const theMenuDecoder: Script = {
       }
     }
   ],
+  quizItems: [
+    {
+      question: "What does ordering 'Just water' often signal on a first date?",
+      options: ["Hydration focus", "Budget consciousness", "A planned quick escape", "Religious fasting"],
+      correctIndex: 2,
+      explanation: "If they don't order a drink or food, they are keeping the interaction low-investment so they can leave quickly."
+    },
+    {
+      question: "If someone asks 'What's the Market Price?', they are likely...",
+      options: ["A fisherman", "Worried about the cost", "Showing off", "Allergic to seafood"],
+      correctIndex: 1,
+      explanation: "It's a subtle way to check if they can afford the dish without looking cheap."
+    },
+    {
+      question: "What is a 'Fry Thief'?",
+      options: ["A person who steals raw potatoes", "Someone who orders no food but eats yours", "A restaurant burglar", "A fast food worker"],
+      correctIndex: 1,
+      explanation: "The Fry Thief claims they aren't hungry, then proceeds to eat half of your meal."
+    }
+  ],
   summaryPoints: [
       "Ordering water is a sign of a quick exit.",
       "The 'Fry Thief' is a real dating archetype.",

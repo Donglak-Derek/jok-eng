@@ -87,6 +87,26 @@ export const theMixedSignals: Script = {
       }
     }
   ],
+  quizItems: [
+    {
+      question: "What does 'I'm not looking for anything serious' mean?",
+      options: ["They want to get married soon", "They want a casual relationship only", "They are confused", "They hate dating"],
+      correctIndex: 1,
+      explanation: "Believe them. It means they want the benefits of dating without the commitment."
+    },
+    {
+      question: "Is being 'bad at texting' a real thing?",
+      options: ["Yes, technology is hard", "No, it just means you are low priority", "Yes, some phones don't work", "Maybe"],
+      correctIndex: 1,
+      explanation: "Everyone looks at their phone. If they don't reply, it's a choice, not an inability."
+    },
+    {
+      question: "What does 'Let's just see where things go' usually lead to?",
+      options: ["A wedding", "Nowhere specific", "A promotion", "A vacation"],
+      correctIndex: 1,
+      explanation: "It's a way to delay defining the relationship indefinitely."
+    }
+  ],
   summaryPoints: [
       "Believe people when they say they aren't looking for serious.",
       "'See where things go' implies a lack of commitment.",

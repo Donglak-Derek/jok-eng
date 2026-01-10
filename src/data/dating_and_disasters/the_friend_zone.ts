@@ -87,6 +87,26 @@ export const theFriendZone: Script = {
       }
     }
   ],
+  quizItems: [
+    {
+      question: "What does 'You're such a nice guy' often imply in dating?",
+      options: ["You are perfect marriage material", "You are safe but not attractive", "You are a superhero", "You are rich"],
+      correctIndex: 1,
+      explanation: "'Nice' is the consolation prize of dating adjectives. It usually means they see you as a platonic friend."
+    },
+    {
+      question: "If they 'value the friendship too much', what is the outcome?",
+      options: ["You will date later", "You will date now", "You will never date", "You will become business partners"],
+      correctIndex: 2,
+      explanation: "It's a polite way of closing the door on romance permanently to avoid awkwardness."
+    },
+    {
+      question: "When they say 'You'll make someone happy someday', who is 'someone'?",
+      options: ["Them", "Anyone but them", "Their sister", "Your ex"],
+      correctIndex: 1,
+      explanation: "They are theoretically complimenting you while practically rejecting you."
+    }
+  ],
   summaryPoints: [
       "'Nice' usually means 'safe', not 'attractive'.",
       "If they value the friendship 'too much', dating is off the table.",

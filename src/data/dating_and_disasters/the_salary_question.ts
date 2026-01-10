@@ -87,6 +87,26 @@ export const theSalaryQuestion: Script = {
       }
     }
   ],
+  quizItems: [
+    {
+      question: "What is a good way to answer 'Is the pay good?' without being specific?",
+      options: ["Show them your bank account", "Say it's 'competitive' or 'pays the bills'", "Tell them to shut up", "Lie and say you're a millionaire"],
+      correctIndex: 1,
+      explanation: "Vague, positive answers shut down the conversation politely without revealing personal data."
+    },
+    {
+      question: "If a friend is always 'broke until payday', what are they likely doing?",
+      options: ["Saving money", "Investing", "Mooching (trying to get you to pay)", "Donating to charity"],
+      correctIndex: 2,
+      explanation: "Repeatedly claiming poverty right before a bill comes is a manipulation tactic to get free meals."
+    },
+    {
+      question: "How should you respond to 'How much did that cost?'",
+      options: ["Tell them the exact price", "Say 'I got a good deal' and change the subject", "Run away", "Give them the receipt"],
+      correctIndex: 1,
+      explanation: "You don't owe anyone financial transparency. Defining it as a 'deal' satisfies curiosity without judgment."
+    }
+  ],
   summaryPoints: [
       "Money talk is sensitive. Vague answers are your best shield.",
       "Don't let 'broke' friends guilt you into paying every time.",

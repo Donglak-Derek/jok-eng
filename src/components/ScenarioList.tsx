@@ -32,15 +32,29 @@ export default function ScenarioList({ scripts, onEdit, onDelete, onTogglePublic
 
     const sectionOrder = ["basics", "advanced", "boss_battles", "The Dating Minefield", "Social Emergencies"];
 
+    const sectionStyles: Record<string, string> = {
+      "The Dating Minefield": "bg-pink-50/50 border-pink-100 rounded-3xl p-6 -mx-4 md:-mx-6",
+      "Social Emergencies": "bg-yellow-50/50 border-yellow-100 rounded-3xl p-6 -mx-4 md:-mx-6"
+    };
+
+    const sectionHeaderStyles: Record<string, string> = {
+      "The Dating Minefield": "border-pink-400 text-pink-900/80",
+      "Social Emergencies": "border-yellow-400 text-yellow-900/80"
+    };
+
     return (
       <div className="flex flex-col gap-12 mt-6">
         {sectionOrder.map(sectionKey => {
           const sectionScripts = scripts.filter(s => s.section === sectionKey);
           if (sectionScripts.length === 0) return null;
 
+          const customStyle = sectionStyles[sectionKey] || "";
+          const headerBorderColor = sectionHeaderStyles[sectionKey] || "border-primary/50";
+          const headerTextColor = sectionHeaderStyles[sectionKey] ? "" : "text-foreground/90";
+
           return (
-            <div key={sectionKey}>
-              <h2 className="text-xl md:text-2xl font-bold mb-6 text-foreground/90 pl-1 border-l-4 border-primary/50">
+            <div key={sectionKey} className={`${customStyle} mb-8 transition-colors duration-300`}>
+              <h2 className={`text-xl md:text-2xl font-bold mb-6 pl-3 border-l-4 ${headerBorderColor} ${headerTextColor}`}>
                 {sections[sectionKey] || sectionKey}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 md:gap-6">
