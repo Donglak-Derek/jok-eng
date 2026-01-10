@@ -18,6 +18,10 @@ import { giftFace } from "./gift_face";
 import { bathroomLine } from "./bathroom_line";
 import { doubleDip } from "./double_dip";
 
+import { theCancelPlansDecoder } from "./cancel_plans_decoder";
+import { theVaguePlansDecoder } from "./the_vague_plans_decoder";
+import { theInvitationDecoder } from "./the_invitation_decoder";
+
 export const partyScripts = [
   tacoTuesday,
   tippingTrap,
@@ -35,4 +39,7 @@ export const partyScripts = [
   giftFace,
   bathroomLine,
   doubleDip,
+  theCancelPlansDecoder,
+  theVaguePlansDecoder,
+  theInvitationDecoder,
 ];
