@@ -9,7 +9,7 @@ export const theExTrap: Script = {
   categoryName: CATEGORY_NAMES["dating_and_disasters"],
   cleanedEnglish: "Talking about exes is a minefield. Here is how to spot the explosions before they happen.",
   sentences: [],
-    imageUrl: "/images/scenarios/dating_generic.png",
+    imageUrl: "/images/scenarios/the_ex_trap.png",
   decoderItems: [
     {
       id: "ex_1",

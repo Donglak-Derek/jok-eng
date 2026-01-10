@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import type { Script } from "@/types";
+import type { Script, UserScript } from "@/types";
 import SentenceCard from "@/components/SentenceCard";
 import { motion, AnimatePresence } from "framer-motion";
 import Confetti from "@/components/Confetti";
@@ -12,11 +12,11 @@ import { Button } from "@/components/Button";
 import { useAuth } from "@/context/AuthContext";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { UserScript } from "@/types";
 import { ChevronLeft, ChevronRight, PartyPopper, FileText } from "lucide-react";
 import StandardFullView from "./StandardFullView";
 import CulturalNoteCard from "@/components/CulturalNoteCard";
 import QuizCard from "@/components/QuizCard";
+import { useProgress } from "@/context/ProgressContext";
 
 type Props = { 
   script: Script;
@@ -25,6 +25,7 @@ type Props = {
 export default function StandardScriptFlow({ script }: Props) {
   const router = useRouter();
   const { user } = useAuth();
+  const { getRepeats } = useProgress(); 
   
   // Script structure logic
   const sentences = script.sentences || [];
@@ -38,22 +39,20 @@ export default function StandardScriptFlow({ script }: Props) {
   const totalSteps = sentencesCount + (hasCulturalNote ? 1 : 0) + (hasQuiz ? 1 : 0);
 
   const storageKey = `jokeng:progress:${script.id}`;
-  const repeatsKey = `jokeng:repeats:${script.id}`;
-  
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [viewMode, setViewMode] = useState<"flow" | "full">("flow");
-  const [isGlobalRevealed, setIsGlobalRevealed] = useState(false); // Default hidden
-
-  const [isAutoPlayEnabled, setIsAutoPlayEnabled] = useState(true); // Default ON
+  const [isGlobalRevealed, setIsGlobalRevealed] = useState(false);
+  const [isAutoPlayEnabled, setIsAutoPlayEnabled] = useState(true);
+  
   const toggleAutoPlay = () => setIsAutoPlayEnabled(prev => !prev);
-
-  // Toggle for the whole deck
   const toggleGlobalReveal = () => setIsGlobalRevealed(prev => !prev);
   const [heardSet, setHeardSet] = useState<Set<number>>(new Set());
-  const [repeats, setRepeats] = useState<number>(0);
-
-  // ... (existing code)
-
+  
+  const hasSavedRef = useState(false);
+  
+  // Connect to real data
+  const databaseRepeats = getRepeats(script.id); 
 
   // Load progress
   useEffect(() => {
@@ -73,13 +72,53 @@ export default function StandardScriptFlow({ script }: Props) {
     localStorage.setItem(storageKey, JSON.stringify(Array.from(heardSet.values())));
   }, [heardSet, storageKey]);
 
-  // Load repeats counter
-  useEffect(() => {
-    const v = localStorage.getItem(repeatsKey);
-    setRepeats(v ? Number(v) || 0 : 0);
-  }, [repeatsKey]);
-
   const isCompletion = currentIndex >= totalSteps;
+  const isOwner = user && 'userId' in script && (script as UserScript).userId === user.uid;
+
+  const saveProgress = async () => {
+      if (user) {
+        try {
+            const { doc, setDoc, serverTimestamp, increment } = await import("firebase/firestore");
+            const progressRef = doc(db, "users", user.uid, "progress", script.id);
+            
+            await setDoc(progressRef, {
+                repeats: increment(1),
+                lastPracticedAt: serverTimestamp()
+            }, { merge: true });
+
+            const userRef = doc(db, "users", user.uid);
+            await updateDoc(userRef, {
+                totalPractices: increment(1)
+            });
+            
+            if (isOwner) {
+                 await updateDoc(doc(db, "users", user.uid, "scenarios", script.id), {
+                   repeats: increment(1)
+                 }).catch(e => console.error("Legacy sync error", e));
+            }
+
+        } catch (practiceErr) {
+            console.error("Failed to update user progress stats", practiceErr);
+        }
+      } else {
+         const key = `jokeng:repeats:${script.id}`;
+         const current = parseInt(localStorage.getItem(key) || "0");
+         localStorage.setItem(key, String(current + 1));
+      }
+      
+      setHeardSet(new Set());
+      localStorage.setItem(storageKey, JSON.stringify([]));
+  };
+
+  // Auto-save progress on completion
+  useEffect(() => {
+    if (isCompletion && !hasSavedRef[0]) {
+      saveProgress();
+      hasSavedRef[1](true);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isCompletion]);
+
 
   const handlePrev = () => {
     if (currentIndex > 0) {
@@ -88,7 +127,6 @@ export default function StandardScriptFlow({ script }: Props) {
   };
 
   const handleNext = () => {
-    // Mark current sentence as heard if we are in sentence range
     if (currentIndex < sentencesCount) {
         setHeardSet((prev) => {
             const next = new Set(prev);
@@ -101,60 +139,13 @@ export default function StandardScriptFlow({ script }: Props) {
       setCurrentIndex((prev) => prev + 1);
     }
   };
-
-  const isOwner = user && 'userId' in script && (script as UserScript).userId === user.uid;
-
-  const saveProgress = async () => {
-      // Increment Repeats (Local)
-      const nextRepeats = repeats + 1;
-      setRepeats(nextRepeats);
-      localStorage.setItem(repeatsKey, String(nextRepeats));
-      
-      // Save for user script (Firestore persistence - Legacy / Script Owner)
-      if (isOwner && user) {
-         try {
-           await updateDoc(doc(db, "users", user.uid, "scenarios", script.id), {
-             repeats: nextRepeats
-           });
-         } catch(e) { 
-           console.error("Failed to sync repeats", e); 
-         }
-      }
-
-      // NEW: Save to global User Progress (for Streak/Fire/Gamification)
-      if (user) {
-        try {
-            // Write to users/{uid}/progress/{scriptId}
-            // Use setDoc with merge: true to create if not exists
-            const { doc, setDoc, serverTimestamp, increment } = await import("firebase/firestore");
-            const progressRef = doc(db, "users", user.uid, "progress", script.id);
-            await setDoc(progressRef, {
-                repeats: increment(1),
-                lastPracticedAt: serverTimestamp()
-            }, { merge: true });
-
-            // Increment Global 'Rehearsals Done' (totalPractices) for the User
-            const userRef = doc(db, "users", user.uid);
-            await updateDoc(userRef, {
-                totalPractices: increment(1)
-            });
-        } catch (practiceErr) {
-            console.error("Failed to update user progress stats", practiceErr);
-        }
-      }
-      
-      // Clear progress (reset heard set)
-      setHeardSet(new Set());
-      localStorage.setItem(storageKey, JSON.stringify([]));
-  };
   
   const handlePracticeAgain = async () => {
-      await saveProgress();
+      hasSavedRef[1](false); 
       setCurrentIndex(0);
   };
 
   const handleBackToMenu = async () => {
-      await saveProgress();
       router.push(`/category/${script.categorySlug}`);
   };
   
@@ -165,7 +156,6 @@ export default function StandardScriptFlow({ script }: Props) {
   // Keyboard Shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-        // Ignore if typing in an input (unlikely here but good practice)
         if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
 
         switch (e.code) {
@@ -184,9 +174,6 @@ export default function StandardScriptFlow({ script }: Props) {
                 break;
             case "Space":
                 e.preventDefault();
-                // Find and click the play button in the active card
-                // We rely on the button text "Play Audio" or class
-                // Ideally we'd use a ref, but a selector is cleaner for this loose coupling
                 const playBtn = document.querySelector('button[data-action="play-sentence"]');
                 if (playBtn instanceof HTMLElement) playBtn.click();
                 break;
@@ -196,7 +183,7 @@ export default function StandardScriptFlow({ script }: Props) {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [handleNext, handlePrev, toggleGlobalReveal]);
+  }, [currentIndex, isGlobalRevealed]); 
 
   // Render content based on current index
   let content = null;
@@ -204,23 +191,43 @@ export default function StandardScriptFlow({ script }: Props) {
 
   if (isCompletion) {
       showControls = false;
+      
+      const currentReps = databaseRepeats; 
+      let encouragement = "Good start!";
+      if (currentReps >= 3) encouragement = "Muscle memory building...";
+      if (currentReps >= 5) encouragement = "You're mastering this!";
+      if (currentReps >= 10) encouragement = "Unstoppable!";
+
       content = (
          <motion.div
              key="completion"
              initial={{ opacity: 0, scale: 0.95 }}
              animate={{ opacity: 1, scale: 1 }}
-             className="w-full py-16 text-center flex flex-col items-center"
+             className="w-full py-10 md:py-16 text-center flex flex-col items-center"
          >
              <Confetti />
-             <div className="w-20 h-20 bg-secondary rounded-full flex items-center justify-center mb-6">
-                <PartyPopper className="w-10 h-10 text-primary" />
+             
+             <div className="w-24 h-24 bg-gradient-to-br from-yellow-200 to-amber-400 rounded-full flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(251,191,36,0.4)] animate-in zoom-in-50 duration-500">
+                <PartyPopper className="w-12 h-12 text-white drop-shadow-md" />
              </div>
-             <h2 className="text-3xl font-bold mb-2">Training Complete</h2>
-             <p className="text-muted-foreground text-lg mb-8">You&apos;ve drilled this scenario {repeats + 1} times.</p>
+             
+             <h2 className="text-3xl md:text-4xl font-bold mb-2 tracking-tight">Training Complete!</h2>
+             <p className="text-muted-foreground text-lg mb-8">{encouragement}</p>
+             
+             <div className="bg-secondary/30 border border-secondary p-6 rounded-2xl mb-8 flex flex-col items-center min-w-[200px]">
+                 <span className="text-sm uppercase tracking-wider text-muted-foreground font-semibold mb-1">Total Reps</span>
+                 <div className="text-5xl font-black text-primary tabular-nums">
+                    {currentReps}
+                 </div>
+             </div>
              
              <div className="flex flex-col w-full max-w-xs gap-3">
-                   <Button onClick={handlePracticeAgain} className="w-full h-12 text-base font-medium rounded-md">
-                       Practice Again (Repeat)
+                   <Button 
+                       onClick={handlePracticeAgain} 
+                       className="w-full h-14 text-lg font-bold rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-[1.02]"
+                       variant="primary"
+                   >
+                       Practice Again (Rep {currentReps + 1})
                    </Button>
                    <Button 
                         variant="ghost" 
@@ -233,7 +240,7 @@ export default function StandardScriptFlow({ script }: Props) {
          </motion.div>
       );
   } else if (currentIndex === culturalNoteIndex && script.culturalNote) {
-      showControls = false; // Hide bottom controls, card has its own button
+      showControls = false; 
       content = (
           <CulturalNoteCard 
              title={script.culturalNote.title}
@@ -242,7 +249,7 @@ export default function StandardScriptFlow({ script }: Props) {
           />
       );
   } else if (currentIndex === quizIndex && script.quizItems) {
-      showControls = false; // Quiz has its own flow
+      showControls = false; 
       content = (
           <QuizCard 
              items={script.quizItems}
@@ -250,7 +257,6 @@ export default function StandardScriptFlow({ script }: Props) {
           />
       );
   } else {
-      // Sentence Card
       const currentSentence = sentences[currentIndex];
       content = (
           <motion.div
@@ -323,7 +329,7 @@ export default function StandardScriptFlow({ script }: Props) {
                  <div className="flex items-center gap-3">
                      {/* Repeats Badge - Compact */}
                       <div className="bg-secondary px-3 py-1 rounded-full text-xs font-medium text-secondary-foreground hidden md:block">
-                          {repeats} runs
+                          {databaseRepeats} runs
                       </div>
 
                      {/* Full View Toggle */}
@@ -339,7 +345,7 @@ export default function StandardScriptFlow({ script }: Props) {
             </div>
 
           </div>
-       {/* Progress Line - Locked to bottom of sticky header */}
+       {/* Progress Line */}
        <div className="w-full h-1 bg-secondary">
            <div 
                className="h-full bg-primary transition-all duration-300 ease-out" 

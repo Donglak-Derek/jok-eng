@@ -60,6 +60,11 @@ export default function ScenarioCard({
   const contextRepeats = getRepeats(script.id);
   const repeats = contextRepeats > 0 ? contextRepeats : ('repeats' in script ? (script as { repeats: number }).repeats : 0);
 
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const href = isUserScript ? `/scenario/${script.id}` : `/script/${script.id}`;
 
   return (
@@ -92,11 +97,12 @@ export default function ScenarioCard({
                     {typeLabel}
                 </span>
                 {/* Repeat Count Display */}
-                {repeats > 0 && (
-                     <div className="flex items-center gap-1 text-[10px] font-medium text-muted-foreground bg-secondary/50 px-1.5 py-0.5 rounded-full" title="Practice Reps">
+                {/* Repeat Count Display - Client side only to avoid hydration mismatch */ }
+                {mounted && repeats > 0 && (
+                     <span className="flex items-center gap-1 text-[10px] font-medium text-muted-foreground bg-secondary/50 px-1.5 py-0.5 rounded-full" title="Practice Reps">
                          <Repeat className="w-3 h-3" />
                          <span>{repeats}</span>
-                     </div>
+                     </span>
                 )}
             </div>
 
