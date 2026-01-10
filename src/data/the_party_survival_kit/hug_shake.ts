@@ -2,7 +2,7 @@ import { Script } from "@/types";
 import { CATEGORY_NAMES } from "@/data/categories";
 
 export const hugShakeFumble: Script = {
-  id: "story-hug-shake",
+  id: "party-hug-shake",
   title: "The Hug-Shake Fumble",
   categorySlug: "the_party_survival_kit",
   categoryName: CATEGORY_NAMES["the_party_survival_kit"],

@@ -195,7 +195,7 @@ export default function SignalDecoder({ script }: Props) {
 
         } catch (err) {
             console.error("Failed to save progress", err);
-            hasSavedRef.current = false; // Retry on failure? Or just fail silently.
+            hasSavedRef.current = false;
         }
      } else {
          // Guest fallback
@@ -203,12 +203,11 @@ export default function SignalDecoder({ script }: Props) {
             const key = `jokeng:repeats:${script.id}`;
             const current = Number(localStorage.getItem(key) || 0);
             localStorage.setItem(key, String(current + 1));
-            // Force re-render or context update if needed, but guest mode is local
          }
      }
       
-      // Save Daily Progress (Local only, for "Daily Session" tracking)
-      markComplete(script.id);
+     // Save Daily Progress
+     markComplete(script.id);
   };
 
   const handleExit = () => {

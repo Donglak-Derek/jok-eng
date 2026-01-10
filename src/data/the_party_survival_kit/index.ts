@@ -18,7 +18,7 @@ import { giftFace } from "./gift_face";
 import { bathroomLine } from "./bathroom_line";
 import { doubleDip } from "./double_dip";
 
-export const standupScripts = [
+export const partyScripts = [
   tacoTuesday,
   tippingTrap,
   howAreYouDisaster,

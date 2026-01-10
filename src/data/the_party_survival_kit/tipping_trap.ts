@@ -2,7 +2,7 @@ import { Script } from "@/types";
 import { CATEGORY_NAMES } from "@/data/categories";
 
 export const tippingTrap: Script = {
-  id: "story-tipping-trap",
+  id: "party-tipping-trap",
   title: "The Tipping Trap",
   categorySlug: "the_party_survival_kit",
   categoryName: CATEGORY_NAMES["the_party_survival_kit"],

@@ -2,7 +2,7 @@ import { Script } from "@/types";
 import { CATEGORY_NAMES } from "@/data/categories";
 
 export const replyAllApocalypse: Script = {
-  id: "story-reply-all",
+  id: "party-reply-all",
   title: "The Reply-All Apocalypse",
   categorySlug: "the_party_survival_kit",
   categoryName: CATEGORY_NAMES["the_party_survival_kit"],

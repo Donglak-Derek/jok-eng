@@ -2,7 +2,7 @@ import { Script } from "@/types";
 import { CATEGORY_NAMES } from "@/data/categories";
 
 export const zoomFail: Script = {
-  id: "story-zoom-fail",
+  id: "party-zoom-fail",
   title: "The Zoom Mute Disaster",
   categorySlug: "the_party_survival_kit",
   categoryName: CATEGORY_NAMES["the_party_survival_kit"],

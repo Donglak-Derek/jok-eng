@@ -2,7 +2,7 @@ import { Script } from "@/types";
 import { CATEGORY_NAMES } from "@/data/categories";
 
 export const nameForget: Script = {
-  id: "story-name-forget",
+  id: "party-name-forget",
   title: "The Name Game Shame",
   categorySlug: "the_party_survival_kit",
   categoryName: CATEGORY_NAMES["the_party_survival_kit"],
