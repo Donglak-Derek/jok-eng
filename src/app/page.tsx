@@ -27,23 +27,33 @@ export default function Home() {
         {/* LOGGED IN VIEW: Dashboard Mode */}
         {user ? (
           <>
-            {/* Minimal Tab Navigation */}
-            <div className="flex border-b border-border mb-6 overflow-x-auto scrollbar-hide">
-                <TabButton 
-                    label="Categories" 
-                    isActive={activeTab === "categories"} 
-                    onClick={() => setActiveTab("categories")} 
-                />
-                <TabButton 
-                    label="Community" 
-                    isActive={activeTab === "community"} 
-                    onClick={() => setActiveTab("community")} 
-                />
-                <TabButton 
-                    label="My Studio" 
-                    isActive={activeTab === "personal"} 
-                    onClick={() => setActiveTab("personal")} 
-                />
+            {/* Premium Segmented Control */}
+            <div className="flex justify-center mb-8">
+                <div className="inline-flex bg-secondary/30 p-1.5 rounded-full relative">
+                    {(["categories", "community", "personal"] as const).map((tab) => (
+                        <button
+                            key={tab}
+                            onClick={() => setActiveTab(tab)}
+                            className={`
+                                relative px-6 py-2 rounded-full text-sm font-medium transition-colors duration-200 z-10
+                                ${activeTab === tab ? "text-foreground" : "text-muted-foreground hover:text-foreground"}
+                            `}
+                        >
+                            {activeTab === tab && (
+                                <motion.div
+                                    layoutId="activeTab"
+                                    className="absolute inset-0 bg-background rounded-full shadow-sm border border-border/50"
+                                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                                />
+                            )}
+                            <span className="relative z-20">
+                                {tab === "categories" && "Categories"}
+                                {tab === "community" && "Community"}
+                                {tab === "personal" && "My Studio"}
+                            </span>
+                        </button>
+                    ))}
+                </div>
             </div>
 
             {/* Tab Content */}
@@ -196,19 +206,4 @@ export default function Home() {
   );
 }
 
-function TabButton({ label, isActive, onClick }: { label: string, isActive: boolean, onClick: () => void }) {
-    return (
-        <button
-            onClick={onClick}
-            className={`
-                pb-3 px-6 text-sm font-medium tracking-wide transition-all border-b-2
-                ${isActive 
-                    ? "border-primary text-primary" 
-                    : "border-transparent text-muted hover:text-foreground"
-                }
-            `}
-        >
-            {label}
-        </button>
-    );
-}
+

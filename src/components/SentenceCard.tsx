@@ -3,7 +3,7 @@
 import { useCallback, useMemo, useState, useEffect, useRef } from "react";
 import type { Sentence } from "@/types";
 import { Button } from "@/components/Button";
-import { Play, Volume2, CheckCircle2, AlertCircle, Eye, EyeOff, AudioLines, Headphones } from "lucide-react";
+import { Eye, EyeOff, AudioLines } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 type Props = {
@@ -234,7 +234,7 @@ export default function SentenceCard(props: Props) {
           }
       }, 500);
       return () => clearTimeout(timer);
-  }, [isAutoPlayEnabled, index]); // Trigger on mount (index change) or toggle
+  }, [isAutoPlayEnabled, index, handlePlay]); // Trigger on mount (index change) or toggle
 
   // Audio Visualizer Component - Minimalist Lines
   const AudioVisualizer = () => (

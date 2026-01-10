@@ -26,6 +26,13 @@ export type DecoderItem = {
   actualMeaning: string;
   dangerLevel: string;
   survivalTip: string;
+  conversation?: {
+    speakerA: string;
+    speakerB: string;
+    textA: string;
+    textB: string;
+    contextNote?: string;
+  };
 };
 
 export type Script = {

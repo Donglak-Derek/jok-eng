@@ -1,16 +1,22 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
-import Image from "next/image";
+// Image removed
 import { useRouter } from "next/navigation";
-import type { Script } from "@/types";
+import type { Script, UserScript } from "@/types";
 import { motion, AnimatePresence } from "framer-motion";
 import Confetti from "@/components/Confetti";
 import { Button } from "@/components/Button";
-import { ChevronLeft, Volume2, ArrowRight, RotateCcw, CheckCircle2, FileText } from "lucide-react";
+import { ChevronLeft, Volume2, ArrowRight, RotateCcw, CheckCircle2, FileText, PlayCircle, PauseCircle } from "lucide-react";
 import SignalFullView from "./SignalFullView";
 import SignalSummaryCard from "@/components/SignalSummaryCard";
+import ContextConversation from "@/components/ContextConversation";
+import QuizCard from "@/components/QuizCard";
+import { useProgress } from "@/context/ProgressContext";
+import { useAuth } from "@/context/AuthContext";
+import { doc, updateDoc, setDoc, increment, serverTimestamp } from "firebase/firestore"; // Import directly for use
+import { db } from "@/lib/firebase";
 
 type Props = {
   script: Script;
@@ -18,98 +24,54 @@ type Props = {
 
 export default function SignalDecoder({ script }: Props) {
   const router = useRouter();
+  const { user } = useAuth();
+  const { getRepeats } = useProgress();
+  const databaseRepeats = getRepeats(script.id);
+
   const items = script.decoderItems || [];
   const itemsCount = items.length;
-  // Summary card is the last step before completion
-  const summaryIndex = itemsCount; 
-  // Total active steps = Items + Summary
-  const total = itemsCount + 1;
   
+  // Script Features
+  const hasQuiz = !!script.quizItems && script.quizItems.length > 0;
+
+  /* 
+    Flow Logic:
+    1. Items (0 to itemsCount-1)
+       For each item, substeps: [Guess -> Reveal -> Context]
+    2. Summary (itemsCount)
+    3. Quiz (itemsCount + 1, if exists)
+    4. Completion (Last Index)
+  */
+  
+  const summaryIndex = itemsCount;
+  const quizIndex = hasQuiz ? itemsCount + 1 : -1;
+  // If quiz exists, completion is quizIndex + 1, else summaryIndex + 1
+  const completionIndex = hasQuiz ? quizIndex + 1 : summaryIndex + 1;
+  const totalMainSteps = completionIndex + 1; 
+
+  // Global State
   const [currentIndex, setCurrentIndex] = useState(0);
   const [viewMode, setViewMode] = useState<"flow" | "full">("flow");
-  
-  // Game State
-  const [isRevealed, setIsRevealed] = useState(false);
-  const [userGuess, setUserGuess] = useState(50); // 0 (Safe) to 100 (Danger)
+  const [isAutoPlayEnabled, setIsAutoPlayEnabled] = useState(true);
+
+  // Item Sub-state
+  const [stepPhase, setStepPhase] = useState<"guess" | "reveal" | "context">("guess");
+  const [userGuess, setUserGuess] = useState<number | null>(null); // 0 (Safe) to 100 (Danger)
   
   const [speaking, setSpeaking] = useState(false);
   const [loading, setLoading] = useState(false);
+  const hasAutoPlayedRef = useRef(false);
+  const hasSavedRef = useRef(false);
 
-  // Completion State: When index reaches total (which is N+1), we are done with all active cards (inc summary)
-  const isCompletion = currentIndex === total;
+  // Access current item safely
+  const currentItem = currentIndex < itemsCount ? items[currentIndex] : null; // null if in summary/quiz/completion
 
-  // Use currentItem only if we are in items range
-  const currentItem = currentIndex < itemsCount ? items[currentIndex] : items[itemsCount - 1];
-  
-  // isLastItem refers to the actual last item card OR the summary card
-  // Actually, "Next" on the last item should go to Summary. "Next" on Summary should go to Completion.
-  const isLastActiveStep = currentIndex === total - 1;
-
-  // Helper to normalize danger levels from data strings to 0-100
+  // Helper to normalize danger levels
   const getDangerValue = (level: string): number => {
     const l = level.toLowerCase();
     if (l.includes("critical") || l.includes("run") || l.includes("red flag") || l.includes("high")) return 90;
-    if (l.includes("medium") || l.includes("caution") || l.includes("flake")) return 50;
-    if (l.includes("low") || l.includes("safe")) return 15;
-    if (l.includes("rejection")) return 80;
-    return 50;
-  };
-
-  const resetCard = () => {
-    setIsRevealed(false);
-    setUserGuess(50);
-  };
-
-  const handleNext = () => {
-    // If we are at the last item, next goes to completion (index = total)
-    if (currentIndex < total) {
-      setCurrentIndex((prev) => prev + 1);
-      resetCard();
-    }
-  };
-
-  const handlePrev = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex((prev) => prev - 1);
-      resetCard();
-    }
-  };
-  
-  const handleRepeat = () => {
-    setCurrentIndex(0);
-    resetCard();
-  };
-
-  const handleFinish = () => {
-     // Increment repeat count
-     if (typeof window !== 'undefined') {
-       const key = `jokeng:repeats:${script.id}`;
-       const current = Number(localStorage.getItem(key) || 0);
-       localStorage.setItem(key, String(current + 1));
-     }
-     router.push(`/category/${script.categorySlug}`);
-  };
-
-  const handleLockInGuess = () => {
-    setIsRevealed(true);
-  };
-  
-  // Get feedback based on guess accuracy
-  const getFeedback = () => {
-    if (!currentItem) return null;
-    const actual = getDangerValue(currentItem.dangerLevel);
-    const diff = Math.abs(userGuess - actual);
-    
-    if (diff <= 25) {
-      return { msg: "Spot on! 🎯", color: "text-green-600", bg: "bg-green-50" };
-    }
-    if (actual >= 70 && userGuess < 50) {
-      return { msg: "Missed the Red Flag completely.", color: "text-red-600", bg: "bg-red-50" };
-    }
-    if (actual < 40 && userGuess >= 60) {
-       return { msg: "You're overthinking it.", color: "text-blue-600", bg: "bg-blue-50" };
-    }
-    return { msg: "Not quite, look closer.", color: "text-orange-600", bg: "bg-orange-50" };
+    if (l.includes("medium") || l.includes("caution") || l.includes("flake") || l.includes("yellow")) return 50;
+    return 15; // Low/Safe
   };
 
   const speak = useCallback(async (text: string) => {
@@ -149,33 +111,181 @@ export default function SignalDecoder({ script }: Props) {
     }, [speaking, loading]);
 
 
-  // Scroll to top on slide change
+  // Auto-play effect
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (isAutoPlayEnabled && currentItem && stepPhase === "guess" && !hasAutoPlayedRef.current) {
+        hasAutoPlayedRef.current = true;
+        // Small delay to allow UI to settle
+        const timer = setTimeout(() => {
+            speak(currentItem.phrase);
+        }, 500);
+        return () => clearTimeout(timer);
+    }
+  }, [currentIndex, stepPhase, isAutoPlayEnabled, currentItem, speak]);
+
+  // Reset auto-play flag on index change
+  useEffect(() => {
+      hasAutoPlayedRef.current = false;
+      setStepPhase("guess");
+      setUserGuess(null);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentIndex]);
 
 
-  // If no items, show error or return null
-  if (itemsCount === 0) return <div>No items found.</div>;
+  const handleGuess = (guessValue: number) => {
+    setUserGuess(guessValue);
+    setStepPhase("reveal");
+  };
 
+  const handleNextPhase = () => {
+      if (stepPhase === "reveal") {
+          // If conversation exists, go to context. Else next item.
+          if (currentItem?.conversation) {
+              setStepPhase("context");
+          } else {
+              handleNextItem();
+          }
+      } else if (stepPhase === "context") {
+          handleNextItem();
+      }
+  };
+
+  const handleNextItem = () => {
+      if (currentIndex < completionIndex) {
+          setCurrentIndex(current => current + 1);
+      }
+  };
+
+  // handlePrev removed as it is not used in the UI
+
+  
+  const handleRepeat = () => {
+    setCurrentIndex(0);
+    setStepPhase("guess");
+    setUserGuess(null);
+    hasSavedRef.current = false;
+  };
+
+  const saveProgress = async () => {
+     if (hasSavedRef.current) return;
+     hasSavedRef.current = true;
+
+     // Increment repeat count in DB
+     if (user) {
+        try {
+            const progressRef = doc(db, "users", user.uid, "progress", script.id);
+            await setDoc(progressRef, {
+                repeats: increment(1),
+                lastPracticedAt: serverTimestamp()
+            }, { merge: true });
+
+            const userRef = doc(db, "users", user.uid);
+            await updateDoc(userRef, {
+                totalPractices: increment(1)
+            });
+            
+            // Legacy sync for user created scripts
+            if ('userId' in script && (script as UserScript).userId === user.uid) {
+                 await updateDoc(doc(db, "users", user.uid, "scenarios", script.id), {
+                   repeats: increment(1)
+                 }).catch(e => console.error("Legacy sync error", e));
+            }
+
+        } catch (err) {
+            console.error("Failed to save progress", err);
+            hasSavedRef.current = false; // Retry on failure? Or just fail silently.
+        }
+     } else {
+         // Guest fallback
+         if (typeof window !== 'undefined') {
+            const key = `jokeng:repeats:${script.id}`;
+            const current = Number(localStorage.getItem(key) || 0);
+            localStorage.setItem(key, String(current + 1));
+            // Force re-render or context update if needed, but guest mode is local
+         }
+     }
+  };
+
+  const handleExit = () => {
+     router.push(`/category/${script.categorySlug}`);
+  };
+
+  // Feedback Logic
+  const getFeedback = () => {
+    if (!currentItem || userGuess === null) return null;
+    const actual = getDangerValue(currentItem.dangerLevel);
+    
+    // Simple logic for 3-button system
+    // 15 (Safe), 50 (Caution), 90 (Danger)
+    const diff = Math.abs(userGuess - actual);
+    
+    if (diff < 30) {
+      return { msg: "Spot on! 🎯", color: "text-green-700", bg: "bg-green-100" };
+    }
+    // Safe (15) vs Danger (90) = 75 diff -> Way off
+    if (diff > 60) {
+       return { msg: "Oof. Complete opposite.", color: "text-red-700", bg: "bg-red-100" };
+    }
+    return { msg: "Not quite.", color: "text-orange-700", bg: "bg-orange-100" };
+  };
+
+  // Helper to visualize risk results
+  const getResultButtonStyle = (val: number, label: string, emoji: string) => {
+    if (!currentItem) return null;
+    const correctVal = getDangerValue(currentItem.dangerLevel);
+    const isCorrect = val === correctVal;
+    const isSelected = userGuess === val;
+    
+    let borderClass = "border-transparent";
+    let bgClass = "bg-secondary/30";
+    let opacityClass = "opacity-50";
+    
+    if (isCorrect) {
+        borderClass = "border-green-500 ring-2 ring-green-200";
+        bgClass = "bg-green-50";
+        opacityClass = "opacity-100";
+    } else if (isSelected) {
+        // Selected but wrong
+        borderClass = "border-red-300";
+        bgClass = "bg-red-50";
+        opacityClass = "opacity-100";
+    }
+
+    return (
+        <div key={val} className={`flex flex-col items-center gap-1 p-2 rounded-lg border-2 ${borderClass} ${bgClass} ${opacityClass}`}>
+            <div className="text-xl">{emoji}</div>
+            <span className="text-xs font-bold text-foreground">{label}</span>
+            {isCorrect && <span className="text-[10px] font-bold text-green-600 uppercase tracking-wider">Correct</span>}
+            {isSelected && !isCorrect && <span className="text-[10px] font-bold text-red-500 uppercase tracking-wider">You</span>}
+        </div>
+    );
+ };
+
+  // Render content
+  let content = null;
+  const isCompletion = currentIndex === completionIndex;
+  
+  // Save progress on completion
+  useEffect(() => {
+    if (isCompletion) {
+        saveProgress();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isCompletion]);
+  
   if (viewMode === "full") {
       return <SignalFullView script={script} onBack={() => setViewMode("flow")} />;
   }
-  
-  let content = null;
-  const showControls = !isCompletion && currentIndex !== summaryIndex;
-  
+
   if (isCompletion) {
        content = (
            <motion.div
                key="completion"
                initial={{ opacity: 0, scale: 0.95 }}
                animate={{ opacity: 1, scale: 1 }}
-               exit={{ opacity: 0, scale: 0.95 }}
-               transition={{ duration: 0.4 }}
-               className="w-full"
+               className="w-full text-center"
            >
-               <div className="bg-white rounded-lg border border-border shadow-sm p-8 md:p-12 flex flex-col items-center text-center gap-6">
+               <div className="bg-white rounded-lg border border-border shadow-sm p-8 md:p-12 flex flex-col items-center gap-6">
                    <Confetti />
                    <div className="text-6xl mb-2">🎉</div>
                    
@@ -185,6 +295,11 @@ export default function SignalDecoder({ script }: Props) {
                      </h2>
                      <p className="text-lg text-muted-foreground">You have decoded all the signals.</p>
                    </div>
+                   
+                    <div className="bg-secondary/30 p-4 rounded-lg min-w-[150px]">
+                         <span className="text-xs uppercase tracking-wider text-muted-foreground font-bold">Total Runs</span>
+                         <div className="text-3xl font-black text-primary">{databaseRepeats}</div> 
+                    </div>
 
                    <div className="w-full max-w-sm flex flex-col gap-3 mt-4">
                       <Button
@@ -199,7 +314,7 @@ export default function SignalDecoder({ script }: Props) {
                       <Button 
                         variant="ghost"
                         size="md"
-                        onClick={handleFinish}
+                        onClick={handleExit}
                         className="w-full text-muted-foreground"
                       >
                         Finish & Return
@@ -208,166 +323,178 @@ export default function SignalDecoder({ script }: Props) {
                </div>
            </motion.div>
        );
+  } else if (currentIndex === quizIndex) {
+      content = (
+          <QuizCard 
+             items={script.quizItems || []}
+             onFinish={() => setCurrentIndex(prev => prev + 1)}
+          />
+      );
   } else if (currentIndex === summaryIndex) {
-       // Summary Card
        content = (
            <SignalSummaryCard 
                items={script.decoderItems || []}
                summaryPoints={script.summaryPoints}
-               onFinish={handleNext}
+               onFinish={() => setCurrentIndex(prev => prev + 1)}
            />
        );
-  } else {
-       // Regular Item Card
-       content = (
-           <motion.div
-                key={currentItem.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
-                className="w-full"
-            >
-                <div className="bg-white rounded-lg border border-border shadow-sm p-6 md:p-12 flex flex-col gap-6 md:gap-8 relative overflow-hidden">
-                    
-                    {/* The Signal (Phrase) */}
-                    <div className="flex flex-col gap-4 text-center items-center">
-                        <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground border-b border-border pb-1">
-                            The Signal
-                        </span>
-                        <h2 className="text-3xl md:text-4xl font-bold leading-tight text-foreground">
-                            &quot;{currentItem.phrase}&quot;
-                        </h2>
+  } else if (currentItem) {
+       // Regular Item Logic
+       if (stepPhase === "context" && currentItem.conversation) {
+           content = (
+               <ContextConversation 
+                  conversation={currentItem.conversation}
+                  onNext={handleNextItem}
+               />
+           );
+       } else {
+           // Guess or Reveal Phase
+           content = (
+               <motion.div
+                    key={`item-${currentItem.id}`}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="w-full"
+                >
+                    <div className="bg-white rounded-lg border border-border shadow-sm p-6 md:p-12 flex flex-col gap-8 relative overflow-hidden">
                         
-                        {/* Audio Button */}
-                         <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => speak(currentItem.phrase)}
-                            isLoading={loading}
-                            className="text-muted-foreground"
-                            leftIcon={<Volume2 className="w-4 h-4" />}
-                         >
-                            Listen
-                         </Button>
-                    </div>
+                        {/* The Signal */}
+                        <div className="flex flex-col gap-4 text-center items-center">
+                            <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground border-b border-border pb-1">
+                                The Signal
+                            </span>
+                            <h2 className="text-3xl md:text-5xl font-bold leading-tight text-foreground tracking-tight">
+                                &quot;{currentItem.phrase}&quot;
+                            </h2>
+                            
+                             <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => speak(currentItem.phrase)}
+                                isLoading={loading}
+                                className="text-muted-foreground hover:text-primary transition-colors"
+                                leftIcon={speaking ? <Volume2 className="w-5 h-5 animate-pulse text-primary" /> : <Volume2 className="w-5 h-5" />}
+                             >
+                                {speaking ? "Listening..." : "Listen"}
+                             </Button>
+                        </div>
 
-                    <hr className="border-border border-dashed" />
+                        <hr className="border-border border-dashed" />
 
-                    {/* Game / Reveal Section */}
-                    <div className="flex flex-col gap-6">
-                        {!isRevealed ? (
-                            <div className="flex flex-col items-center justify-center py-6 gap-8">
-                                <div className="text-center space-y-2">
-                                    <h3 className="text-xl font-bold uppercase tracking-tight text-foreground">Danger Check</h3>
-                                    <p className="text-muted-foreground">How dangerous is this phrase?</p>
+                        {stepPhase === "guess" ? (
+                             <div className="flex flex-col items-center justify-center gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                                <div className="text-center space-y-1">
+                                    <h3 className="text-lg font-bold text-foreground">What&apos;s the vibe?</h3>
+                                    <p className="text-muted-foreground text-sm">Select the risk level to reveal the truth.</p>
                                 </div>
 
-                                {/* Danger Slider Game - Minimalist */}
-                                <div className="w-full max-w-md px-4">
-                                    <div className="flex justify-between text-xs font-bold uppercase mb-4 text-muted-foreground">
-                                        <span className="text-green-600">Safe</span>
-                                        <span className="text-red-600">Run</span>
-                                    </div>
-                                    
-                                    <input 
-                                        type="range" 
-                                        min="0" 
-                                        max="100" 
-                                        value={userGuess} 
-                                        onChange={(e) => setUserGuess(Number(e.target.value))}
-                                        className="w-full h-2 bg-gradient-to-r from-green-500 via-yellow-400 to-red-500 rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
-                                    />
-                                    
-                                    <div className="text-center mt-6">
-                                         <span className="inline-block px-4 py-1.5 rounded-full bg-secondary text-secondary-foreground font-mono text-sm font-bold">
-                                            {userGuess < 33 ? "Safe" : userGuess < 66 ? "Caution" : "Danger"} ({userGuess}%)
-                                         </span>
-                                    </div>
-                                </div>
+                                <div className="grid grid-cols-3 gap-2 w-full max-w-xl">
+                                    <button 
+                                        onClick={() => handleGuess(15)}
+                                        className="group flex flex-col items-center gap-2 p-3 rounded-xl border-2 border-green-100 bg-green-50/30 hover:bg-green-100 hover:border-green-300 transition-all hover:-translate-y-1 shadow-sm"
+                                    >
+                                        <div className="text-2xl group-hover:scale-110 transition-transform">🟢</div>
+                                        <div className="flex flex-col items-center">
+                                            <span className="font-bold text-green-800 text-sm">Safe</span>
+                                            <span className="text-[10px] text-green-600 font-medium leading-tight">No worries</span>
+                                        </div>
+                                    </button>
 
-                                <Button
-                                    variant="primary"
-                                    size="lg"
-                                    onClick={handleLockInGuess}
-                                    className="w-full md:w-auto px-8"
-                                >
-                                    Lock In Guess
-                                </Button>
-                            </div>
+                                    <button 
+                                        onClick={() => handleGuess(50)}
+                                        className="group flex flex-col items-center gap-2 p-3 rounded-xl border-2 border-yellow-100 bg-yellow-50/30 hover:bg-yellow-100 hover:border-yellow-300 transition-all hover:-translate-y-1 shadow-sm"
+                                    >
+                                        <div className="text-2xl group-hover:scale-110 transition-transform">🟡</div>
+                                        <div className="flex flex-col items-center">
+                                            <span className="font-bold text-yellow-800 text-sm">Caution</span>
+                                            <span className="text-[10px] text-yellow-600 font-medium leading-tight">Be careful</span>
+                                        </div>
+                                    </button>
+
+                                    <button 
+                                        onClick={() => handleGuess(90)}
+                                        className="group flex flex-col items-center gap-2 p-3 rounded-xl border-2 border-red-100 bg-red-50/30 hover:bg-red-100 hover:border-red-300 transition-all hover:-translate-y-1 shadow-sm"
+                                    >
+                                        <div className="text-2xl group-hover:scale-110 transition-transform">🔴</div>
+                                        <div className="flex flex-col items-center">
+                                            <span className="font-bold text-red-800 text-sm">Danger</span>
+                                            <span className="text-[10px] text-red-600 font-medium leading-tight">Red flag!</span>
+                                        </div>
+                                    </button>
+                                </div>
+                             </div>
                         ) : (
                             <motion.div
-                                initial={{ opacity: 0, scale: 0.98 }}
-                                animate={{ opacity: 1, scale: 1 }}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
                                 className="flex flex-col gap-6"
                             >
                                 {/* Feedback Banner */}
+                                {/* Feedback Banner */}
                                 {(() => {
                                     const fb = getFeedback();
-                                    if (!fb) return null;
-                                    return (
-                                        <div className={`p-4 rounded-lg flex items-center justify-center text-center ${fb.bg} ${fb.color} font-bold text-lg`}>
-                                            {fb.msg}
-                                        </div>
-                                    );
+                                    if (fb) {
+                                        return (
+                                            <div className={`py-3 px-4 rounded-lg flex items-center justify-center text-center ${fb.bg} ${fb.color} font-bold`}>
+                                                {fb.msg}
+                                            </div>
+                                        );
+                                    }
+                                    return null;
                                 })()}
 
-                                {/* Comparison Grid */}
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div className="p-6 rounded-lg bg-secondary/30">
-                                        <h3 className="text-xs font-bold text-muted-foreground uppercase mb-2">Literal Meaning</h3>
-                                        <p className="text-lg font-medium text-foreground leading-relaxed">{currentItem.literalMeaning}</p>
-                                    </div>
-                                    <div className="p-6 rounded-lg bg-yellow-50/80 border border-yellow-100">
-                                        <h3 className="text-xs font-bold text-yellow-700 uppercase mb-2">Actual Meaning (Subtext)</h3>
-                                        <p className="text-lg font-bold text-yellow-950 leading-relaxed">{currentItem.actualMeaning}</p>
-                                    </div>
-                                </div>
-                                
-                                {/* Danger Level Visual */}
-                                <div className="flex flex-col gap-3 p-6 rounded-lg bg-red-50/50 border border-red-100">
-                                    <div className="flex items-center justify-between">
-                                        <span className="text-xs font-bold text-red-700 uppercase">Actual Danger Level</span>
-                                        <span className="font-bold text-red-700 text-xl">{currentItem.dangerLevel}</span>
-                                    </div>
-                                    
-                                    {/* Comparison Bar */}
-                                    <div className="relative h-2 bg-gray-200 rounded-full w-full mt-2">
-                                        {/* Markers */}
-                                        <div 
-                                          className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-red-500 rounded-full border-2 border-white shadow-sm z-10"
-                                          style={{ left: `${getDangerValue(currentItem.dangerLevel)}%`, marginLeft: '-8px' }}
-                                          title="Actual"
-                                        />
-                                        <div 
-                                          className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-blue-500 rounded-full border-2 border-white shadow-sm z-10 opacity-70"
-                                          style={{ left: `${userGuess}%`, marginLeft: '-6px' }}
-                                          title="Your Guess"
-                                        />
-                                    </div>
-                                    
-                                    <div className="flex justify-between text-xs font-medium text-muted-foreground mt-1">
-                                        <span className="text-blue-600">You: {userGuess}%</span>
-                                        <span className="text-red-600">Actual: {getDangerValue(currentItem.dangerLevel)}%</span>
-                                    </div>
+                                {/* Visual Answer Key */}
+                                <div className="grid grid-cols-3 gap-2 w-full">
+                                    {getResultButtonStyle(15, "Safe", "🟢")}
+                                    {getResultButtonStyle(50, "Caution", "🟡")}
+                                    {getResultButtonStyle(90, "Danger", "🔴")}
                                 </div>
 
-                                <div className="p-6 rounded-lg bg-green-50/50 border border-green-100">
-                                     <h3 className="text-xs font-bold text-green-700 uppercase mb-2 flex items-center gap-2">
-                                        <CheckCircle2 className="w-4 h-4" /> Survival Tip
-                                     </h3>
-                                     <p className="text-lg font-medium text-green-900 leading-relaxed">{currentItem.survivalTip}</p>
+                                {/* Meanings Grid */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                     <div className="p-5 rounded-lg bg-secondary/30 flex flex-col gap-2">
+                                         <span className="text-xs font-bold text-muted-foreground uppercase">Literal Meaning</span>
+                                         <p className="text-base text-foreground">{currentItem.literalMeaning}</p>
+                                     </div>
+                                     <div className="p-5 rounded-lg bg-indigo-50/50 border border-indigo-100 flex flex-col gap-2">
+                                         <span className="text-xs font-bold text-indigo-700 uppercase">Actual Meaning</span>
+                                         <p className="text-lg font-bold text-indigo-950">{currentItem.actualMeaning}</p>
+                                     </div>
                                 </div>
+
+                                {/* Survival Tip */}
+                                <div className="p-5 rounded-lg bg-green-50/50 border border-green-100 flex flex-col gap-2">
+                                     <h3 className="text-xs font-bold text-green-700 uppercase flex items-center gap-2">
+                                        <CheckCircle2 className="w-4 h-4" /> Pro Tip
+                                     </h3>
+                                     <p className="text-base font-medium text-green-900">{currentItem.survivalTip}</p>
+                                </div>
+
+                                <div className="flex justify-end pt-4">
+                                    <Button
+                                        variant="primary"
+                                        size="lg"
+                                        onClick={handleNextPhase}
+                                        rightIcon={<ArrowRight className="w-4 h-4" />}
+                                        className="w-full md:w-auto"
+                                    >
+                                        {currentItem.conversation ? "See Context" : "Next Signal"}
+                                    </Button>
+                                </div>
+
                             </motion.div>
                         )}
-                    </div>
 
-                </div>
-            </motion.div>
-       );
+                    </div>
+               </motion.div>
+           );
+       }
   }
 
-  return (
+
+ 
+   return (
     <div className="min-h-screen text-foreground flex flex-col bg-background">
       
       {/* Sticky Header */}
@@ -383,89 +510,58 @@ export default function SignalDecoder({ script }: Props) {
                      </h1>
                  </div>
 
-                  {/* Optional Scenario Image */}
-                  {script.imageUrl && (
-                      <div className="w-12 h-12 relative rounded-md overflow-hidden border border-border hidden md:block">
-                          <Image 
-                              src={script.imageUrl} 
-                              alt={script.title}
-                              fill
-                              className="object-cover"
-                          />
-                      </div>
-                  )}
-                 
-                 {/* Full View Toggle */}
-                  <button 
-                    onClick={() => setViewMode("full")}
-                    className="p-2 -mr-2 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-full transition-colors"
-                    title="View Full Content"
-                    aria-label="View Full Content"
-                  >
-                      <FileText className="w-6 h-6" />
-                  </button>
+                 <div className="flex items-center gap-2">
+                     {/* Auto-Play Toggle */}
+                     <button
+                        onClick={() => setIsAutoPlayEnabled(!isAutoPlayEnabled)}
+                        className={`p-2 rounded-full transition-colors flex items-center gap-2 text-xs font-bold px-3 py-1.5 ${isAutoPlayEnabled ? 'bg-primary/10 text-primary' : 'bg-secondary text-muted-foreground'}`}
+                     >
+                        {isAutoPlayEnabled ? <PlayCircle className="w-4 h-4" /> : <PauseCircle className="w-4 h-4" />}
+                        <span className="hidden md:inline">Auto-Play</span>
+                     </button>
+                    
+                     {/* Training Count Bubble */}
+                     <div className="hidden md:flex items-center gap-1.5 bg-secondary px-3 py-1.5 rounded-full text-xs font-bold text-muted-foreground">
+                        <RotateCcw className="w-3 h-3" />
+                        <span>{databaseRepeats} Runs</span>
+                     </div>
+
+                     {/* Full View Toggle */}
+                     <button 
+                       onClick={() => setViewMode("full")}
+                       className="p-2 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-full transition-colors"
+                     >
+                         <FileText className="w-6 h-6" />
+                     </button>
+                 </div>
             </div>
 
             {/* Progress Line */}
              <div className="w-full h-1 bg-secondary rounded-full overflow-hidden">
                 <div 
-                    className="h-full bg-red-500 transition-all duration-300 ease-out" 
-                    style={{ width: `${(currentIndex / total) * 100}%` }} 
+                    className="h-full bg-primary transition-all duration-300 ease-out" 
+                    style={{ width: `${(currentIndex / totalMainSteps) * 100}%` }} 
                 />
              </div>
          </div>
       </header>
-
-      <div className="flex-1 max-w-3xl mx-auto px-4 py-8 md:px-6 md:py-12 flex flex-col gap-6 md:gap-8 w-full">
-
-        {/* Decoder Card Area */}
-        <div className="flex-1 flex flex-col justify-center min-h-[400px]">
+      
+      {/* Main Content */}
+      <div className="flex-1 max-w-3xl mx-auto px-4 py-8 md:px-6 md:py-12 flex flex-col w-full h-full">
+         <div className="flex-1 flex flex-col justify-start md:justify-center min-h-[400px]">
             <AnimatePresence mode="wait">
                 {content}
             </AnimatePresence>
-        </div>
+         </div>
 
-        {/* Navigation - Bottom Bar */}
-        {showControls && (
-            <div className="sticky bottom-0 left-0 right-0 p-6 bg-background border-t border-border z-20">
-              <div className="max-w-3xl mx-auto flex items-center justify-between">
-                 <Button 
-                   variant="ghost"
-                   size="sm"
-                   onClick={handleRepeat}
-                   className="text-muted-foreground hover:text-foreground"
-                   leftIcon={<RotateCcw className="w-4 h-4" />}
-                 >
-                   Restart
-                 </Button>
-                 
-                 <div className="flex items-center gap-3">
-                    <Button
-                      variant="ghost"
-                      onClick={handlePrev}
-                      disabled={currentIndex === 0}
-                      className={currentIndex === 0 ? "invisible" : ""}
-                      leftIcon={<ChevronLeft className="w-4 h-4" />}
-                    >
-                      Prev
-                    </Button>
-
-                    {/* Only show Next if revealed */}
-                    {isRevealed && (
-                      <Button
-                        variant="primary"
-                        onClick={handleNext}
-                        rightIcon={isLastActiveStep ? undefined : <ArrowRight className="w-4 h-4" />}
-                      >
-                         {/* Text based on step */}
-                         {isLastActiveStep ? "Review Mission" : "Next"}
-                      </Button>
-                    )}
+         {/* Navigation - Bottom Logic */}
+         {!isCompletion && currentIndex !== quizIndex && currentIndex !== summaryIndex && (
+             <div className="mt-8 flex justify-center pb-8 sticky bottom-0 pointer-events-none">
+                 <div className="pointer-events-auto"> 
+                    {/* Controls are inside the cards predominantly now, but we can add a restart global here if needed */}
                  </div>
-              </div>
-            </div>
-        )}
-
+             </div>
+         )}
       </div>
     </div>
   );

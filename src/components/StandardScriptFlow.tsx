@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Confetti from "@/components/Confetti";
 import { Button } from "@/components/Button";
 import { useAuth } from "@/context/AuthContext";
-import { doc, updateDoc } from "firebase/firestore";
+import { updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { ChevronLeft, ChevronRight, PartyPopper, FileText } from "lucide-react";
 import StandardFullView from "./StandardFullView";

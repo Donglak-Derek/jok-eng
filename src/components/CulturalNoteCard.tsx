@@ -20,7 +20,7 @@ export default function CulturalNoteCard({ title, content, onNext }: Props) {
         drag="x"
         dragConstraints={{ left: 0, right: 0 }}
         dragElastic={0.2}
-        onDragEnd={(e, { offset, velocity }) => {
+        onDragEnd={(e, { offset }) => {
           const swipe = offset.x; // detected swipe distance
           if (swipe < -100 || swipe > 100) {
             onNext();

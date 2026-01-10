@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ChevronLeft } from "lucide-react";
 import { scripts } from "@/data";
 import ScenarioList from "@/components/ScenarioList";
 import CategoryHero from "@/components/CategoryHero";
@@ -22,15 +23,7 @@ export async function generateMetadata(
   };
 }
 
-const COLOR_MAP: Record<string, string> = {
-  orange: "text-orange-600 selection:bg-orange-100",
-  pink: "text-pink-600 selection:bg-pink-100",
-  blue: "text-blue-600 selection:bg-blue-100",
-  emerald: "text-emerald-600 selection:bg-emerald-100",
-  purple: "text-purple-600 selection:bg-purple-100",
-  indigo: "text-indigo-600 selection:bg-indigo-100",
-  cyan: "text-cyan-600 selection:bg-cyan-100",
-};
+
 
 export default async function CategoryPage({ params }: Props) {
   const { slug } = await params;
@@ -48,13 +41,17 @@ export default async function CategoryPage({ params }: Props) {
     <div className="min-h-dvh text-foreground">
       <div className="max-w-md md:max-w-3xl lg:max-w-5xl mx-auto px-4 md:px-6 lg:px-8 py-5 md:py-8 flex flex-col gap-5 md:gap-6">
         <div className="mb-6">
-          <Link href="/" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors mb-4">
-            ← Back to Categories
+          <Link 
+            href="/" 
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium text-muted-foreground bg-secondary/30 hover:bg-secondary hover:text-foreground transition-all mb-6 w-fit group"
+          >
+            <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
+            Back to Categories
           </Link>
           
           <CategoryHero 
             categoryName={categoryName}
-            categorySlug={slug}
+
             scripts={list}
             colorName={colorName}
             description={categoryDetails?.description}

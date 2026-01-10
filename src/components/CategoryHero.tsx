@@ -4,13 +4,13 @@ import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Play, CheckCircle2, Trophy, Star } from "lucide-react";
+import { Play, Trophy, Star } from "lucide-react";
 import type { Script } from "@/types";
 import { Button } from "@/components/Button";
 
 type CategoryHeroProps = {
   categoryName: string;
-  categorySlug: string;
+  // categorySlug removed
   scripts: Script[];
   colorName?: string;
   description?: string;
@@ -50,7 +50,7 @@ const THEME_MAP: Record<string, { bg: string; text: string; accent: string; grad
 
 export default function CategoryHero({ 
   categoryName, 
-  categorySlug,
+  // categorySlug removed
   scripts, 
   colorName = "blue",
   description 

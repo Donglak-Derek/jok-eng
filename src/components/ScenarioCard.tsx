@@ -99,7 +99,7 @@ export default function ScenarioCard({
                 {/* Repeat Count Display */}
                 {/* Repeat Count Display - Client side only to avoid hydration mismatch */ }
                 {mounted && repeats > 0 && (
-                     <span className="flex items-center gap-1 text-[10px] font-medium text-muted-foreground bg-secondary/50 px-1.5 py-0.5 rounded-full" title="Practice Reps">
+                     <span className="flex items-center gap-1 text-xs font-medium text-foreground/70 bg-secondary px-2 py-0.5 rounded-full whitespace-nowrap ml-2" title="Practice Reps">
                          <Repeat className="w-3 h-3" />
                          <span>{repeats}</span>
                      </span>

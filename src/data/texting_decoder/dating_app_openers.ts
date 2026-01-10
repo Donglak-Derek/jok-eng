@@ -24,7 +24,14 @@ export const datingAppOpeners: Script = {
       literalMeaning: "Hello",
       actualMeaning: "I am boring, lazy, or sending this to 50 people.",
       dangerLevel: "Medium - Boring",
-      survivalTip: "Reply with a specific question about their profile to see if they're real."
+      survivalTip: "Reply with a specific question about their profile to see if they're real.",
+      conversation: {
+         speakerA: "Them",
+         speakerB: "You",
+         textA: "Hey",
+         textB: "Hey...",
+         contextNote: "Notice how the conversation died instantly? This is why 'Hey' is a trap."
+      }
     },
     {
       id: "date-2",
