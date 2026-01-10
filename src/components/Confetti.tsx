@@ -5,11 +5,6 @@ import confetti from "canvas-confetti";
 
 export default function Confetti() {
   useEffect(() => {
-    // Play sound on mount
-    const audio = new Audio("/sounds/good_job.mp3");
-    audio.volume = 0.5;
-    audio.play().catch((e) => console.log("Audio play failed", e));
-
     // Fire standard confetti
     const duration = 3000;
     const end = Date.now() + duration;

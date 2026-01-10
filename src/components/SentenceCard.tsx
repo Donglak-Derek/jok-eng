@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState, useEffect } from "react";
+import { useCallback, useMemo, useState, useEffect, useRef } from "react";
 import type { Sentence } from "@/types";
 import { Button } from "@/components/Button";
 import { Play, Volume2, CheckCircle2, AlertCircle, Eye, EyeOff, AudioLines, Headphones } from "lucide-react";
@@ -100,8 +100,28 @@ export default function SentenceCard(props: Props) {
     );
   };
 
+  // Ref to track the current audio instance
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    return () => {
+      // Cleanup on unmount or re-run
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
+
   const handlePlay = useCallback(async () => {
     if (typeof window === "undefined") return;
+    
+    // Stop any currently playing audio
+    if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+    }
+
     if (!heard) {
       onHeard(index);
     }
@@ -109,6 +129,7 @@ export default function SentenceCard(props: Props) {
     // Use goodResponse text or English text, stripped of brackets
     const textToSpeak = cleanText(sentence.goodResponse ? sentence.goodResponse.text : sentence.en);
     setLoading(true);
+    setSpeaking(true); // Optimistically set speaking
 
     try {
       // Direct stream URL - starts playing immediately (no waiting for blob download)
@@ -118,20 +139,30 @@ export default function SentenceCard(props: Props) {
       });
       
       const audio = new Audio(`/api/tts?${params}`);
+      audioRef.current = audio;
       
       await new Promise<void>((resolve, reject) => {
         // Event listeners before play
         audio.oncanplay = () => {
              setLoading(false);
-             setSpeaking(true);
         };
-        audio.onended = () => resolve();
-        audio.onerror = (e) => reject(e);
+        audio.onended = () => {
+            setSpeaking(false);
+            audioRef.current = null;
+            resolve();
+        };
+        audio.onerror = (e) => {
+            setSpeaking(false);
+            reject(e);
+        };
         
         // .play() returns a promise that rejects if autoplay is blocked
         const playPromise = audio.play();
         if (playPromise !== undefined) {
-          playPromise.catch(reject);
+          playPromise.catch((e) => {
+              setSpeaking(false);
+              reject(e);
+          });
         }
       });
       
@@ -139,19 +170,35 @@ export default function SentenceCard(props: Props) {
        console.warn("High-quality TTS failed/blocked, falling back to system voice:", error);
        
        // Fallback to Web Speech API
-       await new Promise<void>((resolve) => {
-         setLoading(false);
-         setSpeaking(true);
+       if (window.speechSynthesis) {
+         window.speechSynthesis.cancel(); // Stop any existing speech
          
-         const u = new SpeechSynthesisUtterance(textToSpeak);
-         u.lang = "en-US";
-         u.rate = 1;
-         u.onend = () => resolve();
-         u.onerror = () => resolve(); 
-         window.speechSynthesis.speak(u);
-       });
+         await new Promise<void>((resolve) => {
+             setLoading(false);
+             setSpeaking(true);
+             
+             const u = new SpeechSynthesisUtterance(textToSpeak);
+             u.lang = "en-US";
+             u.rate = 1;
+             u.onend = () => {
+                 setSpeaking(false);
+                 resolve();
+             };
+             u.onerror = () => {
+                 setSpeaking(false);
+                 resolve();
+             }; 
+             window.speechSynthesis.speak(u);
+         });
+       } else {
+           setSpeaking(false);
+           setLoading(false);
+       }
     } finally {
-      setSpeaking(false);
+      // Safety check in case component unmounted
+      if (audioRef.current === null) {
+          setSpeaking(false);
+      }
       setLoading(false);
     }
   }, [heard, index, onHeard, sentence, setLoading, setSpeaking]);
@@ -243,6 +290,7 @@ export default function SentenceCard(props: Props) {
             e.stopPropagation();
             handlePlay();
           }}
+          data-action="play-sentence"
           className="w-full mt-2 h-12 text-base font-medium rounded-md"
           variant="primary"
           isLoading={loading}
@@ -269,22 +317,34 @@ export default function SentenceCard(props: Props) {
             </button>
          )}
 
-         {/* Auto-Play Toggle (Headphones) - Centered */}
+         {/* Auto-Play Toggle Switch - Softer & Smaller */}
          {onToggleAutoPlay && (
-            <button 
-                onClick={onToggleAutoPlay}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-full transition-all duration-300 ${
-                  isAutoPlayEnabled 
-                    ? "bg-primary text-primary-foreground shadow-md scale-105" 
-                    : "bg-slate-100 text-slate-500 hover:bg-slate-200"
-                }`}
-                title={isAutoPlayEnabled ? "Listening Mode On" : "Enable Listening Mode"}
+            <div 
+                className="flex items-center gap-2 px-2 py-1 transition-opacity duration-300"
+                title="Toggle Auto-Play"
             >
-                <Headphones className={`w-4 h-4 ${isAutoPlayEnabled ? "animate-pulse" : ""}`} />
-                <span className="text-xs font-semibold uppercase tracking-wide">
-                    {isAutoPlayEnabled ? "Listening Mode" : "Auto-Play Off"}
+                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                    Auto-Play
                 </span>
-            </button>
+                
+                <button
+                    onClick={onToggleAutoPlay}
+                    className={`
+                        relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none 
+                        ${isAutoPlayEnabled ? "bg-slate-400" : "bg-slate-200"}
+                    `}
+                >
+                    <span className="sr-only">Toggle Auto-Play</span>
+                    <motion.span
+                        layout
+                        transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                        className={`
+                            inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow-sm ring-0 
+                            ${isAutoPlayEnabled ? "translate-x-4.5" : "translate-x-1"}
+                        `}
+                    />
+                </button>
+            </div>
          )}
       </div>
 
@@ -299,9 +359,27 @@ export default function SentenceCard(props: Props) {
 
       {isClozeMode ? (
           <div className="min-h-[24px] flex flex-col items-center gap-4">
-              <div className="text-sm text-muted-foreground italic">
-                {!anyRevealed ? "Click the boxes to reveal the punchline." : "Nice work! Here's the breakdown:"}
-              </div>
+              <AnimatePresence>
+                {index < 3 && !anyRevealed && (
+                    <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="text-sm text-muted-foreground italic overflow-hidden"
+                    >
+                        Click the boxes to reveal the punchline.
+                    </motion.div>
+                )}
+                {anyRevealed && (
+                    <motion.div
+                         initial={{ opacity: 0 }}
+                         animate={{ opacity: 1 }}
+                         className="text-sm text-muted-foreground italic"
+                    >
+                        Nice work! Here&apos;s the breakdown:
+                    </motion.div>
+                )}
+              </AnimatePresence>
               
               {/* Show keywords if any revealed or global reveal */}
               {anyRevealed && keywords.length > 0 && (
@@ -341,6 +419,7 @@ export default function SentenceCard(props: Props) {
            e.stopPropagation();
            handlePlay();
          }}
+         data-action="play-sentence"
          variant={speaking ? "outline" : "primary"}
          size="lg"
          isLoading={loading}

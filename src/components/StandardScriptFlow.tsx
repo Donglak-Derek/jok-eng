@@ -44,7 +44,7 @@ export default function StandardScriptFlow({ script }: Props) {
   const [viewMode, setViewMode] = useState<"flow" | "full">("flow");
   const [isGlobalRevealed, setIsGlobalRevealed] = useState(false); // Default hidden
 
-  const [isAutoPlayEnabled, setIsAutoPlayEnabled] = useState(false); // Default off
+  const [isAutoPlayEnabled, setIsAutoPlayEnabled] = useState(true); // Default ON
   const toggleAutoPlay = () => setIsAutoPlayEnabled(prev => !prev);
 
   // Toggle for the whole deck
@@ -144,6 +144,41 @@ export default function StandardScriptFlow({ script }: Props) {
   const handleStartOver = () => {
     setCurrentIndex(0);
   };
+
+  // Keyboard Shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+        // Ignore if typing in an input (unlikely here but good practice)
+        if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+
+        switch (e.code) {
+            case "ArrowRight":
+                e.preventDefault();
+                handleNext();
+                break;
+            case "ArrowLeft":
+                e.preventDefault();
+                handlePrev();
+                break;
+            case "ArrowUp":
+            case "ArrowDown":
+                e.preventDefault();
+                toggleGlobalReveal();
+                break;
+            case "Space":
+                e.preventDefault();
+                // Find and click the play button in the active card
+                // We rely on the button text "Play Audio" or class
+                // Ideally we'd use a ref, but a selector is cleaner for this loose coupling
+                const playBtn = document.querySelector('button[data-action="play-sentence"]');
+                if (playBtn instanceof HTMLElement) playBtn.click();
+                break;
+        }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [handleNext, handlePrev, toggleGlobalReveal]);
 
   // Render content based on current index
   let content = null;
