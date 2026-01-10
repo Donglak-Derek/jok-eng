@@ -3,11 +3,11 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { db } from "@/lib/firebase";
-import { collection, onSnapshot, doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 
 export type UserProgressItem = {
   repeats: number;
-  lastPracticedAt: any; // Timestamp or Date
+  lastPracticedAt: unknown; // Flexible for Date or Timestamp
 };
 
 interface ProgressContextType {

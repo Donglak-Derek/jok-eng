@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import type { Script } from "@/types";
+import type { Script, UserScript } from "@/types";
 import ScenarioCard from "@/components/ScenarioCard";
 
 type Props = {
@@ -9,9 +9,15 @@ type Props = {
   onEdit?: (id: string, e: React.MouseEvent) => void;
   onDelete?: (id: string, e: React.MouseEvent) => void;
   onTogglePublic?: (id: string, current: boolean, e: React.MouseEvent) => void;
+  // onLike and likedSet removed from props as they are handled internally
 };
 
+
+import { useLikes } from "@/hooks/useLikes";
+
 export default function ScenarioList({ scripts, onEdit, onDelete, onTogglePublic }: Props) {
+  const { likedSet, toggleLike } = useLikes();
+
   // Check if we have sections
   const hasSections = scripts.some(s => s.section);
 
@@ -49,6 +55,8 @@ export default function ScenarioList({ scripts, onEdit, onDelete, onTogglePublic
                       onEdit={onEdit} 
                       onDelete={onDelete}
                       onTogglePublic={onTogglePublic}
+                      onLike={(id, e) => toggleLike(id, 'userId' in script, (script as UserScript).userId)}
+                      isLiked={likedSet.has(script.id)}
                     />
                   </motion.div>
                 ))}
@@ -76,6 +84,8 @@ export default function ScenarioList({ scripts, onEdit, onDelete, onTogglePublic
                     onEdit={onEdit} 
                     onDelete={onDelete}
                     onTogglePublic={onTogglePublic}
+                    onLike={(id, e) => toggleLike(id, 'userId' in script, (script as UserScript).userId)}
+                    isLiked={likedSet.has(script.id)}
                   />
                 </motion.div>
               ))}
@@ -101,6 +111,8 @@ export default function ScenarioList({ scripts, onEdit, onDelete, onTogglePublic
             onEdit={onEdit} 
             onDelete={onDelete}
             onTogglePublic={onTogglePublic}
+            onLike={(id, e) => toggleLike(id, 'userId' in script, (script as UserScript).userId)}
+            isLiked={likedSet.has(script.id)}
           />
         </motion.div>
       ))}

@@ -22,7 +22,6 @@ type Props = {
 
 export default function ScenarioCard({ 
     script, 
-    index, 
     onEdit, 
     onDelete, 
     onTogglePublic, 
@@ -59,7 +58,7 @@ export default function ScenarioCard({
   // Repeats for user scripts (or if added to standard scripts later)
   // Priority: Firestore (via context) -> Props -> 0
   const contextRepeats = getRepeats(script.id);
-  const repeats = contextRepeats > 0 ? contextRepeats : ('repeats' in script ? (script as any).repeats : 0);
+  const repeats = contextRepeats > 0 ? contextRepeats : ('repeats' in script ? (script as { repeats: number }).repeats : 0);
 
   const href = isUserScript ? `/scenario/${script.id}` : `/script/${script.id}`;
 
@@ -141,22 +140,26 @@ export default function ScenarioCard({
              {/* Actions */}
              <div className="flex items-center gap-3 text-muted-foreground">
                   {/* Likes */}
-                  <div className="flex items-center gap-1 text-xs">
-                      {onLike ? (
-                        <button 
-                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); onLike(script.id, e); }}
-                            className={`flex items-center gap-1 hover:text-foreground transition-colors ${isLiked ? "text-primary fill-primary" : ""}`}
-                        >
-                            <Heart className={`w-3.5 h-3.5 ${isLiked ? "fill-current" : ""}`} />
-                            <span>{likeCount}</span>
-                        </button>
-                      ) : (
-                        <>
-                            <Heart className="w-3.5 h-3.5" />
-                            <span>{likeCount}</span>
-                        </>
-                      )}
-                  </div>
+                  <div className="flex items-center gap-4 text-xs font-medium text-muted-foreground">
+          {isUserScript && (
+            <button 
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (onLike) onLike(script.id, e);
+              }}
+              className="flex items-center gap-1.5 hover:text-red-500 transition-colors group z-20"
+              title="Like this scenario"
+            >
+              <Heart 
+                className={`w-4 h-4 transition-all ${isLiked ? "fill-red-500 text-red-500 scale-110" : "group-hover:scale-110"}`} 
+              />
+              <span>{likeCount}</span>
+            </button>
+          )}
+
+           {/* Difficulty or other metadata can go here if needed, but keeping it clean */}
+        </div>
                  
                  {/* Public Toggle */}
                  {onTogglePublic && (

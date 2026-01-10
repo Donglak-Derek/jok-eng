@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Confetti from "@/components/Confetti";
 import { Button } from "@/components/Button";
 import { useAuth } from "@/context/AuthContext";
-import { doc, updateDoc, increment } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { UserScript } from "@/types";
 import { ChevronLeft, ChevronRight, PartyPopper, FileText } from "lucide-react";
@@ -195,6 +195,7 @@ export default function StandardScriptFlow({ script }: Props) {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [handleNext, handlePrev, toggleGlobalReveal]);
 
   // Render content based on current index

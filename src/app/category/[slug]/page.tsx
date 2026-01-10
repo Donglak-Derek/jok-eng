@@ -43,7 +43,6 @@ export default async function CategoryPage({ params }: Props) {
   const categoryName = categoryDetails?.name ?? list[0]?.categoryName ?? slug;
   
   const colorName = categoryDetails?.color || "blue";
-  const accentClass = COLOR_MAP[colorName] || "text-black";
 
   return (
     <div className="min-h-dvh text-foreground">
