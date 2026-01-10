@@ -12,6 +12,7 @@ import { Button } from "@/components/Button";
 import { useAuth } from "@/context/AuthContext";
 import { updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import { useDailyProgress } from "@/hooks/useDailyProgress";
 import { ChevronLeft, ChevronRight, PartyPopper, FileText } from "lucide-react";
 import StandardFullView from "./StandardFullView";
 import CulturalNoteCard from "@/components/CulturalNoteCard";
@@ -25,6 +26,7 @@ type Props = {
 export default function StandardScriptFlow({ script }: Props) {
   const router = useRouter();
   const { user } = useAuth();
+  const { markComplete } = useDailyProgress();
   const { getRepeats } = useProgress(); 
   
   // Script structure logic
@@ -106,12 +108,8 @@ export default function StandardScriptFlow({ script }: Props) {
          localStorage.setItem(key, String(current + 1));
       }
       
-      // Save Daily Progress (Local only, for "Daily Session" tracking)
-       if (typeof window !== 'undefined') {
-          const today = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD local
-          const dailyKey = `jokeng:daily:${today}:${script.id}`;
-          localStorage.setItem(dailyKey, "true");
-       }
+      // Save Daily Progress
+      markComplete(script.id);
       
       setHeardSet(new Set());
       localStorage.setItem(storageKey, JSON.stringify([]));

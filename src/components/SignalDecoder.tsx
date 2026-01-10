@@ -17,6 +17,7 @@ import { useProgress } from "@/context/ProgressContext";
 import { useAuth } from "@/context/AuthContext";
 import { doc, updateDoc, setDoc, increment, serverTimestamp } from "firebase/firestore"; // Import directly for use
 import { db } from "@/lib/firebase";
+import { useDailyProgress } from "@/hooks/useDailyProgress";
 
 type Props = {
   script: Script;
@@ -27,6 +28,7 @@ export default function SignalDecoder({ script }: Props) {
   const { user } = useAuth();
   const { getRepeats } = useProgress();
   const databaseRepeats = getRepeats(script.id);
+  const { markComplete } = useDailyProgress();
 
   const items = script.decoderItems || [];
   const itemsCount = items.length;
@@ -204,17 +206,13 @@ export default function SignalDecoder({ script }: Props) {
             // Force re-render or context update if needed, but guest mode is local
          }
      }
-     
-     // Save Daily Progress (Local only, for "Daily Session" tracking)
-     if (typeof window !== 'undefined') {
-        const today = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD local
-        const dailyKey = `jokeng:daily:${today}:${script.id}`;
-        localStorage.setItem(dailyKey, "true");
-     }
+      
+      // Save Daily Progress (Local only, for "Daily Session" tracking)
+      markComplete(script.id);
   };
 
   const handleExit = () => {
-     router.push(`/category/${script.categorySlug}`);
+      router.push(`/category/${script.categorySlug}`);
   };
 
   // Feedback Logic

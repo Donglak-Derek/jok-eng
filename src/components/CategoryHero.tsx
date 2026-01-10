@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { Play, Trophy, Star } from "lucide-react";
 import type { Script } from "@/types";
 import { Button } from "@/components/Button";
+import { useDailyProgress } from "@/hooks/useDailyProgress";
 
 type CategoryHeroProps = {
   categoryName: string;
@@ -57,27 +58,13 @@ export default function CategoryHero({
   description 
 }: CategoryHeroProps) {
   const theme = THEME_MAP[colorName] || THEME_MAP.blue;
-  const [completedIds, setCompletedIds] = useState<Set<string>>(new Set());
+  const scriptIds = useMemo(() => scripts.map(s => s.id), [scripts]);
+  const { completedIds } = useDailyProgress(scriptIds);
   const [mounted, setMounted] = useState(false);
 
-  // Load progress on mount
   useEffect(() => {
     setMounted(true);
-    const completed = new Set<string>();
-    const today = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD local
-    
-    scripts.forEach(script => {
-      // Check Daily Key
-      const dailyKey = `jokeng:daily:${today}:${script.id}`;
-      const isDoneToday = localStorage.getItem(dailyKey) === "true";
-      
-      if (isDoneToday) {
-        completed.add(script.id);
-      }
-    });
-    
-    setCompletedIds(completed);
-  }, [scripts]);
+  }, []);
 
   // Determine "Up Next"
   const nextUpScript = useMemo(() => {
