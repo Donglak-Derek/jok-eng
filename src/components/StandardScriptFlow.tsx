@@ -104,7 +104,7 @@ export default function StandardScriptFlow({ script }: Props) {
 
   const isOwner = user && 'userId' in script && (script as UserScript).userId === user.uid;
 
-  const handleFinishTraining = async () => {
+  const saveProgress = async () => {
       // Increment Repeats (Local)
       const nextRepeats = repeats + 1;
       setRepeats(nextRepeats);
@@ -143,11 +143,18 @@ export default function StandardScriptFlow({ script }: Props) {
         }
       }
       
-      // Clear progress
+      // Clear progress (reset heard set)
       setHeardSet(new Set());
       localStorage.setItem(storageKey, JSON.stringify([]));
+  };
+  
+  const handlePracticeAgain = async () => {
+      await saveProgress();
+      setCurrentIndex(0);
+  };
 
-      // Go to category page
+  const handleBackToMenu = async () => {
+      await saveProgress();
       router.push(`/category/${script.categorySlug}`);
   };
   
@@ -211,15 +218,17 @@ export default function StandardScriptFlow({ script }: Props) {
              <p className="text-muted-foreground text-lg mb-8">You&apos;ve drilled this scenario {repeats + 1} times.</p>
              
              <div className="flex flex-col w-full max-w-xs gap-3">
-                  <Button onClick={handleFinishTraining} className="w-full h-12 text-base font-medium rounded-md">
-                      Finish & Save
-                  </Button>
-                  <Link href={`/category/${script.categorySlug}`} className="w-full">
-                      <Button variant="ghost" className="w-full h-12 text-muted-foreground hover:text-foreground">
-                         Back to Menu
-                      </Button>
-                  </Link>
-             </div>
+                   <Button onClick={handlePracticeAgain} className="w-full h-12 text-base font-medium rounded-md">
+                       Practice Again (Repeat)
+                   </Button>
+                   <Button 
+                        variant="ghost" 
+                        onClick={handleBackToMenu}
+                        className="w-full h-12 text-muted-foreground hover:text-foreground"
+                   >
+                        Back to Menu
+                   </Button>
+              </div>
          </motion.div>
       );
   } else if (currentIndex === culturalNoteIndex && script.culturalNote) {
