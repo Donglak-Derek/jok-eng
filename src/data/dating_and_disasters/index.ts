@@ -13,6 +13,9 @@ import { theMenuDecoder } from "./the_menu_decoder";
 import { theApologyDecoder } from "./the_apology_decoder";
 import { theFriendZone } from "./the_friend_zone";
 import { theMixedSignals } from "./the_mixed_signals";
+import { theElevatorFart } from "./the_elevator_fart";
+import { theWrongWave } from "./the_wrong_wave";
+import { theSalaryQuestion } from "./the_salary_question";
 
 export const skitScripts: Script[] = [
   datingAppCrash,
@@ -28,5 +31,8 @@ export const skitScripts: Script[] = [
   theMenuDecoder,
   theApologyDecoder,
   theFriendZone,
-  theMixedSignals
+  theMixedSignals,
+  theElevatorFart,
+  theWrongWave,
+  theSalaryQuestion
 ];
