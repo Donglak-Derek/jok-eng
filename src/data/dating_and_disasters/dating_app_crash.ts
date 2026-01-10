@@ -5,6 +5,7 @@ export const datingAppCrash: Script = {
   id: "date_app_crash",
   title: "Dating App Crash",
   type: "decoder",
+  section: "The Dating Minefield",
   categorySlug: "dating_and_disasters",
   categoryName: CATEGORY_NAMES["dating_and_disasters"],
   cleanedEnglish: "Apps are designed to keep you swiping, not dating. Here is what their notifications really mean.",
@@ -52,4 +53,44 @@ export const datingAppCrash: Script = {
       survivalTip: "Put the phone away. obsession is not attractive.",
     },
   ],
+  quizItems: [
+    {
+       question: "What does 'It's a Match!' really mean?",
+       options: [
+         "You are soulmates.",
+         "You have 24 hours to start a conversation.",
+         "They want to marry you.",
+         "The app is broken."
+       ],
+       correctIndex: 1,
+       explanation: "Most apps have a 24-hour timer. If you don't speak, the match disappears."
+    },
+    {
+       question: "What is the best way to handle 'Ghosting'?",
+       options: [
+         "Double text them until they reply.",
+         "Call the police.",
+         "Unmatch after a few days and move on.",
+         "Send an angry voice note."
+       ],
+       correctIndex: 2,
+       explanation: "Ghosting is part of modern dating. Don't let it clutter your inbox or your mind."
+    },
+    {
+       question: "If an app says 'Upgrade to see who liked you', you should...",
+       options: [
+         "Immediately pay $20.",
+         "Assume it's a scam or long-distance match.",
+         "Throw your phone in the river.",
+         "Email support."
+       ],
+       correctIndex: 1,
+       explanation: "Apps use this curiosity gap to make money. Usually, the likes are not quality matches."
+    }
+  ],
+  summaryPoints: [
+      "Dating apps are businesses first, matchmakers second.",
+      "Silence (Ghosting) is an answer. Accept it.",
+      "Don't pay for premium features unless you like burning money."
+  ]
 };

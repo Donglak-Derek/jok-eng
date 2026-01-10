@@ -3,7 +3,8 @@ import { CATEGORY_NAMES } from "@/data/categories";
 
 export const roommateCooking: Script = {
   id: "skit-roommate-cooking",
-  title: "Kitchen Disaster Date",
+  title: "The Roommate's Cooking",
+  section: "Social Emergencies",
   categorySlug: "dating_and_disasters",
   categoryName: CATEGORY_NAMES["dating_and_disasters"],
   cleanedEnglish:

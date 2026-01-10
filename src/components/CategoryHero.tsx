@@ -14,6 +14,7 @@ type CategoryHeroProps = {
   scripts: Script[];
   colorName?: string;
   description?: string;
+  // No changes needed to props, script has section
 };
 
 // Map color names to Tailwind style objects/classes
@@ -63,12 +64,14 @@ export default function CategoryHero({
   useEffect(() => {
     setMounted(true);
     const completed = new Set<string>();
+    const today = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD local
     
     scripts.forEach(script => {
-      // Check repeats key as a proxy for "completed at least once"
-      const repeatsKey = `jokeng:repeats:${script.id}`;
-      const repeats = localStorage.getItem(repeatsKey);
-      if (repeats && parseInt(repeats) > 0) {
+      // Check Daily Key
+      const dailyKey = `jokeng:daily:${today}:${script.id}`;
+      const isDoneToday = localStorage.getItem(dailyKey) === "true";
+      
+      if (isDoneToday) {
         completed.add(script.id);
       }
     });
@@ -119,7 +122,7 @@ export default function CategoryHero({
             {/* Progress Bar */}
             <div className="space-y-2 max-w-sm">
                 <div className="flex justify-between text-sm font-semibold text-slate-600">
-                    <span>Mastery Progress</span>
+                    <span>Daily Progress</span>
                     <span>{completedIds.size} / {scripts.length}</span>
                 </div>
                 <div className="h-3 w-full bg-white rounded-full overflow-hidden shadow-inner border border-slate-100">
@@ -139,6 +142,11 @@ export default function CategoryHero({
                         <Trophy className="w-4 h-4" />
                         Category Mastered!
                     </motion.div>
+                )}
+                {isAllComplete && (
+                     <div className="text-xs text-slate-500 font-medium">
+                        All trainings complete for today. Great job!
+                     </div>
                 )}
             </div>
         </div>

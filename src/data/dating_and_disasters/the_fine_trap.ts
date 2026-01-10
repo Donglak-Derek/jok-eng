@@ -5,6 +5,7 @@ export const theFineTrap: Script = {
   id: "date_fine_trap",
   title: "The 'Fine' Trap",
   type: "decoder",
+  section: "The Dating Minefield",
   categorySlug: "dating_and_disasters",
   categoryName: CATEGORY_NAMES["dating_and_disasters"],
   cleanedEnglish: "Passive-aggression is a love language nobody wants to speak. Learn to decode the silence.",

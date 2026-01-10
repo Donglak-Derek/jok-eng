@@ -4,6 +4,7 @@ import { CATEGORY_NAMES } from "@/data/categories";
 export const theExTrap: Script = {
   id: "date_ex_trap",
   title: "The 'Ex' Trap",
+  section: "The Dating Minefield",
   type: "decoder",
   categorySlug: "dating_and_disasters",
   categoryName: CATEGORY_NAMES["dating_and_disasters"],

@@ -3,7 +3,8 @@ import { CATEGORY_NAMES } from "@/data/categories";
 
 export const netflixTrap: Script = {
   id: "date_03",
-  title: "The 'Netflix' Trap",
+  title: "The Netflix Trap",
+  section: "The Dating Minefield",
   type: "decoder",
   categorySlug: "dating_and_disasters",
   categoryName: CATEGORY_NAMES["dating_and_disasters"],

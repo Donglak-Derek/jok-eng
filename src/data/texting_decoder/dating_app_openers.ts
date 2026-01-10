@@ -39,7 +39,14 @@ export const datingAppOpeners: Script = {
       literalMeaning: "Your eyes form a crescent shape when you smile.",
       actualMeaning: "I read a pickup artist book from 2005.",
       dangerLevel: "High - Cringe",
-      survivalTip: "Ignore the compliment, ask what they do for work."
+      survivalTip: "Ignore the compliment, ask what they do for work.",
+      conversation: {
+          speakerA: "Them",
+          speakerB: "You",
+          textA: "You smile with your eyes",
+          textB: "Haha thanks. So what do you do for work?",
+          contextNote: "Don't let the scripted compliment derail you. Pivot to a real topic to see if they can hold a conversation."
+      }
     },
     {
       id: "date-3",
@@ -47,7 +54,14 @@ export const datingAppOpeners: Script = {
       literalMeaning: "I speak ironically.",
       actualMeaning: "I will be mean to you and call it a joke.",
       dangerLevel: "Critical - Run",
-      survivalTip: "Test them early. If they get offended easily, unmatch."
+      survivalTip: "Test them early. If they get offended easily, unmatch.",
+      conversation: {
+          speakerA: "Them",
+          speakerB: "You",
+          textA: "I'm fluent in sarcasm",
+          textB: "Does that mean you're funny, or just mean?",
+          contextNote: "A little pushback usually reveals their true colors immediately. If they get defensive, it's a red flag."
+      }
     },
     {
       id: "date-4",

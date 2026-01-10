@@ -25,10 +25,12 @@ export default function ScenarioList({ scripts, onEdit, onDelete, onTogglePublic
     const sections: Record<string, string> = {
       basics: "5 Basics (The \"Must Knows\")",
       advanced: "5 Advanced (The \"Cool Kid\" Stuff)",
-      boss_battles: "Boss Battles (Hard/Complex)"
+      boss_battles: "Boss Battles (Hard/Complex)",
+      "The Dating Minefield": "The Dating Minefield",
+      "Social Emergencies": "Social Emergencies"
     };
 
-    const sectionOrder = ["basics", "advanced", "boss_battles"];
+    const sectionOrder = ["basics", "advanced", "boss_battles", "The Dating Minefield", "Social Emergencies"];
 
     return (
       <div className="flex flex-col gap-12 mt-6">

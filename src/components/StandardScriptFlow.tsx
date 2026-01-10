@@ -106,6 +106,13 @@ export default function StandardScriptFlow({ script }: Props) {
          localStorage.setItem(key, String(current + 1));
       }
       
+      // Save Daily Progress (Local only, for "Daily Session" tracking)
+       if (typeof window !== 'undefined') {
+          const today = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD local
+          const dailyKey = `jokeng:daily:${today}:${script.id}`;
+          localStorage.setItem(dailyKey, "true");
+       }
+      
       setHeardSet(new Set());
       localStorage.setItem(storageKey, JSON.stringify([]));
   };

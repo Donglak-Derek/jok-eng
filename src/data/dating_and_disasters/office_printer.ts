@@ -4,6 +4,7 @@ import { CATEGORY_NAMES } from "@/data/categories";
 export const officePrinter: Script = {
   id: "skit-office-printer",
   title: "The Offline Date",
+  section: "The Dating Minefield",
   categorySlug: "dating_and_disasters",
   categoryName: CATEGORY_NAMES["dating_and_disasters"],
   cleanedEnglish:

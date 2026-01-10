@@ -204,6 +204,13 @@ export default function SignalDecoder({ script }: Props) {
             // Force re-render or context update if needed, but guest mode is local
          }
      }
+     
+     // Save Daily Progress (Local only, for "Daily Session" tracking)
+     if (typeof window !== 'undefined') {
+        const today = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD local
+        const dailyKey = `jokeng:daily:${today}:${script.id}`;
+        localStorage.setItem(dailyKey, "true");
+     }
   };
 
   const handleExit = () => {
