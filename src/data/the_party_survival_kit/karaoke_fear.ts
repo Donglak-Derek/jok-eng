@@ -6,6 +6,7 @@ export const karaokeFear: Script = {
   title: "The Karaoke Trap",
   categorySlug: "the_party_survival_kit",
   categoryName: CATEGORY_NAMES["the_party_survival_kit"],
+  section: "boss_battles",
   cleanedEnglish: "Singing badly is a requirement, not a mistake.",
   imageUrl: "/images/scenarios/karaoke_fear.png",
   difficulty: "Medium 🌶️🌶️",

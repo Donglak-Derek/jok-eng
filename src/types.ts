@@ -33,6 +33,7 @@ export type Script = {
   title: string;
   categorySlug: string;
   categoryName: string;
+  section?: string; // Optional grouping for category pages
   cleanedEnglish: string; // Used as summary
   icon?: string;
   sentences?: Sentence[];

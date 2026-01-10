@@ -6,6 +6,7 @@ export const giftFace: Script = {
   title: "The 'Gift Face'",
   categorySlug: "the_party_survival_kit",
   categoryName: CATEGORY_NAMES["the_party_survival_kit"],
+  section: "boss_battles",
   cleanedEnglish: "Pretending to love ugly socks is an art form.",
   imageUrl: "/images/scenarios/gift_face.png",
   difficulty: "Spicy 🌶️🌶️🌶️",

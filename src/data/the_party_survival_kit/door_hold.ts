@@ -6,6 +6,7 @@ export const doorHoldDilemma: Script = {
   title: "The Door Hold Dilemma",
   categorySlug: "the_party_survival_kit",
   categoryName: CATEGORY_NAMES["the_party_survival_kit"],
+  section: "basics",
   cleanedEnglish: "Holding the door for someone who is just a little too far away.",
   imageUrl: "/images/scenarios/hug_shake.png", // Reusing an awkward social interaction image since generation failed
   difficulty: "Mild 🌶️",

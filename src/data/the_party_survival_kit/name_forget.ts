@@ -6,6 +6,7 @@ export const nameForget: Script = {
   title: "The Name Game Shame",
   categorySlug: "the_party_survival_kit",
   categoryName: CATEGORY_NAMES["the_party_survival_kit"],
+  section: "advanced",
   cleanedEnglish: "Meeting someone and forgetting their name 10 seconds later.",
   imageUrl: "/images/scenarios/name_forget.png",
   difficulty: "Medium 🌶️🌶️",

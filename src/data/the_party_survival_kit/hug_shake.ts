@@ -6,6 +6,7 @@ export const hugShakeFumble: Script = {
   title: "The Hug-Shake Fumble",
   categorySlug: "the_party_survival_kit",
   categoryName: CATEGORY_NAMES["the_party_survival_kit"],
+  section: "advanced",
   cleanedEnglish: "That awkward dance when you don't know if it's a handshake or a hug.",
   imageUrl: "/images/scenarios/hug_shake.png",
   difficulty: "Spicy 🌶️🌶️🌶️",

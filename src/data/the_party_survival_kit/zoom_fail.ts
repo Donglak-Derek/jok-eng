@@ -6,6 +6,7 @@ export const zoomFail: Script = {
   title: "The Zoom Mute Disaster",
   categorySlug: "the_party_survival_kit",
   categoryName: CATEGORY_NAMES["the_party_survival_kit"],
+  section: "advanced",
   cleanedEnglish: "The modern horror story of thinking you are muted when you are definitely not.",
   imageUrl: "/images/scenarios/zoom_fail.png",
   difficulty: "Medium 🌶️🌶️",

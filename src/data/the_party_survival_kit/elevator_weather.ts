@@ -6,6 +6,7 @@ export const elevatorWeather: Script = {
   title: "The Elevator Weather Bot",
   categorySlug: "the_party_survival_kit",
   categoryName: CATEGORY_NAMES["the_party_survival_kit"],
+  section: "basics",
   cleanedEnglish: "When you run out of things to say and become a meteorologist.",
   imageUrl: "/images/scenarios/elevator_weather.png",
   difficulty: "Mild 🌶️",

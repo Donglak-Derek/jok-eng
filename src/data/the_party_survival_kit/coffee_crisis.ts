@@ -6,6 +6,7 @@ export const coffeeCrisis: Script = {
   title: "The Coffee Size Crisis",
   categorySlug: "the_party_survival_kit",
   categoryName: CATEGORY_NAMES["the_party_survival_kit"],
+  section: "basics",
   cleanedEnglish: "Ordering a 'Small' coffee shouldn't require a translator.",
   imageUrl: "/images/scenarios/coffee_crisis.png",
   difficulty: "Mild 🌶️",

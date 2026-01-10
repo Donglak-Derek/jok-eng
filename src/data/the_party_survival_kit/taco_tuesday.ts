@@ -6,6 +6,7 @@ export const tacoTuesday: Script = {
   title: "Taco Tuesday",
   categorySlug: "the_party_survival_kit",
   categoryName: CATEGORY_NAMES["the_party_survival_kit"],
+  section: "basics",
   cleanedEnglish: "A fun story about misinterpreting a weekly food special as a serious cultural holiday.",
   imageUrl: "/images/scenarios/taco_tuesday.png",
   difficulty: "Mild 🌶️",

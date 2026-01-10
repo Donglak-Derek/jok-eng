@@ -6,6 +6,7 @@ export const theIrishGoodbye: Script = {
   title: "The Irish Goodbye",
   categorySlug: "the_party_survival_kit",
   categoryName: CATEGORY_NAMES["the_party_survival_kit"],
+  section: "boss_battles",
   cleanedEnglish: "I'm not rude, I'm just efficient at leaving.",
   imageUrl: "/images/scenarios/irish_goodbye.png", // specific image to be added later if available
   difficulty: "Spicy 🌶️🌶️🌶️",

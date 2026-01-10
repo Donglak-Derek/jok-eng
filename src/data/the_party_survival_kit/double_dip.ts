@@ -6,6 +6,7 @@ export const doubleDip: Script = {
   title: "The Double Dip",
   categorySlug: "the_party_survival_kit",
   categoryName: CATEGORY_NAMES["the_party_survival_kit"],
+  section: "advanced",
   cleanedEnglish: "One chip, one dip. That is the law.",
   imageUrl: "/images/scenarios/double_dip.png",
   difficulty: "Mild 🌶️",

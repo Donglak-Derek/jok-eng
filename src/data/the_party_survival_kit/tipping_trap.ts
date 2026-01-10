@@ -6,6 +6,7 @@ export const tippingTrap: Script = {
   title: "The Tipping Trap",
   categorySlug: "the_party_survival_kit",
   categoryName: CATEGORY_NAMES["the_party_survival_kit"],
+  section: "advanced",
   cleanedEnglish: "A chaotic story about chasing a waiter to give them loose change.",
   imageUrl: "/images/scenarios/tipping_trap.png",
   difficulty: "Spicy 🌶️🌶️🌶️",

@@ -6,6 +6,7 @@ export const howAreYouDisaster: Script = {
   title: "The 'How Are You' Essay",
   categorySlug: "the_party_survival_kit",
   categoryName: CATEGORY_NAMES["the_party_survival_kit"],
+  section: "basics",
   cleanedEnglish: "When 'small talk' accidentally becomes a therapy session.",
   imageUrl: "/images/scenarios/how_are_you.png",
   difficulty: "Medium 🌶️🌶️",

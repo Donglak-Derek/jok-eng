@@ -6,6 +6,7 @@ export const replyAllApocalypse: Script = {
   title: "The Reply-All Apocalypse",
   categorySlug: "the_party_survival_kit",
   categoryName: CATEGORY_NAMES["the_party_survival_kit"],
+  section: "advanced",
   cleanedEnglish: "Sending a private rant to the entire company by mistake.",
   imageUrl: "/images/scenarios/reply_all.png",
   difficulty: "Spicy 🌶️🌶️🌶️",
