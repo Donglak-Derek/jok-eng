@@ -280,11 +280,8 @@ export default function SentenceCard(props: Props) {
              </div>
 
              {/* Center: Scenario Text (Smaller) */}
-             <div className="flex-1 min-w-0 text-center px-1">
-                 <div className="text-sm md:text-base font-medium text-foreground leading-tight truncate">
-                     {sentence.scenario}
-                 </div>
-             </div>
+             {/* Spacer to keep layout balanced if needed, or just let justify-between handle it */}
+             <div className="flex-1" />
 
              {/* Right: Auto-Play Toggle (Icon) */}
              <div className="flex-shrink-0 w-10 flex justify-end">
@@ -308,6 +305,11 @@ export default function SentenceCard(props: Props) {
         </div>
 
         <div className="p-4 md:p-6 flex flex-col gap-4">
+            {/* The Situation (Scenario) - Moved from Header */}
+            <div className="text-lg md:text-xl font-medium text-center text-foreground/90 leading-snug mb-2">
+                {sentence.scenario}
+            </div>
+
             {/* The Mistake (Bad Response) - Visually Receded */}
             <div className="relative pl-4 border-l-4 border-red-300 bg-red-100/40 p-5 rounded-r-xl">
                 <div className="absolute -left-[10px] top-4 bg-white text-red-500">

@@ -7,7 +7,7 @@ export const directionsAndLocations: Script = {
   categorySlug: "small_talk",
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish: "Asking for directions when Google Maps betrays you.",
-  imageUrl: "/images/scenarios/small_talk_generic.png", // Will update later
+  imageUrl: "/images/scenarios/lost_upside_down_map_3d.png",
 
   culturalNote: {
     title: "Landmark Navigation",

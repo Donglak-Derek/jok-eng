@@ -7,7 +7,7 @@ export const healthAndFeelings: Script = {
   categorySlug: "small_talk",
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish: "Communicating burnout, illness, and the 'Sunday Scaries' without oversharing.",
-  imageUrl: "/images/scenarios/small_talk_generic.png", // Will update later
+  imageUrl: "/images/scenarios/calling_in_sick_3d.png",
 
   culturalNote: {
     title: "The 'Mental Health Day'",

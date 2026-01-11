@@ -7,7 +7,7 @@ export const timeAndSchedules: Script = {
   categorySlug: "small_talk",
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish: "Excuses for lateness, time zone math, and the 'Hard Stop'.",
-  imageUrl: "/images/scenarios/small_talk_generic.png", // Will update later
+  imageUrl: "/images/scenarios/running_late_sprint_3d.png",
 
   culturalNote: {
     title: "The 'Hard Stop'",

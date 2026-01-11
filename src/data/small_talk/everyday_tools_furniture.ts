@@ -7,7 +7,7 @@ export const toolsAndFurniture: Script = {
   categorySlug: "small_talk",
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish: "Surviving flat-pack furniture assembly without a divorce.",
-  imageUrl: "/images/scenarios/small_talk_generic.png", // Will update later
+  imageUrl: "/images/scenarios/diy_disaster_3d.png",
 
   culturalNote: {
     title: "The 'Extra Screw' Panic",

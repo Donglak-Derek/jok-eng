@@ -7,7 +7,7 @@ export const shoppingAndMoney: Script = {
   categorySlug: "small_talk",
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish: "Just browsing, asking for discounts, and buyer's remorse.",
-  imageUrl: "/images/scenarios/small_talk_generic.png", // Will update later
+  imageUrl: "/images/scenarios/retail_therapy_browsing_3d.png",
 
   culturalNote: {
     title: "The 'Just Looking' Defense",

@@ -7,7 +7,7 @@ export const groceryStore: Script = {
   categorySlug: "small_talk",
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish: "Surviving the aisles, judging carts, and the checkout interrogation.",
-  imageUrl: "/images/scenarios/small_talk_generic.png", // Will update later
+  imageUrl: "/images/scenarios/grocery_gauntlet_3d.png",
   
   culturalNote: {
     title: "The Checkout Chit-Chat",
