@@ -11,7 +11,14 @@ import { deliveringBadNews } from "./delivering_bad_news";
 import { networkingCoffee } from "./networking_coffee";
 import { resignationGraceful } from "./resignation_graceful";
 
+import { corporateDecoder } from "./corporate_decoder";
+import { jobAdDecoder } from "./job_ad_decoder";
+import { performanceReviewDecoder } from "./performance_review_decoder";
+
 export const interviewScripts: Script[] = [
+  corporateDecoder, 
+  jobAdDecoder, 
+  performanceReviewDecoder, // New!
   interviewIntro, // Put intro first as it's foundational
   salaryNegotiation,
   settingBoundaries,

@@ -71,7 +71,7 @@ export default function SignalDecoder({ script }: Props) {
   // Helper to normalize danger levels
   const getDangerValue = (level: string): number => {
     const l = level.toLowerCase();
-    if (l.includes("critical") || l.includes("run") || l.includes("red flag") || l.includes("high")) return 90;
+    if (l.includes("critical") || l.includes("run") || l.includes("red flag") || l.includes("high") || l.includes("danger")) return 90;
     if (l.includes("medium") || l.includes("caution") || l.includes("flake") || l.includes("yellow")) return 50;
     return 15; // Low/Safe
   };
@@ -400,8 +400,7 @@ export default function SignalDecoder({ script }: Props) {
                                     >
                                         <div className="text-2xl group-hover:scale-110 transition-transform">🟢</div>
                                         <div className="flex flex-col items-center">
-                                            <span className="font-bold text-green-800 text-sm">Safe</span>
-                                            <span className="text-[10px] text-green-600 font-medium leading-tight">No worries</span>
+                                            <span className="font-bold text-green-800 text-sm text-center">Safe / Genuine</span>
                                         </div>
                                     </button>
 
@@ -411,8 +410,7 @@ export default function SignalDecoder({ script }: Props) {
                                     >
                                         <div className="text-2xl group-hover:scale-110 transition-transform">🟡</div>
                                         <div className="flex flex-col items-center">
-                                            <span className="font-bold text-yellow-800 text-sm">Caution</span>
-                                            <span className="text-[10px] text-yellow-600 font-medium leading-tight">Be careful</span>
+                                            <span className="font-bold text-yellow-800 text-sm text-center">Caution / Fluff</span>
                                         </div>
                                     </button>
 
@@ -422,8 +420,7 @@ export default function SignalDecoder({ script }: Props) {
                                     >
                                         <div className="text-2xl group-hover:scale-110 transition-transform">🔴</div>
                                         <div className="flex flex-col items-center">
-                                            <span className="font-bold text-red-800 text-sm">Danger</span>
-                                            <span className="text-[10px] text-red-600 font-medium leading-tight">Red flag!</span>
+                                            <span className="font-bold text-red-800 text-sm text-center">Danger / Trap</span>
                                         </div>
                                     </button>
                                 </div>
@@ -450,9 +447,9 @@ export default function SignalDecoder({ script }: Props) {
 
                                 {/* Visual Answer Key */}
                                 <div className="grid grid-cols-3 gap-2 w-full">
-                                    {getResultButtonStyle(15, "Safe", "🟢")}
-                                    {getResultButtonStyle(50, "Caution", "🟡")}
-                                    {getResultButtonStyle(90, "Danger", "🔴")}
+                                    {getResultButtonStyle(15, "Safe / Genuine", "🟢")}
+                                    {getResultButtonStyle(50, "Caution / Fluff", "🟡")}
+                                    {getResultButtonStyle(90, "Danger / Trap", "🔴")}
                                 </div>
 
                                 {/* Meanings Grid */}
