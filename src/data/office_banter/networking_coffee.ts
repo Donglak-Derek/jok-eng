@@ -6,7 +6,7 @@ export const networkingCoffee: Script = {
   categorySlug: "office_banter",
   categoryName: "Career & Office Talk",
   cleanedEnglish: "Building allies without being awkward.",
-    imageUrl: "/images/scenarios/coffee_crisis.png",
+    imageUrl: "/images/scenarios/networking_coffee_3d.png",
   // Engagement
   culturalNote: {
     title: "The Art of the 'Coffee Chat'",

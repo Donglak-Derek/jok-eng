@@ -6,7 +6,7 @@ export const interviewIntro: Script = {
   categorySlug: "office_banter",
   categoryName: "Career & Office Talk",
   cleanedEnglish: "Master the 2-minute elevator pitch of your career.",
-    imageUrl: "/images/scenarios/coffee_crisis.png",
+    imageUrl: "/images/scenarios/interview_intro_3d.png",
   // Engagement
   culturalNote: {
     title: "The 'Elevator Pitch' Culture",

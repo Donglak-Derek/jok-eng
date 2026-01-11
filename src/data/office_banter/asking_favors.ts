@@ -37,7 +37,7 @@ export const askingFavors: Script = {
     }
   ],
 
-  imageUrl: "/images/scenarios/coffee_crisis.png",
+  imageUrl: "/images/scenarios/asking_favors_3d.png",
   sentences: [
     {
       id: "favor-1",

@@ -6,7 +6,7 @@ export const deliveringBadNews: Script = {
   categorySlug: "office_banter",
   categoryName: "Career & Office Talk",
   cleanedEnglish: "How to tell your boss things are going wrong.",
-    imageUrl: "/images/scenarios/apology_decoder.png",
+    imageUrl: "/images/scenarios/delivering_bad_news_3d.png",
   // Engagement
   culturalNote: {
     title: "Bad News Travels Fast",

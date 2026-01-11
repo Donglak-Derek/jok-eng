@@ -8,7 +8,7 @@ export const interviewSmartQuestion: Script = {
   categoryName: CATEGORY_NAMES["office_banter"],
   cleanedEnglish:
     "How to joke with a PM about bugs, show you’re not defensive, and still look like the teammate they want to work with.",
-  imageUrl: "/images/scenarios/zoom_fail.png",
+  imageUrl: "/images/scenarios/pm_banter_3d.png",
   // Engagement
   culturalNote: {
     title: "Product Managers vs. Engineers",

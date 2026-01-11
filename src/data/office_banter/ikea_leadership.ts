@@ -6,7 +6,7 @@ export const ikeaLeadership: Script = {
   categorySlug: "office_banter",
   categoryName: "Career & Office Talk",
   cleanedEnglish: "Leading with 'Togetherness' and 'Cost-consciousness'.",
-    imageUrl: "/images/scenarios/coffee_crisis.png",
+    imageUrl: "/images/scenarios/ikea_leadership_3d.png",
   // Engagement
   culturalNote: {
     title: "Swedish Leadership Style",

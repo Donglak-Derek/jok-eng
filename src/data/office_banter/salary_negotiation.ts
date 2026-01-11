@@ -6,7 +6,7 @@ export const salaryNegotiation: Script = {
   categorySlug: "office_banter",
   categoryName: "Career & Office Talk",
   cleanedEnglish: "Get paid what you're worth without sweating through your shirt.",
-    imageUrl: "/images/scenarios/salary_question.png",
+    imageUrl: "/images/scenarios/salary_negotiation_3d.png",
   
   // Engagement
   culturalNote: {
