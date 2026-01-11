@@ -3,7 +3,7 @@
 import { useCallback, useMemo, useState, useEffect, useRef } from "react";
 import type { Sentence } from "@/types";
 import { Button } from "@/components/Button";
-import { Eye, EyeOff, AudioLines } from "lucide-react";
+import { Eye, EyeOff, AudioLines, Volume2, VolumeX } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 type Props = {
@@ -28,12 +28,14 @@ export default function SentenceCard(props: Props) {
   const cleanText = (text: string) => text.replace(/\[|\]/g, "");
 
   // Unified Logic: Standard mode is just Cloze mode with everything revealed by default
-  const isEffectiveGlobalReveal = mode === "standard" || isGlobalRevealed;
+  // EXCEPT if it is a "Comparison Card" (has goodResponse), we want it to behave like a Cloze card (interactive)
+  const isComparison = !!(sentence.goodResponse && sentence.badResponse);
+  const isEffectiveGlobalReveal = (mode === "standard" && !isComparison) || isGlobalRevealed;
   const anyRevealed = isEffectiveGlobalReveal || localRevealed.size > 0;
 
   const keywords = useMemo(() => sentence.keywords || [], [sentence.keywords]);
 
-  // Constants for animations
+  // Constants for iterations
   const containerVariants = {
     hidden: { opacity: 1 },
     visible: {
@@ -42,10 +44,13 @@ export default function SentenceCard(props: Props) {
     }
   };
   
-  const wordVariants = {
+  const wordVariants = { // ... (unchanged)
     hidden: { opacity: 1, y: 0 },
     visible: { opacity: 1, y: 0 }
   };
+
+  // Helper to render text with clickable cloze gaps
+
 
   // Helper to render text with clickable cloze gaps
   const renderClozeText = () => {
@@ -78,9 +83,10 @@ export default function SentenceCard(props: Props) {
                     // Allow toggling only if NOT in forced standard mode (optional, but good for interaction)
                     if (mode === "standard") return;
                     
-                    const next = new Set(localRevealed);
-                    if (next.has(content)) next.delete(content); else next.add(content);
-                    setLocalRevealed(next);
+                    // User requested "Group Toggle" behavior: Clicking any box toggles ALL
+                    if (onToggleGlobalReveal) {
+                        onToggleGlobalReveal();
+                    }
                 }}
                 className={`
                   inline-block rounded mx-1 px-1.5 border-b-4 transition-all duration-300
@@ -246,76 +252,181 @@ export default function SentenceCard(props: Props) {
     </div>
   );
 
-  // New "Mistake -> Fix" Layout (Minimalist)
+  // New "Mistake -> Fix" Layout (Cleaner & Integrated Cloze)
   if (sentence.scenario && sentence.badResponse && sentence.goodResponse) {
+    // We override the renderer to use the good response text for cloze logic
+    // Temporarily swap sentence.en with goodResponse for the renderer
+    const originalEn = sentence.en;
+    // We need to mutate the object structure slightly for the helper or just pass strict text
+    // But renderClozeText uses `sentence.en`. simpler to create a derived renderer or mock it.
+    // actually, let's keep it simple: we want the GOOD response to be clozable.
+    // So we will render the Cloze logic MANUALLY here for the good response.
+    
     return (
-      <div className="bg-white rounded-lg border border-border p-6 md:p-8 flex flex-col gap-8 shadow-sm transition-shadow hover:shadow-md">
-        {/* Scenario Header */}
-        <div className="pb-4 border-b border-border">
-          <div className="text-xs font-semibold tracking-wider text-muted uppercase mb-2">
-            Scenario
-          </div>
-          <div className="text-xl md:text-2xl font-semibold text-foreground">
-            {sentence.scenario}
-          </div>
+      <div className="bg-white rounded-xl border border-border overflow-hidden shadow-sm transition-all hover:shadow-md flex flex-col">
+        {/* Header: Controls & Scenario (Single Row) */}
+        <div className="bg-slate-50/50 p-3 h-14 border-b border-border flex items-center justify-between gap-2">
+             {/* Left: Eye Icon (Reveal All) */}
+             <div className="flex-shrink-0 w-10">
+                 {(mode === "cloze" || isComparison) && onToggleGlobalReveal && (
+                    <button 
+                        onClick={(e) => { e.stopPropagation(); onToggleGlobalReveal(); }}
+                        className="p-2 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-full transition-colors flex items-center justify-center"
+                        title={isGlobalRevealed ? "Hide Answers" : "Reveal All"}
+                    >
+                        {isGlobalRevealed ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
+                    </button>
+                 )}
+             </div>
+
+             {/* Center: Scenario Text (Smaller) */}
+             <div className="flex-1 min-w-0 text-center px-1">
+                 <div className="text-sm md:text-base font-medium text-foreground leading-tight truncate">
+                     {sentence.scenario}
+                 </div>
+             </div>
+
+             {/* Right: Auto-Play Toggle (Icon) */}
+             <div className="flex-shrink-0 w-10 flex justify-end">
+                 {onToggleAutoPlay && (
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); onToggleAutoPlay(); }}
+                      className="flex items-center gap-2 group"
+                      title="Toggle Auto-Play"
+                    >
+                        {/* Sound Icon */}
+                        <div className={`transition-colors ${isAutoPlayEnabled ? "text-teal-600" : "text-slate-300"}`}>
+                            {isAutoPlayEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+                        </div>
+                        
+                        <div className={`w-8 h-4 rounded-full p-0.5 transition-colors ${isAutoPlayEnabled ? "bg-teal-500" : "bg-slate-300"}`}>
+                            <div className={`w-3 h-3 bg-white rounded-full shadow-sm transition-transform ${isAutoPlayEnabled ? "translate-x-4" : "translate-x-0"}`} />
+                        </div>
+                    </button>
+                 )}
+             </div>
         </div>
 
-        {/* Content Grid */}
-        <div className="flex flex-col gap-6">
-          {/* Bad Response (Mistake) */}
-          <div className="p-5 rounded-md bg-secondary/50">
-            <div className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-2">
-              Don&apos;t say
+        <div className="p-4 md:p-6 flex flex-col gap-4">
+            {/* The Mistake (Bad Response) - Visually Receded */}
+            <div className="relative pl-4 border-l-4 border-red-300 bg-red-100/40 p-5 rounded-r-xl">
+                <div className="absolute -left-[10px] top-4 bg-white text-red-500">
+                    <div className="w-5 h-5 rounded-full border-2 border-red-300 flex items-center justify-center text-[10px] font-bold shadow-sm">✕</div>
+                </div>
+                <div className="text-xs font-bold text-red-500 uppercase tracking-wider mb-2">
+                    Avoid Saying
+                </div>
+                <div className="text-base text-muted-foreground/90 line-through decoration-red-300/60 decoration-2 mb-2">
+                    &quot;{sentence.badResponse.text}&quot;
+                </div>
+                <div className="text-xs text-red-600/90 italic font-medium">
+                    Why: {sentence.badResponse.why}
+                </div>
             </div>
-            <div className="text-lg md:text-xl text-muted-foreground mb-2 line-through decoration-muted-foreground/30">
-              &quot;{sentence.badResponse.text}&quot;
-            </div>
-            <div className="text-sm text-muted-foreground">
-              {sentence.badResponse.why}
-            </div>
-          </div>
 
-          {/* Good Response (Fix) */}
-          <div className="p-5 rounded-md bg-primary/5 border-l-2 border-primary">
-            <div className="text-xs font-bold text-primary uppercase tracking-wide mb-2">
-              Better
+            {/* The Fix (Good Response) - Hero Status */}
+            <div className="relative bg-teal-100/30 p-6 rounded-xl border border-teal-200/50">
+                 <div className="text-xs font-bold text-teal-700 uppercase tracking-wider mb-3 flex items-center gap-2">
+                    <span>Better Approach</span>
+                    <div className="h-px bg-teal-200 flex-1"></div>
+                </div>
+                
+                {/* Render Good Response with Cloze Logic */}
+                {/* We treat the goodResponse.text as the source for the cloze renderer */}
+                <div className="relative w-full text-left">
+                     {(() => {
+                        const text = sentence.goodResponse?.text || "";
+                        const parts = text.split(/(\[.*?\])/g);
+                        
+                        if (parts.length === 1) {
+                            return <div className="text-xl md:text-3xl font-bold leading-relaxed text-foreground text-left">{cleanText(text)}</div>;
+                        }
+
+                        return (
+                            <motion.p 
+                                className="text-xl md:text-3xl font-bold leading-relaxed text-foreground leading-snug text-left"
+                                variants={containerVariants}
+                                initial="hidden"
+                                animate={isEffectiveGlobalReveal ? "visible" : "hidden"}
+                            >
+                                {parts.map((part, i) => {
+                                if (part.startsWith("[") && part.endsWith("]")) {
+                                    const content = part.slice(1, -1);
+                                    const isRevealed = isEffectiveGlobalReveal || localRevealed.has(content);
+                                    
+                                    return (
+                                    <motion.span 
+                                        key={i}
+                                        variants={wordVariants}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            // Allow toggling only if NOT in forced standard mode (unless it's a comparison card)
+                                            if (mode === "standard" && !isComparison) return;
+                                            
+                                            // User requested "Group Toggle" behavior: Clicking any box toggles ALL
+                                            if (onToggleGlobalReveal) {
+                                                onToggleGlobalReveal();
+                                            }
+                                        }}
+                                        className={`
+                                        inline-block rounded mx-1 px-1.5 border-b-4 transition-all duration-300 mb-2
+                                        ${isRevealed 
+                                            ? "bg-teal-50 border-teal-200 text-teal-900 cursor-default" 
+                                            : "bg-slate-100 border-slate-300 text-transparent cursor-pointer hover:bg-slate-200 select-none min-w-[3ch] text-center"
+                                        }
+                                        ${mode !== "standard" && !isRevealed ? "active:scale-95" : ""}
+                                        `}
+                                        animate={{ 
+                                            scale: isRevealed ? [1, 1.05, 1] : 1,
+                                            backgroundColor: isRevealed ? "#f0fdfa" : "#f1f5f9",
+                                            borderColor: isRevealed ? "#99f6e4" : "#cbd5e1",
+                                            color: isRevealed ? "#134e4a" : "transparent"
+                                        }}
+                                    >
+                                        {content}
+                                    </motion.span>
+                                    );
+                                }
+                                return <span key={i} className="mx-0.5">{part}</span>;
+                                })}
+                            </motion.p>
+                        );
+                     })()}
+                </div>
+                
+                <div className="mt-3 text-sm font-medium text-teal-700/80 bg-teal-50/50 p-2 rounded border border-teal-100 inline-block">
+                    💡 {sentence.goodResponse.why}
+                </div>
             </div>
-            <div className="text-xl md:text-2xl font-bold text-foreground mb-2">
-              &quot;{sentence.goodResponse.text}&quot;
+
+            {/* Keywords hint */}
+            {keywords.length > 0 && anyRevealed && (
+            <div className="flex flex-wrap gap-2 animate-in fade-in slide-in-from-bottom-2 duration-500">
+                {keywords.map((k) => (
+                    <span
+                    key={k.word}
+                    className="text-xs px-2 py-1 rounded-full bg-secondary text-secondary-foreground border border-secondary"
+                    >
+                    <span className="font-semibold">{k.word}</span>
+                    <span className="opacity-70">: {k.definition.replace(/^Hidden:\s*/, "")}</span>
+                </span>
+                ))}
             </div>
-            <div className="text-base text-foreground/80">
-              {sentence.goodResponse.why}
-            </div>
-          </div>
+            )}
+
+            <Button
+            onClick={(e) => {
+                e.stopPropagation();
+                handlePlay();
+            }}
+            data-action="play-sentence"
+            className="w-full h-12 text-base font-medium rounded-lg shadow-none border border-primary/20 bg-primary/5 text-primary hover:bg-primary/10"
+            variant="ghost"
+            isLoading={loading}
+            >
+                {speaking ? <AudioVisualizer /> : <span className="flex items-center gap-2 font-bold">Listen to Better Response</span>}
+            </Button>
         </div>
-
-        {/* Keywords hint */}
-        {keywords.length > 0 && (
-           <div className="flex flex-wrap gap-2 mt-2">
-            {keywords.map((k) => (
-                <span
-                  key={k.word}
-                  className="text-xs px-2 py-1 rounded bg-secondary text-secondary-foreground"
-                >
-                <span className="font-semibold">{k.word}</span>
-                <span className="opacity-70">: {k.definition}</span>
-              </span>
-            ))}
-           </div>
-        )}
-
-        <Button
-          onClick={(e) => {
-            e.stopPropagation();
-            handlePlay();
-          }}
-          data-action="play-sentence"
-          className="w-full mt-2 h-12 text-base font-medium rounded-md"
-          variant="primary"
-          isLoading={loading}
-        >
-            {speaking ? <AudioVisualizer /> : <span className="flex items-center gap-2">Play Audio</span>}
-        </Button>
       </div>
     );
   }

@@ -37,7 +37,7 @@ export const askingFavors: Script = {
     }
   ],
 
-  imageUrl: "/images/scenarios/asking_favors.png",
+  imageUrl: "/images/scenarios/coffee_crisis.png",
   sentences: [
     {
       id: "favor-1",
@@ -46,14 +46,14 @@ export const askingFavors: Script = {
         { word: "Bandwidth", definition: "Mental capacity or time available" },
         { word: "Heads-down", definition: "Concentrating hard on work" }
       ],
-      scenario: "You need to interrupt someone who looks busy.",
+      scenario: "Interrupting someone busy",
       badResponse: {
-        text: "Hey, can you look at this right now?",
-        why: "Presumes their time is less important than yours. "
+          text: "Hey, can you look at this right now?",
+          why: "Presumes their time is cheap."
       },
       goodResponse: {
-        text: "Hey, gentle interruption - do you have a quick sec, or are you heads-down on something?",
-        why: "Respects their flow and gives them an 'out'."
+          text: "Hey, [gentle interruption] - do you have a quick sec, or are you [heads-down] on something?",
+          why: "Respects their flow and gives them an 'out'."
       }
     },
     {
@@ -63,65 +63,65 @@ export const askingFavors: Script = {
         { word: "Blocker", definition: "Something preventing progress" },
         { word: "Urgency", definition: "Importance requiring swift action" }
       ],
-      scenario: "You can't finish your work until they do theirs.",
+      scenario: "Chasing a delay",
       badResponse: {
-        text: "I'm waiting on you to finish the report.",
-        why: "Sounds accusatory and passive-aggressive."
+          text: "I'm waiting on you to finish the report.",
+          why: "Sounds accusatory."
       },
       goodResponse: {
-        text: "I'm currently blocked on the slide deck until I get those numbers. Could you let me know when you might have them?",
-        why: "Focuses on the *work flow*, not the *person's delay*."
+          text: "I'm currently [blocked] on the slide deck until I get those numbers. Could you let me know when you might have them?",
+          why: "Focuses on the *work flow*, not the *person*."
       }
     },
     {
       id: "favor-3",
       en: "Asking for 'Brain Power'",
       keywords: [
-        { word: "Perspective", definition: "A particular attitude toward or way of regarding something" },
-        { word: "Sounding board", definition: "A person with whom one discusses an idea or opinion" }
+        { word: "Perspective", definition: "A particular way of regarding something" },
+        { word: "Sounding board", definition: "A person to test ideas on" }
       ],
-      scenario: "You need advice, not a task.",
+      scenario: "Asking for advice",
       badResponse: {
-        text: "Tell me how to do this.",
-        why: "Demanding."
+          text: "Tell me how to do this.",
+          why: "Demanding."
       },
       goodResponse: {
-        text: "Can I pick your brain for 5 minutes? I'd love your perspective on how to tackle this client issue.",
-        why: "Flattery ('I value your brain') goes a long way."
+          text: "Can I [pick your brain] for 5 minutes? I'd love your [perspective] on how to tackle this client issue.",
+          why: "Flattery ('I value your brain') goes a long way."
       }
     },
     {
       id: "favor-4",
-      en: "The 'Big Ask' (Trading Favors)",
+      en: "The 'Big Ask'",
       keywords: [
         { word: "Capital", definition: "Social credit or goodwill" },
-        { word: "Reciprocity", definition: "The practice of exchanging things with others for mutual benefit" }
+        { word: "Reciprocity", definition: "Exchanging things for mutual benefit" }
       ],
-      scenario: "Asking for something that will take them a long time.",
+      scenario: "Asking for a huge favor",
       badResponse: {
-        text: "I need you to redo this whole spreadsheet by tomorrow.",
-        why: "Entitled. Offers nothing in return."
+          text: "I need you to redo this whole spreadsheet by tomorrow.",
+          why: "Entitled."
       },
       goodResponse: {
-        text: "I know this is a heavy lift and I really appreciate you helping me out. I owe you one—lunch is on me next week?",
-        why: "Acknowledges the effort and offers immediate reciprocity."
+          text: "I know this is a [heavy lift] and I really appreciate you helping me out. I [owe you one] - lunch on me?",
+          why: "Acknowledges effort and offers reciprocity."
       }
     },
     {
       id: "favor-5",
-      en: "The 'No' Acceptance",
+      en: "The Graceful 'No'",
       keywords: [
-        { word: "Boundaries", definition: "A line that marks the limits of an area" },
-        { word: "Gracious", definition: "Courteous, kind, and pleasant" }
+        { word: "Boundaries", definition: "Limits of responsibility" },
+        { word: "Gracious", definition: "Courteous and kind" }
       ],
-      scenario: "They say they are too busy to help.",
+      scenario: "Accepting a Rejection",
       badResponse: {
-        text: "Oh... okay. I guess I'll fail then.",
-        why: "Guilt-tripping is unprofessional."
+          text: "Oh... okay. I guess I'll fail then.",
+          why: "Guilt-tripping is unprofessional."
       },
       goodResponse: {
-        text: "Totally understand, you've got a full plate. I'll figure out a workaround. Thanks anyway!",
-        why: "Protects the relationship for the next time you need to ask."
+          text: "Totally understand, you've got a [full plate]. I'll figure out a workaround. Thanks anyway!",
+          why: "Protects the relationship for next time."
       }
     }
   ]
