@@ -3,132 +3,115 @@ import { CATEGORY_NAMES } from "@/data/categories";
 
 export const healthAndFeelings: Script = {
   id: "everyday-health-feelings",
-  title: "Health and Feelings",
+  title: "Calling in Sick",
   categorySlug: "small_talk",
   categoryName: CATEGORY_NAMES["small_talk"],
-  cleanedEnglish:
-    "Practice talking about how you feel—tired, sick, happy, or stressed. These phrases help you share your condition and emotions in daily life.",
-    imageUrl: "/images/scenarios/small_talk_generic.png",
+  cleanedEnglish: "Communicating burnout, illness, and the 'Sunday Scaries' without oversharing.",
+  imageUrl: "/images/scenarios/small_talk_generic.png", // Will update later
+
+  culturalNote: {
+    title: "The 'Mental Health Day'",
+    content: "It's becoming acceptable to take a sick day for mental exhaustion, not just flu. You don't need to give details. 'I'm not feeling well' covers everything from vomiting to 'I cannot deal with people today'."
+  },
+
+  quizItems: [
+    {
+      question: "You have a cold. Your boss asks for details. What do you provide?",
+      options: [
+        "A photo of your tissue.",
+        "A detailed description of your mucus.",
+        "Just say 'I have a bad head cold and need rest'.",
+        "Nothing."
+      ],
+      correctIndex: 2,
+      explanation: "Keep it vague. Nobody wants the gross details."
+    },
+    {
+      question: "It is Sunday night and you dread Monday. This is called:",
+      options: [
+        "The Sunday Scaries.",
+        "The Weekend End.",
+        "Monday Fear.",
+        "Job Hate."
+      ],
+      correctIndex: 0,
+      explanation: "'The Sunday Scaries' is the popular term for pre-work week anxiety."
+    }
+  ],
+
   sentences: [
     {
       id: "s1",
-      en: "I’m tired today because I worked late.",
+      en: "The Sick Text",
+      scenario: "Messaging your boss",
       keywords: [
-        { word: "tired", definition: "exhausted" },
-        { word: "worked late", definition: "stayed at work past hours" },
+        { word: "Make it", definition: "Attend" },
+        { word: "Under the weather", definition: "Sick" }
       ],
+      badResponse: {
+          text: "I am vomiting.",
+          why: "Gross. Too much info."
+      },
+      goodResponse: {
+          text: "I won't be able to [make it] in today. I'm feeling a bit [under the weather].",
+          why: "'Under the weather' is the perfect professional idiom for 'sick'."
+      }
     },
     {
       id: "s2",
-      en: "I didn’t sleep well last night.",
+      en: "The Burnout Signal",
+      scenario: "Admitting you are tired",
       keywords: [
-        { word: "sleep", definition: "rest" },
-        { word: "last night", definition: "previous night" },
+        { word: "Fried", definition: "Burned out/Exhausted" },
+        { word: "Brain", definition: "Mind" }
       ],
+      goodResponse: {
+          text: "Honestly, my [brain] is [fried]. It's been a long week.",
+          why: "Colloquial way to say you are mentally exhausted."
+      }
     },
     {
       id: "s3",
-      en: "I feel sick and need to rest.",
+      en: "The Decline",
+      scenario: "Refusing plans because you are tired",
       keywords: [
-        { word: "sick", definition: "ill" },
-        { word: "rest", definition: "take a break" },
+        { word: "Low battery", definition: "No energy" },
+        { word: "Pass", definition: "Decline" }
       ],
+      badResponse: {
+          text: "No I don't want to go.",
+          why: "Harsh."
+      },
+      goodResponse: {
+          text: "I'm running on [low battery] tonight, so I'll take a [pass]. Next time?",
+          why: "Tech metaphor ('low battery') is universally understood."
+      }
     },
     {
       id: "s4",
-      en: "My back hurts from lifting furniture.",
+      en: "The Recovery",
+      scenario: "Returning to work after sickness",
       keywords: [
-        { word: "back", definition: "rear part of body" },
-        { word: "hurts", definition: "is painful" },
+        { word: "Mend", definition: "Healing" },
+        { word: "Alive", definition: "Living" }
       ],
+      goodResponse: {
+          text: "I'm on the [mend], thanks! Finally feeling [alive] again.",
+          why: "Positive spin on returning to health."
+      }
     },
     {
       id: "s5",
-      en: "I have a headache right now.",
+      en: "The Stress Check",
+      scenario: "Friend asks how you are",
       keywords: [
-        { word: "headache", definition: "pain in head" },
-        { word: "right now", definition: "at this moment" },
+        { word: "Swamped", definition: "Very busy" },
+        { word: "Hanging in", definition: "Surviving" }
       ],
-    },
-    {
-      id: "s6",
-      en: "I’m stressed because of too much work.",
-      keywords: [
-        { word: "stressed", definition: "under pressure" },
-        { word: "too much", definition: "excessive" },
-      ],
-    },
-    {
-      id: "s7",
-      en: "I feel nervous before an interview.",
-      keywords: [
-        { word: "nervous", definition: "anxious" },
-        { word: "interview", definition: "formal meeting" },
-      ],
-    },
-    {
-      id: "s8",
-      en: "I’m happy because I finished my project.",
-      keywords: [
-        { word: "happy", definition: "cheerful" },
-        { word: "project", definition: "assignment" },
-      ],
-    },
-    {
-      id: "s9",
-      en: "I feel relaxed after drinking coffee.",
-      keywords: [
-        { word: "relaxed", definition: "calm" },
-        { word: "after", definition: "following" },
-      ],
-    },
-    {
-      id: "s10",
-      en: "I was excited to see my friends yesterday.",
-      keywords: [
-        { word: "excited", definition: "enthusiastic" },
-        { word: "friends", definition: "companions" },
-      ],
-    },
-    {
-      id: "s11",
-      en: "I’m worried about making mistakes at work.",
-      keywords: [
-        { word: "worried", definition: "concerned" },
-        { word: "mistakes", definition: "errors" },
-      ],
-    },
-    {
-      id: "s12",
-      en: "I feel strong after exercising.",
-      keywords: [
-        { word: "strong", definition: "powerful" },
-        { word: "exercising", definition: "working out" },
-      ],
-    },
-    {
-      id: "s13",
-      en: "I feel weak when I don’t eat breakfast.",
-      keywords: [
-        { word: "weak", definition: "lacking energy" },
-        { word: "breakfast", definition: "first meal" },
-      ],
-    },
-    {
-      id: "s14",
-      en: "I’m grateful for my coworkers’ help.",
-      keywords: [
-        { word: "grateful", definition: "thankful" },
-        { word: "help", definition: "assistance" },
-      ],
-    },
-    {
-      id: "s15",
-      en: "Sometimes I feel lonely in a new place.",
-      keywords: [
-        { word: "lonely", definition: "sad from being alone" },
-        { word: "new place", definition: "unfamiliar location" },
-      ],
-    },
-  ],
+      goodResponse: {
+          text: "We're completely [swamped] at work, but I'm [hanging in] there.",
+          why: "'Hanging in there' implies struggle but resilience."
+      }
+    }
+  ]
 };

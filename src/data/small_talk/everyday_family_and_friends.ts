@@ -3,172 +3,115 @@ import { CATEGORY_NAMES } from "@/data/categories";
 
 export const familyAndFriends: Script = {
   id: "everyday-family-and-friends",
-  title: "Family and Friends",
+  title: "Family Interrogation",
   categorySlug: "small_talk",
   categoryName: CATEGORY_NAMES["small_talk"],
-  cleanedEnglish:
-    "Talk about your family and friends in daily life, and ask others politely about theirs. Short, natural lines for real conversations.",
-    imageUrl: "/images/scenarios/small_talk_generic.png",
+  cleanedEnglish: "Surviving invasive questions about marriage, jobs, and babies.",
+  imageUrl: "/images/scenarios/family_interrogation_3d.png",
+
+  culturalNote: {
+    title: "The 'Privacy' Buffer",
+    content: "In some cultures, commenting on weight or salary is normal. In the West, it is RUDE. If someone asks 'Why aren't you married?', you can joke, deflect, or simply say 'I'm focusing on me right now'. You don't owe them an explanation."
+  },
+
+  quizItems: [
+    {
+      question: "Your aunt asks 'When are you having a baby?'. You don't want to answer. You say:",
+      options: [
+        "None of your business.",
+        "We're just practicing a lot right now!",
+        "When the economy collapses.",
+        "Oh, look at the time! (Run away)"
+      ],
+      correctIndex: 1,
+      explanation: "A joke (even a slightly risky one) is the best way to shut down nosy questions without starting a fight."
+    },
+    {
+      question: "A friend keeps cancelling plans. You want to see them. You say:",
+      options: [
+        "I hate you.",
+        "You are flaky.",
+        "No worries! Let me know when things calm down.",
+        "Block them."
+      ],
+      correctIndex: 2,
+      explanation: "'Low pressure' is the key. Making them feel guilty will just make them avoid you more."
+    }
+  ],
+
   sentences: [
     {
       id: "s1",
-      en: "I live with my wife and two kids.",
+      en: "The Relationship Status",
+      scenario: "Relative: 'Are you dating anyone?'",
       keywords: [
-        { word: "live with", definition: "reside together" },
-        { word: "kids", definition: "children" },
+        { word: "Career", definition: "Job path" },
+        { word: "Married", definition: "Wedded to" }
       ],
+      badResponse: {
+          text: "I am lonely and sad.",
+          why: "Depressing."
+      },
+      goodResponse: {
+          text: "Nope! I'm actually [married] to my [career] right now. It's very serious.",
+          why: "Funny, confident, and shuts down the topic."
+      }
     },
     {
       id: "s2",
-      en: "My kids love playing soccer.",
+      en: "The Weight Comment",
+      scenario: "Relative: 'You look... healthy.'",
       keywords: [
-        { word: "love", definition: "really like" },
-        { word: "soccer", definition: "football (sport)" },
+        { word: "Living", definition: "Being alive" },
+        { word: "Good life", definition: "Happy existence" }
       ],
+      badResponse: {
+          text: "Are you calling me fat?",
+          why: "Start of a fight."
+      },
+      goodResponse: {
+          text: "I know, right? Just [living] the [good life]! More cake, please.",
+          why: "Owning it takes the power away from them."
+      }
     },
     {
       id: "s3",
-      en: "My son is eight, and my daughter is twelve.",
+      en: "The Job Comparison",
+      scenario: "Friend: 'My cousin makes $200k...'",
       keywords: [
-        { word: "son", definition: "male child" },
-        { word: "daughter", definition: "female child" },
+        { word: "Happy", definition: "Glad" },
+        { word: "Lane", definition: "Path/Track" }
       ],
+      goodResponse: {
+          text: "That's amazing for him! I'm pretty [happy] in my own [lane] though.",
+          why: "Politely refuses to compete."
+      }
     },
     {
       id: "s4",
-      en: "My parents live nearby, so we visit often.",
+      en: "The Never-Ending Story",
+      scenario: "Uncle is telling a boring story",
       keywords: [
-        { word: "nearby", definition: "close to here" },
-        { word: "visit", definition: "go to see" },
+        { word: "Wild", definition: "Crazy" },
+        { word: "Grab", definition: "Get" }
       ],
+      goodResponse: {
+          text: "Wow, that is [wild]. Hey, I'm gonna [grab] another drink, do you want anything?",
+          why: "The classic 'Drink Refill' escape move."
+      }
     },
     {
       id: "s5",
-      en: "We have a small family dinner every Sunday.",
+      en: "The Flaky Friend",
+      scenario: "Friend cancels last minute",
       keywords: [
-        { word: "family dinner", definition: "meal with relatives" },
-        { word: "every Sunday", definition: "weekly on Sunday" },
+        { word: "Worries", definition: "Concerns" },
+        { word: "Rain check", definition: "Reschedule" }
       ],
-    },
-    {
-      id: "s6",
-      en: "How is your family doing these days?",
-      keywords: [
-        { word: "these days", definition: "lately" },
-        { word: "doing", definition: "faring/living" },
-      ],
-    },
-    {
-      id: "s7",
-      en: "Do you have any siblings?",
-      keywords: [
-        { word: "siblings", definition: "brothers or sisters" },
-        { word: "any", definition: "one or more" },
-      ],
-    },
-    {
-      id: "s8",
-      en: "My best friend works at the same place.",
-      keywords: [
-        { word: "best friend", definition: "closest friend" },
-        { word: "works", definition: "is employed" },
-      ],
-    },
-    {
-      id: "s9",
-      en: "We met in college and stayed close.",
-      keywords: [
-        { word: "met", definition: "encountered first time" },
-        { word: "stayed close", definition: "remained friends" },
-      ],
-    },
-    {
-      id: "s10",
-      en: "My wife enjoys baking with the kids on weekends.",
-      keywords: [
-        { word: "enjoy", definition: "likes" },
-        { word: "baking", definition: "cooking in oven" },
-      ],
-    },
-    {
-      id: "s11",
-      en: "We’re planning a picnic if the weather is good.",
-      keywords: [
-        { word: "planning", definition: "organizing" },
-        { word: "picnic", definition: "outdoor meal" },
-      ],
-    },
-    {
-      id: "s12",
-      en: "Would you like to join us this Saturday?",
-      keywords: [
-        { word: "join", definition: "come with" },
-        { word: "Saturday", definition: "weekend day" },
-      ],
-    },
-    {
-      id: "s13",
-      en: "Thanks for inviting me. Let me check with my family.",
-      keywords: [
-        { word: "invite", definition: "ask to come" },
-        { word: "check with", definition: "ask/consult" },
-      ],
-    },
-    {
-      id: "s14",
-      en: "My friend’s kids are the same age as mine.",
-      keywords: [
-        { word: "same age", definition: "born in same year" },
-        { word: "friend’s", definition: "belonging to friend" },
-      ],
-    },
-    {
-      id: "s15",
-      en: "We often carpool to practice after school.",
-      keywords: [
-        { word: "carpool", definition: "share rides" },
-        { word: "practice", definition: "training session" },
-      ],
-    },
-    {
-      id: "s16",
-      en: "I’m trying to balance work and family time.",
-      keywords: [
-        { word: "balance", definition: "keep equal" },
-        { word: "family time", definition: "time with kin" },
-      ],
-    },
-    {
-      id: "s17",
-      en: "If you need help, my family can watch the kids.",
-      keywords: [
-        { word: "watch the kids", definition: "babysit" },
-        { word: "need help", definition: "require assistance" },
-      ],
-    },
-    {
-      id: "s18",
-      en: "Do you and your partner like hiking or movies?",
-      keywords: [
-        { word: "partner", definition: "spouse / significant other" },
-        { word: "hiking", definition: "walking in nature" },
-      ],
-    },
-    {
-      id: "s19",
-      en: "We’re celebrating my mom’s birthday next week.",
-      keywords: [
-        { word: "celebrate", definition: "party for" },
-        { word: "birthday", definition: "day born" },
-      ],
-    },
-    {
-      id: "s20",
-      en: "Let’s keep in touch and plan a family barbecue.",
-      keywords: [
-        { word: "keep in touch", definition: "stay contacted" },
-        { word: "barbecue", definition: "outdoor grill meal" },
-      ],
-    },
-  ],
+      goodResponse: {
+          text: "No [worries]! We'll take a [rain check]. Rest up!",
+          why: "Be the chill friend. They will appreciate it."
+      }
+    }
+  ]
 };

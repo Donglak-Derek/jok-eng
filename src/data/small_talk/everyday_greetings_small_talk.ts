@@ -1,91 +1,117 @@
 import { Script } from "@/types";
+import { CATEGORY_NAMES } from "@/data/categories";
 
 export const greetingsSmallTalk: Script = {
   id: "casual_small_talk_1",
-  title: "Casual Small Talk",
+  title: "The Art of Hello",
   categorySlug: "small_talk",
-  categoryName: "Small Talk",
-  cleanedEnglish: "Simple greetings and questions to start a friendly conversation.",
-  
-  // Engagement Data
-  imageUrl: "/images/categories/small_talk.svg", // Using placeholder for now
+  categoryName: CATEGORY_NAMES["small_talk"],
+  cleanedEnglish: "Mastering the 'How are you?' ritual and escaping awkwardly long chats.",
+  imageUrl: "/images/scenarios/greetings_introvert_3d.png",
+
   culturalNote: {
     title: "The 'How are you?' Trap",
-    content: "In Western culture, 'How are you?' is often just a greeting, not a real question. A simple 'Good, you?' is usually expected unless you're talking to a close friend."
+    content: "In Western culture (especially US/UK), 'How are you?' is a greeting, NOT a question. The only correct answer is 'Good, you?'. If you answer 'Actually, I am sad', people will panic. Save the truth for close friends."
   },
+
   quizItems: [
     {
-      question: "If someone says 'How's it going?', what is a natural response?",
-      options: ["I am 70kg.", "Not bad, you?", "Yes, I am going.", "My existential dread is rising."],
+      question: "You see an acquaintance on the street, but you are in a rush. What do you do?",
+      options: [
+        "Hide behind a tree.",
+        "Stop and talk for 20 minutes.",
+        "Smile, wave, and keep walking.",
+        "Sprint past them screaming."
+      ],
+      correctIndex: 2,
+      explanation: "The 'Smile and Wave' allows you to acknowledge them politey without stopping. It is the ultimate survival move."
+    },
+    {
+      question: "Someone asks 'What's up?'. You answer:",
+      options: [
+        "The sky.",
+        "Not much, just chilling. You?",
+        "I am currently walking.",
+        "My blood pressure."
+      ],
       correctIndex: 1,
-      explanation: "'Not bad, you?' is the most natural, low-pressure response to a casual greeting."
+      explanation: "'Not much' is the standard default response to 'What's up?'."
     }
   ],
 
   sentences: [
     {
       id: "s1",
-      en: "Hey! Made it before the coffee disappears.",
+      en: "The Default Setting",
+      scenario: "Standard Greeting Ritual",
       keywords: [
-        { word: "made it", definition: "arrived successfully" },
-        { word: "disappears", definition: "vanishes / runs out" },
+        { word: "Good", definition: "Fine/Okay" },
+        { word: "Yourself", definition: "And you?" }
       ],
+      badResponse: {
+          text: "I have a headache and my cat is sick.",
+          why: "Too much information (TMI)."
+      },
+      goodResponse: {
+          text: "I'm [good], thanks! How about [yourself]?",
+          why: "The script everyone expects. Stick to it."
+      }
     },
     {
       id: "s2",
-      en: "How's your day treating you so far?",
+      en: "The Rush Escape",
+      scenario: "You don't have time to stop",
       keywords: [
-        { word: "treating you", definition: "going for you" },
-        { word: "so far", definition: "up to now" },
+        { word: "Run", definition: "Hurry" },
+        { word: "Catch up", definition: "Talk later" }
       ],
+      badResponse: {
+          text: "Bye.",
+          why: "Rude."
+      },
+      goodResponse: {
+          text: "Hey! So good to see you. I've actually gotta [run], but let's [catch up] soon!",
+          why: "Positive ('Good to see you') + Valid Excuse ('Gotta run')."
+      }
     },
     {
       id: "s3",
-      en: "Nice to see you—surviving the week?",
+      en: "The Name Blank",
+      scenario: "You forgot their name",
       keywords: [
-        { word: "surviving", definition: "getting through tough times" },
-        { word: "week", definition: "Mon-Fri work days" },
+        { word: "Bad", definition: "Terrible" },
+        { word: "Names", definition: "Labels for people" }
       ],
+      goodResponse: {
+          text: "I am so [bad] with names, remind me again?",
+          why: "Honesty is better than guessing 'Steve' and being wrong."
+      }
     },
     {
       id: "s4",
-      en: "That weather is doing stand-up comedy today—sunny then dramatic.",
+      en: "The Weather Filler",
+      scenario: "Silence is getting awkward",
       keywords: [
-        { word: "stand-up", definition: "comedy performance" },
-        { word: "dramatic", definition: "sudden and striking" },
+        { word: "Believe", definition: "Accept as true" },
+        { word: "Freezing", definition: "Very cold" }
       ],
+      goodResponse: {
+          text: "Can you [believe] this weather? It's absolutely [freezing] today.",
+          why: "Weather is the universal 'safe topic' when you have nothing else to say."
+      }
     },
     {
       id: "s5",
-      en: "Any fun plans after work or just couch-hero mode?",
+      en: "The Closing Statement",
+      scenario: "Ending the conversation",
       keywords: [
-        { word: "plans", definition: "intentions" },
-        { word: "couch", definition: "sofa" },
+        { word: "Great", definition: "Excellent" },
+        { word: "Seeing", definition: "Meeting" }
       ],
-    },
-    {
-      id: "s6",
-      en: "I’m on my third coffee—wish me luck.",
-      keywords: [
-        { word: "third", definition: "number 3 in sequence" },
-        { word: "wish me luck", definition: "hope for my success" },
-      ],
-    },
-    {
-      id: "s7",
-      en: "If you need the good snacks, they’re hiding in the second drawer.",
-      keywords: [
-        { word: "snack", definition: "light food" },
-        { word: "drawer", definition: "sliding storage box" },
-      ],
-    },
-    {
-      id: "s8",
-      en: "Okay, this is your floor—have a good one!",
-      keywords: [
-        { word: "floor", definition: "level of building" },
-        { word: "have a good one", definition: "have a good day" },
-      ],
-    },
-  ],
+      goodResponse: {
+          text: "Well, it was [great] seeing you! Have a good one.",
+          why: "Clear end signal. 'Well...' usually signals the start of the goodbye."
+      }
+    }
+  ]
 };

@@ -3,108 +3,111 @@ import { CATEGORY_NAMES } from "@/data/categories";
 
 export const hobbiesFreeTime: Script = {
   id: "everyday-hobbies-free-time",
-  title: "Hobbies and Free Time",
+  title: "The Hobby Humblebrag",
   categorySlug: "small_talk",
   categoryName: CATEGORY_NAMES["small_talk"],
-  cleanedEnglish:
-    "Practice talking about hobbies and free time. Share what you like to do after work or on weekends.",
-    imageUrl: "/images/scenarios/small_talk_generic.png",
+  cleanedEnglish: "Making 'doing nothing' sound like a lifestyle choice.",
+  imageUrl: "/images/scenarios/hobby_humblebrag_3d.png",
+
+  culturalNote: {
+    title: "The 'Busy' Badge",
+    content: "In modern culture, being 'busy' is often seen as a status symbol. If you say you did nothing, people might think you are boring. So we invent 'activities' like 'catch-up admin' (Netflix) or 'self-care' (sleeping)."
+  },
+
+  quizItems: [
+    {
+      question: "Someone asks what you do for fun. You mostly watch TikTok. You say:",
+      options: [
+        "I stare at a screen until my eyes bleed.",
+        "I'm really into digital content curation.",
+        "I like keeping up with current trends and media.",
+        "I have no life."
+      ],
+      correctIndex: 2,
+      explanation: "'Keeping up with trends' sounds sophisticated. It's all about branding."
+    },
+    {
+      question: "You want to leave a party to go home and sleep. You say:",
+      options: [
+        "You people bore me.",
+        "I have an early morning tomorrow.",
+        "I hate this.",
+        "Goodbye forever."
+      ],
+      correctIndex: 1,
+      explanation: "'I have an early morning' is the classic, unchallengeable excuse to leave events early."
+    }
+  ],
+
   sentences: [
     {
       id: "s1",
-      en: "I enjoy watching movies on weekends.",
+      en: "The Binge Watch",
+      scenario: "Admitting you watched TV all weekend",
       keywords: [
-        { word: "enjoy", definition: "get pleasure from" },
-        { word: "weekends", definition: "Sat/Sun" },
+        { word: "Season", definition: "Set of episodes" },
+        { word: "Binge", definition: "Consume all at once" }
       ],
+      badResponse: {
+          text: "I didn't move from the sofa.",
+          why: "A bit sad."
+      },
+      goodResponse: {
+          text: "Honestly, I just [binged] the entire new [season] of that chef show. No regrets.",
+          why: "Owning it ('No regrets') makes it a fun activity rather than laziness."
+      }
     },
     {
       id: "s2",
-      en: "After work, I like to listen to music.",
+      en: "The Hiking Myth",
+      scenario: "Talking about outdoor plans",
       keywords: [
-        { word: "after work", definition: "post-job time" },
-        { word: "listen", definition: "hear" },
+        { word: "Nature", definition: "Outdoors" },
+        { word: "Disconnect", definition: "Go offline" }
       ],
+      goodResponse: {
+          text: "I'm trying to get into [nature] more, just to [disconnect] for a bit.",
+          why: "Sounds virtuous and healthy."
+      }
     },
     {
       id: "s3",
-      en: "Sometimes I play video games to relax.",
+      en: "The Foodie",
+      scenario: "Talking about restaurants",
       keywords: [
-        { word: "video games", definition: "digital games" },
-        { word: "relax", definition: "unwind" },
+        { word: "Spot", definition: "Restaurant/Place" },
+        { word: "Booked", definition: "Reserved" }
       ],
+      goodResponse: {
+          text: "We checked out that new sushi [spot]. It's impossible to get into, but we got lucky and [booked] a table.",
+          why: "Subtle brag ('impossible to get into')."
+      }
     },
     {
       id: "s4",
-      en: "I like cooking new recipes at home.",
+      en: "The 'Project' that never ends",
+      scenario: "Renovating or learning something",
       keywords: [
-        { word: "cooking", definition: "preparing food" },
-        { word: "recipes", definition: "cooking instructions" },
+        { word: "Tinkering", definition: "Working casually" },
+        { word: "Side project", definition: "Hobby work" }
       ],
+      goodResponse: {
+          text: "I've been [tinkering] with some coding as a [side project]. It's slow going, though.",
+          why: "Shows ambition without promising results."
+      }
     },
     {
       id: "s5",
-      en: "On weekends, I usually go hiking with friends.",
+      en: "The Social Battery",
+      scenario: "Declining an invite",
       keywords: [
-        { word: "hiking", definition: "walking in nature" },
-        { word: "friends", definition: "mates" },
+        { word: "Low key", definition: "Relaxed" },
+        { word: "Recover", definition: "Heal/Rest" }
       ],
-    },
-    {
-      id: "s6",
-      en: "I sometimes read books before sleeping.",
-      keywords: [
-        { word: "read", definition: "scan text" },
-        { word: "before sleeping", definition: "pre-bedtime" },
-      ],
-    },
-    {
-      id: "s7",
-      en: "I like playing soccer on Sundays.",
-      keywords: [
-        { word: "soccer", definition: "football sport" },
-        { word: "Sundays", definition: "first day of week" },
-      ],
-    },
-    {
-      id: "s8",
-      en: "Sometimes I draw pictures when I feel creative.",
-      keywords: [
-        { word: "draw", definition: "sketch" },
-        { word: "creative", definition: "artistic" },
-      ],
-    },
-    {
-      id: "s9",
-      en: "I love spending time with my family in the park.",
-      keywords: [
-        { word: "spending time", definition: "being with" },
-        { word: "park", definition: "green space" },
-      ],
-    },
-    {
-      id: "s10",
-      en: "In my free time, I practice speaking English.",
-      keywords: [
-        { word: "free time", definition: "spare time" },
-        { word: "practice", definition: "rehearse" },
-      ],
-    },
-    {
-      id: "s11",
-      en: "I sometimes watch YouTube videos to learn new things.",
-      keywords: [
-        { word: "YouTube", definition: "video platform" },
-        { word: "learn", definition: "acquire knowledge" },
-      ],
-    },
-    {
-      id: "s12",
-      en: "I enjoy taking long walks in the evening.",
-      keywords: [
-        { word: "walks", definition: "strolls" },
-        { word: "evening", definition: "nighttime" },
-      ],
-    },
-  ],
+      goodResponse: {
+          text: "I think I'm going to keep it [low key] this weekend. Need to [recover] from the work week.",
+          why: "Everyone respects the need to recover."
+      }
+    }
+  ]
 };

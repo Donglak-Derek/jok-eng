@@ -3,132 +3,115 @@ import { CATEGORY_NAMES } from "@/data/categories";
 
 export const teamworkCollaboration: Script = {
   id: "everyday-teamwork-collaboration",
-  title: "Teamwork and Collaboration",
+  title: "The Group Project",
   categorySlug: "small_talk",
   categoryName: CATEGORY_NAMES["small_talk"],
-  cleanedEnglish:
-    "Practice how to work together by offering help, asking politely, and suggesting ideas. These sentences are useful at work and in daily life.",
-    imageUrl: "/images/scenarios/small_talk_generic.png",
+  cleanedEnglish: "Herding cats, dividing tasks, and politely telling people to do their job.",
+  imageUrl: "/images/scenarios/group_project_chaos_3d.png",
+
+  culturalNote: {
+    title: "The 'We' vs 'I'",
+    content: "In teamwork, always say 'We' when things go well ('We did great!'). When they go bad, avoid saying 'You' ('You failed'). Use passive voice or 'We' to soften the blow ('We missed the deadline')."
+  },
+
+  quizItems: [
+    {
+      question: "No one is taking notes during the meeting. You say:",
+      options: [
+        "Write this down, idiots.",
+        "Should we capture these action items?",
+        "I am leaving.",
+        "I will remember everything. (Lie)"
+      ],
+      correctIndex: 1,
+      explanation: "'Capture action items' is corporate speak for 'Write down what we actually have to do'."
+    },
+    {
+      question: "A teammate has a terrible idea. You say:",
+      options: [
+        "That is the worst idea ever.",
+        "I hate it.",
+        "Interesting! How would that work with X?",
+        "Shut up."
+      ],
+      correctIndex: 2,
+      explanation: "'Interesting' allows you to explore the flaws gently without rejecting them personally."
+    }
+  ],
+
   sentences: [
     {
       id: "s1",
-      en: "Should we move this together?",
+      en: "The Divider",
+      scenario: "Splitting up the work",
       keywords: [
-        { word: "move", definition: "change place" },
-        { word: "together", definition: "as a group" },
+        { word: "Tackle", definition: "Handle" },
+        { word: "Divide and conquer", definition: "Split up to win" }
       ],
+      goodResponse: {
+          text: "Why don't we [divide and conquer]? I'll [tackle] the slides if you handle the data.",
+          why: "Efficient and assertive leadership move."
+      }
     },
     {
       id: "s2",
-      en: "Do you need any help?",
+      en: "The Alignment Check",
+      scenario: "Making sure everyone agrees",
       keywords: [
-        { word: "help", definition: "assistance" },
-        { word: "need", definition: "require" },
+        { word: "Page", definition: "Sheet of paper" },
+        { word: "Sync", definition: "Synchronize" }
       ],
+      badResponse: {
+          text: "Do you understand?",
+          why: "Can sound condescending."
+      },
+      goodResponse: {
+          text: "Just want to make sure we're all on the same [page]. Let's [sync] up quickly.",
+          why: "'Same page' implies unity."
+      }
     },
     {
       id: "s3",
-      en: "Can I give you a hand?",
+      en: "The Volunteer",
+      scenario: "Nobody wants to do the hard task",
       keywords: [
-        { word: "give a hand", definition: "assist something" },
-        { word: "can I", definition: "may I" },
+        { word: "Bullet", definition: "Projectile" },
+        { word: "Take one", definition: "Accept" }
       ],
+      goodResponse: {
+          text: "Alright, I'll take one for the team and handle the spreadsheet. Someone has to bite the [bullet].",
+          why: "Shows you are a martyr hero (Bite the bullet)."
+      }
     },
     {
       id: "s4",
-      en: "Let’s finish this together.",
+      en: "The Gentle Nudge",
+      scenario: "Someone is late with their part",
       keywords: [
-        { word: "finish", definition: "complete" },
-        { word: "together", definition: "jointly" },
+        { word: "Update", definition: "Status report" },
+        { word: "Blocked", definition: "Stopped" }
       ],
+      badResponse: {
+          text: "Where is it??",
+          why: "Panic."
+      },
+      goodResponse: {
+          text: "Hey, just checking in on that [update]? I'm a little [blocked] until I get those files.",
+          why: "Phrasing it as 'I am blocked' makes it about workflow, not personal failure."
+      }
     },
     {
       id: "s5",
-      en: "Could you hold this for me?",
+      en: "The Celebration",
+      scenario: "Finishing the project",
       keywords: [
-        { word: "hold", definition: "grasp / support" },
-        { word: "for me", definition: "on my behalf" },
+        { word: "Crushed", definition: "Did very well" },
+        { word: "Effort", definition: "Work" }
       ],
-    },
-    {
-      id: "s6",
-      en: "I’ll take care of this part.",
-      keywords: [
-        { word: "take care of", definition: "handle" },
-        { word: "part", definition: "section" },
-      ],
-    },
-    {
-      id: "s7",
-      en: "Can you check if this is straight?",
-      keywords: [
-        { word: "check", definition: "inspect" },
-        { word: "straight", definition: "not crooked" },
-      ],
-    },
-    {
-      id: "s8",
-      en: "What do you think about this idea?",
-      keywords: [
-        { word: "think", definition: "believe / opine" },
-        { word: "idea", definition: "concept" },
-      ],
-    },
-    {
-      id: "s9",
-      en: "Maybe we should try another way.",
-      keywords: [
-        { word: "try", definition: "attempt" },
-        { word: "another way", definition: "different method" },
-      ],
-    },
-    {
-      id: "s10",
-      en: "I’ll help you lift this side.",
-      keywords: [
-        { word: "lift", definition: "raise up" },
-        { word: "side", definition: "edge/end" },
-      ],
-    },
-    {
-      id: "s11",
-      en: "Let’s take a short break together.",
-      keywords: [
-        { word: "break", definition: "rest period" },
-        { word: "short", definition: "brief" },
-      ],
-    },
-    {
-      id: "s12",
-      en: "Could you show me how you did it?",
-      keywords: [
-        { word: "show", definition: "demonstrate" },
-        { word: "how", definition: "in what way" },
-      ],
-    },
-    {
-      id: "s13",
-      en: "That looks heavy. Do you want help?",
-      keywords: [
-        { word: "heavy", definition: "having great weight" },
-        { word: "looks", definition: "appears" },
-      ],
-    },
-    {
-      id: "s14",
-      en: "Let’s talk and plan before we start.",
-      keywords: [
-        { word: "plan", definition: "strategize" },
-        { word: "before", definition: "prior to" },
-      ],
-    },
-    {
-      id: "s15",
-      en: "We can finish faster if we work together.",
-      keywords: [
-        { word: "faster", definition: "more quickly" },
-        { word: "work together", definition: "collaborate" },
-      ],
-    },
-  ],
+      goodResponse: {
+          text: "Nice work everyone! We absolutely [crushed] that. great team [effort].",
+          why: "Always celebrate the win."
+      }
+    }
+  ]
 };

@@ -3,132 +3,115 @@ import { CATEGORY_NAMES } from "@/data/categories";
 
 export const explainingProblems: Script = {
   id: "everyday-explaining-problems",
-  title: "Explaining Problems",
+  title: "The Complaint Department",
   categorySlug: "small_talk",
   categoryName: CATEGORY_NAMES["small_talk"],
-  cleanedEnglish:
-    "Learn how to report issues clearly in work or daily life. These sentences help you explain what’s wrong and what needs to be done.",
-    imageUrl: "/images/scenarios/small_talk_generic.png",
+  cleanedEnglish: "Reporting bugs, broken stuff, and wrong orders without being a 'Karen'.",
+  imageUrl: "/images/scenarios/complaint_department_3d.png",
+
+  culturalNote: {
+    title: "The 'Sandwich' Method",
+    content: "When complaining, sandwich the bad news between two polite things. 'Hi! (Polite) This is broken (Bad). Thanks for helping! (Polite)'. It stops the other person from getting defensive."
+  },
+
+  quizItems: [
+    {
+      question: "Your hotel room is noisy. You call the front desk:",
+      options: [
+        "SHUT THEM UP!",
+        "Hi, sorry to bother you, but there's a lot of noise next door.",
+        "I demand a refund immediately.",
+        "Call the police."
+      ],
+      correctIndex: 1,
+      explanation: "Starting with 'Sorry to bother you' (even though it's their fault) is a psychological trick to get better service."
+    },
+    {
+      question: "You dropped your phone in water. You tell the repair shop:",
+      options: [
+        "It just stopped working on its own. (Lie)",
+        "I gave it a bath. Is it fixable?",
+        "Fix it now.",
+        "It's the phone's fault."
+      ],
+      correctIndex: 1,
+      explanation: "Repair techs appreciate honesty. They know when you are lying about water damage."
+    }
+  ],
+
   sentences: [
     {
       id: "s1",
-      en: "This part is missing. We need to order it.",
+      en: "The Tech Support Call",
+      scenario: "Your internet is down",
       keywords: [
-        { word: "missing", definition: "not present" },
-        { word: "order", definition: "request supply" },
+        { word: "Cycling", definition: "Turning on/off" },
+        { word: "Connecting", definition: "Linking" }
       ],
+      badResponse: {
+          text: "Nothing works. Fix it.",
+          why: "Helpless."
+      },
+      goodResponse: {
+          text: "I've tried [cycling] the power, but it's still not [connecting]. Any ideas?",
+          why: "Shows you tried to fix it yourself first. Techs love this."
+      }
     },
     {
       id: "s2",
-      en: "The table is broken. We can’t use it.",
+      en: "The Wrong Order",
+      scenario: "You ordered chicken, got fish",
       keywords: [
-        { word: "broken", definition: "damaged" },
-        { word: "use", definition: "utilize" },
+        { word: "Mix-up", definition: "Confusion/Mistake" },
+        { word: "Ordered", definition: "Requested" }
       ],
+      badResponse: {
+          text: "You are stupid.",
+          why: "Abusive and unnecessary."
+      },
+      goodResponse: {
+          text: "Excuse me? I think there might be a [mix-up]. I actually [ordered] the chicken.",
+          why: "'Mix-up' implies an innocent accident, not incompetence."
+      }
     },
     {
       id: "s3",
-      en: "The instructions are not clear.",
+      en: "The Mystery Sound",
+      scenario: "Car/Appliance making noise",
       keywords: [
-        { word: "instructions", definition: "directions" },
-        { word: "clear", definition: "easy to understand" },
+        { word: "Funny", definition: "Weird/Strange" },
+        { word: "Noise", definition: "Sound" }
       ],
+      goodResponse: {
+          text: "It's making a [funny] clunking [noise] when I turn it on. It sounds angry.",
+          why: "Describing the sound helps diagnose the problem."
+      }
     },
     {
       id: "s4",
-      en: "This screw is too short.",
+      en: "The Missing Item",
+      scenario: "Delivery arrived incomplete",
       keywords: [
-        { word: "screw", definition: "metal fastener" },
-        { word: "short", definition: "not long enough" },
+        { word: "Seem", definition: "Appear" },
+        { word: "Short", definition: "Missing" }
       ],
+      goodResponse: {
+          text: "Hi, I just opened the box and we [seem] to be [short] one bracket.",
+          why: "'Seem to be' softens the accusation that they forgot it."
+      }
     },
     {
       id: "s5",
-      en: "The shelf is not stable. It shakes when I touch it.",
+      en: "The Manager Request",
+      scenario: "Front line staff can't help",
       keywords: [
-        { word: "shelf", definition: "storage plank" },
-        { word: "stable", definition: "steady" },
+        { word: "Escalate", definition: "Take higher" },
+        { word: "Supervisor", definition: "Manager" }
       ],
-    },
-    {
-      id: "s6",
-      en: "We are missing two pieces from the box.",
-      keywords: [
-        { word: "pieces", definition: "parts" },
-        { word: "box", definition: "container" },
-      ],
-    },
-    {
-      id: "s7",
-      en: "The paint is scratched on the surface.",
-      keywords: [
-        { word: "paint", definition: "colored coating" },
-        { word: "surface", definition: "outer layer" },
-      ],
-    },
-    {
-      id: "s8",
-      en: "The package arrived damaged.",
-      keywords: [
-        { word: "package", definition: "parcel" },
-        { word: "damaged", definition: "broken / harmed" },
-      ],
-    },
-    {
-      id: "s9",
-      en: "The drawer doesn’t open smoothly.",
-      keywords: [
-        { word: "drawer", definition: "storage box" },
-        { word: "smoothly", definition: "easily" },
-      ],
-    },
-    {
-      id: "s10",
-      en: "The light is flickering. It needs to be fixed.",
-      keywords: [
-        { word: "flickering", definition: "flashing on and off" },
-        { word: "fixed", definition: "repaired" },
-      ],
-    },
-    {
-      id: "s11",
-      en: "The part does not match the instructions.",
-      keywords: [
-        { word: "match", definition: "correspond to" },
-        { word: "instructions", definition: "guide" },
-      ],
-    },
-    {
-      id: "s12",
-      en: "There is a crack in the glass.",
-      keywords: [
-        { word: "crack", definition: "break line" },
-        { word: "glass", definition: "transparent material" },
-      ],
-    },
-    {
-      id: "s13",
-      en: "The box is heavy. I need help to move it.",
-      keywords: [
-        { word: "heavy", definition: "weighty" },
-        { word: "move", definition: "change position" },
-      ],
-    },
-    {
-      id: "s14",
-      en: "The handle is loose. It might fall off.",
-      keywords: [
-        { word: "handle", definition: "grip" },
-        { word: "loose", definition: "not tight" },
-      ],
-    },
-    {
-      id: "s15",
-      en: "Something is missing, but I don’t know what it is.",
-      keywords: [
-        { word: "missing", definition: "lost / gone" },
-        { word: "something", definition: "an unspecified thing" },
-      ],
-    },
-  ],
+      goodResponse: {
+          text: "I understand your hands are tied. Is there a [supervisor] I could speak to to [escalate] this?",
+          why: "Professional way to ask for the boss without screaming."
+      }
+    }
+  ]
 };

@@ -3,107 +3,91 @@ import { CATEGORY_NAMES } from "@/data/categories";
 
 export const relativeClauses: Script = {
   id: "grammar-relative-clauses",
-  title: "Relative Clauses (who, which, that)",
+  title: "The Over-Explainer",
   categorySlug: "the_sarcasm_detector",
   categoryName: CATEGORY_NAMES["the_sarcasm_detector"],
   cleanedEnglish:
-    "Relative clauses use words like who, which, and that to connect ideas smoothly and add more detail about a person or thing.",
-    imageUrl: "/images/scenarios/sarcasm_generic.png",
+    "Use relative clauses to add unnecessary details that make you sound condescending or annoyed.",
+  imageUrl: "/images/scenarios/sarcasm_generic.png",
   sentences: [
     {
       id: "s1",
-      en: "The coworker who helped me was kind.",
+      en: "The button, 'which is the big red one', needs to be pressed.",
       keywords: [
-        { word: "coworker", definition: "work colleague" },
-        { word: "who", definition: "pronoun for people" },
+        { word: "which is", definition: "clause introducing detail" },
+        { word: "big red one", definition: "obvious feature" },
       ],
     },
     {
       id: "s2",
-      en: "I met a teacher who loves music.",
+      en: "My boss, 'who thinks he knows everything', is wrong.",
       keywords: [
-        { word: "teacher", definition: "instructor" },
-        { word: "loves", definition: "likes greatly" },
+        { word: "who thinks", definition: "opinion clause" },
+        { word: "knows everything", definition: "omniscient (ironic)" },
       ],
     },
     {
       id: "s3",
-      en: "She has a friend who can speak Korean.",
+      en: "The email, 'that I sent three days ago', answers this.",
       keywords: [
-        { word: "friend", definition: "close associate" },
-        { word: "speak", definition: "talk" },
+        { word: "that I sent", definition: "reminder clause" },
+        { word: "answers this", definition: "provides solution" },
       ],
     },
     {
       id: "s4",
-      en: "The book which I bought yesterday is very interesting.",
+      en: "People 'who actually read instructions' succeed.",
       keywords: [
-        { word: "book", definition: "written volume" },
-        { word: "interesting", definition: "holding attention" },
+        { word: "who actually", definition: "sarcastic emphasis" },
+        { word: "read instructions", definition: "follow guide" },
       ],
     },
     {
       id: "s5",
-      en: "This is the song which makes me happy.",
+      en: "The deadline, 'which we discussed yesterday', hasn't changed.",
       keywords: [
-        { word: "song", definition: "musical composition" },
-        { word: "happy", definition: "feeling joy" },
+        { word: "discussed", definition: "talked about" },
+        { word: "hasn't changed", definition: "is same" },
       ],
     },
     {
       id: "s6",
-      en: "I like the chair that is in the living room.",
+      en: "He is a man 'whose ego is larger than the room'.",
       keywords: [
-        { word: "chair", definition: "seat" },
-        { word: "living room", definition: "lounge area" },
+        { word: "whose ego", definition: "sense of self-importance" },
+        { word: "larger than", definition: "bigger than" },
       ],
     },
     {
       id: "s7",
-      en: "She wore the dress that her mom gave her.",
+      en: "It’s a problem 'that only you seem to have'.",
       keywords: [
-        { word: "dress", definition: "woman's garment" },
-        { word: "gave", definition: "presented to" },
+        { word: "only you", definition: "unique to you" },
+        { word: "seem to have", definition: "appear to possess" },
       ],
     },
     {
       id: "s8",
-      en: "The computer that I use every day is old.",
+      en: "The trash, 'which is overflowing', won't empty itself.",
       keywords: [
-        { word: "computer", definition: "electronic machine" },
-        { word: "old", definition: "aged / not new" },
+        { word: "overflowing", definition: "spilling out" },
+        { word: "empty itself", definition: "act automatically" },
       ],
     },
     {
       id: "s9",
-      en: "Do you know the man who is standing over there?",
+      en: "Customers 'who shout' get served last.",
       keywords: [
-        { word: "man", definition: "adult male" },
-        { word: "standing", definition: "upright on feet" },
+        { word: "shout", definition: "yell" },
+        { word: "served last", definition: "helped at end" },
       ],
     },
     {
       id: "s10",
-      en: "The store which sells furniture is closed today.",
+      en: "This is the report 'which nobody asked for'.",
       keywords: [
-        { word: "store", definition: "shop" },
-        { word: "furniture", definition: "household items" },
-      ],
-    },
-    {
-      id: "s11",
-      en: "That’s the dog that barks all night.",
-      keywords: [
-        { word: "dog", definition: "canine" },
-        { word: "barks", definition: "makes loud noise" },
-      ],
-    },
-    {
-      id: "s12",
-      en: "She is the person who always smiles.",
-      keywords: [
-        { word: "person", definition: "human being" },
-        { word: "smiles", definition: "makes happy face" },
+        { word: "nobody", definition: "no person" },
+        { word: "asked for", definition: "requested" },
       ],
     },
   ],

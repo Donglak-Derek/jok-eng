@@ -3,76 +3,115 @@ import { CATEGORY_NAMES } from "@/data/categories";
 
 export const timeAndSchedules: Script = {
   id: "everyday-time-and-schedules",
-  title: "Zoom Buffer Talk",
+  title: "Running Late",
   categorySlug: "small_talk",
   categoryName: CATEGORY_NAMES["small_talk"],
-  cleanedEnglish:
-    "Light lines for the awkward two minutes before a call starts—keep it breezy, then land on the agenda.",
-    imageUrl: "/images/scenarios/small_talk_generic.png",
+  cleanedEnglish: "Excuses for lateness, time zone math, and the 'Hard Stop'.",
+  imageUrl: "/images/scenarios/small_talk_generic.png", // Will update later
+
+  culturalNote: {
+    title: "The 'Hard Stop'",
+    content: "If you want to leave a meeting on time, announce a 'Hard Stop' at the start. 'I have a hard stop at 3 PM'. It creates a social contract that ANYONE can leave at 3 PM without being rude."
+  },
+
+  quizItems: [
+    {
+      question: "You are going to be 10 minutes late. You text:",
+      options: [
+        "Nothing. Hope they don't notice.",
+        "Traffic is crazy! (Lie)",
+        "Running 10 mins behind, please start without me!",
+        "Cancel everything."
+      ],
+      correctIndex: 2,
+      explanation: "Giving permission to 'start without me' releases the pressure on everyone waiting."
+    },
+    {
+      question: "You need to reschedule a meeting. You say:",
+      options: [
+        "I don't want to meet today.",
+        "Something came up. Can we push to tomorrow?",
+        "I quit.",
+        "Ghost them."
+      ],
+      correctIndex: 1,
+      explanation: "'Something came up' is the universal vague excuse for 'I am busy or tired'."
+    }
+  ],
+
   sentences: [
     {
       id: "s1",
-      en: "Hey! Thanks for hopping on—how's your week going?",
+      en: "The Late Arrival",
+      scenario: "Joining a meeting late",
       keywords: [
-        { word: "hopping on", definition: "joining the call" },
-        { word: "week", definition: "Mon-Fri" },
+        { word: "Held up", definition: "Delayed" },
+        { word: "Ran over", definition: "Went too long" }
       ],
+      badResponse: {
+          text: "I overslept.",
+          why: "Unprofessional."
+      },
+      goodResponse: {
+          text: "So sorry I'm late! My last meeting [ran over] and I got [held up].",
+          why: "Blaming the previous meeting is the standard corporate excuse."
+      }
     },
     {
       id: "s2",
-      en: "I promise this will be quick—no surprise marathons.",
+      en: "The Hard Stop",
+      scenario: "Setting boundaries on time",
       keywords: [
-        { word: "promise", definition: "guarantee" },
-        { word: "marathon", definition: "long event" },
+        { word: "Hard stop", definition: "Must leave time" },
+        { word: "Sharp", definition: "Exactly" }
       ],
+      goodResponse: {
+          text: "Just a heads-up, I have a [hard stop] at 3:00 [sharp] today.",
+          why: "Sets expectation immediately."
+      }
     },
     {
       id: "s3",
-      en: "Do you need a minute to close out the last meeting?",
+      en: "The Reschedule",
+      scenario: "Cancelling plans",
       keywords: [
-        { word: "close out", definition: "finish up" },
-        { word: "meeting", definition: "session" },
+        { word: "Push", definition: "Move time" },
+        { word: "Crazy", definition: "Busy" }
       ],
+      badResponse: {
+          text: "No.",
+          why: "Rude."
+      },
+      goodResponse: {
+          text: "My day has gone totally [crazy]. Can we [push] our chat to tomorrow?",
+          why: "'Push' sounds softer than 'Cancel' or 'Reschedule'."
+      }
     },
     {
       id: "s4",
-      en: "We’ll wrap by the half-hour so you can escape on time.",
+      en: "The Time Zone Math",
+      scenario: "Scheduling with different regions",
       keywords: [
-        { word: "wrap", definition: "finish" },
-        { word: "escape", definition: "leave" },
+        { word: "EST", definition: "Eastern Time" },
+        { word: "Pacific", definition: "West Coast Time" }
       ],
+      goodResponse: {
+          text: "Wait, is that 2 PM your time or my time? I always mess up the [EST] to [Pacific] conversion.",
+          why: "Humble admission avoids missed meetings."
+      }
     },
     {
       id: "s5",
-      en: "Where are you calling from today—home base or office?",
+      en: "The 'Wrap It Up' Signal",
+      scenario: "Meeting is dragging on",
       keywords: [
-        { word: "calling from", definition: "location" },
-        { word: "home base", definition: "home office" },
+        { word: "Conscious", definition: "Aware" },
+        { word: "Time", definition: "Clock" }
       ],
-    },
-    {
-      id: "s6",
-      en: "If my Wi‑Fi acts up, I'll switch to audio.",
-      keywords: [
-        { word: "acts up", definition: "malfunctions" },
-        { word: "switch to", definition: "change to" },
-      ],
-    },
-    {
-      id: "s7",
-      en: "Shall we start with a quick recap and then decisions?",
-      keywords: [
-        { word: "recap", definition: "summary" },
-        { word: "decision", definition: "conclusion" },
-      ],
-    },
-    {
-      id: "s8",
-      en: "Great, let's dive in before the calendar monster grabs us.",
-      keywords: [
-        { word: "dive in", definition: "get started" },
-        { word: "calendar", definition: "schedule" },
-      ],
-    },
-  ],
+      goodResponse: {
+          text: "I want to be [conscious] of everyone's [time]—should we wrap up?",
+          why: "You look like a hero for saving everyone from a long meeting."
+      }
+    }
+  ]
 };

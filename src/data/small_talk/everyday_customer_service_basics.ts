@@ -3,132 +3,115 @@ import { CATEGORY_NAMES } from "@/data/categories";
 
 export const customerServiceBasics: Script = {
   id: "everyday-customer-service-basics",
-  title: "Customer Service Basics",
+  title: "The Salon Chair",
   categorySlug: "small_talk",
   categoryName: CATEGORY_NAMES["small_talk"],
-  cleanedEnglish:
-    "Useful phrases for helping customers politely and clearly. These sentences focus on giving directions, explaining items, and offering help.",
-    imageUrl: "/images/scenarios/small_talk_generic.png",
+  cleanedEnglish: "Surviving 30 minutes of forced eye contact and reflection.",
+  imageUrl: "/images/scenarios/salon_awkwardness_3d.png",
+
+  culturalNote: {
+    title: "The 'Mirror Talk' Rule",
+    content: "Hairdressers and barbers are unofficial therapists. It's polite to answer their questions, but if you close your eyes, most will take the hint that you want a 'Silent Cut'. Also, always tip 15-20% in the US, even if you hate it."
+  },
+
+  quizItems: [
+    {
+      question: "The barber asks 'So, any plans for the weekend?'. You have no plans. You say:",
+      options: [
+        "I have no friends.",
+        "Just taking it easy, catching up on sleep. You?",
+        "Why do you ask?",
+        "Silence."
+      ],
+      correctIndex: 1,
+      explanation: "'Taking it easy' is the perfect code for 'I am doing nothing and I love it'. It sounds positive."
+    },
+    {
+      question: "They show you the back of your head with a mirror. You hate it. You say:",
+      options: [
+        "I refuse to pay.",
+        "It looks great, thanks!",
+        "Ew.",
+        "Cry."
+      ],
+      correctIndex: 1,
+      explanation: "Unless it is a disaster that can be fixed, social contract dictates you lie and say 'Great, thanks!' then cry in the car."
+    }
+  ],
+
   sentences: [
     {
       id: "s1",
-      en: "Hello, can I help you find something?",
+      en: "The Vague Request",
+      scenario: "Describing what you want",
       keywords: [
-        { word: "help", definition: "assist" },
-        { word: "find", definition: "locate" },
+        { word: "Trim", definition: "Cut a small amount" },
+        { word: "Clean up", definition: "Make neat" }
       ],
+      badResponse: {
+          text: "Make it shorter.",
+          why: "Too vague. You will end up bald."
+      },
+      goodResponse: {
+          text: "Just a [trim] on top, and can we [clean up] the sides? Keep the length.",
+          why: "Specific but uses standard terminology."
+      }
     },
     {
       id: "s2",
-      en: "That item is in aisle 5, bin 12.",
+      en: "The Awkward Silence",
+      scenario: "The chatting dies down",
       keywords: [
-        { word: "aisle", definition: "walkway between shelves" },
-        { word: "bin", definition: "container" },
+        { word: "Zone out", definition: "Stop focusing" },
+        { word: "Relax", definition: "Rest" }
       ],
+      goodResponse: {
+          text: "I'm just going to close my eyes and [relax] for a bit while you work.",
+          why: "Polite way to initiate the 'Silent Cut'."
+      }
     },
     {
       id: "s3",
-      en: "This product is out of stock right now.",
+      en: "The Temperature Check",
+      scenario: "Water is boiling hot",
       keywords: [
-        { word: "product", definition: "item for sale" },
-        { word: "out of stock", definition: "unavailable" },
+        { word: "Scalding", definition: "Burning hot" },
+        { word: "Bit", definition: "Small amount" }
       ],
+      badResponse: {
+          text: "AHHH! IT BURNS!",
+          why: "Dramatic."
+      },
+      goodResponse: {
+          text: "It's a little hot—could we turn it down just a [smidge]?",
+          why: "'Smidge' softens the complaint."
+      }
     },
     {
       id: "s4",
-      en: "You can order it online.",
+      en: "The Big Reveal",
+      scenario: "They show you the mirror",
       keywords: [
-        { word: "order", definition: "request purchase" },
-        { word: "online", definition: "on the internet" },
+        { word: "Fresh", definition: "New/Clean" },
+        { word: "Lighter", definition: "Less weight" }
       ],
+      goodResponse: {
+          text: "That looks [fresh]! Feels much [lighter]. Thanks.",
+          why: "Generic positive feedback suitable for any haircut."
+      }
     },
     {
       id: "s5",
-      en: "Please wait here for a moment.",
+      en: "The Tip Panic",
+      scenario: "Paying at the counter",
       keywords: [
-        { word: "wait", definition: "stay" },
-        { word: "moment", definition: "short time" },
+        { word: "Appreciate", definition: "Value" },
+        { word: "Card", definition: "Payment method" }
       ],
-    },
-    {
-      id: "s6",
-      en: "I will check the stock for you.",
-      keywords: [
-        { word: "check", definition: "verify" },
-        { word: "stock", definition: "inventory" },
-      ],
-    },
-    {
-      id: "s7",
-      en: "This item comes in different colors.",
-      keywords: [
-        { word: "different", definition: "not the same" },
-        { word: "colors", definition: "hues" },
-      ],
-    },
-    {
-      id: "s8",
-      en: "Would you like me to show you?",
-      keywords: [
-        { word: "show", definition: "display / guide" },
-        { word: "would you like", definition: "do you want" },
-      ],
-    },
-    {
-      id: "s9",
-      en: "The return desk is over there.",
-      keywords: [
-        { word: "return", definition: "give back" },
-        { word: "desk", definition: "service counter" },
-      ],
-    },
-    {
-      id: "s10",
-      en: "You need the receipt to return this item.",
-      keywords: [
-        { word: "receipt", definition: "proof of purchase" },
-        { word: "return", definition: "give back for refund" },
-      ],
-    },
-    {
-      id: "s11",
-      en: "I can call someone to help you.",
-      keywords: [
-        { word: "call", definition: "summon" },
-        { word: "someone", definition: "a person" },
-      ],
-    },
-    {
-      id: "s12",
-      en: "Please follow me, I’ll show you the way.",
-      keywords: [
-        { word: "follow", definition: "come after" },
-        { word: "way", definition: "path" },
-      ],
-    },
-    {
-      id: "s13",
-      en: "The assembly instructions are inside the box.",
-      keywords: [
-        { word: "assembly", definition: "putting together" },
-        { word: "instructions", definition: "directions" },
-      ],
-    },
-    {
-      id: "s14",
-      en: "This item is heavy, let me get a cart for you.",
-      keywords: [
-        { word: "heavy", definition: "great weight" },
-        { word: "cart", definition: "wheeled carrier" },
-      ],
-    },
-    {
-      id: "s15",
-      en: "Thank you for waiting.",
-      keywords: [
-        { word: "thank you", definition: "expression of gratitude" },
-        { word: "waiting", definition: "staying until ready" },
-      ],
-    },
-  ],
+      goodResponse: {
+          text: "I really [appreciate] you fitting me in. Can I leave the tip on the card?",
+          why: "Clarifies payment method politely."
+      }
+    }
+  ]
 };

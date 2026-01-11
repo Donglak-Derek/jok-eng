@@ -3,132 +3,115 @@ import { CATEGORY_NAMES } from "@/data/categories";
 
 export const dailyRoutines: Script = {
   id: "everyday-daily-routines",
-  title: "Daily Routines",
+  title: "The Morning Rush",
   categorySlug: "small_talk",
   categoryName: CATEGORY_NAMES["small_talk"],
-  cleanedEnglish:
-    "Daily routines are about talking simply and clearly about your schedule, meals, and habits. These sentences help you explain your everyday life.",
-    imageUrl: "/images/scenarios/small_talk_generic.png",
+  cleanedEnglish: "Battling the snooze button, missing keys, and coffee dependency.",
+  imageUrl: "/images/scenarios/morning_rush_3d.png",
+
+  culturalNote: {
+    title: "The 10-Minute Lie",
+    content: "When someone says 'I'm 5 minutes away', they usually haven't left the house. In casual culture, being 5-10 minutes late is often forgiven, but 'on time' basically means '5 minutes late'."
+  },
+
+  quizItems: [
+    {
+      question: "You hit snooze 3 times and are late. You text your boss:",
+      options: [
+        "I quit.",
+        "My alarm is broken.",
+        "Running a few minutes behind! See you shortly.",
+        "I am asleep."
+      ],
+      correctIndex: 2,
+      explanation: "Keep it brief. 'Running behind' implies you are moving, even if you are panic-eating toast."
+    },
+    {
+      question: "Someone asks 'Are you a morning person?'. You are not. You say:",
+      options: [
+        "No.",
+        "I speak only after 10 AM.",
+        "I hate the sun.",
+        "Yes (Lie)."
+      ],
+      correctIndex: 1,
+      explanation: "A humorous exaggeration ('I speak after 10 AM') is a relatable way to set boundaries."
+    }
+  ],
+
   sentences: [
     {
       id: "s1",
-      en: "I wake up at 5 a.m. every day.",
+      en: "The Alarm Struggle",
+      scenario: "Waking up difficultly",
       keywords: [
-        { word: "wake up", definition: "stop sleeping" },
-        { word: "every day", definition: "daily" },
+        { word: "Snooze", definition: "Delay alarm" },
+        { word: "Zombie", definition: "Half-dead/tired" }
       ],
+      badResponse: {
+          text: "I am tired.",
+          why: "Boring."
+      },
+      goodResponse: {
+          text: "I hit [snooze] four times. I'm basically a functioning [zombie] right now.",
+          why: "Vivid imagery ('Zombie') is funnier than just 'tired'."
+      }
     },
     {
       id: "s2",
-      en: "I brush my teeth and wash my face.",
+      en: "The Coffee Need",
+      scenario: "Before you have gathered energy",
       keywords: [
-        { word: "brush teeth", definition: "clean teeth" },
-        { word: "wash face", definition: "clean face with water" },
+        { word: "Human", definition: "A person" },
+        { word: "System", definition: "Body/Brain" }
       ],
+      goodResponse: {
+          text: "Don't ask me hard questions yet. I need coffee to feel [human] again.",
+          why: "Relatable hyperbolic statement."
+      }
     },
     {
       id: "s3",
-      en: "I eat breakfast at 6 a.m.",
+      en: "The Lost Items",
+      scenario: "You can't find your things",
       keywords: [
-        { word: "breakfast", definition: "morning meal" },
-        { word: "eat", definition: "consume food" },
+        { word: "Keys", definition: "Unlocker" },
+        { word: "Disappeared", definition: "Vanished" }
       ],
+      badResponse: {
+          text: "I lost my keys.",
+          why: "Basic."
+      },
+      goodResponse: {
+          text: "I swear my [keys] just [disappeared] into another dimension. They were right here!",
+          why: "Blaming 'another dimension' reduces the stress of being disorganized."
+      }
     },
     {
       id: "s4",
-      en: "I leave home and drive to work.",
+      en: "The Traffic Check",
+      scenario: "Checking navigation app",
       keywords: [
-        { word: "leave home", definition: "depart from house" },
-        { word: "drive", definition: "operate a car" },
+        { word: "Red", definition: "Traffic jam color" },
+        { word: "Commute", definition: "Journey to work" }
       ],
+      goodResponse: {
+          text: "Ugh, the map is all [red]. This [commute] is going to be painful.",
+          why: "Shared suffering about traffic builds connection."
+      }
     },
     {
       id: "s5",
-      en: "I start work at 6:30 in the morning.",
+      en: "The Arrival",
+      scenario: "Finally getting to work/school",
       keywords: [
-        { word: "start work", definition: "begin job" },
-        { word: "morning", definition: "early part of day" },
+        { word: "Made it", definition: "Arrived" },
+        { word: "Piece", definition: "Whole" }
       ],
-    },
-    {
-      id: "s6",
-      en: "I take a short break around 10 a.m.",
-      keywords: [
-        { word: "break", definition: "rest period" },
-        { word: "around", definition: "approximately" },
-      ],
-    },
-    {
-      id: "s7",
-      en: "I eat lunch at 12 noon.",
-      keywords: [
-        { word: "lunch", definition: "midday meal" },
-        { word: "noon", definition: "12:00 PM" },
-      ],
-    },
-    {
-      id: "s8",
-      en: "I finish work at 2:30 p.m.",
-      keywords: [
-        { word: "finish work", definition: "end job" },
-        { word: "afternoon", definition: "time after noon" },
-      ],
-    },
-    {
-      id: "s9",
-      en: "I drive back home and rest.",
-      keywords: [
-        { word: "drive back", definition: "return by car" },
-        { word: "rest", definition: "relax" },
-      ],
-    },
-    {
-      id: "s10",
-      en: "Sometimes I take a short nap.",
-      keywords: [
-        { word: "nap", definition: "short sleep" },
-        { word: "sometimes", definition: "occasionally" },
-      ],
-    },
-    {
-      id: "s11",
-      en: "I eat dinner with my family at 6 p.m.",
-      keywords: [
-        { word: "dinner", definition: "evening meal" },
-        { word: "family", definition: "relatives" },
-      ],
-    },
-    {
-      id: "s12",
-      en: "After dinner, I study or work on my projects.",
-      keywords: [
-        { word: "study", definition: "learn" },
-        { word: "project", definition: "planned work" },
-      ],
-    },
-    {
-      id: "s13",
-      en: "I watch TV or listen to music to relax.",
-      keywords: [
-        { word: "watch TV", definition: "view television" },
-        { word: "relax", definition: "become less tense" },
-      ],
-    },
-    {
-      id: "s14",
-      en: "I prepare things for the next day.",
-      keywords: [
-        { word: "prepare", definition: "get ready" },
-        { word: "next day", definition: "following day" },
-      ],
-    },
-    {
-      id: "s15",
-      en: "I go to bed at 10 p.m.",
-      keywords: [
-        { word: "go to bed", definition: "lie down to sleep" },
-        { word: "night", definition: "dark time of day" },
-      ],
-    },
-  ],
+      goodResponse: {
+          text: "Well, we [made it] in one [piece]. Let's do this.",
+          why: "Positive affirmation to start the day."
+      }
+    }
+  ]
 };

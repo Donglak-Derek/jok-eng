@@ -3,76 +3,115 @@ import { CATEGORY_NAMES } from "@/data/categories";
 
 export const shoppingAndMoney: Script = {
   id: "everyday-shopping-money",
-  title: "Coffee Line Chit-Chat",
+  title: "Retail Therapy",
   categorySlug: "small_talk",
   categoryName: CATEGORY_NAMES["small_talk"],
-  cleanedEnglish:
-    "Friendly lines for ordering coffee and joking about prices without sounding rude.",
-    imageUrl: "/images/scenarios/small_talk_generic.png",
+  cleanedEnglish: "Just browsing, asking for discounts, and buyer's remorse.",
+  imageUrl: "/images/scenarios/small_talk_generic.png", // Will update later
+
+  culturalNote: {
+    title: "The 'Just Looking' Defense",
+    content: "Shop assistants are trained to greet you immediately. If you don't want help, the standard phrase is 'I'm just browsing, thanks!'. This effectively makes you invisible to them until you need something."
+  },
+
+  quizItems: [
+    {
+      question: "You try on a shirt. It looks terrible. The assistant asks 'How was it?'. You say:",
+      options: [
+        "It is ugly.",
+        "It didn't quite work for me.",
+        "I hate this store.",
+        "Burn it."
+      ],
+      correctIndex: 1,
+      explanation: "'It didn't work for me' is a polite way to say 'I look bad in this' or 'I don't like it'."
+    },
+    {
+      question: "You want to know if there is a sale coming up. You ask:",
+      options: [
+        "Make this cheaper.",
+        "Is this the best price?",
+        "Any chance of a discount?",
+        "I have no money."
+      ],
+      correctIndex: 2,
+      explanation: "'Any chance of a discount?' is casual and low-risk. Worst they say is no."
+    }
+  ],
+
   sentences: [
     {
       id: "s1",
-      en: "Hi! Can I get an iced latte, medium?",
+      en: "The Hovering Assistant",
+      scenario: "Salesperson asks if you need help",
       keywords: [
-        { word: "iced latte", definition: "cold espresso milk drink" },
-        { word: "medium", definition: "middle size" },
+        { word: "Browsing", definition: "Looking around" },
+        { word: "Give a yell", definition: "Call out" }
       ],
+      badResponse: {
+          text: "Go away.",
+          why: "Rude."
+      },
+      goodResponse: {
+          text: "I'm just [browsing] for now, thanks! I'll [give a yell] if I need anything.",
+          why: "Polite dismissal."
+      }
     },
     {
       id: "s2",
-      en: "Could you make it a little less sweet?",
+      en: "The Price Shock",
+      scenario: "Item is more expensive than expected",
       keywords: [
-        { word: "less sweet", definition: "reduced sugar" },
-        { word: "make it", definition: "prepare it" },
+        { word: "Steep", definition: "Expensive" },
+        { word: "Budget", definition: "Spending limit" }
       ],
+      goodResponse: {
+          text: "Oof, that's a little [steep] for my [budget] today.",
+          why: "Honest but polite rejection based on price."
+      }
     },
     {
       id: "s3",
-      en: "Is it okay to tap here, or do I need to sign?",
+      en: "The Polite Return",
+      scenario: "You decided not to buy it",
       keywords: [
-        { word: "tap", definition: "contactless payment" },
-        { word: "sign", definition: "write signature" },
+        { word: "Think about", definition: "Consider" },
+        { word: "Lap", definition: "Walk around" }
       ],
+      badResponse: {
+          text: "I don't want it anymore.",
+          why: "A bit blunt."
+      },
+      goodResponse: {
+          text: "I'm going to [think about] it and do another [lap] around the store.",
+          why: "The classic lie. You are never coming back."
+      }
     },
     {
       id: "s4",
-      en: "Wow, coffee got fancy—does this come with a free life coach?",
+      en: "The Impulse Buy",
+      scenario: "Buying something you don't need",
       keywords: [
-        { word: "fancy", definition: "elaborate/expensive" },
-        { word: "life coach", definition: "mentor" },
+        { word: "Treat", definition: "Reward" },
+        { word: "Resist", definition: "Stop myself" }
       ],
+      goodResponse: {
+          text: "I really shouldn't... but I can't [resist]. Trying to [treat] myself today.",
+          why: "Justifying the purchase makes you feel better."
+      }
     },
     {
       id: "s5",
-      en: "Is there a loyalty card or should I start a punch card of tears?",
+      en: "The Return Policy",
+      scenario: "Checking if you can bring it back",
       keywords: [
-        { word: "loyalty card", definition: "rewards card" },
-        { word: "punch card", definition: "card marked per visit" },
+        { word: "Change my mind", definition: "Decide differently" },
+        { word: "Receipt", definition: "Proof of purchase" }
       ],
-    },
-    {
-      id: "s6",
-      en: "I’ll grab a croissant too—why not live boldly.",
-      keywords: [
-        { word: "grab", definition: "buy quickly" },
-        { word: "boldly", definition: "courageously" },
-      ],
-    },
-    {
-      id: "s7",
-      en: "Could I get a receipt? My budget likes to see evidence.",
-      keywords: [
-        { word: "receipt", definition: "payment record" },
-        { word: "get", definition: "receive" },
-      ],
-    },
-    {
-      id: "s8",
-      en: "Name's Derek—thanks! Hope the line stays calm for you.",
-      keywords: [
-        { word: "line", definition: "queue" },
-        { word: "stay calm", definition: "remain peaceful" },
-      ],
-    },
-  ],
+      goodResponse: {
+          text: "Just in case I [change my mind], what's the return policy with the [receipt]?",
+          why: "Smart shopping behavior."
+      }
+    }
+  ]
 };

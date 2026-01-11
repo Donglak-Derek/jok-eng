@@ -3,131 +3,86 @@ import { CATEGORY_NAMES } from "@/data/categories";
 
 export const comparativesSuperlatives: Script = {
   id: "grammar-comparatives-superlatives",
-  title: "Comparatives and Superlatives",
+  title: "The Drama Queen",
   categorySlug: "the_sarcasm_detector",
   categoryName: CATEGORY_NAMES["the_sarcasm_detector"],
   cleanedEnglish:
-    "Comparatives compare two things, and superlatives show the highest level. They are useful in interviews, presentations, and daily conversations.",
-    imageUrl: "/images/scenarios/sarcasm_generic.png",
+    "Master the art of exaggeration. Use comparatives and superlatives to be dramatic, sarcastic, or mockingly enthusiastic.",
+  imageUrl: "/images/scenarios/sarcasm_generic.png",
   sentences: [
     {
       id: "s1",
-      en: "This chair is more comfortable than that one.",
+      en: "This is the 'best' idea I've ever heard. (Sarcasm)",
       keywords: [
-        { word: "comfortable", definition: "providing physical ease" },
-        { word: "than", definition: "conjunction for comparison" },
+        { word: "best", definition: "highest quality (fake)" },
       ],
     },
     {
       id: "s2",
-      en: "Today is hotter than yesterday.",
+      en: "Could you be any 'slower'?",
       keywords: [
-        { word: "hotter", definition: "having higher temperature" },
-        { word: "yesterday", definition: "the day before today" },
+        { word: "slower", definition: "more slow" },
       ],
     },
     {
       id: "s3",
-      en: "This is better than I expected.",
+      en: "That is the 'worst' excuse in history.",
       keywords: [
-        { word: "better", definition: "more good" },
-        { word: "expected", definition: "thought likely to happen" },
+        { word: "worst", definition: "most bad" },
+        { word: "in history", definition: "of all time" },
       ],
     },
     {
       id: "s4",
-      en: "She is more confident than before.",
+      en: "Oh, you are 'so' much smarter than everyone else.",
       keywords: [
-        { word: "confident", definition: "feeling sure of oneself" },
-        { word: "before", definition: "at an earlier time" },
+        { word: "smarter", definition: "more intelligent" },
       ],
     },
     {
       id: "s5",
-      en: "This tool is easier to use than that one.",
+      en: "This meeting is 'more' exciting than watching paint dry.",
       keywords: [
-        { word: "easier", definition: "less difficult" },
-        { word: "tool", definition: "implement for working" },
+        { word: "more exciting", definition: "better (ironic)" },
+        { word: "paint dry", definition: "boring activity" },
       ],
     },
     {
       id: "s6",
-      en: "This is the best idea we’ve had.",
+      en: "You are the 'greatest' human to ever live. (Mocking)",
       keywords: [
-        { word: "best", definition: "most good" },
-        { word: "idea", definition: "thought or suggestion" },
+        { word: "greatest", definition: "best" },
+        { word: "mocking", definition: "making fun of" },
       ],
     },
     {
       id: "s7",
-      en: "She is the most talented person on the team.",
+      en: "It’s 'less' of a plan and 'more' of a disaster.",
       keywords: [
-        { word: "talented", definition: "having natural skill" },
-        { word: "team", definition: "group working together" },
+        { word: "less of", definition: "not really" },
+        { word: "disaster", definition: "catastrophe" },
       ],
     },
     {
       id: "s8",
-      en: "This is the worst mistake I ever made.",
+      en: "I couldn't be 'happier' to work this weekend.",
       keywords: [
-        { word: "worst", definition: "most bad" },
-        { word: "mistake", definition: "error" },
+        { word: "couldn't be", definition: "impossible to be" },
+        { word: "happier", definition: "more joy" },
       ],
     },
     {
       id: "s9",
-      en: "He is the fastest worker in our group.",
+      en: "That's the 'least' you could do.",
       keywords: [
-        { word: "fastest", definition: "most rapid" },
-        { word: "worker", definition: "person who works" },
+        { word: "least", definition: "minimum amount" },
       ],
     },
     {
       id: "s10",
-      en: "That was the most exciting game I’ve ever seen.",
+      en: "You are 'more' right than you know.",
       keywords: [
-        { word: "exciting", definition: "causing enthusiasm" },
-        { word: "game", definition: "activity for amusement" },
-      ],
-    },
-    {
-      id: "s11",
-      en: "My bag is heavier than yours.",
-      keywords: [
-        { word: "heavier", definition: "having more weight" },
-        { word: "bag", definition: "container for carrying" },
-      ],
-    },
-    {
-      id: "s12",
-      en: "This project is more important than the others.",
-      keywords: [
-        { word: "important", definition: "of great value" },
-        { word: "others", definition: "other things/people" },
-      ],
-    },
-    {
-      id: "s13",
-      en: "That movie was funnier than I thought.",
-      keywords: [
-        { word: "funnier", definition: "more amusing" },
-        { word: "thought", definition: "idea or opinion" },
-      ],
-    },
-    {
-      id: "s14",
-      en: "This is the cheapest option we can choose.",
-      keywords: [
-        { word: "cheapest", definition: "lowest in price" },
-        { word: "option", definition: "choice" },
-      ],
-    },
-    {
-      id: "s15",
-      en: "She is the kindest teacher I’ve ever met.",
-      keywords: [
-        { word: "kindest", definition: "most friendly" },
-        { word: "teacher", definition: "person who instructs" },
+        { word: "more right", definition: "correct to a high degree" },
       ],
     },
   ],

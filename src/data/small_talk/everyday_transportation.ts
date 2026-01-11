@@ -3,76 +3,119 @@ import { CATEGORY_NAMES } from "@/data/categories";
 
 export const transportation: Script = {
   id: "everyday-transportation",
-  title: "Uber & Taxi Banter",
+  title: "The Uber Dilemma",
   categorySlug: "small_talk",
   categoryName: CATEGORY_NAMES["small_talk"],
-  cleanedEnglish:
-    "Light lines for rideshares—fast small talk that makes you sound friendly without oversharing.",
-    imageUrl: "/images/scenarios/small_talk_generic.png",
+  cleanedEnglish: "To talk or not to talk? Navigating rideshare awkwardness.",
+  imageUrl: "/images/scenarios/small_talk_generic.png", // Will update later
+
+  culturalNote: {
+    title: "The 5-Star Rating Game",
+    content: "In Uber/Lyft culture, both the driver and passenger rate each other. The golden rule: Be ready on time, don't slam the door, and read the vibe. If the driver isn't talking, they probably want quiet. If they are chatting, a little polite banter ensures a 5-star rating."
+  },
+
+  quizItems: [
+    {
+      question: "The driver is silent. You want to open the window. What do you do?",
+      options: [
+        "Just open it without asking.",
+        "Ask 'Do you mind if I crack the window?'",
+        "Suffer in silence.",
+        "Break the glass."
+      ],
+      correctIndex: 1,
+      explanation: "Always ask before adjusting the environment (windows, AC, music). 'Crack the window' means opening it slightly."
+    },
+    {
+      question: "You are ending the ride. What is the standard polite goodbye?",
+      options: [
+        "Get out silently.",
+        "Here is money.",
+        "Thanks, have a good one!",
+        "Drive faster next time."
+      ],
+      correctIndex: 2,
+      explanation: "'Have a good one' is the universal casual upbeat goodbye in the US."
+    }
+  ],
+
   sentences: [
     {
       id: "s1",
-      en: "Hey, thanks for picking me up—how's your day going?",
+      en: "The Entry Greeting",
+      scenario: "Getting into the car",
       keywords: [
-        { word: "pick up", definition: "collect passenger" },
-        { word: "how's your day", definition: "greeting" },
+        { word: "Confirm", definition: "Check verify" },
+        { word: "Heading to", definition: "Going towards" }
       ],
+      badResponse: {
+          text: "(Get in silently and stare at phone)",
+          why: "Creepy and rude."
+      },
+      goodResponse: {
+          text: "Hi, how's it going? Heading to [Main Street], right?",
+          why: "Friendly verification to ensure you aren't being kidnapped."
+      }
     },
     {
       id: "s2",
-      en: "Traffic is wild today, right?",
+      en: "The Temperature negotiation",
+      scenario: "It is freezing inside the car",
       keywords: [
-        { word: "traffic", definition: "vehicle congestion" },
-        { word: "wild", definition: "crazy/chaotic" },
+        { word: "Blast", definition: "Blowing strongly" },
+        { word: "AC", definition: "Air Conditioning" }
       ],
+      badResponse: {
+          text: "Turn off the cold.",
+          why: "Too direct."
+      },
+      goodResponse: {
+          text: "Do you mind if we turn down the AC just a bit? It's a little [chilly] back here.",
+          why: "Polite request using 'Do you mind'."
+      }
     },
     {
       id: "s3",
-      en: "If there's a faster route, I'm all for it.",
+      en: "The 'Chatty Driver' Defense",
+      scenario: "Driver keeps talking but you are tired",
       keywords: [
-        { word: "route", definition: "path" },
-        { word: "all for it", definition: "totally agree" },
+        { word: "Long day", definition: "Exhausting day" },
+        { word: "Zone out", definition: "Stop paying attention/relax" }
       ],
+      goodResponse: {
+          text: "Yeah... (polite laugh). Sorry, I've had such a [long day], I'm probably just going to [zone out] for a bit.",
+          why: "Politely shuts down conversation without being mean."
+      }
     },
     {
       id: "s4",
-      en: "I’m headed to a friend's thing—trying not to be late.",
+      en: "The Navigation Assist",
+      scenario: "Driver looks confused",
       keywords: [
-        { word: "headed to", definition: "going towards" },
-        { word: "late", definition: "delayed" },
+        { word: "Pull up", definition: "Stop the car" },
+        { word: "Right here", definition: "Exact spot" }
       ],
+      badResponse: {
+          text: "You missed the turn! Stop!",
+          why: "Panic inducing."
+      },
+      goodResponse: {
+          text: "You can just [pull up] right here on the corner. That's perfect, thanks.",
+          why: "Calm guidance for the drop-off."
+      }
     },
     {
       id: "s5",
-      en: "Mind if I crack a window just a bit?",
+      en: "The Exit",
+      scenario: "Getting out",
       keywords: [
-        { word: "mind if", definition: "do you object if" },
-        { word: "crack a window", definition: "open slightly" },
+        { word: "Safe", definition: "Unharmed" },
+        { word: "Rating", definition: "Score" }
       ],
-    },
-    {
-      id: "s6",
-      en: "Thanks for the smooth driving—feels like a bonus nap zone.",
-      keywords: [
-        { word: "smooth", definition: "gentle" },
-        { word: "bonus", definition: "extra" },
-      ],
-    },
-    {
-      id: "s7",
-      en: "By the way, do you have a favorite podcast or playlist for rides?",
-      keywords: [
-        { word: "podcast", definition: "audio show" },
-        { word: "playlist", definition: "music list" },
-      ],
-    },
-    {
-      id: "s8",
-      en: "This is my stop—thanks and have a chill shift!",
-      keywords: [
-        { word: "stop", definition: "drop-off point" },
-        { word: "shift", definition: "work period" },
-      ],
-    },
-  ],
+      goodResponse: {
+          text: "Thanks for the ride! Drive distinct safe. 5 stars!",
+          why: "Explicitly mentioning '5 stars' often guarantees you get 5 stars back."
+      }
+    }
+  ]
 };

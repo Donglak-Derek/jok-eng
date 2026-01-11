@@ -3,132 +3,115 @@ import { CATEGORY_NAMES } from "@/data/categories";
 
 export const directionsAndLocations: Script = {
   id: "everyday-directions-locations",
-  title: "Directions and Locations",
+  title: "Lost in Translation",
   categorySlug: "small_talk",
   categoryName: CATEGORY_NAMES["small_talk"],
-  cleanedEnglish:
-    "Learn how to ask and give directions at work or outside. These sentences help you talk about places and locations clearly.",
-    imageUrl: "/images/scenarios/small_talk_generic.png",
+  cleanedEnglish: "Asking for directions when Google Maps betrays you.",
+  imageUrl: "/images/scenarios/small_talk_generic.png", // Will update later
+
+  culturalNote: {
+    title: "Landmark Navigation",
+    content: "Locals rarely use street names ('Turn on 4th Ave'). They use landmarks: 'Turn left at the Starbucks', 'Go past the big ugly statue'. If you look confused, they will usually point and say 'It's that way'."
+  },
+
+  quizItems: [
+    {
+      question: "You are visibly lost. A local asks if you need help. You say:",
+      options: [
+        "Go away.",
+        "Yes, I am looking for the station.",
+        "I live here. (Lie)",
+        "Scream."
+      ],
+      correctIndex: 1,
+      explanation: "Most people enter 'Helper Mode' instantly. Just say what you are looking for."
+    },
+    {
+      question: "Someone gives you complicated directions. You didn't understand. You say:",
+      options: [
+        "Thanks! (Walk away and cry).",
+        "Could you repeat that last part?",
+        "You speak too fast.",
+        "Whatever."
+      ],
+      correctIndex: 1,
+      explanation: "It is better to ask for a repeat than to walk in the wrong direction for 20 minutes."
+    }
+  ],
+
   sentences: [
     {
       id: "s1",
-      en: "Where is the restroom?",
+      en: "The Confused Tourist",
+      scenario: "Your phone GPS died",
       keywords: [
-        { word: "restroom", definition: "toilet / bathroom" },
-        { word: "where", definition: "location query" },
+        { word: "Turned around", definition: "Lost/Disoriented" },
+        { word: "Direction", definition: "Way" }
       ],
+      badResponse: {
+          text: "Where is the museum?",
+          why: "A bit abrupt."
+      },
+      goodResponse: {
+          text: "Excuse me, I'm a little [turned around]. Could you point me in the [direction] of the museum?",
+          why: "'Turned around' sounds less pathetic than 'lost'."
+      }
     },
     {
       id: "s2",
-      en: "The restroom is next to the cafeteria.",
+      en: "The Landmark Check",
+      scenario: "Verifying the path",
       keywords: [
-        { word: "next to", definition: "beside" },
-        { word: "cafeteria", definition: "dining hall" },
+        { word: "Past", definition: "Beyond" },
+        { word: "Big", definition: "Large" }
       ],
+      goodResponse: {
+          text: "So I go [past] the big church, then turn right? Got it.",
+          why: "Repeating the instructions back ensures you understood."
+      }
     },
     {
       id: "s3",
-      en: "How do I get to the showroom?",
+      en: "The Uber Pickup",
+      scenario: "Explaining where you are by phone",
       keywords: [
-        { word: "get to", definition: "arrive at" },
-        { word: "showroom", definition: "display room" },
+        { word: "Standing", definition: "Positioned" },
+        { word: "Corner", definition: "Intersection" }
       ],
+      goodResponse: {
+          text: "I'm [standing] right on the [corner], next to the bright yellow mailbox.",
+          why: "Visual cues (color, object) helps drivers find you faster than addresses."
+      }
     },
     {
       id: "s4",
-      en: "The showroom is straight ahead.",
+      en: "The Distance Query",
+      scenario: "Deciding to walk or drive",
       keywords: [
-        { word: "straight ahead", definition: "directly forward" },
-        { word: "ahead", definition: "in front" },
+        { word: "Walkable", definition: "Close enough to walk" },
+        { word: "Hop in", definition: "Get in" }
       ],
+      badResponse: {
+          text: "Is it far?",
+          why: "Vague."
+      },
+      goodResponse: {
+          text: "Is it [walkable] from here, or should I [hop in] a cab?",
+          why: "Specifically asks about effort required."
+      }
     },
     {
       id: "s5",
-      en: "Turn left at the corner.",
+      en: "The Bathroom Emergency",
+      scenario: "You need a toilet NOW",
       keywords: [
-        { word: "turn left", definition: "go left" },
-        { word: "corner", definition: "junction" },
+        { word: "Restroom", definition: "Toilet" },
+        { word: "Closest", definition: "Nearest" }
       ],
-    },
-    {
-      id: "s6",
-      en: "Turn right after the stairs.",
-      keywords: [
-        { word: "turn right", definition: "go right" },
-        { word: "stairs", definition: "steps" },
-      ],
-    },
-    {
-      id: "s7",
-      en: "The elevator is near the entrance.",
-      keywords: [
-        { word: "elevator", definition: "lift" },
-        { word: "entrance", definition: "entry door" },
-      ],
-    },
-    {
-      id: "s8",
-      en: "Go past the kitchen section.",
-      keywords: [
-        { word: "go past", definition: "pass by" },
-        { word: "section", definition: "area" },
-      ],
-    },
-    {
-      id: "s9",
-      en: "The office is on the second floor.",
-      keywords: [
-        { word: "office", definition: "workplace" },
-        { word: "second floor", definition: "level 2" },
-      ],
-    },
-    {
-      id: "s10",
-      en: "Walk down this hallway.",
-      keywords: [
-        { word: "hallway", definition: "corridor" },
-        { word: "walk down", definition: "proceed along" },
-      ],
-    },
-    {
-      id: "s11",
-      en: "The cafeteria is next to the showroom.",
-      keywords: [
-        { word: "cafeteria", definition: "canteen" },
-        { word: "next to", definition: "adjacent" },
-      ],
-    },
-    {
-      id: "s12",
-      en: "Go through that door and turn left.",
-      keywords: [
-        { word: "go through", definition: "pass via" },
-        { word: "door", definition: "gateway" },
-      ],
-    },
-    {
-      id: "s13",
-      en: "The parking lot is behind the building.",
-      keywords: [
-        { word: "parking lot", definition: "car park" },
-        { word: "behind", definition: "at the back of" },
-      ],
-    },
-    {
-      id: "s14",
-      en: "Is it far from here?",
-      keywords: [
-        { word: "far", definition: "long distance" },
-        { word: "from here", definition: "starting here" },
-      ],
-    },
-    {
-      id: "s15",
-      en: "No, it’s very close.",
-      keywords: [
-        { word: "close", definition: "near" },
-        { word: "very", definition: "extremely" },
-      ],
-    },
-  ],
+      goodResponse: {
+          text: "Sorry to ask, but do you know where the [closest] public [restroom] is?",
+          why: "Polite but urgent."
+      }
+    }
+  ]
 };

@@ -3,132 +3,115 @@ import { CATEGORY_NAMES } from "@/data/categories";
 
 export const foodAndEating: Script = {
   id: "everyday-food-and-eating",
-  title: "Food and Eating",
+  title: "Dining Drama",
   categorySlug: "small_talk",
   categoryName: CATEGORY_NAMES["small_talk"],
-  cleanedEnglish:
-    "Practice sentences for ordering food, talking about meals, and sharing food preferences in daily life.",
-    imageUrl: "/images/scenarios/small_talk_generic.png",
+  cleanedEnglish: "Navigating menus, allergies, and the awkwardness of 'The Bill'.",
+  imageUrl: "/images/scenarios/dining_bill_shock_3d.png",
+
+  culturalNote: {
+    title: "The Bill Dance",
+    content: "When the check comes, it's polite to offer 'I've got this' or 'Shall we split it?'. In the US, splitting 'down the middle' (50/50) is common for friends, even if one person ate slightly more, just to save time. And NEVER forget the tip (20%)."
+  },
+
+  quizItems: [
+    {
+      question: "You found a hair in your soup. How do you tell the waiter?",
+      options: [
+        "Scream and throw the soup.",
+        "Whisper politely 'Excuse me, I think there is a hair in this'.",
+        "Eat around it.",
+        "Leave without paying."
+      ],
+      correctIndex: 1,
+      explanation: "Mistakes happen. Being quiet and polite ('Whisper') saves the waiter from embarrassment and usually gets you a free meal."
+    },
+    {
+      question: "Someone offers to pay the whole bill ('It's on me!'). You should:",
+      options: [
+        "Say 'Okay!' immediately.",
+        "Argue for 20 minutes.",
+        "Offer to pay once ('Are you sure?'), then accept graciously.",
+        "Run away."
+      ],
+      correctIndex: 2,
+      explanation: "This is 'The Dance'. You must offer to pay once to show you aren't a moocher, but let them accept the glory."
+    }
+  ],
+
   sentences: [
     {
       id: "s1",
-      en: "I’ll have coffee and a sandwich.",
+      en: "The Dietary Fuss",
+      scenario: "Asking about ingredients",
       keywords: [
-        { word: "coffee", definition: "caffeinated drink" },
-        { word: "sandwich", definition: "bread with filling" },
+        { word: "Side", definition: "Put separate" },
+        { word: "Allergic", definition: "Medical reaction" }
       ],
+      badResponse: {
+          text: "I hate onions. Don't put them in.",
+          why: "Sounds like a toddler."
+      },
+      goodResponse: {
+          text: "Does this come with onions? I'm actually [allergic], so could I get them on the [side] or removed?",
+          why: "Medical framing ('allergic') gets taken more seriously than preference."
+      }
     },
     {
       id: "s2",
-      en: "Can I see the menu, please?",
+      en: "The Indecisive Order",
+      scenario: "Waiter arrives but you aren't ready",
       keywords: [
-        { word: "menu", definition: "food list" },
-        { word: "please", definition: "polite request" },
+        { word: "Minute", definition: "More time" },
+        { word: "Decide", definition: "Choose" }
       ],
+      goodResponse: {
+          text: "Sorry, we need just one more [minute] to [decide]. Everything looks too good!",
+          why: "Flattery ('Everything looks good') makes the delay less annoying."
+      }
     },
     {
       id: "s3",
-      en: "What do you recommend?",
+      en: "The 'Send Back' (Polite)",
+      scenario: "The food is cold or wrong",
       keywords: [
-        { word: "recommend", definition: "suggest" },
-        { word: "what", definition: "which thing" },
+        { word: "Bother", definition: "Annoy" },
+        { word: "Cold", definition: "Not hot" }
       ],
+      badResponse: {
+          text: "This is garbage. Take it away.",
+          why: "Rude."
+      },
+      goodResponse: {
+          text: "I'm so sorry to [bother] you, but this came out a little [cold]. Would you mind heating it up?",
+          why: "Apologizing ('Sorry to bother') puts the server on your side."
+      }
     },
     {
       id: "s4",
-      en: "I’d like a bowl of soup and some bread.",
+      en: "The Bill Split",
+      scenario: "Deciding who pays",
       keywords: [
-        { word: "bowl", definition: "deep dish" },
-        { word: "soup", definition: "liquid food" },
+        { word: "Split", definition: "Divide" },
+        { word: "Venmo", definition: "Payment App" }
       ],
+      goodResponse: {
+          text: "Shall we just [split] it down the middle? I can [Venmo] you my half.",
+          why: "Splitting equally saves the math headache."
+      }
     },
     {
       id: "s5",
-      en: "Is this dish spicy?",
+      en: "The Treat",
+      scenario: "You want to pay for everyone",
       keywords: [
-        { word: "dish", definition: "food item" },
-        { word: "spicy", definition: "hot flavor" },
+        { word: "Got this", definition: "Will pay" },
+        { word: "Treat", definition: "Gift" }
       ],
-    },
-    {
-      id: "s6",
-      en: "Can I get this without cheese?",
-      keywords: [
-        { word: "without", definition: "excluding" },
-        { word: "cheese", definition: "dairy product" },
-      ],
-    },
-    {
-      id: "s7",
-      en: "I’ll take it to go.",
-      keywords: [
-        { word: "to go", definition: "takeaway" },
-        { word: "take", definition: "carry" },
-      ],
-    },
-    {
-      id: "s8",
-      en: "Can we have the bill, please?",
-      keywords: [
-        { word: "bill", definition: "check/cost" },
-        { word: "please", definition: "request" },
-      ],
-    },
-    {
-      id: "s9",
-      en: "What’s your favorite food?",
-      keywords: [
-        { word: "favorite", definition: "most liked" },
-        { word: "food", definition: "edible things" },
-      ],
-    },
-    {
-      id: "s10",
-      en: "My favorite meal is fried chicken and rice.",
-      keywords: [
-        { word: "meal", definition: "eating occasion" },
-        { word: "fried chicken", definition: "cooked poultry" },
-      ],
-    },
-    {
-      id: "s11",
-      en: "I usually eat cereal for breakfast.",
-      keywords: [
-        { word: "usually", definition: "normally" },
-        { word: "breakfast", definition: "morning meal" },
-      ],
-    },
-    {
-      id: "s12",
-      en: "For lunch, I had a salad and some fruit.",
-      keywords: [
-        { word: "lunch", definition: "noon meal" },
-        { word: "salad", definition: "greens mix" },
-      ],
-    },
-    {
-      id: "s13",
-      en: "Let’s eat dinner together tonight.",
-      keywords: [
-        { word: "dinner", definition: "evening meal" },
-        { word: "together", definition: "as a group" },
-      ],
-    },
-    {
-      id: "s14",
-      en: "I’m hungry. Let’s order something.",
-      keywords: [
-        { word: "hungry", definition: "needing food" },
-        { word: "order", definition: "request food" },
-      ],
-    },
-    {
-      id: "s15",
-      en: "This tastes really good!",
-      keywords: [
-        { word: "taste", definition: "flavor" },
-        { word: "good", definition: "delicious" },
-      ],
-    },
-  ],
+      goodResponse: {
+          text: "No, put your wallet away. I've [got this]. It's my [treat].",
+          why: "Firm but generous."
+      }
+    }
+  ]
 };

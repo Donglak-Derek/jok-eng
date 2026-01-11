@@ -3,108 +3,119 @@ import { CATEGORY_NAMES } from "@/data/categories";
 
 export const workplaceCommunication: Script = {
   id: "everyday-workplace-communication",
-  title: "Workplace Communication",
+  title: "The Water Cooler",
   categorySlug: "small_talk",
   categoryName: CATEGORY_NAMES["small_talk"],
-  cleanedEnglish:
-    "Simple sentences for asking help, giving updates, and saying you finished something at work.",
-    imageUrl: "/images/scenarios/small_talk_generic.png",
+  cleanedEnglish: "Surviving the coffee machine, dodging gossip, and looking busy.",
+  imageUrl: "/images/scenarios/water_cooler_hiding_3d.png",
+
+  culturalNote: {
+    title: "Safe Topics vs. Danger Zones",
+    content: "At work, stick to 'Safe Topics': The weekend, weather, sports, and TV shows. Avoid 'Danger Zones': Politics, religion, and who is getting fired. The goal of work small talk is to be friendly but neutral."
+  },
+
+  quizItems: [
+    {
+      question: "A coworker starts gossiping about the boss. What is the safest move?",
+      options: [
+        "Agree enthusiastically.",
+        "Record the conversation.",
+        "Say 'That sounds tough' and change the subject.",
+        "Insult the boss too."
+      ],
+      correctIndex: 2,
+      explanation: "Neutral deflection ('That sounds tough') protects you. Joining in makes you a co-conspirator."
+    },
+    {
+      question: "It is Monday morning. You haven't had coffee. Someone asks 'How are you?'.",
+      options: [
+        "Scream.",
+        "Ignore them.",
+        "Say 'Ask me again after my second coffee' (with a smile).",
+        "Explain your insomnia in detail."
+      ],
+      correctIndex: 2,
+      explanation: "The 'Need Coffee' joke is a universal, acceptable way to say 'I am tired' without being negative."
+    }
+  ],
+
   sentences: [
     {
       id: "s1",
-      en: "Can you help me with this?",
+      en: "The Monday Morning Grunt",
+      scenario: "Pre-coffee interaction",
       keywords: [
-        { word: "help", definition: "assist" },
-        { word: "with", definition: "in regards to" },
+        { word: "Caffeine", definition: "Stimulant in coffee" },
+        { word: "Loading", definition: "Starting up" }
       ],
+      badResponse: {
+          text: "Leave me alone.",
+          why: "Too hostile."
+      },
+      goodResponse: {
+          text: "Hey! I'm still [loading]... ask me again after the [caffeine] hits.",
+          why: "Relatable humor diffuses the grumpiness."
+      }
     },
     {
       id: "s2",
-      en: "I finished the build.",
+      en: "The Weekend Recap",
+      scenario: "The inevitable 'How was your weekend?'",
       keywords: [
-        { word: "finished", definition: "completed" },
-        { word: "build", definition: "assembly" },
+        { word: "Key", definition: "Low-key (relaxed)" },
+        { word: "Recharge", definition: "Rest energy" }
       ],
+      badResponse: {
+          text: "I stared at the wall.",
+          why: "A bit depressing."
+      },
+      goodResponse: {
+          text: "It was pretty low-[key], actually. Just [recharged] the batteries. How about yours?",
+          why: "Frame 'doing nothing' as 'recharging'. Sounds professional."
+      }
     },
     {
       id: "s3",
-      en: "Do you need me for the next task?",
+      en: "The Gossip Deflection",
+      scenario: "Someone tries to tell you drama",
       keywords: [
-        { word: "next", definition: "following" },
-        { word: "task", definition: "assignment" },
+        { word: "Loop", definition: "In the know" },
+        { word: "Focus", definition: "Concentrate" }
       ],
+      badResponse: {
+          text: "Tell me everything!",
+          why: "Trap. Don't do it."
+      },
+      goodResponse: {
+          text: "Oh really? I'm honestly so out of the [loop] lately, I've just been [focused] on this project.",
+          why: "Claiming ignorance ('out of the loop') keeps your hands clean."
+      }
     },
     {
       id: "s4",
-      en: "Can I take this to the shopkeeper?",
+      en: "The Fake Exit",
+      scenario: "You need to escape a conversation",
       keywords: [
-        { word: "take", definition: "bring" },
-        { word: "shopkeeper", definition: "store manager" },
+        { word: "Jump", definition: "Go quickly" },
+        { word: "Meeting", definition: "Gathering" }
       ],
+      goodResponse: {
+          text: "I'd love to chat more, but I actually have to [jump] into a call in 5 minutes.",
+          why: "The 'upcoming call' is the perfect un-argueable excuse."
+      }
     },
     {
       id: "s5",
-      en: "The part is missing.",
+      en: "The 'Leaving Early' Defense",
+      scenario: "Leaving at 4:55 PM",
       keywords: [
-        { word: "part", definition: "component" },
-        { word: "missing", definition: "lost" },
+        { word: "Head out", definition: "Leave" },
+        { word: "Tomorrow", definition: "Next day" }
       ],
-    },
-    {
-      id: "s6",
-      en: "I already checked the instructions.",
-      keywords: [
-        { word: "checked", definition: "reviewed" },
-        { word: "instructions", definition: "directions" },
-      ],
-    },
-    {
-      id: "s7",
-      en: "Should I move this to the display?",
-      keywords: [
-        { word: "move", definition: "relocate" },
-        { word: "display", definition: "showcase area" },
-      ],
-    },
-    {
-      id: "s8",
-      en: "I will start the next project now.",
-      keywords: [
-        { word: "start", definition: "begin" },
-        { word: "project", definition: "work assignment" },
-      ],
-    },
-    {
-      id: "s9",
-      en: "Do you want me to fix this?",
-      keywords: [
-        { word: "fix", definition: "repair" },
-        { word: "want", definition: "desire" },
-      ],
-    },
-    {
-      id: "s10",
-      en: "Everything is ready now.",
-      keywords: [
-        { word: "everything", definition: "all things" },
-        { word: "ready", definition: "prepared" },
-      ],
-    },
-    {
-      id: "s11",
-      en: "Can I take a short break?",
-      keywords: [
-        { word: "short", definition: "brief" },
-        { word: "break", definition: "rest" },
-      ],
-    },
-    {
-      id: "s12",
-      en: "Let me know if you need me.",
-      keywords: [
-        { word: "let me know", definition: "inform me" },
-        { word: "need", definition: "require help from" },
-      ],
-    },
-  ],
+      goodResponse: {
+          text: "Alright, I'm gonna [head out]. See you guys [tomorrow]!",
+          why: "Announce your departure confidently. Don't sneak out like a criminal."
+      }
+    }
+  ]
 };

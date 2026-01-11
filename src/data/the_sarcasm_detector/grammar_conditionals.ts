@@ -3,91 +3,88 @@ import { CATEGORY_NAMES } from "@/data/categories";
 
 export const conditionalsPractice: Script = {
   id: "grammar-conditionals",
-  title: "Conditionals (If Sentences)",
+  title: "The 'If Only' Excuses",
   categorySlug: "the_sarcasm_detector",
   categoryName: CATEGORY_NAMES["the_sarcasm_detector"],
   cleanedEnglish:
-    "Conditionals are 'if sentences.' They help you talk about facts, plans, and imagination. Practice zero, first, and second conditionals for daily and work situations.",
-    imageUrl: "/images/scenarios/sarcasm_generic.png",
+    "How to use 'if' sentences to give fake excuses, subtle threats, and passive-aggressive advice.",
+  imageUrl: "/images/scenarios/sarcasm_generic.png",
   sentences: [
     {
       id: "s1",
-      en: "If you heat water, it boils.",
+      en: "If I were you, I would stop talking right now.",
       keywords: [
-        { word: "heat", definition: "make hot" },
-        { word: "boil", definition: "reach 100°C" },
+        { word: "If I were you", definition: "advice phrase" },
+        { word: "stop talking", definition: "be quiet" },
       ],
     },
     {
       id: "s2",
-      en: "If people don’t eat, they get hungry.",
+      en: "If you had asked me earlier, I might have cared.",
       keywords: [
-        { word: "hungry", definition: "needing food" },
-        { word: "eat", definition: "consume food" },
+        { word: "might have", definition: "possibility in past" },
+        { word: "cared", definition: "had interest" },
       ],
     },
     {
       id: "s3",
-      en: "If you drop a glass, it breaks.",
+      en: "If I have time, I might look at it. (Meaning: No)",
       keywords: [
-        { word: "drop", definition: "let fall" },
-        { word: "break", definition: "separate into pieces" },
+        { word: "If I have time", definition: "conditional condition" },
+        { word: "might", definition: "low probability" },
       ],
     },
     {
       id: "s4",
-      en: "If I study, I will improve.",
+      en: "If it were up to me, this would be done differently.",
       keywords: [
-        { word: "study", definition: "learn subjects" },
-        { word: "improve", definition: "get better" },
+        { word: "up to me", definition: "my decision" },
+        { word: "differently", definition: "in another way" },
       ],
     },
     {
       id: "s5",
-      en: "If it rains tomorrow, I will stay home.",
+      en: "If you say so.",
       keywords: [
-        { word: "rain", definition: "falls as accuracy" },
-        { word: "stay home", definition: "remain in one's house" },
+        { word: "If you say so", definition: "doubting agreement" },
       ],
     },
     {
       id: "s6",
-      en: "If I work hard, I will get better results.",
+      en: "If that’s what you think, good luck.",
       keywords: [
-        { word: "work hard", definition: "put in effort" },
-        { word: "results", definition: "outcomes" },
+        { word: "good luck", definition: "sarcastic well wish" },
       ],
     },
     {
       id: "s7",
-      en: "If I had more time, I would make videos.",
+      en: "If only common sense were common.",
       keywords: [
-        { word: "had time", definition: "possessed availability" },
-        { word: "make videos", definition: "create recordings" },
+        { word: "If only", definition: "strong wish/regret" },
+        { word: "common sense", definition: "basic judgment" },
       ],
     },
     {
       id: "s8",
-      en: "If I were rich, I would travel the world.",
+      en: "I would help, if I wasn't so 'busy'.",
       keywords: [
-        { word: "rich", definition: "having much money" },
-        { word: "travel", definition: "go to different places" },
+        { word: "busy", definition: "occupied (used ironically)" },
       ],
     },
     {
       id: "s9",
-      en: "If I spoke English perfectly, I would feel more confident.",
+      en: "If you’re happy with that quality, then great.",
       keywords: [
-        { word: "perfectly", definition: "without mistakes" },
-        { word: "confident", definition: "sure of oneself" },
+        { word: "happy with", definition: "satisfied by" },
+        { word: "quality", definition: "standard of work" },
       ],
     },
     {
       id: "s10",
-      en: "If I had a bigger kitchen, I would cook every day.",
+      en: "If I win the lottery, I won't tell you, but there will be signs.",
       keywords: [
-        { word: "kitchen", definition: "room for cooking" },
-        { word: "cook", definition: "prepare food" },
+        { word: "lottery", definition: "gambling prize" },
+        { word: "signs", definition: "hints / clues" },
       ],
     },
   ],
