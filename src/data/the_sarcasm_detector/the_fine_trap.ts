@@ -8,7 +8,7 @@ export const theFineTrap: Script = {
   categoryName: CATEGORY_NAMES["the_sarcasm_detector"],
   cleanedEnglish:
     "When 'fine' means the opposite. Learn to spot the tone difference between genuine agreement and passive-aggressive anger.",
-  imageUrl: "/images/scenarios/sarcasm_generic.png",
+  imageUrl: "/images/scenarios/the_fine_trap_clay.png",
   mode: "cloze",
   culturalNote: {
     title: "The Danger of 'Fine'",
