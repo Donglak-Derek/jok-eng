@@ -8,6 +8,7 @@ export const directionsAndLocations: Script = {
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish: "Asking for directions when Google Maps betrays you.",
   imageUrl: "/images/scenarios/lost_upside_down_map_3d.png",
+  mode: "cloze",
 
   culturalNote: {
     title: "Landmark Navigation",
@@ -36,6 +37,17 @@ export const directionsAndLocations: Script = {
       ],
       correctIndex: 1,
       explanation: "It is better to ask for a repeat than to walk in the wrong direction for 20 minutes."
+    },
+    {
+      question: "A local says 'It's just down the road'. How far is it?",
+      options: [
+        "1 minute.",
+        "5 minutes.",
+        "Could be 5 minutes, could be 5 miles.",
+        "Right here."
+      ],
+      correctIndex: 2,
+      explanation: "'Just down the road' is a dangerous, vague unit of measurement. Be skeptical."
     }
   ],
 

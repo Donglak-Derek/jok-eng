@@ -8,6 +8,7 @@ export const teamworkCollaboration: Script = {
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish: "Herding cats, dividing tasks, and politely telling people to do their job.",
   imageUrl: "/images/scenarios/group_project_chaos_3d.png",
+  mode: "cloze",
 
   culturalNote: {
     title: "The 'We' vs 'I'",
@@ -36,6 +37,17 @@ export const teamworkCollaboration: Script = {
       ],
       correctIndex: 2,
       explanation: "'Interesting' allows you to explore the flaws gently without rejecting them personally."
+    },
+    {
+      question: "You finished a group project. You say:",
+      options: [
+        "Finally, it's over.",
+        "I did all the work.",
+        "Nice work everyone! We crushed that.",
+        "I am going home."
+      ],
+      correctIndex: 2,
+      explanation: "Always celebrate the win with the team, even if you did do all the work."
     }
   ],
 

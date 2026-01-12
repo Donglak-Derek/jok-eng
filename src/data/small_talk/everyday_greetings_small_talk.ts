@@ -8,6 +8,7 @@ export const greetingsSmallTalk: Script = {
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish: "Mastering the 'How are you?' ritual and escaping awkwardly long chats.",
   imageUrl: "/images/scenarios/greetings_introvert_3d.png",
+  mode: "cloze",
 
   culturalNote: {
     title: "The 'How are you?' Trap",
@@ -36,6 +37,17 @@ export const greetingsSmallTalk: Script = {
       ],
       correctIndex: 1,
       explanation: "'Not much' is the standard default response to 'What's up?'."
+    },
+    {
+      question: "You forget someone's name immediately after they introduce themselves. You say:",
+      options: [
+        "Who are you?",
+        "I'm so sorry, I'm blanking on your name.",
+        "Hey... You!",
+        "Run away."
+      ],
+      correctIndex: 1,
+      explanation: "Honesty is better than guessing and calling 'Mike' 'Steve' for three months."
     }
   ],
 

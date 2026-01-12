@@ -8,6 +8,7 @@ export const healthAndFeelings: Script = {
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish: "Communicating burnout, illness, and the 'Sunday Scaries' without oversharing.",
   imageUrl: "/images/scenarios/calling_in_sick_3d.png",
+  mode: "cloze",
 
   culturalNote: {
     title: "The 'Mental Health Day'",
@@ -36,6 +37,17 @@ export const healthAndFeelings: Script = {
       ],
       correctIndex: 0,
       explanation: "'The Sunday Scaries' is the popular term for pre-work week anxiety."
+    },
+    {
+      question: "You are burnt out. A colleague asks if you can take on a new project. You say:",
+      options: [
+        "No.",
+        "I'd love to, but I'm at capacity right now.",
+        "I am dead inside.",
+        "Sure! (Lie)."
+      ],
+      correctIndex: 1,
+      explanation: "'At capacity' is the professional way to say 'I will explode if you give me one more thing'."
     }
   ],
 

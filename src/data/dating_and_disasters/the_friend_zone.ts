@@ -13,7 +13,7 @@ export const theFriendZone: Script = {
   decoderItems: [
     {
       id: "friend-1",
-      phrase: "You're such a nice guy.",
+      phrase: "You're such a [nice guy].",
       literalMeaning: "You are a pleasant male.",
       actualMeaning: "You are not dangerous, but I have zero romantic attraction to you.",
       dangerLevel: "High - Friend Zone Entry",
@@ -24,11 +24,14 @@ export const theFriendZone: Script = {
          textA: "Aww, you're such a nice guy for paying!",
          textB: "Thanks!",
          contextNote: "It sounds like a compliment, but 'nice' is often the opposite of 'sexy' in dating."
-      }
+      },
+      keywords: [
+          { word: "nice guy", definition: "Often code for 'safe but not attractive'." }
+      ]
     },
     {
       id: "friend-2",
-      phrase: "I value our friendship too much.",
+      phrase: "I value our [friendship too much].",
       literalMeaning: "Our friendship is precious.",
       actualMeaning: "I don't want to ruin this friendship by dating you (and then dumping you).",
       dangerLevel: "Critical - Permanent Zone",
@@ -39,11 +42,14 @@ export const theFriendZone: Script = {
          textA: "I just value our friendship too much to risk it.",
          textB: "I understand.",
          contextNote: "This is the polite way of saying 'No' without hurting your feelings."
-      }
+      },
+      keywords: [
+          { word: "friendship too much", definition: "A polite way to close the door on romance permanently." }
+      ]
     },
     {
       id: "friend-3",
-      phrase: "You'll make some girl really happy someday.",
+      phrase: "You'll make some girl really [happy someday].",
       literalMeaning: "A future woman will be happy with you.",
       actualMeaning: "That woman is definitely not me.",
       dangerLevel: "Medium - End of the Road",
@@ -54,11 +60,14 @@ export const theFriendZone: Script = {
          textA: "Seriously, you'll make someone really happy someday.",
          textB: "Do you know anyone?",
          contextNote: "Pivot the rejection into a setup. It's a power move."
-      }
+      },
+      keywords: [
+          { word: "happy someday", definition: "Reassurance that you are dateable, just not by them." }
+      ]
     },
     {
       id: "friend-4",
-      phrase: "You're like a brother to me.",
+      phrase: "You're [like a brother] to me.",
       literalMeaning: "We have a familial bond.",
       actualMeaning: "The idea of kissing you feels like incest.",
       dangerLevel: "Critical - The Sibling Seal",
@@ -69,11 +78,14 @@ export const theFriendZone: Script = {
          textA: "I love you! You're like my big brother.",
          textB: "That's... sweet.",
          contextNote: "This is the final nail in the romantic coffin."
-      }
+      },
+      keywords: [
+          { word: "like a brother", definition: "The ultimate romantic disqualifier; implies zero sexual attraction." }
+      ]
     },
     {
       id: "friend-5",
-      phrase: "I wish I could find a guy like you.",
+      phrase: "I wish I could find a [guy like you].",
       literalMeaning: "I want a partner with your qualities.",
       actualMeaning: "I want someone with your personality, but significantly hotter.",
       dangerLevel: "High - The Clone Request",
@@ -84,7 +96,10 @@ export const theFriendZone: Script = {
          textA: "Why can't all guys be like you?",
          textB: "I am right here.",
          contextNote: "Watch them stumble. It's cruel but clarifying."
-      }
+      },
+      keywords: [
+          { word: "guy like you", definition: "Wanting your traits but not you personally." }
+      ]
     }
   ],
   quizItems: [

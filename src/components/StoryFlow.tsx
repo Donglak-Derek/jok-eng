@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useCallback, useEffect, useMemo } from "react";
-import Link from "next/link";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import type { Script } from "@/types";
 import { motion, AnimatePresence } from "framer-motion";
@@ -13,8 +11,9 @@ import { updateDoc, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { UserScript } from "@/types";
 import QuizCard from "@/components/QuizCard";
+import ScriptPlayerShell from "@/components/ScriptPlayerShell";
 
-import { ArrowRight, RotateCcw, Volume2, ArrowLeft, Lightbulb, ChevronLeft, FileText } from "lucide-react";
+import { ArrowRight, Volume2, Lightbulb } from "lucide-react";
 import StoryFullView from "./StoryFullView";
 
 type Props = {
@@ -40,8 +39,6 @@ export default function StoryFlow({ script }: Props) {
     const v = localStorage.getItem(repeatsKey);
     setRepeats(v ? Number(v) || 0 : 0);
   }, [repeatsKey]);
-
-  // ... (Load repeats useEffect)
 
   // TTS State
   const [speaking, setSpeaking] = useState(false);
@@ -99,6 +96,9 @@ export default function StoryFlow({ script }: Props) {
   const speak = useCallback(async () => {
     if (typeof window === "undefined") return;
     if (speaking || loading) return; 
+    
+    // Safety check
+    if (!segments[currentStep]) return;
 
     // Speak the main text of the current segment
     const textToSpeak = segments[currentStep].text;
@@ -142,8 +142,6 @@ export default function StoryFlow({ script }: Props) {
       setLoading(false);
     }
   }, [segments, currentStep, speaking, loading]);
-
-  const isLastSegment = currentStep === segmentsCount - 1;
   
   // Logic to get current segment safely
   const currentSegment = currentStep < segmentsCount ? segments[currentStep] : segments[segmentsCount - 1];
@@ -221,7 +219,7 @@ export default function StoryFlow({ script }: Props) {
             transition={{ duration: 0.3 }}
             className="w-full"
           >
-             <div className="bg-white rounded-lg border border-border shadow-sm p-6 md:p-12 flex flex-col gap-6 md:gap-8">
+             <div className="bg-white rounded-lg border border-border shadow-sm p-6 md:p-12 flex flex-col gap-6 md:gap-8 min-h-[400px]">
                <div className="flex flex-col gap-6 text-center items-center">
                  <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground border border-border px-3 py-1 rounded-full bg-secondary/50">
                    Step {currentSegment.step}
@@ -253,6 +251,8 @@ export default function StoryFlow({ script }: Props) {
                    ))}
                   </div>
                )}
+               
+               <div className="flex-1" />
 
                {/* TTS Play Button */}
                <Button
@@ -273,103 +273,26 @@ export default function StoryFlow({ script }: Props) {
       );
   }
 
+  // --- RENDER SHELL ---
   return (
-    <div className="min-h-screen text-foreground flex flex-col bg-background">
-      {/* Sticky Header */}
-      <header className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-border">
-        <div className="max-w-3xl mx-auto px-4 py-3 md:px-6 md:py-4 flex flex-col gap-4">
-            <div className="flex items-center gap-4">
-              <Link href={`/category/${script.categorySlug}`} className="text-muted-foreground hover:text-foreground transition-colors">
-                  <ChevronLeft className="w-6 h-6" />
-              </Link>
-                <div className="flex-1 min-w-0">
-                  <h1 className="text-xl md:text-2xl font-bold tracking-tight text-foreground truncate">
-                    {script.title}
-                  </h1>
-                </div>
-              </div>
-
-               {/* Optional Scenario Image in Header (Mobile/Desktop) */}
-               {script.imageUrl && (
-                  <div className="w-full h-32 md:h-48 relative rounded-lg overflow-hidden border border-border mt-2 hidden md:block">
-                      <Image 
-                        src={script.imageUrl} 
-                        alt={script.title}
-                        fill
-                        className="object-cover"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-                  </div>
-               )}
-
-              <div className="flex items-center justify-end">
-              <button 
-                onClick={() => setViewMode("full")}
-                className="p-2 -mr-2 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-full transition-colors"
-                title="View Full Content"
-                aria-label="View Full Content"
-              >
-                  <FileText className="w-6 h-6" />
-              </button>
-            </div>
-            
-             {/* Progress Bar */}
-             <div className="w-full h-1 bg-secondary rounded-full overflow-hidden">
-                 <div 
-                   className="h-full bg-primary transition-all duration-300 ease-out"
-                   style={{ width: `${(currentStep / totalSteps) * 100}%` }}
-                 />
-            </div>
-        </div>
-      </header>
-
-      <div className="flex-1 max-w-3xl mx-auto px-4 py-8 md:px-6 md:py-12 flex flex-col gap-6 md:gap-8 w-full">
-
-        {/* Card Area */}
-        <div className="flex-1 flex flex-col justify-center min-h-[400px]">
-          <AnimatePresence mode="wait">
-            {content}
-          </AnimatePresence>
-        </div>
-      </div>
-      
-      {/* Bottom Action Bar */}
-      {showControls && (
-        <div className="sticky bottom-0 left-0 right-0 p-6 bg-background border-t border-border z-20">
-          <div className="max-w-3xl mx-auto flex items-center justify-between">
-             {/* Start Over Button */}
-             <Button 
-               variant="ghost"
-               size="sm"
-               onClick={handleStartOver}
-               className="text-muted-foreground hover:text-foreground"
-               leftIcon={<RotateCcw className="w-4 h-4" />}
-             >
-               Restart
-             </Button>
-             
-             <div className="flex items-center gap-3">
-                <Button
-                  variant="ghost"
-                  onClick={handlePrev}
-                  disabled={currentStep === 0}
-                  className={currentStep === 0 ? "invisible" : ""}
-                  leftIcon={<ArrowLeft className="w-4 h-4" />}
-                >
-                  Prev
-                </Button>
-
-                <Button
-                  variant="primary"
-                  onClick={handleNext}
-                  rightIcon={isLastSegment ? undefined : <ArrowRight className="w-4 h-4" />}
-                >
-                  {isLastSegment && !hasQuiz ? "Finish" : "Next"}
-                </Button>
-             </div>
-          </div>
-        </div>
-      )}
-    </div>
+    <ScriptPlayerShell
+        title={script.title}
+        categorySlug={script.categorySlug}
+        imageUrl={script.imageUrl}
+        currentStep={currentStep}
+        totalSteps={totalSteps}
+        hasFinished={isCompletion || !showControls} // Hide footer controls if completion or quiz
+        
+        // Navigation
+        onNext={handleNext}
+        onPrev={handlePrev}
+        onRestart={handleStartOver}
+        onViewFull={() => setViewMode("full")}
+        onBackToMenu={() => router.push(`/category/${script.categorySlug}`)}
+    >
+        <AnimatePresence mode="wait">
+             {content}
+        </AnimatePresence>
+    </ScriptPlayerShell>
   );
 }

@@ -14,7 +14,7 @@ export const jobAdDecoder: Script = {
   decoderItems: [
     {
       id: "ja1",
-      phrase: "Fast-paced environment.",
+      phrase: "[Fast-paced environment].",
       literalMeaning: "Things move quickly here.",
       actualMeaning: "We are understaffed, everything is on fire, and you will have no time to think.",
       dangerLevel: "Danger 🛑", // 80
@@ -25,11 +25,14 @@ export const jobAdDecoder: Script = {
         textA: "We thrive in a fast-paced environment.",
         textB: "I see. How does the team prioritize tasks to avoid crunch?",
         contextNote: "Often code for 'poor planning'."
-      }
+      },
+      keywords: [
+          { word: "Fast-paced environment", definition: "Euphemism for chaos, understaffing, and constant emergencies." }
+      ]
     },
     {
       id: "ja2",
-      phrase: "We are like a family.",
+      phrase: "We are [like a family].",
       literalMeaning: "We are close-knit and supportive.",
       actualMeaning: "We have no boundaries. We will expect you to work unpaid overtime because 'family helps family'.",
       dangerLevel: "Danger 🛑", // 95
@@ -40,11 +43,14 @@ export const jobAdDecoder: Script = {
         textA: "Here at TechCorp, we are a family.",
         textB: "That sounds nice. How do you handle work-life balance?",
         contextNote: "Run away. Emotional manipulation is coming."
-      }
+      },
+      keywords: [
+          { word: "like a family", definition: "Implies lack of boundaries and expectation of unpaid sacrifice." }
+      ]
     },
     {
       id: "ja3",
-      phrase: "Must be willing to wear many hats.",
+      phrase: "Must be willing to [wear many hats].",
       literalMeaning: "You will have varied responsibilities.",
       actualMeaning: "We fired the designer and the PM, so you are now the engineer, designer, and PM. You get paid for one job.",
       dangerLevel: "Caution ⚠️", // 60
@@ -55,11 +61,14 @@ export const jobAdDecoder: Script = {
         textA: "You'll need to wear many hats.",
         textB: "Could you define the core 3 responsibilities I'd be measured on?",
         contextNote: "Great for startups, bad for 'stable' jobs."
-      }
+      },
+      keywords: [
+          { word: "wear many hats", definition: "Doing multiple jobs for one salary; common in startups." }
+      ]
     },
     {
       id: "ja4",
-      phrase: "Competitive salary.",
+      phrase: "[Competitive salary].",
       literalMeaning: "Our pay matches other companies.",
       actualMeaning: "Average at best. If it was 'Excellent', we would list the number.",
       dangerLevel: "Caution ⚠️", // 50
@@ -70,11 +79,14 @@ export const jobAdDecoder: Script = {
         textA: "Competitive salary + equity.",
         textB: "What is the salary range for this role?",
         contextNote: "Transparency is confidence. Vague is suspicious."
-      }
+      },
+      keywords: [
+          { word: "Competitive salary", definition: "Usually means average or below average; lacks transparency." }
+      ]
     },
     {
       id: "ja5",
-      phrase: "Self-starter.",
+      phrase: "[Self-starter].",
       literalMeaning: "You take initiative.",
       actualMeaning: "We have absolutely no training or onboarding process. You are on your own, good luck.",
       dangerLevel: "Caution ⚠️", // 40
@@ -85,11 +97,14 @@ export const jobAdDecoder: Script = {
         textA: "We need a self-starter who hits the ground running.",
         textB: "I love autonomy. Do you have documentation for the codebase?",
         contextNote: "Often means 'sink or swim'."
-      }
+      },
+      keywords: [
+          { word: "Self-starter", definition: "Code for 'We have no training program; figure it out yourself'." }
+      ]
     },
     {
       id: "ja6",
-      phrase: "Work hard, play hard.",
+      phrase: "[Work hard, play hard].",
       literalMeaning: "We work seriously and have fun parties.",
       actualMeaning: "We work 80 hours a week, and then we have mandatory drinking events where you can't go home.",
       dangerLevel: "Danger 🛑", // 90
@@ -100,7 +115,10 @@ export const jobAdDecoder: Script = {
         textA: "Our culture is very 'work hard, play hard'.",
         textB: "What do people typically do after work hours?",
         contextNote: "Expect peer pressure to stay late."
-      }
+      },
+      keywords: [
+          { word: "Work hard, play hard", definition: "High burnout culture with mandatory social obligations." }
+      ]
     }
   ],
 

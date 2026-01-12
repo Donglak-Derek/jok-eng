@@ -8,6 +8,7 @@ export const gymSmallTalk: Script = {
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish: "Navigating sweat, sets, and unsolicited advice.",
   imageUrl: "/images/scenarios/gym_hover_3d.png",
+  mode: "cloze",
 
   culturalNote: {
     title: "Gym Etiquette 101",
@@ -36,6 +37,17 @@ export const gymSmallTalk: Script = {
       ],
       correctIndex: 1,
       explanation: "'Working in' means taking turns on the machine while the other person rests. It is efficient and polite."
+    },
+    {
+      question: "Someone tries to talk to you while you have headphones on. You:",
+      options: [
+        "Take them off and smile.",
+        "Point to your ears and shrug.",
+        "Scream.",
+        "Pretend you are deaf."
+      ],
+      correctIndex: 1,
+      explanation: "Unless it's an emergency, pointing to headphones is the universal 'I am in the zone' signal."
     }
   ],
 

@@ -8,6 +8,7 @@ export const workplaceCommunication: Script = {
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish: "Surviving the coffee machine, dodging gossip, and looking busy.",
   imageUrl: "/images/scenarios/water_cooler_hiding_3d.png",
+  mode: "cloze",
 
   culturalNote: {
     title: "Safe Topics vs. Danger Zones",
@@ -36,6 +37,17 @@ export const workplaceCommunication: Script = {
       ],
       correctIndex: 2,
       explanation: "The 'Need Coffee' joke is a universal, acceptable way to say 'I am tired' without being negative."
+    },
+    {
+      question: "It is 4:55 PM on Friday. You want to leave. You say:",
+      options: [
+        "Running away!",
+        "I'm gonna head out. See you Monday!",
+        "Sneak out back door.",
+        "Can I leave?"
+      ],
+      correctIndex: 1,
+      explanation: "Announce your departure confidently. Don't sneak out like a criminal or ask for permission."
     }
   ],
 

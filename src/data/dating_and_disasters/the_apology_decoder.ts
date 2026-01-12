@@ -13,7 +13,7 @@ export const theApologyDecoder: Script = {
   decoderItems: [
     {
       id: "sorry-1",
-      phrase: "I'm sorry you feel that way.",
+      phrase: "I'm sorry you [feel that way].",
       literalMeaning: "I regret your emotions.",
       actualMeaning: "I am not sorry at all. You are being dramatic.",
       dangerLevel: "High - Gaslighting",
@@ -24,11 +24,14 @@ export const theApologyDecoder: Script = {
          textA: "Look, I'm sorry you feel hurt.",
          textB: "But are you sorry for what you did?",
          contextNote: "Notice they apologized for YOUR feelings, not THEIR actions."
-      }
+      },
+      keywords: [
+          { word: "feel that way", definition: "Apologizing for your reaction, not their action (Deflection)." }
+      ]
     },
     {
       id: "sorry-2",
-      phrase: "It's not you, it's me.",
+      phrase: "It's [not you, it's me].",
       literalMeaning: "The problem is internal to me.",
       actualMeaning: "It is definitely you. I just want to leave without a fight.",
       dangerLevel: "Medium - Breakup Cliché",
@@ -39,11 +42,14 @@ export const theApologyDecoder: Script = {
          textA: "It's not you, it's me. I need space.",
          textB: "Okay. Goodbye.",
          contextNote: "This phrase is the universal exit code. There is no negotiating."
-      }
+      },
+      keywords: [
+          { word: "not you, it's me", definition: "A classic breakdown cliché to avoid hard conversations." }
+      ]
     },
     {
       id: "sorry-3",
-      phrase: "I was just joking!",
+      phrase: "I was [just joking]!",
       literalMeaning: "It was intended as humor.",
       actualMeaning: "I said something mean, but you got offended, so now I'm backtracking.",
       dangerLevel: "Critical - Jerk Alert",
@@ -54,11 +60,14 @@ export const theApologyDecoder: Script = {
          textA: "Wow, you gained weight! ... I was just joking!",
          textB: "Could you explain the punchline?",
          contextNote: "Asking them to explain the joke usually makes them realize how rude it was."
-      }
+      },
+      keywords: [
+          { word: "just joking", definition: "Backtracking when an insult lands poorly." }
+      ]
     },
     {
       id: "sorry-4",
-      phrase: "I'm sorry, I've just been so crazy busy.",
+      phrase: "I'm sorry, I've just been so [crazy busy].",
       literalMeaning: "My schedule is full.",
       actualMeaning: "You were not high enough on my priority list to send a 10-second text.",
       dangerLevel: "Medium - The Busy Bee",
@@ -69,11 +78,14 @@ export const theApologyDecoder: Script = {
          textA: "Sorry I ghosted! Work has been insane.",
          textB: "No worries.",
          contextNote: "Everyone is busy. Obama found time to date Michelle while running for Senate."
-      }
+      },
+      keywords: [
+          { word: "crazy busy", definition: "A low-effort excuse; if they wanted to, they would." }
+      ]
     },
     {
       id: "sorry-5",
-      phrase: "I didn't mean to hurt you.",
+      phrase: "I [didn't mean] to hurt you.",
       literalMeaning: "My intent was innocent.",
       actualMeaning: "I definitely did the thing that hurt you, I just didn't want the consequences.",
       dangerLevel: "High - The Accidental Villain",
@@ -84,7 +96,10 @@ export const theApologyDecoder: Script = {
          textA: "I didn't mean to make you cry!",
          textB: "But you did. So what now?",
          contextNote: "Focus on the outcome, not their 'good intentions'."
-      }
+      },
+      keywords: [
+          { word: "didn't mean", definition: "Focusing on intent instead of the impact of their actions." }
+      ]
     }
   ],
   quizItems: [

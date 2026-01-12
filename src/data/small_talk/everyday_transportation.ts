@@ -8,6 +8,7 @@ export const transportation: Script = {
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish: "To talk or not to talk? Navigating rideshare awkwardness.",
   imageUrl: "/images/scenarios/uber_dilemma_3d.png",
+  mode: "cloze",
 
   culturalNote: {
     title: "The 5-Star Rating Game",
@@ -36,6 +37,17 @@ export const transportation: Script = {
       ],
       correctIndex: 2,
       explanation: "'Have a good one' is the universal casual upbeat goodbye in the US."
+    },
+    {
+      question: "The driver is talking about their divorce. You just want quiet. You say:",
+      options: [
+        "Stop talking.",
+        "I'm sorry to hear that. I've had a long day so I'm gonna zone out a bit.",
+        "That sucks.",
+        "Get a lawyer."
+      ],
+      correctIndex: 1,
+      explanation: "Politely invoking 'tiredness' is the best way to stop a conversation without offending them."
     }
   ],
 

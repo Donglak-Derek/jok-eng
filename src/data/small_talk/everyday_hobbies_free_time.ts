@@ -8,6 +8,7 @@ export const hobbiesFreeTime: Script = {
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish: "Making 'doing nothing' sound like a lifestyle choice.",
   imageUrl: "/images/scenarios/hobby_humblebrag_3d.png",
+  mode: "cloze",
 
   culturalNote: {
     title: "The 'Busy' Badge",
@@ -36,6 +37,17 @@ export const hobbiesFreeTime: Script = {
       ],
       correctIndex: 1,
       explanation: "'I have an early morning' is the classic, unchallengeable excuse to leave events early."
+    },
+    {
+      question: "You did nothing all weekend. A coworker asks what you did. You say:",
+      options: [
+        "I was a lazy slob.",
+        "Just caught up on some life admin and rested.",
+        "I stared at a wall.",
+        "None of your business."
+      ],
+      correctIndex: 1,
+      explanation: "'Life admin' makes laundry and sleeping sound productive."
     }
   ],
 

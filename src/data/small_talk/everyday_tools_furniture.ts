@@ -8,6 +8,7 @@ export const toolsAndFurniture: Script = {
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish: "Surviving flat-pack furniture assembly without a divorce.",
   imageUrl: "/images/scenarios/diy_disaster_3d.png",
+  mode: "cloze",
 
   culturalNote: {
     title: "The 'Extra Screw' Panic",
@@ -36,6 +37,17 @@ export const toolsAndFurniture: Script = {
       ],
       correctIndex: 1,
       explanation: "Sadly, stepping on it later is the most common way to find it."
+    },
+    {
+      question: "You have one screw left over after building a table. You say:",
+      options: [
+        "It's a spare!",
+        "The table will collapse.",
+        "I am a failure.",
+        "Call the manufacturer."
+      ],
+      correctIndex: 0,
+      explanation: "Optimistic denial ('It's a spare') is the only way to maintain sanity."
     }
   ],
 

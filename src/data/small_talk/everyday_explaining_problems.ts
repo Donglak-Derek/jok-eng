@@ -8,6 +8,7 @@ export const explainingProblems: Script = {
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish: "Reporting bugs, broken stuff, and wrong orders without being a 'Karen'.",
   imageUrl: "/images/scenarios/complaint_department_3d.png",
+  mode: "cloze",
 
   culturalNote: {
     title: "The 'Sandwich' Method",
@@ -36,6 +37,17 @@ export const explainingProblems: Script = {
       ],
       correctIndex: 1,
       explanation: "Repair techs appreciate honesty. They know when you are lying about water damage."
+    },
+    {
+      question: "You ordered a salad but got a steak. You say:",
+      options: [
+        "I will eat it.",
+        "This is poison.",
+        "Excuse me, I think there was a mix-up with my order.",
+        "You are fired."
+      ],
+      correctIndex: 2,
+      explanation: "Using 'mix-up' suggests it was an accident, which makes the waiter less defensive."
     }
   ],
 

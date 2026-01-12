@@ -16,7 +16,7 @@ export const theInvitationDecoder: Script = {
   decoderItems: [
     {
       id: "d1",
-      phrase: "Casual dress.",
+      phrase: "[Casual] dress.",
       literalMeaning: "Wear whatever you want.",
       actualMeaning: "Look nice, but don't wear a tuxedo. Jeans are fine, sweatpants are a crime.",
       dangerLevel: "Caution ⚠️", // 50
@@ -27,11 +27,14 @@ export const theInvitationDecoder: Script = {
         textA: "What should I wear to the BBQ?",
         textB: "Oh, it's casual dress.",
         contextNote: "Casual at a party is very different from casual at home."
-      }
+      },
+      keywords: [
+          { word: "Casual", definition: "Relaxed dress code, but still neat/presentable." }
+      ]
     },
     {
       id: "d2",
-      phrase: "No gifts, please.",
+      phrase: "[No gifts], please.",
       literalMeaning: "Do not bring a present.",
       actualMeaning: "I am obligated to say this, but if you show up empty-handed you might look cheap.",
       dangerLevel: "Danger 🛑", // 90
@@ -42,11 +45,14 @@ export const theInvitationDecoder: Script = {
         textA: "Can I bring anything for your birthday?",
         textB: "No no, no gifts please! Just your presence.",
         contextNote: "Bringing a bottle of wine never hurts. Showing up with nothing is risky."
-      }
+      },
+      keywords: [
+          { word: "No gifts", definition: "A polite request, often ignored for small items like wine." }
+      ]
     },
     {
       id: "d3",
-      phrase: "Bring whoever!",
+      phrase: "Bring [whoever]!",
       literalMeaning: "You can bring as many people as you want.",
       actualMeaning: "You can bring one (1) person, usually a partner or close friend. Do NOT bring a crowd.",
       dangerLevel: "Danger 🛑", // 90
@@ -57,11 +63,14 @@ export const theInvitationDecoder: Script = {
         textA: "I have my cousin staying with me.",
         textB: "Oh, bring whoever! The more the merrier.",
         contextNote: "If you bring 5 people, you will never be invited again."
-      }
+      },
+      keywords: [
+          { word: "whoever", definition: "Anyone you want (usually implies +1, not a group)." }
+      ]
     },
     {
       id: "d4",
-      phrase: "Come around 7-ish.",
+      phrase: "Come around [7-ish].",
       literalMeaning: "Arrive at approximately 7:00 PM.",
       actualMeaning: "Do not arrive before 7:15. If you knock at 7:00, I will still be in the shower.",
       dangerLevel: "Caution ⚠️", // 50
@@ -72,11 +81,14 @@ export const theInvitationDecoder: Script = {
         textA: "What time does it start?",
         textB: "Come around 7-ish.",
         contextNote: "Arriving exactly on time is often stressful for the host."
-      }
+      },
+      keywords: [
+          { word: "7-ish", definition: "Around 7:00, usually meaning 15-30 minutes late." }
+      ]
     },
     {
       id: "d5",
-      phrase: "Make yourself at home.",
+      phrase: "Make yourself [at home].",
       literalMeaning: "Act as if this is your house.",
       actualMeaning: "Relax on the couch, but do not open my fridge or go into my bedroom.",
       dangerLevel: "Safe ✅", // 15
@@ -87,7 +99,10 @@ export const theInvitationDecoder: Script = {
         textA: "Wow, nice place!",
         textB: "Thanks! Make yourself at home.",
         contextNote: "It's an invitation to comfort, not ownership."
-      }
+      },
+      keywords: [
+          { word: "at home", definition: "Comfortable, but respecting boundaries." }
+      ]
     },
   ],
 

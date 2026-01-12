@@ -8,6 +8,7 @@ export const customerServiceBasics: Script = {
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish: "Surviving 30 minutes of forced eye contact and reflection.",
   imageUrl: "/images/scenarios/salon_awkwardness_3d.png",
+  mode: "cloze",
 
   culturalNote: {
     title: "The 'Mirror Talk' Rule",
@@ -36,6 +37,17 @@ export const customerServiceBasics: Script = {
       ],
       correctIndex: 1,
       explanation: "Unless it is a disaster that can be fixed, social contract dictates you lie and say 'Great, thanks!' then cry in the car."
+    },
+    {
+      question: "The bill comes to $20. The service was okay. How much do you tip in the US?",
+      options: [
+        "Nothing.",
+        "$1.",
+        "$3-4 (15-20%).",
+        "My phone number."
+      ],
+      correctIndex: 2,
+      explanation: "15-20% is standard. $0 is an insult, and $1 is worse than nothing."
     }
   ],
 

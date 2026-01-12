@@ -1,11 +1,11 @@
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Script, UserScript } from "@/types";
-import SentenceCard from "@/components/SentenceCard";
+import ClozeCard from "@/components/ClozeCard"; // Replaces SentenceCard
+import ComparisonCard from "@/components/ComparisonCard"; 
+import ScriptPlayerShell from "@/components/ScriptPlayerShell";
 import { motion, AnimatePresence } from "framer-motion";
 import Confetti from "@/components/Confetti";
 import { Button } from "@/components/Button";
@@ -13,7 +13,7 @@ import { useAuth } from "@/context/AuthContext";
 import { updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useDailyProgress } from "@/hooks/useDailyProgress";
-import { ChevronLeft, ChevronRight, PartyPopper, FileText } from "lucide-react";
+import { PartyPopper } from "lucide-react";
 import StandardFullView from "./StandardFullView";
 import CulturalNoteCard from "@/components/CulturalNoteCard";
 import QuizCard from "@/components/QuizCard";
@@ -26,16 +26,17 @@ type Props = {
 export default function StandardScriptFlow({ script }: Props) {
   const router = useRouter();
   const { user } = useAuth();
+  // ... (auth/progress hooks unchanged)
   const { markComplete } = useDailyProgress();
   const { getRepeats } = useProgress(); 
   
   // Script structure logic
   const sentences = script.sentences || [];
   const sentencesCount = sentences.length;
+  // ... (indices logic unchanged)
   const hasCulturalNote = !!script.culturalNote;
   const hasQuiz = !!script.quizItems && script.quizItems.length > 0;
   
-  // Step indices
   const culturalNoteIndex = hasCulturalNote ? sentencesCount : -1;
   const quizIndex = hasQuiz ? (sentencesCount + (hasCulturalNote ? 1 : 0)) : -1;
   const totalSteps = sentencesCount + (hasCulturalNote ? 1 : 0) + (hasQuiz ? 1 : 0);
@@ -52,10 +53,9 @@ export default function StandardScriptFlow({ script }: Props) {
   const [heardSet, setHeardSet] = useState<Set<number>>(new Set());
   
   const hasSavedRef = useState(false);
-  
-  // Connect to real data
   const databaseRepeats = getRepeats(script.id); 
 
+  // ... (useEffect for Progress Loading/Saving unchanged)
   // Load progress
   useEffect(() => {
     const raw = localStorage.getItem(storageKey);
@@ -78,6 +78,7 @@ export default function StandardScriptFlow({ script }: Props) {
   const isOwner = user && 'userId' in script && (script as UserScript).userId === user.uid;
 
   const saveProgress = async () => {
+      // ... (Same save logic as before)
       if (user) {
         try {
             const { doc, setDoc, serverTimestamp, increment } = await import("firebase/firestore");
@@ -107,7 +108,6 @@ export default function StandardScriptFlow({ script }: Props) {
          const current = parseInt(localStorage.getItem(key) || "0");
          localStorage.setItem(key, String(current + 1));
       }
-      
       // Save Daily Progress
       markComplete(script.id);
       
@@ -153,12 +153,8 @@ export default function StandardScriptFlow({ script }: Props) {
   const handleBackToMenu = async () => {
       router.push(`/category/${script.categorySlug}`);
   };
-  
-  const handleStartOver = () => {
-    setCurrentIndex(0);
-  };
 
-  // Keyboard Shortcuts
+  // Keyboard Shortcuts (Same as before)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
         if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
@@ -179,6 +175,7 @@ export default function StandardScriptFlow({ script }: Props) {
                 break;
             case "Space":
                 e.preventDefault();
+                // We might need a better way to target play button, but this works for now
                 const playBtn = document.querySelector('button[data-action="play-sentence"]');
                 if (playBtn instanceof HTMLElement) playBtn.click();
                 break;
@@ -190,13 +187,15 @@ export default function StandardScriptFlow({ script }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentIndex, isGlobalRevealed]); 
 
-  // Render content based on current index
+  // Full View handling
+  if (viewMode === "full") {
+      return <StandardFullView script={script} onBack={() => setViewMode("flow")} />;
+  }
+
+  // Determine current content
   let content = null;
-  let showControls = true;
 
   if (isCompletion) {
-      showControls = false;
-      
       const currentReps = databaseRepeats; 
       let encouragement = "Good start!";
       if (currentReps >= 3) encouragement = "Muscle memory building...";
@@ -245,7 +244,6 @@ export default function StandardScriptFlow({ script }: Props) {
          </motion.div>
       );
   } else if (currentIndex === culturalNoteIndex && script.culturalNote) {
-      showControls = false; 
       content = (
           <CulturalNoteCard 
              title={script.culturalNote.title}
@@ -254,7 +252,6 @@ export default function StandardScriptFlow({ script }: Props) {
           />
       );
   } else if (currentIndex === quizIndex && script.quizItems) {
-      showControls = false; 
       content = (
           <QuizCard 
              items={script.quizItems}
@@ -263,6 +260,11 @@ export default function StandardScriptFlow({ script }: Props) {
       );
   } else {
       const currentSentence = sentences[currentIndex];
+      
+      // DISPATCHER LOGIC: Choose the right card
+      const isComparison = !!(currentSentence.badResponse && currentSentence.goodResponse);
+      const CardComponent = isComparison ? ComparisonCard : ClozeCard;
+
       content = (
           <motion.div
              key={currentIndex} 
@@ -270,17 +272,17 @@ export default function StandardScriptFlow({ script }: Props) {
              animate={{ opacity: 1, y: 0 }}
              exit={{ opacity: 0, y: -10 }}
              transition={{ duration: 0.2 }}
-             className="w-full"
+             className="w-full h-full"
          >
-             <SentenceCard 
+             <CardComponent
                 sentence={currentSentence} 
                 index={currentIndex}
                 heard={heardSet.has(currentIndex)}
+                // ClozeCard specific props (ComparisonCard ignores mode, but ClozeCard needs it)
                 mode={script.mode || "standard"} 
                 isGlobalRevealed={isGlobalRevealed}
-                onToggleGlobalReveal={toggleGlobalReveal}
+                // Shared Props
                 isAutoPlayEnabled={isAutoPlayEnabled}
-                onToggleAutoPlay={toggleAutoPlay}
                 onHeard={() => {
                     setHeardSet(prev => {
                         const next = new Set(prev);
@@ -293,116 +295,32 @@ export default function StandardScriptFlow({ script }: Props) {
       );
   }
 
-  if (viewMode === "full") {
-      return <StandardFullView script={script} onBack={() => setViewMode("flow")} />;
-  }
-
+  // --- RENDER SHELL ---
   return (
-    <div className="min-h-screen flex flex-col relative bg-background text-foreground">
-      
-      {/* Sticky Header */}
-      <header className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-border">
-         <div className="max-w-3xl mx-auto px-4 py-3 md:px-6 md:py-4 flex flex-col gap-4">
-             <div className="flex items-center gap-4">
-                 <Link href={`/category/${script.categorySlug}`} className="text-muted-foreground hover:text-foreground transition-colors">
-                     <ChevronLeft className="w-6 h-6" />
-                 </Link>
-                 <div className="flex-1 min-w-0">
-                     <h1 className="text-xl md:text-2xl font-bold tracking-tight truncate">
-                       {script.title}
-                     </h1>
-                 </div>
-                  {/* Optional Scenario Image */}
-                  {script.imageUrl && (
-                      <div className="w-12 h-12 relative rounded-md overflow-hidden border border-border hidden md:block">
-                          <Image 
-                              src={script.imageUrl} 
-                              alt={script.title}
-                              fill
-                              className="object-cover"
-                          />
-                      </div>
-                  )}
-
-                  {/* Difficulty Badge */}
-                   {script.difficulty && (
-                      <div className="bg-secondary/50 px-3 py-1 rounded-full text-xs font-bold border border-secondary text-secondary-foreground hidden md:block">
-                          {script.difficulty}
-                      </div>
-                   )}
-                 
-                 <div className="flex items-center gap-3">
-                     {/* Repeats Badge - Compact */}
-                      <div className="bg-secondary px-3 py-1 rounded-full text-xs font-medium text-secondary-foreground hidden md:block">
-                          {databaseRepeats} runs
-                      </div>
-
-                     {/* Full View Toggle */}
-                      <button 
-                        onClick={() => setViewMode("full")}
-                        className="p-2 -mr-2 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-full transition-colors"
-                        title="View Full Content"
-                        aria-label="View Full Content"
-                      >
-                          <FileText className="w-6 h-6" />
-                      </button>
-                 </div>
-            </div>
-
-          </div>
-       {/* Progress Line */}
-       <div className="w-full h-1 bg-secondary">
-           <div 
-               className="h-full bg-primary transition-all duration-300 ease-out" 
-               style={{ width: `${(currentIndex / totalSteps) * 100}%` }} 
-           />
-       </div>
-    </header>
-
-      <div className="flex-1 max-w-3xl mx-auto px-4 py-8 md:px-6 md:py-12 flex flex-col w-full">
-
-        {/* Content Area */}
-        <div className="flex-1 flex flex-col justify-center min-h-[400px]">
-             <AnimatePresence mode="wait">
-                 {content}
-             </AnimatePresence>
-        </div>
-
-        {/* Bottom Action Bar */}
-        {showControls && (
-            <div className="mt-8 flex items-center justify-between border-t border-border pt-6">
-                <Button 
-                    variant="ghost"
-                    onClick={handleStartOver}
-                    className="text-muted-foreground hover:text-foreground text-sm"
-                >
-                    Restart
-                </Button>
-                
-                <div className="flex items-center gap-3">
-                    <Button
-                        variant="ghost"
-                        onClick={handlePrev}
-                        disabled={currentIndex === 0}
-                        className="text-base font-medium"
-                        leftIcon={<ChevronLeft className="w-4 h-4" />}
-                    >
-                        Prev
-                    </Button>
-
-                    <Button
-                        variant="primary"
-                        onClick={handleNext}
-                        className="px-6"
-                        rightIcon={<ChevronRight className="w-4 h-4" />}
-                    >
-                        Next
-                    </Button>
-                </div>
-            </div>
-        )}
+    <ScriptPlayerShell
+        title={script.title}
+        categorySlug={script.categorySlug}
+        imageUrl={script.imageUrl}
+        currentStep={currentIndex}
+        totalSteps={totalSteps}
+        hasFinished={isCompletion || currentIndex === culturalNoteIndex || currentIndex === quizIndex}
         
-      </div>
-    </div>
+        // Controls
+        isAutoPlayEnabled={isAutoPlayEnabled}
+        onToggleAutoPlay={toggleAutoPlay}
+        isGlobalRevealed={isGlobalRevealed}
+        onToggleGlobalReveal={toggleGlobalReveal}
+        
+        // Navigation
+        onNext={handleNext}
+        onPrev={handlePrev}
+        onRestart={handlePracticeAgain}
+        onViewFull={() => setViewMode("full")}
+        onBackToMenu={handleBackToMenu}
+    >
+        <AnimatePresence mode="wait">
+             {content}
+        </AnimatePresence>
+    </ScriptPlayerShell>
   );
 }

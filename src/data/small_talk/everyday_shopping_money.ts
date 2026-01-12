@@ -8,6 +8,7 @@ export const shoppingAndMoney: Script = {
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish: "Just browsing, asking for discounts, and buyer's remorse.",
   imageUrl: "/images/scenarios/retail_therapy_browsing_3d.png",
+  mode: "cloze",
 
   culturalNote: {
     title: "The 'Just Looking' Defense",
@@ -36,6 +37,17 @@ export const shoppingAndMoney: Script = {
       ],
       correctIndex: 2,
       explanation: "'Any chance of a discount?' is casual and low-risk. Worst they say is no."
+    },
+    {
+      question: "A salesperson is following you. You want them to stop. You say:",
+      options: [
+        "Go away.",
+        "I'm just browsing, thanks!",
+        "I have no money.",
+        "I am stealing this."
+      ],
+      correctIndex: 1,
+      explanation: "'Just browsing' is the magic spell to make salespeople disappear."
     }
   ],
 

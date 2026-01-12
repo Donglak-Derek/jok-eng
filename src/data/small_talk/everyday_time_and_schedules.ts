@@ -8,6 +8,7 @@ export const timeAndSchedules: Script = {
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish: "Excuses for lateness, time zone math, and the 'Hard Stop'.",
   imageUrl: "/images/scenarios/running_late_sprint_3d.png",
+  mode: "cloze",
 
   culturalNote: {
     title: "The 'Hard Stop'",
@@ -36,6 +37,17 @@ export const timeAndSchedules: Script = {
       ],
       correctIndex: 1,
       explanation: "'Something came up' is the universal vague excuse for 'I am busy or tired'."
+    },
+    {
+      question: "You want to leave a meeting exactly at 5 PM. You say at the start:",
+      options: [
+        "I am leaving at 5.",
+        "Just a heads-up, I have a hard stop at 5 sharp.",
+        "Please hurry up.",
+        "Don't talk too much."
+      ],
+      correctIndex: 1,
+      explanation: "'Hard stop' creates a social contract that allows you to leave without being rude."
     }
   ],
 

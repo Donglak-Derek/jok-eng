@@ -26,6 +26,7 @@ export type DecoderItem = {
   actualMeaning: string;
   dangerLevel: string;
   survivalTip: string;
+  keywords?: Keyword[];
   conversation?: {
     speakerA: string;
     speakerB: string;

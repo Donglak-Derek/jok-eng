@@ -8,6 +8,7 @@ export const foodAndEating: Script = {
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish: "Navigating menus, allergies, and the awkwardness of 'The Bill'.",
   imageUrl: "/images/scenarios/dining_bill_shock_3d.png",
+  mode: "cloze",
 
   culturalNote: {
     title: "The Bill Dance",
@@ -36,6 +37,17 @@ export const foodAndEating: Script = {
       ],
       correctIndex: 2,
       explanation: "This is 'The Dance'. You must offer to pay once to show you aren't a moocher, but let them accept the glory."
+    },
+    {
+      question: "There is one piece of pizza left. You want it. You say:",
+      options: [
+        "Mine!",
+        "Does anyone want the last piece?",
+        "Eat it immediately.",
+        "Touch it so no one else wants it."
+      ],
+      correctIndex: 1,
+      explanation: "Always ask. Usually, people will say 'No, go ahead!'."
     }
   ],
 

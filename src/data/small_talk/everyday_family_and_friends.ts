@@ -8,6 +8,7 @@ export const familyAndFriends: Script = {
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish: "Surviving invasive questions about marriage, jobs, and babies.",
   imageUrl: "/images/scenarios/family_interrogation_3d.png",
+  mode: "cloze",
 
   culturalNote: {
     title: "The 'Privacy' Buffer",
@@ -36,6 +37,17 @@ export const familyAndFriends: Script = {
       ],
       correctIndex: 2,
       explanation: "'Low pressure' is the key. Making them feel guilty will just make them avoid you more."
+    },
+    {
+      question: "Your uncle is telling a story you have heard 10 times. You want to escape. You say:",
+      options: [
+        "Stop talking.",
+        "I am going to grab another drink, do you want anything?",
+        "I am bored.",
+        "Sleep."
+      ],
+      correctIndex: 1,
+      explanation: "The 'Drink Refill' is the classic polite exit strategy."
     }
   ],
 

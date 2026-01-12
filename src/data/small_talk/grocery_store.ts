@@ -8,6 +8,7 @@ export const groceryStore: Script = {
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish: "Surviving the aisles, judging carts, and the checkout interrogation.",
   imageUrl: "/images/scenarios/grocery_gauntlet_3d.png",
+  mode: "cloze",
   
   culturalNote: {
     title: "The Checkout Chit-Chat",
@@ -36,6 +37,17 @@ export const groceryStore: Script = {
       ],
       correctIndex: 1,
       explanation: "'Just sneaking past' or 'Ope, let me squeeze by' is the polite, non-confrontational way to ask for space."
+    },
+    {
+      question: "You bump into someone's cart. It was clearly their fault. You say:",
+      options: [
+        "Watch it!",
+        "Sorry!",
+        "You did that.",
+        "My cart is bigger."
+      ],
+      correctIndex: 1,
+      explanation: "We apologize even when not at fault. It's the social grease that keeps civilization from collapsing."
     }
   ],
 

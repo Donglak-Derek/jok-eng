@@ -14,7 +14,7 @@ export const corporateDecoder: Script = {
   decoderItems: [
     {
       id: "cd1",
-      phrase: "Let's take this offline.",
+      phrase: "Let's [take this offline].",
       literalMeaning: "Let us discuss this outside of the current meeting.",
       actualMeaning: "Stop talking. You are arguing about details that nobody else cares about, and you are ruining my agenda.",
       dangerLevel: "Danger 🛑", // 90
@@ -25,11 +25,14 @@ export const corporateDecoder: Script = {
         textA: "That's an interesting point, but let's take this offline.",
         textB: "Understood. Moving on.",
         contextNote: "It's the polite way to say 'You are derailing the meeting'."
-      }
+      },
+      keywords: [
+          { word: "take this offline", definition: "Stop talking publicly; you are derailing the meeting." }
+      ]
     },
     {
       id: "cd2",
-      phrase: "Per my last email...",
+      phrase: "[Per my last email]...",
       literalMeaning: "According to the email I sent previously.",
       actualMeaning: "Can you read? I already answered this yesterday. You are wasting my time.",
       dangerLevel: "Caution ⚠️", // 50
@@ -40,11 +43,14 @@ export const corporateDecoder: Script = {
         textA: "When is the deadline for this?",
         textB: "Per my last email, it is due on Friday at 5 PM.",
         contextNote: "It is the corporate equivalent of screaming."
-      }
+      },
+      keywords: [
+          { word: "Per my last email", definition: "Passive-aggressive for 'I already told you this'." }
+      ]
     },
     {
       id: "cd3",
-      phrase: "I don't have the bandwidth.",
+      phrase: "I [don't have the bandwidth].",
       literalMeaning: "My transmission capacity is full.",
       actualMeaning: "I am too busy for your low-priority request. Go ask someone else.",
       dangerLevel: "Safe ✅", // 15
@@ -55,11 +61,14 @@ export const corporateDecoder: Script = {
         textA: "Can you help me fix this bug?",
         textB: "I'd love to, but I don't have the bandwidth this sprint.",
         contextNote: "A professional way to say 'No'."
-      }
+      },
+      keywords: [
+          { word: "don't have the bandwidth", definition: "Corporate speak for 'I'm too busy' or 'No'." }
+      ]
     },
     {
       id: "cd4",
-      phrase: "Let's circle back on this.",
+      phrase: "Let's [circle back] on this.",
       literalMeaning: "Let us return to this topic later.",
       actualMeaning: "I have no idea what the answer is, or I want to avoid making a decision right now.",
       dangerLevel: "Caution ⚠️", // 40
@@ -70,11 +79,14 @@ export const corporateDecoder: Script = {
         textA: "Can we add this extra feature for free?",
         textB: "That's a great question. Let's circle back on that after we review the budget.",
         contextNote: "Used to delay conflict or difficult decisions."
-      }
+      },
+      keywords: [
+          { word: "circle back", definition: "Delaying tactic; often used to avoid immediate conflict." }
+      ]
     },
     {
       id: "cd5",
-      phrase: "Moving forward...",
+      phrase: "[Moving forward]...",
       literalMeaning: "In the future.",
       actualMeaning: "You messed up. I am not firing you, but don't you dare do it again.",
       dangerLevel: "Danger 🛑", // 80
@@ -85,11 +97,14 @@ export const corporateDecoder: Script = {
         textA: "Moving forward, please cc me on all client emails.",
         textB: "Understood. Will do.",
         contextNote: "Usually follows a mistake you made."
-      }
+      },
+      keywords: [
+          { word: "Moving forward", definition: "Transition phrase that implies a previous mistake was made." }
+      ]
     },
     {
       id: "cd6",
-      phrase: "Just a gentle reminder.",
+      phrase: "Just a [gentle reminder].",
       literalMeaning: "I am reminding you softly.",
       actualMeaning: " GIVE. ME. THE. THING. I asked 3 times already.",
       dangerLevel: "Caution ⚠️", // 60
@@ -100,7 +115,10 @@ export const corporateDecoder: Script = {
         textA: "Just a gentle reminder to submit your timesheet.",
         textB: "Doing it right now! Sorry for the delay.",
         contextNote: "There is nothing 'gentle' about this phrase."
-      }
+      },
+      keywords: [
+          { word: "gentle reminder", definition: "Not gentle; implies impatience and urgency." }
+      ]
     }
   ],
 

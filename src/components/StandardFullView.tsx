@@ -3,7 +3,7 @@
 import { Script } from "@/types";
 import { Button } from "@/components/Button";
 import { ChevronLeft, Volume2, Play } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 type Props = {
   script: Script;
@@ -12,6 +12,17 @@ type Props = {
 
 export default function StandardFullView({ script, onBack }: Props) {
   const [speakingIndex, setSpeakingIndex] = useState<number | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null); // Track audio
+
+  useEffect(() => {
+      return () => {
+          if (audioRef.current) {
+              audioRef.current.pause();
+              audioRef.current = null;
+          }
+          if (window.speechSynthesis) window.speechSynthesis.cancel();
+      };
+  }, []);
 
   const speak = async (text: string, index: number) => {
     if (typeof window === "undefined") return;
@@ -26,6 +37,7 @@ export default function StandardFullView({ script, onBack }: Props) {
       });
 
       const audio = new Audio(`/api/tts?${params}`);
+      audioRef.current = audio;
       
       await new Promise<void>((resolve, reject) => {
         audio.onended = () => resolve();

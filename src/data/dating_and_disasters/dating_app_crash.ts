@@ -14,43 +14,58 @@ export const datingAppCrash: Script = {
   decoderItems: [
     {
       id: "app_1",
-      phrase: "It's a Match!",
+      phrase: "It's a [Match]!",
       literalMeaning: "Two people liked each other.",
       actualMeaning: "You have 24 hours to say something witty or this match will expire forever.",
       dangerLevel: "⏳ Time Sensitive",
       survivalTip: "Do not say 'Hey'. Ask a question about their bio immediately.",
+      keywords: [
+          { word: "Match", definition: "Mutual swipe right; the start of the game." }
+      ]
     },
     {
       id: "app_2",
-      phrase: "No more profiles in your area.",
+      phrase: "[No more profiles] in your area.",
       literalMeaning: "You have viewed everyone nearby.",
       actualMeaning: "You are addicted. Put the phone down and go outside.",
       dangerLevel: "💀 Reality Check",
       survivalTip: "Delete the app for 3 days. Your mental health needs a reboot.",
+      keywords: [
+          { word: "No more profiles", definition: "Signal that you are addicted to the swipe dopamine loop." }
+      ]
     },
     {
       id: "app_3",
-      phrase: "Someone liked you! Upgrade to see who.",
+      phrase: "Someone liked you! [Upgrade] to see who.",
       literalMeaning: "Pay money to reveal a secret admirer.",
       actualMeaning: "The person who liked you lives 5,000 miles away or is a bot.",
       dangerLevel: "💸 Scam",
       survivalTip: "Do not pay. If they were close and compatible, you would see them in the stack.",
+      keywords: [
+          { word: "Upgrade", definition: "Pay-to-win mechanics that rarely help finding love." }
+      ]
     },
     {
       id: "app_4",
-      phrase: "Ghosting (No Notification)",
+      phrase: "[Ghosting] (No Notification)",
       literalMeaning: "Silence.",
       actualMeaning: "They found someone else, deleted the app, or died. You will never know.",
       dangerLevel: "👻 Spooky",
       survivalTip: "Unmatch after 3 days of silence. Clean up your digital space.",
+      keywords: [
+          { word: "Ghosting", definition: "Disappearing without explanation; standard modern dating behavior." }
+      ]
     },
     {
       id: "app_5",
-      phrase: "He/She is typing...",
+      phrase: "He/She is [typing]...",
       literalMeaning: "A message is being drafted.",
       actualMeaning: "They are overthinking their response, or they typed 'lol' and fell asleep.",
       dangerLevel: "🤔 Anxiety",
       survivalTip: "Put the phone away. obsession is not attractive.",
+      keywords: [
+          { word: "typing", definition: "The three dots of anxiety; implies a message is coming (maybe)." }
+      ]
     },
   ],
   quizItems: [

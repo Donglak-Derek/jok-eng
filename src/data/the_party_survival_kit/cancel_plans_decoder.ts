@@ -16,7 +16,7 @@ export const theCancelPlansDecoder: Script = {
   decoderItems: [
     {
       id: "d1",
-      phrase: "I'm tentative for tonight.",
+      phrase: "I'm [tentative] for tonight.",
       literalMeaning: "I am not 100% sure I can come.",
       actualMeaning: "I am absolutely not coming, but I'm too scared to say no yet.",
       dangerLevel: "Caution ⚠️", // 50
@@ -27,11 +27,14 @@ export const theCancelPlansDecoder: Script = {
         textA: "Hey! Are you still coming to the dinner?",
         textB: "I'm tentative. Work is crazy right now.",
         contextNote: "Use 'tentative' to soften the blow of a likely cancellation."
-      }
+      },
+      keywords: [
+          { word: "tentative", definition: "Uncertain or not fixed; often a soft 'no'." }
+      ]
     },
     {
       id: "d2",
-      phrase: "Let's play it by ear.",
+      phrase: "Let's [play it by ear].",
       literalMeaning: "We will decide based on how we feel later.",
       actualMeaning: "I want to keep my options open in case something better comes up (or I just want to nap).",
       dangerLevel: "Caution ⚠️", // 50
@@ -42,11 +45,14 @@ export const theCancelPlansDecoder: Script = {
         textA: "What time should we meet at the bar?",
         textB: "Let's play it by ear. I might be busy until late.",
         contextNote: "'Play it by ear' sounds spontaneous, but often causes scheduling chaos."
-      }
+      },
+      keywords: [
+          { word: "play it by ear", definition: "To improvise or decide as you go along." }
+      ]
     },
     {
       id: "d3",
-      phrase: "I'm feeling a bit under the weather.",
+      phrase: "I'm feeling a bit [under the weather].",
       literalMeaning: "I am slightly sick.",
       actualMeaning: "I am physically fine, but socially exhausted. I need to recharge alone.",
       dangerLevel: "Safe ✅", // 15 (Socially acceptable lie)
@@ -57,11 +63,14 @@ export const theCancelPlansDecoder: Script = {
         textA: "We're all heading to the club! You ready?",
         textB: "Ah, I'm feeling a bit under the weather actually.",
         contextNote: "This is the ultimate 'Get Out of Jail Free' card for introverts."
-      }
+      },
+      keywords: [
+          { word: "under the weather", definition: "Feeling slightly sick or unwell (often used as an excuse)." }
+      ]
     },
     {
       id: "d4",
-      phrase: "Something came up.",
+      phrase: "[Something came up].",
       literalMeaning: "An unexpected event occurred.",
       actualMeaning: "I forgot we had plans, or I double-booked myself.",
       dangerLevel: "Danger 🛑", // 90
@@ -72,11 +81,14 @@ export const theCancelPlansDecoder: Script = {
         textA: "You're 30 minutes late. Everything okay?",
         textB: "So sorry, something came up at the last minute.",
         contextNote: "Using vague excuses like 'something' usually makes people suspicious."
-      }
+      },
+      keywords: [
+          { word: "something came up", definition: "A vague excuse for being unable to attend." }
+      ]
     },
     {
       id: "d5",
-      phrase: "Ideally, I'd love to go.",
+      phrase: "[Ideally], I'd love to go.",
       literalMeaning: "In a perfect world, I want to attend.",
       actualMeaning: "In this world, there is a 0% chance I am going.",
       dangerLevel: "Danger 🛑", // 90
@@ -87,7 +99,10 @@ export const theCancelPlansDecoder: Script = {
         textA: "It's your ex's birthday party. You have to come.",
         textB: "Ideally, I'd love to go and support him.",
         contextNote: "'Ideally' is a polite way of describing a fantasy world you don't live in."
-      }
+      },
+      keywords: [
+          { word: "ideally", definition: "In a perfect world; used to separate desire from reality." }
+      ]
     },
   ],
 

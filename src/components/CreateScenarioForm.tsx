@@ -9,7 +9,7 @@ import { db } from "@/lib/firebase";
 import { collection, setDoc, doc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 // For preview, we want to see sentences.
-import SentenceCard from "./SentenceCard";
+import ClozeCard from "./ClozeCard";
 import { Button } from "@/components/Button";
 
 export default function CreateScenarioForm() {
@@ -278,7 +278,7 @@ export default function CreateScenarioForm() {
 
                      <div className="space-y-4">
                         {(generatedScript.sentences || []).map((sentence, idx) => (
-                            <SentenceCard 
+                            <ClozeCard 
                                 key={sentence.id} 
                                 sentence={sentence} 
                                 index={idx} 

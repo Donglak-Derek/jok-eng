@@ -13,7 +13,7 @@ export const theMenuDecoder: Script = {
   decoderItems: [
     {
       id: "menu-1",
-      phrase: "I'll just have water.",
+      phrase: "I'll [just have water].",
       literalMeaning: "They are not thirsty for other beverages.",
       actualMeaning: "I am planning my escape and don't want to wait for a bill.",
       dangerLevel: "Medium - Flight Risk",
@@ -24,11 +24,14 @@ export const theMenuDecoder: Script = {
          textA: "I'll just have water, thanks.",
          textB: "Oh, are you not hungry?",
          contextNote: "If they don't even order an appetizer, this date might be over in 20 minutes."
-      }
+      },
+      keywords: [
+          { word: "just have water", definition: "A signal of low investment or a desire to leave quickly." }
+      ]
     },
     {
       id: "menu-2",
-      phrase: "What's the 'Market Price'?",
+      phrase: "What's the '[Market Price]'?",
       literalMeaning: "Asking the cost of a seasonal item.",
       actualMeaning: "I am either very rich or very worried about my credit card limit.",
       dangerLevel: "Low - Practical",
@@ -39,11 +42,14 @@ export const theMenuDecoder: Script = {
          textA: "I'll take the lobster. Market price.",
          textB: "Bold choice!",
          contextNote: "Confidence is key. Or financial irresponsibility. Hard to tell."
-      }
+      },
+      keywords: [
+          { word: "Market Price", definition: "A variable price; asking reveals financial caution." }
+      ]
     },
     {
       id: "menu-3",
-      phrase: "I'm not hungry, I'll just have a bite of yours.",
+      phrase: "I'm not hungry, I'll just have a [bite of yours].",
       literalMeaning: "I will not order food.",
       actualMeaning: "I will eat 50% of your fries and pretend it didn't happen.",
       dangerLevel: "High - Fry Thief",
@@ -54,11 +60,14 @@ export const theMenuDecoder: Script = {
          textA: "I'm not hungry. I'll just steal a fry.",
          textB: "You can order your own, it's on me!",
          contextNote: "Always offer to buy them their own. It saves friendships."
-      }
+      },
+      keywords: [
+          { word: "bite of yours", definition: "The 'Fry Thief' tactic; claims no hunger but eats your food." }
+      ]
     },
     {
       id: "menu-4",
-      phrase: "I'll have the garden salad, dressing on the side.",
+      phrase: "I'll have the garden salad, [dressing on the side].",
       literalMeaning: "I want a healthy, light meal.",
       actualMeaning: "I am judging your double-bacon cheeseburger with every fiber of my being.",
       dangerLevel: "High - The Health Police",
@@ -69,11 +78,14 @@ export const theMenuDecoder: Script = {
          textA: "Just a salad for me. Are you sure you want all those carbs?",
          textB: "Yes. I love carbs.",
          contextNote: "If they comment on your food choices on date one, run."
-      }
+      },
+      keywords: [
+          { word: "dressing on the side", definition: "A specific control request; usually implies strict diet or fussiness." }
+      ]
     },
     {
       id: "menu-5",
-      phrase: "Let's just order a bunch of things and share.",
+      phrase: "Let's just order a bunch of things and [share].",
       literalMeaning: "I want to try many dishes.",
       actualMeaning: "I have control issues and want to curate your entire meal.",
       dangerLevel: "Medium - The Merger",
@@ -84,7 +96,10 @@ export const theMenuDecoder: Script = {
          textA: "Let's get five appetizers and share everything!",
          textB: "Great, but I'm getting the steak for myself.",
          contextNote: "Sharing is caring, but forced sharing is controlling."
-      }
+      },
+      keywords: [
+          { word: "share", definition: "Forced sharing can be a sign of poor boundary respect." }
+      ]
     }
   ],
   quizItems: [

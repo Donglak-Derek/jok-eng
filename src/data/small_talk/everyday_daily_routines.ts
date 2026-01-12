@@ -8,6 +8,7 @@ export const dailyRoutines: Script = {
   categoryName: CATEGORY_NAMES["small_talk"],
   cleanedEnglish: "Battling the snooze button, missing keys, and coffee dependency.",
   imageUrl: "/images/scenarios/morning_rush_3d.png",
+  mode: "cloze",
 
   culturalNote: {
     title: "The 10-Minute Lie",
@@ -36,6 +37,17 @@ export const dailyRoutines: Script = {
       ],
       correctIndex: 1,
       explanation: "A humorous exaggeration ('I speak after 10 AM') is a relatable way to set boundaries."
+    },
+    {
+      question: "You are leaving work. You see a colleague. You say:",
+      options: [
+        "I am fleeing.",
+        "See you tomorrow!",
+        "Goodbye forever.",
+        "Silence."
+      ],
+      correctIndex: 1,
+      explanation: "Simple, polite, and signals you are done for the day."
     }
   ],
 
