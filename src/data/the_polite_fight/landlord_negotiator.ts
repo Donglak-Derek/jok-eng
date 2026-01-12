@@ -6,85 +6,99 @@ export const landlordNegotiator: Script = {
   title: "The Landlord Negotiator",
   categorySlug: "the_polite_fight",
   categoryName: CATEGORY_NAMES["the_polite_fight"],
-  cleanedEnglish:
-    "How to ask for repairs firmly. Alternates between aggressive demands (Rude) and cooperative requests (Polite).",
-    imageUrl: "/images/scenarios/polite_generic.png",
+  cleanedEnglish: "How to get repairs done without getting evicted. Documentation vs Emotion.",
+  imageUrl: "/images/scenarios/landlord_negotiator_clay.png",
+  mode: "cloze",
+  culturalNote: {
+    title: "Protecting the Asset",
+    content: "Landlords care about money, not your comfort. The best way to get a repair is not to complain about how sad you are (Emotion), but to warn them about damage to their building (Asset Protection). Frame every request as you helping them save money."
+  },
   sentences: [
     {
-      id: "s1_rude",
-      en: "Rude: 'The heater is broken. Fix it now or I'm withholding rent.'",
+      id: "landlord-1",
+      scenario: "The heater is broken. It is freezing.",
+      en: "The Asset Protection",
       keywords: [
-        { word: "withholding", definition: "refusing to give" },
+        { word: "pipes", definition: "plumbing tubes" },
+        { word: "frozen", definition: "ice cold" }
       ],
+      badResponse: {
+        text: "You: 'Fix it now! I'm so cold!'",
+        why: "Desperation makes you look weak. They can ignore feelings."
+      },
+      goodResponse: {
+        text: "You: 'I wanted to alert you to the heating issue before [frozen] [pipes] cause major water damage.'",
+        why: "'Water damage' acts as a magic spell on landlords. They will run to fix it."
+      }
     },
     {
-      id: "s1_polite",
-      en: "Polite: 'I'd love to get the heater fixed before it becomes a bigger issue for the units.'",
+      id: "landlord-2",
+      scenario: "There is a leak under the sink. Landlord is ignoring your texts.",
+      en: "The Paper Trail",
       keywords: [
-        { word: "issue", definition: "problem" },
-        { word: "units", definition: "individual apartments" },
+        { word: "record", definition: "written proof" },
+        { word: "concerned", definition: "worried" }
       ],
+      badResponse: {
+        text: "You: 'Why are you ignoring me???'",
+        why: "Emotional outbursts are easy to mute."
+      },
+      goodResponse: {
+        text: "You: 'Just sending this email for the [record]. I am [concerned] about mold growth affecting the property value.'",
+        why: "'For the record' implies legal preparation. 'Mold' scares them."
+      }
     },
     {
-      id: "s2_rude",
-      en: "Rude: 'There are bugs everywhere. This place is a dump.'",
+      id: "landlord-3",
+      scenario: "They want to raise the rent by $500.",
+      en: "The Value Proposition",
       keywords: [
-        { word: "dump", definition: "dirty or unpleasant place" },
+        { word: "stable", definition: "reliable" },
+        { word: "history", definition: "past actions" }
       ],
-    },
-    {
-      id: "s2_polite",
-      en: "Polite: 'We've noticed some pests and want to address it early to protect the property.'",
-      keywords: [
-        { word: "pests", definition: "harmful insects or animals" },
-        { word: "address", definition: "deal with (a problem)" },
-      ],
-    },
-    {
-      id: "s3_rude",
-      en: "Rude: 'The faucet has been leaking for weeks. You're useless.'",
-      keywords: [
-        { word: "leaking", definition: "dripping water" },
-        { word: "useless", definition: "not helping at all" },
-      ],
-    },
-    {
-      id: "s3_polite",
-      en: "Polite: 'Just concerned about potential water damage from this persistent leak.'",
-      keywords: [
-        { word: "potential", definition: "possible future" },
-        { word: "persistent", definition: "continuing for a long time" },
-      ],
-    },
-    {
-      id: "s4_rude",
-      en: "Rude: 'Tell the neighbors to shut up. I can't sleep.'",
-      keywords: [
-        { word: "shut up", definition: "stop talking / be quiet" },
-      ],
-    },
-    {
-      id: "s4_polite",
-      en: "Polite: 'Could we send a general reminder to the building regarding quiet hours?'",
-      keywords: [
-        { word: "reminder", definition: "notice to help remember" },
-        { word: "quiet hours", definition: "times when noise is restricted" },
-      ],
-    },
-    {
-      id: "s5_rude",
-      en: "Rude: 'You're raising the rent? Are you crazy?'",
-      keywords: [
-        { word: "crazy", definition: "insane/unreasonable" },
-      ],
-    },
-    {
-      id: "s5_polite",
-      en: "Polite: 'I was hoping to discuss the renewal rate given my history of on-time payments.'",
-      keywords: [
-        { word: "renewal rate", definition: "new price for contract" },
-        { word: "on-time", definition: "not late" },
-      ],
-    },
+      badResponse: {
+        text: "You: 'You greedy monster!'",
+        why: "Insults won't lower the rent."
+      },
+      goodResponse: {
+        text: "You: 'I was hoping to discuss a lower rate given my [history] of on-time payments. [Stable] tenants save you turnover costs.'",
+        why: "Remind them that finding a new tenant is expensive and risky. You are the safe option."
+      }
+    }
   ],
+  quizItems: [
+    {
+      question: "What is the best way to motivate a landlord?",
+      options: [
+        "Send them a Christmas card.",
+        "Threaten damage to their investment (Mold, Water, Etc).",
+        "Cry on the phone.",
+        "Pay extra rent."
+      ],
+      correctIndex: 1,
+      explanation: "Money talks. Damage costs money. Comfort does not."
+    },
+    {
+      question: "Why should you use the phrase 'For the record'?",
+      options: [
+        "To sound like a DJ.",
+        "To imply you are keeping evidence for legal reasons.",
+        "To practice typing.",
+        "It sounds cool."
+      ],
+      correctIndex: 1,
+      explanation: "It signals that you are professional and might take legal action if ignored."
+    },
+    {
+      question: "If a landlord raises rent, what is your best leverage?",
+      options: [
+        "Your reliability (On-time payments, no damage).",
+        "Your good looks.",
+        "Your ability to clean.",
+        "Your large family."
+      ],
+      correctIndex: 0,
+      explanation: "Landlords fear bad tenants who don't pay. Being a 'good tenant' has financial value."
+    }
+  ]
 };

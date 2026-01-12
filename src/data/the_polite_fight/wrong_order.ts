@@ -6,53 +6,99 @@ export const wrongOrder: Script = {
   title: "The Wrong Coffee Order",
   categorySlug: "the_polite_fight",
   categoryName: CATEGORY_NAMES["the_polite_fight"],
-  cleanedEnglish: "You ordered iced. They gave you hot. How to fix it without feeling guilty.",
-    imageUrl: "/images/scenarios/polite_generic.png",
+  cleanedEnglish: "You ordered iced. They gave you hot. How to get it fixed without feeling guilty.",
+  imageUrl: "/images/scenarios/wrong_order_clay.png",
+  mode: "cloze",
+  culturalNote: {
+    title: "The Strategic Apology",
+    content: "In polite English (especially British/Canadian), we often apologize when OTHER people make mistakes. We say 'I think I might have said the wrong thing' even when we didn't. This allows the other person to fix the mistake without feeling stupid or attacked."
+  },
   sentences: [
     {
-      id: "order-1-rude",
-      en: "Rude: 'I said iced. This is hot. Remake it.'",
+      id: "order-1",
+      scenario: "Barista hands you a hot latte. You definitely ordered iced.",
+      en: "The Self-Blame",
       keywords: [
-        { word: "Remake", definition: "Make again" },
+        { word: "iced", definition: "cold with ice" },
+        { word: "sorry", definition: "apology" }
       ],
+      badResponse: {
+        text: "You: 'I said iced. Remake this.'",
+        why: "Correct, but cold. It creates tension."
+      },
+      goodResponse: {
+        text: "You: 'So [sorry], I think I might have asked for this [iced]?'",
+        why: "Taking the blame ('I think I might have') makes them eager to help you."
+      }
     },
     {
-      id: "order-1-polite",
-      en: "Polite: 'So sorry, I think I might have asked for this iced?'",
+      id: "order-2",
+      scenario: "They look annoyed but agree to fix it.",
+      en: "The Reinforcement",
       keywords: [
-        { word: "Might have", definition: "Possibility (takes partial blame)" },
-        { word: "Asked for", definition: "Requested" }
+        { word: "messed up", definition: "made a mistake" },
+        { word: "swap", definition: "exchange" }
       ],
+      badResponse: {
+        text: "You: 'Finally. Get it right this time.'",
+        why: "Never kick someone when they are correcting a mistake."
+      },
+      goodResponse: {
+        text: "You: 'I totally [messed up] explaining it. Can we [swap] this for an iced one?'",
+        why: "Doubling down on self-deprecation ('totally messed up') ensures they don't spit in your drink."
+      }
     },
     {
-      id: "order-2-rude",
-      en: "Rude: 'Can't you get a simple order right?'",
+      id: "order-3",
+      scenario: "They hand you the new drink.",
+      en: "The Gratitude",
       keywords: [
-        { word: "Simple", definition: "Easy to understand/do" },
+        { word: "appreciate", definition: "value" },
+        { word: "rush", definition: "hurry" }
       ],
+      badResponse: {
+        text: "You: (Grab drink and walk away silently)",
+        why: "Silence implies you are still angry."
+      },
+      goodResponse: {
+        text: "You: 'No [rush] at all! I really [appreciate] you fixing it.'",
+        why: "Leaving them with a compliment ('appreciate you') resets the interaction to positive."
+      }
+    }
+  ],
+  quizItems: [
+    {
+      question: "Why do we apologize when the Barista makes a mistake?",
+      options: [
+        "Because we are stupid.",
+        "It is specific to coffee shops.",
+        "It is a social tool to reduce tension (Face Saving).",
+        "It increases the price."
+      ],
+      correctIndex: 2,
+      explanation: "It isn't about guilt. It's about lubrication. It makes the transaction smooth."
     },
     {
-      id: "order-2-polite",
-      en: "Polite: 'I totally messed up explaining it, but is there any way we could swap this for an iced one?'",
-      keywords: [
-        { word: "Swap", definition: "Exchange" },
-        { word: "Messed up", definition: "Made a mistake (self-deprecation)" }
+      question: "If you are rude to a barista, what is the risk?",
+      options: [
+        "They might cry.",
+        "They might give you bad service (or worse, decaf).",
+        "They will call your mom.",
+        "Nothing."
       ],
+      correctIndex: 1,
+      explanation: "Service workers have power over your food. Be nice."
     },
     {
-      id: "order-3-rude",
-      en: "Rude: 'I want a refund if I have to wait.'",
-      keywords: [
-        { word: "Refund", definition: "Repayment of money" },
+      question: "What is the best tone for correcting an order?",
+      options: [
+        "Confused and apologetic.",
+        "Angry and loud.",
+        "Silent staring.",
+        "Sarcastic clapping."
       ],
-    },
-    {
-      id: "order-3-polite",
-      en: "Polite: 'No rush at all, take your time! I really appreciate you fixing it.'",
-      keywords: [
-        { word: "No rush", definition: "Don't hurry" },
-        { word: "Appreciate", definition: "Recognize the full worth of" }
-      ],
+      correctIndex: 0,
+      explanation: "Acting confused ('Oh, did I say hot?') is safer than acting superior."
     }
   ]
 };
