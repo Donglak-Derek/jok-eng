@@ -48,7 +48,7 @@ export const theForgottenName: Script = {
       keywords: [{ word: "mortifying", definition: "extremely embarrassing" }],
     }
   ],
-  culturalNote: {
+  culturalInsights: {
     title: "The 'Name Fishing' Technique",
     content: "If you forget a name, try introducing them to someone else immediately: 'Have you met my friend...?' forcing them to say their own name. Or just be honest: 'My brain is failing me today, remind me?'"
   },

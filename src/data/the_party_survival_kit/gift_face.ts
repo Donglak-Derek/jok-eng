@@ -51,7 +51,7 @@ export const giftFace: Script = {
     },
   ],
 
-  culturalNote: {
+  culturalInsights: {
     title: "The Art of Receiving Gifts",
     content: "In Western culture, you must open gifts in front of the giver. If you don't like it, you cannot show it. You must use your 'Gift Face'—a polite, enthusiastic smile—and say something neutral like 'Wow, I don't have anything like this!' to avoid hurting feelings."
   },

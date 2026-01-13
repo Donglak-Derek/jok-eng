@@ -48,7 +48,7 @@ export const theBillStandoff: Script = {
       keywords: [{ word: "weep", definition: "cry softly" }],
     }
   ],
-  culturalNote: {
+  culturalInsights: {
     title: "Who Pays?",
     content: "In modern dating, 'Whoever asks, pays' is the safest rule. However, many people still do the 'Bill Dance' where both pretend to offer, even if one expects to pay. Offering to 'split the bill' (go Dutch) is usually acceptable on a first date."
   },

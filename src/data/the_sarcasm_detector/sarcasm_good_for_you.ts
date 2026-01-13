@@ -9,7 +9,7 @@ export const sarcasmGoodForYou: Script = {
   cleanedEnglish: "The phrase that kills bragging instantly. Decoding 'Good for you'.",
   imageUrl: "/images/scenarios/sarcasm_good_for_you_clay.png",
   mode: "cloze",
-  culturalNote: {
+  culturalInsights: {
     title: "The Conversation Killer",
     content: "When someone says 'Good for you' with a flat tone and no follow-up question, they are not congratulating you. They are saying: 'I do not care, please stop talking about yourself'."
   },

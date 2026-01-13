@@ -10,7 +10,7 @@ export const toolsAndFurniture: Script = {
   imageUrl: "/images/scenarios/diy_disaster_3d.png",
   mode: "cloze",
 
-  culturalNote: {
+  culturalInsights: {
     title: "The 'Extra Screw' Panic",
     content: "There is a universal law of furniture assembly: You will always have one screw left over. You have two choices: Panic and verify every step, or pretend it was a 'spare' and hope the chair doesn't collapse."
   },

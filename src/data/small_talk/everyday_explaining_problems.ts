@@ -10,7 +10,7 @@ export const explainingProblems: Script = {
   imageUrl: "/images/scenarios/complaint_department_3d.png",
   mode: "cloze",
 
-  culturalNote: {
+  culturalInsights: {
     title: "The 'Sandwich' Method",
     content: "When complaining, sandwich the bad news between two polite things. 'Hi! (Polite) This is broken (Bad). Thanks for helping! (Polite)'. It stops the other person from getting defensive."
   },

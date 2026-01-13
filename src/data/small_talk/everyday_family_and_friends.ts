@@ -10,7 +10,7 @@ export const familyAndFriends: Script = {
   imageUrl: "/images/scenarios/family_interrogation_3d.png",
   mode: "cloze",
 
-  culturalNote: {
+  culturalInsights: {
     title: "The 'Privacy' Buffer",
     content: "In some cultures, commenting on weight or salary is normal. In the West, it is RUDE. If someone asks 'Why aren't you married?', you can joke, deflect, or simply say 'I'm focusing on me right now'. You don't owe them an explanation."
   },

@@ -69,7 +69,7 @@ export const officePrinter: Script = {
       ],
     },
   ],
-  culturalNote: {
+  culturalInsights: {
     title: "The Tech Metaphor",
     content: "This scenario is funny because it treats a romantic date like a piece of software. Terms like 'beta testing' (trying something new), 'patch notes' (updates), and 'QA' (testing for quality) are usually used for coding, not dating. It shows two 'nerdy' people bonding over their shared awkwardness."
   },

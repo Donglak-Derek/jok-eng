@@ -9,7 +9,7 @@ export const backseatDriver: Script = {
   cleanedEnglish: "How to silence a passenger who won't stop criticizing your driving.",
   imageUrl: "/images/scenarios/backseat_driver_clay.png",
   mode: "cloze",
-  culturalNote: {
+  culturalInsights: {
     title: "The 'Focus' Card",
     content: "Driving is a safety issue. The polite way to shut down a critic is not to say 'I know how to drive' (Ego battle), but to say 'I need to focus' (Safety). No one wants to distract the driver, so they will shut up immediately."
   },

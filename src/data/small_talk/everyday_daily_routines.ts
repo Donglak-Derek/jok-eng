@@ -10,7 +10,7 @@ export const dailyRoutines: Script = {
   imageUrl: "/images/scenarios/morning_rush_3d.png",
   mode: "cloze",
 
-  culturalNote: {
+  culturalInsights: {
     title: "The 10-Minute Lie",
     content: "When someone says 'I'm 5 minutes away', they usually haven't left the house. In casual culture, being 5-10 minutes late is often forgiven, but 'on time' basically means '5 minutes late'."
   },

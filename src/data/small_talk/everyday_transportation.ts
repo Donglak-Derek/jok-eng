@@ -10,7 +10,7 @@ export const transportation: Script = {
   imageUrl: "/images/scenarios/uber_dilemma_3d.png",
   mode: "cloze",
 
-  culturalNote: {
+  culturalInsights: {
     title: "The 5-Star Rating Game",
     content: "In Uber/Lyft culture, both the driver and passenger rate each other. The golden rule: Be ready on time, don't slam the door, and read the vibe. If the driver isn't talking, they probably want quiet. If they are chatting, a little polite banter ensures a 5-star rating."
   },

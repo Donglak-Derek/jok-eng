@@ -10,7 +10,7 @@ export const workplaceCommunication: Script = {
   imageUrl: "/images/scenarios/water_cooler_hiding_3d.png",
   mode: "cloze",
 
-  culturalNote: {
+  culturalInsights: {
     title: "Safe Topics vs. Danger Zones",
     content: "At work, stick to 'Safe Topics': The weekend, weather, sports, and TV shows. Avoid 'Danger Zones': Politics, religion, and who is getting fired. The goal of work small talk is to be friendly but neutral."
   },

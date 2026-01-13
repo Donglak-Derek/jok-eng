@@ -48,7 +48,7 @@ export const theThirdWheel: Script = {
       keywords: [],
     }
   ],
-  culturalNote: {
+  culturalInsights: {
     title: "Third Wheeling",
     content: "Being a 'Third Wheel' is universally awkward. If the couple ignores you (to fight or flirt), it's socially acceptable to leave early. Crazy excuses like 'walking my fish' are a funny way to signal 'I need to escape now'."
   },

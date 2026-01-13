@@ -51,7 +51,7 @@ export const nameForget: Script = {
     },
   ],
 
-  culturalNote: {
+  culturalInsights: {
     title: "Why is this funny?",
     content: "Forgetting a name immediately is a common social anxiety. The 'spelling trick' usually works—unless the name is incredibly short and common, like Bob or Tom. Then you look insane for asking how to spell it, and even crazier for calling 'Bob' a unique name."
   },

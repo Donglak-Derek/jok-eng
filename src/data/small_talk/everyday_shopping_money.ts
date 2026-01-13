@@ -10,7 +10,7 @@ export const shoppingAndMoney: Script = {
   imageUrl: "/images/scenarios/retail_therapy_browsing_3d.png",
   mode: "cloze",
 
-  culturalNote: {
+  culturalInsights: {
     title: "The 'Just Looking' Defense",
     content: "Shop assistants are trained to greet you immediately. If you don't want help, the standard phrase is 'I'm just browsing, thanks!'. This effectively makes you invisible to them until you need something."
   },

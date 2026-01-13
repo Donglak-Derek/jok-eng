@@ -59,11 +59,12 @@ export type Script = {
   decoderItems?: DecoderItem[];
   // Phase 1: New Engagement Fields
   imageUrl?: string; 
-  culturalNote?: {
+  culturalInsights?: {
     title: string;
     content: string;
   };
   quizItems?: {
+    id?: string;
     question: string;
     options: string[];
     correctIndex: number;

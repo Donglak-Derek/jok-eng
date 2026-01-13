@@ -9,7 +9,7 @@ export const sarcasmWhatever: Script = {
   cleanedEnglish: "The most dangerous word in English. It doesn't mean 'anything', it means 'I am done with you'.",
   imageUrl: "/images/scenarios/sarcasm_whatever_clay.png",
   mode: "cloze",
-  culturalNote: {
+  culturalInsights: {
     title: "The Conversation Killer",
     content: "When used as a standalone sentence, 'Whatever' is not a choice—it is a weapon. It signals total apathy and dismissal. It says 'I don't care enough to argue with you anymore'. Use with extreme caution."
   },

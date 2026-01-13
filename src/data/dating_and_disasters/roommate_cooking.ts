@@ -69,7 +69,7 @@ export const roommateCooking: Script = {
       ],
     },
   ],
-  culturalNote: {
+  culturalInsights: {
     title: "Cooking Dates",
     content: "Cooking dates are often seen as romantic but stressful. By treating their disaster like a 'TV Cooking Show' (with an audience and commercial breaks), they turned a stressful situation into a shared joke."
   },

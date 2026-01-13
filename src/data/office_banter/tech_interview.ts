@@ -10,7 +10,7 @@ export const techInterview: Script = {
     "Use light jokes about standups, bugs, and meetings to survive office banter without sounding negative.",
   imageUrl: "/images/scenarios/tech_interview_3d.png",
   // Engagement
-  culturalNote: {
+  culturalInsights: {
     title: "Sprint Planning Rituals",
     content: "Agile rituals (Standup, Planning, Retro) can become monotonous. Using lightweight humor helps the team bond. It transforms the tone from 'a list of complaints' to 'a team solving a puzzle together'. However, avoid cynicism; keep it constructive."
   },

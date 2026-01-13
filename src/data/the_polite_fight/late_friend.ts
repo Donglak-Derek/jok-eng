@@ -9,7 +9,7 @@ export const lateFriend: Script = {
   cleanedEnglish: "How to tell a friend to be on time without ruining the friendship.",
   imageUrl: "/images/scenarios/late_friend_clay.png",
   mode: "cloze",
-  culturalNote: {
+  culturalInsights: {
     title: "The 'Worry' Tactic",
     content: "When someone is late, they expect you to be angry. If you are angry, they become defensive ('Traffic was bad!'). The polite hack is to be 'worried'. Saying 'I was worried something happened!' forces them to apologize for scaring you, rather than arguing about time."
   },

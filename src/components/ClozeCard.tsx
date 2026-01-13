@@ -3,7 +3,7 @@
 import { useMemo, useState, useRef, useEffect, useCallback } from "react";
 import type { Sentence } from "@/types";
 import { Button } from "@/components/Button";
-import { AudioLines, Volume2 } from "lucide-react";
+import { AudioLines } from "lucide-react";
 import { motion } from "framer-motion";
 
 type Props = {
@@ -123,7 +123,7 @@ export default function ClozeCard({
         setLoading(false);
         if (audioRef.current === null) setSpeaking(false);
     }
-  }, [heard, index, onHeard, sentence, setLoading, setSpeaking]);
+  }, [heard, index, onHeard, sentence, setLoading, setSpeaking, textToDisplay]);
 
   // --- Auto-Play ---
   const hasAutoPlayedRef = useRef(false);

@@ -10,7 +10,7 @@ export const teamworkCollaboration: Script = {
   imageUrl: "/images/scenarios/group_project_chaos_3d.png",
   mode: "cloze",
 
-  culturalNote: {
+  culturalInsights: {
     title: "The 'We' vs 'I'",
     content: "In teamwork, always say 'We' when things go well ('We did great!'). When they go bad, avoid saying 'You' ('You failed'). Use passive voice or 'We' to soften the blow ('We missed the deadline')."
   },

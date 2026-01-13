@@ -12,7 +12,7 @@ export const partyDecline: Script = {
   difficulty: "Medium 🌶️🌶️",
   context: "A friend invites you to a big birthday party, but you are exhausted and just want to stay home.",
   imageUrl: "/images/scenarios/party_decline.jpg",
-  culturalNote: {
+  culturalInsights: {
     title: "Cultural Context: The Value of 'No'",
     content: "In many Western cultures, 'No' is a complete sentence. You don't need to invent a fake illness or a family emergency to decline an invite. Simple honesty (softened with gratitude) is often respected more than a flaky excuse. Over-explaining can actually make you sound guilty or like you're lying.",
   },

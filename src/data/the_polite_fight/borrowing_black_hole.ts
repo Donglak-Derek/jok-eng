@@ -9,7 +9,7 @@ export const borrowingBlackHole: Script = {
   cleanedEnglish: "How to ask for your stuff back without sounding like a loan shark.",
   imageUrl: "/images/scenarios/borrowing_black_hole_clay.png",
   mode: "cloze",
-  culturalNote: {
+  culturalInsights: {
     title: "The 'I Need It' Excuse",
     content: "Asking for a borrowed item back can feel awkward because it implies you don't trust them to return it (even if they forgot!). The polite hack is to invent a specific reason you need it *right now*. This forces them to return it immediately without you having to accuse them of being lazy."
   },

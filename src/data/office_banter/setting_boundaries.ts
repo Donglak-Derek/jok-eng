@@ -8,7 +8,7 @@ export const settingBoundaries: Script = {
   cleanedEnglish: "Protect your time without looking lazy.",
     imageUrl: "/images/scenarios/setting_boundaries_3d.png",
   // Engagement
-  culturalNote: {
+  culturalInsights: {
     title: "Saying 'No' is a Superpower",
     content: "In Western work culture, having no boundaries is not seen as 'dedicated'; it is often seen as 'disorganized' or 'prone to burnout'. Leaders respect employees who can prioritize effectively. The key is to say 'No' not because you are lazy, but because you care about quality."
   },

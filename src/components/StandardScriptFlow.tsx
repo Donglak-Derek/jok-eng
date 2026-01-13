@@ -34,12 +34,12 @@ export default function StandardScriptFlow({ script }: Props) {
   const sentences = script.sentences || [];
   const sentencesCount = sentences.length;
   // ... (indices logic unchanged)
-  const hasCulturalNote = !!script.culturalNote;
+  const hasCulturalInsight = !!script.culturalInsights;
   const hasQuiz = !!script.quizItems && script.quizItems.length > 0;
   
-  const culturalNoteIndex = hasCulturalNote ? sentencesCount : -1;
-  const quizIndex = hasQuiz ? (sentencesCount + (hasCulturalNote ? 1 : 0)) : -1;
-  const totalSteps = sentencesCount + (hasCulturalNote ? 1 : 0) + (hasQuiz ? 1 : 0);
+  const culturalInsightIndex = hasCulturalInsight ? sentencesCount : -1;
+  const quizIndex = hasQuiz ? (sentencesCount + (hasCulturalInsight ? 1 : 0)) : -1;
+  const totalSteps = sentencesCount + (hasCulturalInsight ? 1 : 0) + (hasQuiz ? 1 : 0);
 
   const storageKey = `jokeng:progress:${script.id}`;
 
@@ -249,11 +249,11 @@ export default function StandardScriptFlow({ script }: Props) {
               </div>
          </motion.div>
       );
-  } else if (currentIndex === culturalNoteIndex && script.culturalNote) {
+  } else if (currentIndex === culturalInsightIndex && script.culturalInsights) {
       content = (
           <CulturalNoteCard 
-             title={script.culturalNote.title}
-             content={script.culturalNote.content}
+             title={script.culturalInsights.title}
+             content={script.culturalInsights.content}
              onNext={handleNext}
           />
       );
@@ -309,7 +309,7 @@ export default function StandardScriptFlow({ script }: Props) {
         imageUrl={script.imageUrl}
         currentStep={currentIndex}
         totalSteps={totalSteps}
-        hasFinished={isCompletion || currentIndex === culturalNoteIndex || currentIndex === quizIndex}
+        hasFinished={isCompletion || currentIndex === culturalInsightIndex || currentIndex === quizIndex}
         
         // Controls
         isAutoPlayEnabled={isAutoPlayEnabled}

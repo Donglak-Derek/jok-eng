@@ -8,7 +8,7 @@ export const resignationGraceful: Script = {
   cleanedEnglish: "How to quit like a pro.",
     imageUrl: "/images/scenarios/resignation_graceful_3d.png",
   // Engagement
-  culturalNote: {
+  culturalInsights: {
     title: "The 'Good' Goodbye",
     content: "The tech world is small. The person you quit today might be your hiring manager in 5 years. A graceful resignation protects your reputation ('Your network is your net worth'). It is standard to give 2 weeks' notice and offer help with the transition."
   },

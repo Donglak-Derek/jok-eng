@@ -51,7 +51,7 @@ export const elevatorWeather: Script = {
     },
   ],
 
-  culturalNote: {
+  culturalInsights: {
     title: "Why is this funny?",
     content: "Elevator silence is physically painful for many people. We feel forced to make 'Small Talk', usually about the weather. The joke here is the 'brain short-circuit'—generating a sentence that means nothing ('Sure is using the weather'), and the neighbor politely agreeing anyway just to survive the interaction."
   },

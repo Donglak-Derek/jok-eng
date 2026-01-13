@@ -9,7 +9,7 @@ export const sarcasmGreat: Script = {
   cleanedEnglish: "When praise is actually poison. Decoding 'Great', 'Perfect', and 'Just what I needed'.",
   imageUrl: "/images/scenarios/sarcasm_great_clay.png",
   mode: "cloze",
-  culturalNote: {
+  culturalInsights: {
     title: "The Inverted Superlative",
     content: "When things go wrong, English speakers often default to extreme praise to highlight the failure. If a car breaks down, we say 'Perfect'. If it starts raining, we say 'Just great'. It's a coping mechanism: we laugh so we don't scream."
   },

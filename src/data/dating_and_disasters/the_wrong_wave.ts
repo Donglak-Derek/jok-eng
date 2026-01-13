@@ -48,7 +48,7 @@ export const theWrongWave: Script = {
       keywords: [{ word: "away", definition: "to a different place" }]
     }
   ],
-  culturalNote: {
+  culturalInsights: {
     title: " The Recovery Move",
     content: "When you wave at the wrong person, you have two options: 1. Pretend you were smoothing your hair (the 'slick' move). 2. Commit to the wave and wave at everyone else too (the 'chaos' move)."
   },

@@ -51,7 +51,7 @@ export const bathroomLine: Script = {
     },
   ],
 
-  culturalNote: {
+  culturalInsights: {
     title: "Bathroom Lines",
     content: "At house parties, there is often only one bathroom. The line becomes a purgatory where you are trapped with strangers. The etiquette is usually to stay silent or complain about the wait together. Trying to make deep conversation here is considered socially awkward."
   },

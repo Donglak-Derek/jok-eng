@@ -8,7 +8,7 @@ export const ikeaLeadership: Script = {
   cleanedEnglish: "Leading with 'Togetherness' and 'Cost-consciousness'.",
     imageUrl: "/images/scenarios/ikea_leadership_3d.png",
   // Engagement
-  culturalNote: {
+  culturalInsights: {
     title: "Swedish Leadership Style",
     content: "The IKEA leadership style reflects Swedish culture: flat hierarchy, consensus decision-making, and 'Jantelagen' (The Law of Jante), which discourages individual bragging. Leaders are expected to be humble coaches ('Servant Leadership') rather than authoritarian bosses."
   },

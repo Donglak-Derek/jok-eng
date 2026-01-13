@@ -51,7 +51,7 @@ export const theIrishGoodbye: Script = {
     },
   ],
 
-  culturalNote: {
+  culturalInsights: {
     title: "What is an Irish Goodbye?",
     content: "Also known as 'Ghosting' or 'The French Leave', it means leaving a social gathering without saying goodbye to anyone. It's often considered rude by older generations, but modern social etiquette accepts it as a practical way to escape large parties without getting stuck in long farewell conversations."
   },

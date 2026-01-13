@@ -51,7 +51,7 @@ export const replyAllApocalypse: Script = {
     },
   ],
 
-  culturalNote: {
+  culturalInsights: {
     title: "Why is this funny?",
     content: "The 'Reply All' fail is a classic corporate horror trope. Calling the CEO a 'confused robot' to the entire company (including the CEO) is basically professional suicide. The flood of 'Out of Office' replies is the signature sign that you just spammed thousands of people."
   },

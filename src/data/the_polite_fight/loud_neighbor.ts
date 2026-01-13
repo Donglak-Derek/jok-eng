@@ -9,7 +9,7 @@ export const loudNeighbor: Script = {
   cleanedEnglish: "How to ask for silence without making enemies next door.",
   imageUrl: "/images/scenarios/loud_neighbor_clay.png",
   mode: "cloze",
-  culturalNote: {
+  culturalInsights: {
     title: "The Thin Wall Defense",
     content: "Directly criticizing a neighbor ('You are loud') creates a permanent enemy. The polite trick is to blame the building. By saying 'These walls are so thin', you shift the blame to the architecture, making it a shared problem rather than a personal attack."
   },

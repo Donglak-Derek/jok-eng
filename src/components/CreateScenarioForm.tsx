@@ -11,6 +11,9 @@ import { useRouter } from "next/navigation";
 // For preview, we want to see sentences.
 import ClozeCard from "./ClozeCard";
 import { Button } from "@/components/Button";
+import { GenerativeCover } from "./GenerativeCover";
+import CulturalNoteCard from "./CulturalNoteCard";
+import QuizCard from "./QuizCard";
 
 export default function CreateScenarioForm() {
   const { user } = useAuth();
@@ -160,79 +163,109 @@ export default function CreateScenarioForm() {
             {step === "input" && (
                 <motion.div 
                     key="input"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 20 }}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
                     className="flex flex-col gap-6"
                 >
-                    <div className="bg-card/50 backdrop-blur border border-secondary/30 rounded-3xl p-6 md:p-8 shadow-xl">
-                        {/* Unified Header */}
-                        <div className="flex items-center justify-between mb-6">
-                            <Link href="/" className="text-sm font-bold text-muted hover:text-foreground transition-colors flex items-center gap-1">
-                                <span>←</span> Back
-                            </Link>
-                            <h2 className="text-xl md:text-2xl font-bold flex items-center gap-2">
-                                🎬 <span className="bg-gradient-to-r from-secondary to-primary text-transparent bg-clip-text">Director Mode</span>
-                            </h2>
-                            <div className="w-10" /> {/* Spacer for centering if needed, or empty */}
+                    {/* Live Preview Header */}
+                    <div className="w-full aspect-[2.5/1] rounded-3xl overflow-hidden shadow-2xl border border-border/50 relative group">
+                        <GenerativeCover 
+                            title={inputs.context || "New Scenario"} 
+                            category="Custom" 
+                            className="transition-all duration-700 hover:scale-105"
+                        />
+                         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                            <span className="bg-black/20 backdrop-blur-md text-white/90 text-xs font-bold px-3 py-1 rounded-full border border-white/20">
+                                Live Preview
+                            </span>
                         </div>
-                        
-                        <div className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-bold text-muted mb-1 uppercase tracking-wider">Where does it take place?</label>
-                                <input 
-                                    type="text" 
-                                    placeholder="e.g. Starbucks in New York, Business Meeting"
-                                    className="w-full bg-background/50 border border-secondary/20 rounded-xl px-4 py-3 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-muted/30"
-                                    value={inputs.context}
-                                    onChange={(e) => setInputs({...inputs, context: e.target.value})}
-                                />
-                            </div>
+                    </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm font-bold text-muted mb-1 uppercase tracking-wider">I am...</label>
+                    <div className="relative">
+                        {/* Decorative Background Blur */}
+                         <div className="absolute -inset-4 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-[2.5rem] blur-xl opacity-50 pointer-events-none" />
+
+                        <div className="bg-card/80 backdrop-blur-xl border border-white/20 rounded-3xl p-6 md:p-8 shadow-sm relative z-10">
+                            {/* Unified Header */}
+                            <div className="flex items-center justify-between mb-8">
+                                <Link href="/" className="text-sm font-bold text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
+                                    <span>←</span> Back
+                                </Link>
+                                <h2 className="text-xl md:text-2xl font-black bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+                                    Director Mode
+                                </h2>
+                            </div>
+                            
+                            <div className="space-y-6">
+                                {/* Context Input - The most important one */}
+                                <div className="space-y-2">
+                                    <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest pl-1">
+                                        The Setting
+                                    </label>
                                     <input 
                                         type="text" 
-                                        placeholder="e.g. Angry Customer"
-                                        className="w-full bg-background/50 border border-secondary/20 rounded-xl px-4 py-3 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-muted/30"
-                                        value={inputs.myRole}
-                                        onChange={(e) => setInputs({...inputs, myRole: e.target.value})}
+                                        placeholder="e.g. Asking for a raise, Breaking up, Ordering Pizza"
+                                        className="w-full bg-secondary/30 border border-transparent focus:border-primary/50 text-foreground text-lg font-medium rounded-2xl px-5 py-4 focus:ring-4 focus:ring-primary/10 outline-none transition-all placeholder:text-muted/40"
+                                        value={inputs.context}
+                                        onChange={(e) => setInputs({...inputs, context: e.target.value})}
                                     />
                                 </div>
-                                <div>
-                                    <label className="block text-sm font-bold text-muted mb-1 uppercase tracking-wider">Other person is...</label>
-                                    <input 
-                                        type="text" 
-                                        placeholder="e.g. Rude Barista"
-                                        className="w-full bg-background/50 border border-secondary/20 rounded-xl px-4 py-3 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-muted/30"
-                                        value={inputs.otherRole}
-                                        onChange={(e) => setInputs({...inputs, otherRole: e.target.value})}
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                    <div className="space-y-2">
+                                        <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest pl-1">
+                                            My Role
+                                        </label>
+                                        <input 
+                                            type="text" 
+                                            placeholder="e.g. Employee"
+                                            className="w-full bg-secondary/30 border border-transparent focus:border-primary/50 text-foreground rounded-2xl px-5 py-3.5 focus:ring-4 focus:ring-primary/10 outline-none transition-all placeholder:text-muted/40"
+                                            value={inputs.myRole}
+                                            onChange={(e) => setInputs({...inputs, myRole: e.target.value})}
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest pl-1">
+                                            Their Role
+                                        </label>
+                                        <input 
+                                            type="text" 
+                                            placeholder="e.g. Boss"
+                                            className="w-full bg-secondary/30 border border-transparent focus:border-primary/50 text-foreground rounded-2xl px-5 py-3.5 focus:ring-4 focus:ring-primary/10 outline-none transition-all placeholder:text-muted/40"
+                                            value={inputs.otherRole}
+                                            onChange={(e) => setInputs({...inputs, otherRole: e.target.value})}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest pl-1">
+                                        Plot Twist / Specifics
+                                    </label>
+                                    <textarea 
+                                        placeholder="What exactly happens? e.g. I need to explain why I'm late without sounding defensive."
+                                        className="w-full bg-secondary/30 border border-transparent focus:border-primary/50 text-foreground rounded-2xl px-5 py-4 focus:ring-4 focus:ring-primary/10 outline-none transition-all h-32 resize-none placeholder:text-muted/40 leading-relaxed"
+                                        value={inputs.plot}
+                                        onChange={(e) => setInputs({...inputs, plot: e.target.value})}
                                     />
                                 </div>
                             </div>
 
-                            <div>
-                                <label className="block text-sm font-bold text-muted mb-1 uppercase tracking-wider">The Plot (What happens?)</label>
-                                <textarea 
-                                    placeholder="Describe the situation in English or your language. e.g. I ordered iced coffee but got hot. I want to ask for a remake politely."
-                                    className="w-full bg-background/50 border border-secondary/20 rounded-xl px-4 py-3 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all h-32 resize-none placeholder:text-muted/30"
-                                    value={inputs.plot}
-                                    onChange={(e) => setInputs({...inputs, plot: e.target.value})}
-                                />
+                            <div className="mt-10">
+                                <Button 
+                                    onClick={handleGenerate}
+                                    disabled={!inputs.context || !inputs.plot}
+                                    variant="primary"
+                                    size="lg"
+                                    className="w-full h-14 text-lg font-bold rounded-2xl shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                                >
+                                    ✨ Action!
+                                </Button>
+                                <p className="text-center text-xs text-muted-foreground mt-4">
+                                    AI Director will cast actors and write the script in ~5s
+                                </p>
                             </div>
-                        </div>
-
-                        <div className="mt-8">
-                            <Button 
-                                onClick={handleGenerate}
-                                disabled={!inputs.context || !inputs.plot}
-                                variant="primary"
-                                size="lg"
-                                className="w-full bg-gradient-to-r from-secondary to-primary hover:scale-[1.01] active:scale-[0.99] shadow-lg"
-                            >
-                                ✨ Generate Scenario
-                            </Button>
                         </div>
                     </div>
                 </motion.div>
@@ -282,10 +315,29 @@ export default function CreateScenarioForm() {
                                 key={sentence.id} 
                                 sentence={sentence} 
                                 index={idx} 
+                                // Preview mode props
                                 heard={false} 
                                 onHeard={() => {}} 
+                                isGlobalRevealed={true} // In preview, let's just show it? Or maybe interactive? Interactive is better.
+                                isAutoPlayEnabled={false}
+                                mode="standard"
                             />
                         ))}
+
+                        {generatedScript.culturalInsights && (
+                            <CulturalNoteCard 
+                                title={generatedScript.culturalInsights.title}
+                                content={generatedScript.culturalInsights.content}
+                                onNext={() => {}} // No-op in preview
+                            />
+                        )}
+
+                        {generatedScript.quizItems && generatedScript.quizItems.length > 0 && (
+                            <QuizCard 
+                                items={generatedScript.quizItems}
+                                onFinish={() => {}} // No-op in preview
+                            />
+                        )}
                      </div>
 
                      <div className="sticky bottom-4 pt-4 bg-gradient-to-t from-background via-background/90 to-transparent">

@@ -10,7 +10,7 @@ export const hobbiesFreeTime: Script = {
   imageUrl: "/images/scenarios/hobby_humblebrag_3d.png",
   mode: "cloze",
 
-  culturalNote: {
+  culturalInsights: {
     title: "The 'Busy' Badge",
     content: "In modern culture, being 'busy' is often seen as a status symbol. If you say you did nothing, people might think you are boring. So we invent 'activities' like 'catch-up admin' (Netflix) or 'self-care' (sleeping)."
   },

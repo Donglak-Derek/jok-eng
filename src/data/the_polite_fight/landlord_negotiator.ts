@@ -9,7 +9,7 @@ export const landlordNegotiator: Script = {
   cleanedEnglish: "How to get repairs done without getting evicted. Documentation vs Emotion.",
   imageUrl: "/images/scenarios/landlord_negotiator_clay.png",
   mode: "cloze",
-  culturalNote: {
+  culturalInsights: {
     title: "Protecting the Asset",
     content: "Landlords care about money, not your comfort. The best way to get a repair is not to complain about how sad you are (Emotion), but to warn them about damage to their building (Asset Protection). Frame every request as you helping them save money."
   },

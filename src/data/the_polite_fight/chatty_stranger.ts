@@ -9,7 +9,7 @@ export const chattyStranger: Script = {
   cleanedEnglish: "How to end a conversation on a plane/bus without being rude.",
   imageUrl: "/images/scenarios/chatty_stranger_clay.png",
   mode: "cloze",
-  culturalNote: {
+  culturalInsights: {
     title: "The 'Exit' Strategy",
     content: "Americans especially love to chat with strangers. If you want to stop, simply going silent is rude. You need a 'Transition Phrase' that validates the conversation ('It was great talking to you') followed by an 'Action' ('I'm going to read now')."
   },

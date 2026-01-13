@@ -51,7 +51,7 @@ export const coffeeCrisis: Script = {
     },
   ],
 
-  culturalNote: {
+  culturalInsights: {
     title: "Why is this funny?",
     content: "Coffee chains like Starbucks use Italian-ish words for sizes that confuse everyone. 'Tall' sounds like 'Big', but it's actually their 'Small'. 'Venti' means 20 (ounces). The joke is that you need to learn a secret language just to get generic caffeine."
   },

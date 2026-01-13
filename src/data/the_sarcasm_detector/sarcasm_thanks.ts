@@ -9,7 +9,7 @@ export const sarcasmThanks: Script = {
   cleanedEnglish: "Is it gratitude or blame? Learn how 'Thanks' can mean 'It is your fault'.",
   imageUrl: "/images/scenarios/sarcasm_thanks_clay.png",
   mode: "cloze",
-  culturalNote: {
+  culturalInsights: {
     title: "The Weaponized 'Thanks'",
     content: "In English, 'Thanks a lot' is dangerous. If said with a smile and high pitch, it is genuine. If said with a flat tone or stress on 'LOT', it means 'You ruined everything'."
   },

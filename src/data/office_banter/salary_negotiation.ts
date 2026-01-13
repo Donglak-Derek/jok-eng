@@ -9,7 +9,7 @@ export const salaryNegotiation: Script = {
     imageUrl: "/images/scenarios/salary_negotiation_3d.png",
   
   // Engagement
-  culturalNote: {
+  culturalInsights: {
     title: "The Table Tennis Rule",
     content: "Salary negotiation in the West is expected, like a game of table tennis. If they serve a number and you just say 'okay', the game ends too early. They usually budget for a 'rally' (a counter-offer). Not negotiating can actually make you look less senior or confident."
   },

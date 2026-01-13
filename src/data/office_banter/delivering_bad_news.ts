@@ -8,7 +8,7 @@ export const deliveringBadNews: Script = {
   cleanedEnglish: "How to tell your boss things are going wrong.",
     imageUrl: "/images/scenarios/delivering_bad_news_3d.png",
   // Engagement
-  culturalNote: {
+  culturalInsights: {
     title: "Bad News Travels Fast",
     content: "Western business culture prefers 'Bad news early' over 'Bad news late'. Hiding a problem until the deadline is seen as a betrayal of trust. Admitting mistakes quickly and proposing solutions ('The Solution Sandwich') is seen as a sign of maturity and competence."
   },

@@ -10,7 +10,7 @@ export const greetingsSmallTalk: Script = {
   imageUrl: "/images/scenarios/greetings_introvert_3d.png",
   mode: "cloze",
 
-  culturalNote: {
+  culturalInsights: {
     title: "The 'How are you?' Trap",
     content: "In Western culture (especially US/UK), 'How are you?' is a greeting, NOT a question. The only correct answer is 'Good, you?'. If you answer 'Actually, I am sad', people will panic. Save the truth for close friends."
   },

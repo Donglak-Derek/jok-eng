@@ -12,7 +12,7 @@ export const furnitureRefusal: Script = {
   difficulty: "Spicy 🌶️🌶️🌶️",
   context: "A close friend asks you to help them move apartments this weekend. You hate moving and have a bad back / other plans.",
   imageUrl: "/images/scenarios/furniture_refusal.jpg",
-  culturalNote: {
+  culturalInsights: {
     title: "Cultural Context: The 'Moving' Tax",
     content: "Asking friends to help move is a classic 'young fancy-free' tradition. However, as people get older (late 20s+), it becomes culturally acceptable to hire movers. Refusing to help move is not a sin, but how you do it matters. You need to separate the 'labor' from the 'support'.",
   },

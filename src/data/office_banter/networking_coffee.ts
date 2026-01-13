@@ -8,7 +8,7 @@ export const networkingCoffee: Script = {
   cleanedEnglish: "Building allies without being awkward.",
     imageUrl: "/images/scenarios/networking_coffee_3d.png",
   // Engagement
-  culturalNote: {
+  culturalInsights: {
     title: "The Art of the 'Coffee Chat'",
     content: "In the US, asking for a 'virtual coffee' (15-20 mins) is the standard way to build a network. It is less formal than an interview but more structured than a random chat. The goal is connection, not an immediate job offer. Always respect the time limit strictly."
   },

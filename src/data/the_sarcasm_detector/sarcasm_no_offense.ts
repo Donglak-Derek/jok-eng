@@ -9,7 +9,7 @@ export const sarcasmNoOffense: Script = {
   cleanedEnglish: "The polite warning that a huge insult is coming. Decoding 'No offense'.",
   imageUrl: "/images/scenarios/sarcasm_no_offense_clay.png",
   mode: "cloze",
-  culturalNote: {
+  culturalInsights: {
     title: "The Offensive Shield",
     content: "When someone starts a sentence with 'No offense', they are 100% about to offend you. It is a fake shield used to excuse rude comments. It translates to: 'I know this is mean, but I want to say it anyway without consequences'."
   },

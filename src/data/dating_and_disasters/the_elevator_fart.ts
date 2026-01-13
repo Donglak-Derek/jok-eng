@@ -48,7 +48,7 @@ export const theElevatorFart: Script = {
       keywords: [{ word: "out", definition: "away from the inside" }]
     }
   ],
-  culturalNote: {
+  culturalInsights: {
     title: "Elevator Etiquette",
     content: "In an elevator, the social rule is 'ignore everything'. If someone farts, no one acknowledges it. To say something would be more awkward than the smell itself."
   },

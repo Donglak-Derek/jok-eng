@@ -8,7 +8,7 @@ export const interviewIntro: Script = {
   cleanedEnglish: "Master the 2-minute elevator pitch of your career.",
     imageUrl: "/images/scenarios/interview_intro_3d.png",
   // Engagement
-  culturalNote: {
+  culturalInsights: {
     title: "The 'Elevator Pitch' Culture",
     content: "In Western business culture, you are expected to 'sell yourself' in 60 seconds or less. This isn't bragging; it's considered efficient communication. The 'Tell me about yourself' question is not an invitation for your life story—it's a test of whether you can summarize your professional value quickly."
   },

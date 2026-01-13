@@ -9,7 +9,7 @@ export const billSplitter: Script = {
   cleanedEnglish: "How to pay only for what you ate without looking like a cheapskate.",
   imageUrl: "/images/scenarios/bill_splitter_clay.png",
   mode: "cloze",
-  culturalNote: {
+  culturalInsights: {
     title: "Itemized vs. Even Split",
     content: "In many Western cultures, asking to 'split the check evenly' is the default for groups. Objecting to this can make you look stingy. However, it is fair to object if there is a huge price difference. The polite trick is to blame 'budgeting' or 'not drinking', rather than accusing others of ordering too much."
   },

@@ -8,7 +8,7 @@ export const askingFavors: Script = {
   cleanedEnglish: "How to get help without being 'that annoying guy'.",
   
   // Engagement
-  culturalNote: {
+  culturalInsights: {
     title: "The 'Soft Ask' vs. The Command",
     content: "In many Western workplaces, direct commands ('Do this') are seen as rude, even from bosses. We use 'Soft Asks' ('Do you have a second?', 'Could you possibly...') to show respect for the other person's time and autonomy. It allows them to say 'no' or 'not now' without conflict."
   },

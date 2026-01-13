@@ -9,7 +9,7 @@ export const sarcasmSure: Script = {
   cleanedEnglish: "Decoding the weakest word in English. When 'Sure' means 'No'.",
   imageUrl: "/images/scenarios/sarcasm_sure_clay.png",
   mode: "cloze",
-  culturalNote: {
+  culturalInsights: {
     title: "The Non-Committal Yes",
     content: "If you ask for a favor and get a 'Yes!', you are safe. If you get a 'Sure...', be careful. The pause and the tone change everything. 'Sure' often means 'I will do it, but I don't want to' or 'I don't believe you'."
   },

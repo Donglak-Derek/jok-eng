@@ -51,7 +51,7 @@ export const zoomFail: Script = {
     },
   ],
 
-  culturalNote: {
+  culturalInsights: {
     title: "Why is this funny?",
     content: "Since remote work became common, the 'hot mic' (unmuted microphone) is a classic fear. Shouting insults at a pet while your boss thinks you are shouting at *them* is the ultimate workplace nightmare. 'Monster' is a funny exaggeration for a cat, but a terrible thing to call a CEO."
   },

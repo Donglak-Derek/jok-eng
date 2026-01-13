@@ -51,7 +51,7 @@ export const howAreYouDisaster: Script = {
     },
   ],
 
-  culturalNote: {
+  culturalInsights: {
     title: "Why is this funny?",
     content: "In English-speaking professional cultures, 'How are you?' is a greeting, not a question. The only correct answer is 'Good, you?'. Actual life updates are considered 'oversharing' and make people uncomfortable. The narrator failing to realize the boss wasn't even stopping to listen adds to the physical comedy."
   },

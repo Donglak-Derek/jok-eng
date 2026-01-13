@@ -51,7 +51,7 @@ export const potluckPanic: Script = {
     },
   ],
 
-  culturalNote: {
+  culturalInsights: {
     title: "Potluck Etiquette",
     content: "A potluck is a party where guests bring food to share. The 'rule' is usually to make something yourself, but store-bought items are common last-minute saves. Bringing just a bag of chips when others cooked elaborate meals can feel embarrassing, but ironically, people often love the junk food most."
   },

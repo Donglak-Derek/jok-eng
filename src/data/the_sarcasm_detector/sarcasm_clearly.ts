@@ -9,7 +9,7 @@ export const sarcasmClearly: Script = {
   cleanedEnglish: "How to call someone stupid without using bad words. Decoding 'Clearly' and 'Obviously'.",
   imageUrl: "/images/scenarios/sarcasm_clearly_clay.png",
   mode: "cloze",
-  culturalNote: {
+  culturalInsights: {
     title: "The Intellectual Slap",
     content: "When explaining something, adding 'Clearly' or 'Obviously' at the start implies: 'This is simple, so why don't you understand it?'. It is a way to claim intellectual superiority. Watch out for it in meetings."
   },

@@ -9,7 +9,7 @@ export const sarcasmHaveFun: Script = {
   cleanedEnglish: "When 'Fun' means 'Misery'. Wishing someone luck for a terrible task.",
   imageUrl: "/images/scenarios/sarcasm_have_fun_clay.png",
   mode: "cloze",
-  culturalNote: {
+  culturalInsights: {
     title: "The Misery High-Five",
     content: "We say 'Have fun!' for parties. But we also say it when someone has to do something awful, like filing taxes or cleaning a toilet. In this context, it is a sarcastic way of saying 'I am glad it is you and not me'."
   },

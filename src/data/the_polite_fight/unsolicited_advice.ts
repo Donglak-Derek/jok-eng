@@ -9,7 +9,7 @@ export const unsolicitedAdvice: Script = {
   cleanedEnglish: "Shutting down nosy comments about your life/diet/dating without starting a war.",
   imageUrl: "/images/scenarios/unsolicited_advice_clay.png",
   mode: "cloze",
-  culturalNote: {
+  culturalInsights: {
     title: "The 'Interesting' Shield",
     content: "When people give unwanted advice, they usually want to feel smart or helpful. Fighting them ('That is stupid') hurts their ego. The best defense is to call their idea 'Interesting' or 'A unique perspective'. It acknowledges them without agreeing to anything."
   },

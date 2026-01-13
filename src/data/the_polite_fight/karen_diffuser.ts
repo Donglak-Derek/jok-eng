@@ -9,7 +9,7 @@ export const karenDiffuser: Script = {
   cleanedEnglish: "How to complain to customer service without being the worst customer they see all day.",
   imageUrl: "/images/scenarios/karen_diffuser_clay.png",
   mode: "cloze",
-  culturalNote: {
+  culturalInsights: {
     title: "The Complaint Sandwich",
     content: "Service workers are used to being yelled at. To get what you want, you must separate yourself from the 'Karens'. The trick is to state facts without emotion, and if possible, use the 'Sandwich Method': Start with understanding, insert the complaint, end with gratitude."
   },

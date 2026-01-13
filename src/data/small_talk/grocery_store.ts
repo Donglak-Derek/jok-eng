@@ -10,7 +10,7 @@ export const groceryStore: Script = {
   imageUrl: "/images/scenarios/grocery_gauntlet_3d.png",
   mode: "cloze",
   
-  culturalNote: {
+  culturalInsights: {
     title: "The Checkout Chit-Chat",
     content: "In many Western countries (especially the US), cashiers are expected to be chatted to. Silence is seen as rude. They will ask 'Did you find everything okay?' or 'Any big plans for the weekend?'. You don't need a real answer—just be friendly!"
   },

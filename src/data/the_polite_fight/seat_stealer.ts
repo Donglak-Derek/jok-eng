@@ -9,7 +9,7 @@ export const seatStealer: Script = {
   cleanedEnglish: "How to kick someone out of your assigned seat without causing air rage.",
   imageUrl: "/images/scenarios/seat_stealer_clay.png",
   mode: "cloze",
-  culturalNote: {
+  culturalInsights: {
     title: "The 'Confusion' Strategy",
     content: "When someone is in your seat, saying 'Get out' makes you the bad guy, even if you are right. The polite trick is to pretend you are confused. Saying 'I think I might be in this seat?' forces them to check their ticket without feeling attacked."
   },

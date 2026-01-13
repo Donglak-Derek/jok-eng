@@ -10,7 +10,7 @@ export const timeAndSchedules: Script = {
   imageUrl: "/images/scenarios/running_late_sprint_3d.png",
   mode: "cloze",
 
-  culturalNote: {
+  culturalInsights: {
     title: "The 'Hard Stop'",
     content: "If you want to leave a meeting on time, announce a 'Hard Stop' at the start. 'I have a hard stop at 3 PM'. It creates a social contract that ANYONE can leave at 3 PM without being rude."
   },

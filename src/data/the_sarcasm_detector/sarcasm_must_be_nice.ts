@@ -9,7 +9,7 @@ export const sarcasmMustBeNice: Script = {
   cleanedEnglish: "The ultimate phrase for jealousy. When 'Nice' means 'I hate you because I am jealous'.",
   imageUrl: "/images/scenarios/sarcasm_must_be_nice_clay.png",
   mode: "cloze",
-  culturalNote: {
+  culturalInsights: {
     title: "The Jealousy Trap",
     content: "'Must be nice' is pure passive-aggression. It takes your happiness or success and twists it into guilt. It implies: 'You have it easy, and I suffer'."
   },

@@ -9,7 +9,7 @@ export const gymHog: Script = {
   cleanedEnglish: "How to get a machine without starting a fight. The art of 'Working In'.",
   imageUrl: "/images/scenarios/gym_hog_clay.png",
   mode: "cloze",
-  culturalNote: {
+  culturalInsights: {
     title: "Gym Etiquette 101",
     content: "In Western gyms, it is rude to hover silently. However, it is also rude to occupy a machine while texting. The polite middle ground is asking to 'work in'—sharing the machine during rest periods. It turns a conflict into a collaboration."
   },

@@ -10,7 +10,7 @@ export const healthAndFeelings: Script = {
   imageUrl: "/images/scenarios/calling_in_sick_3d.png",
   mode: "cloze",
 
-  culturalNote: {
+  culturalInsights: {
     title: "The 'Mental Health Day'",
     content: "It's becoming acceptable to take a sick day for mental exhaustion, not just flu. You don't need to give details. 'I'm not feeling well' covers everything from vomiting to 'I cannot deal with people today'."
   },

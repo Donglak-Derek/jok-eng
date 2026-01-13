@@ -9,7 +9,7 @@ export const wrongOrder: Script = {
   cleanedEnglish: "You ordered iced. They gave you hot. How to get it fixed without feeling guilty.",
   imageUrl: "/images/scenarios/wrong_order_clay.png",
   mode: "cloze",
-  culturalNote: {
+  culturalInsights: {
     title: "The Strategic Apology",
     content: "In polite English (especially British/Canadian), we often apologize when OTHER people make mistakes. We say 'I think I might have said the wrong thing' even when we didn't. This allows the other person to fix the mistake without feeling stupid or attacked."
   },

@@ -10,7 +10,7 @@ export const gymSmallTalk: Script = {
   imageUrl: "/images/scenarios/gym_hover_3d.png",
   mode: "cloze",
 
-  culturalNote: {
+  culturalInsights: {
     title: "Gym Etiquette 101",
     content: "The Gym is a place of solitude in public. Talking is generally discouraged unless necessary (asking for equipment). Headphones = 'Do Not Disturb'. If someone has headphones on, do not talk to them unless the building is on fire."
   },

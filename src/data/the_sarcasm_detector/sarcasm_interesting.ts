@@ -9,7 +9,7 @@ export const sarcasmInteresting: Script = {
   cleanedEnglish: "The polite way to say 'I hate it'. Decoding the word 'Interesting' in different contexts.",
   imageUrl: "/images/scenarios/sarcasm_interesting_clay.png",
   mode: "cloze",
-  culturalNote: {
+  culturalInsights: {
     title: "The Safe Word",
     content: "When English speakers encounter something weird, ugly, or bad, they rarely say 'I hate it'. That is too aggressive. Instead, they say 'That's... interesting'. It is the ultimate social shield to avoid lying ('It's great') but also avoid truth ('It's ugly')."
   },

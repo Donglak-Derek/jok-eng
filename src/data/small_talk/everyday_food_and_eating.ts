@@ -10,7 +10,7 @@ export const foodAndEating: Script = {
   imageUrl: "/images/scenarios/dining_bill_shock_3d.png",
   mode: "cloze",
 
-  culturalNote: {
+  culturalInsights: {
     title: "The Bill Dance",
     content: "When the check comes, it's polite to offer 'I've got this' or 'Shall we split it?'. In the US, splitting 'down the middle' (50/50) is common for friends, even if one person ate slightly more, just to save time. And NEVER forget the tip (20%)."
   },

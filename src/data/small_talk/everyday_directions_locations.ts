@@ -10,7 +10,7 @@ export const directionsAndLocations: Script = {
   imageUrl: "/images/scenarios/lost_upside_down_map_3d.png",
   mode: "cloze",
 
-  culturalNote: {
+  culturalInsights: {
     title: "Landmark Navigation",
     content: "Locals rarely use street names ('Turn on 4th Ave'). They use landmarks: 'Turn left at the Starbucks', 'Go past the big ugly statue'. If you look confused, they will usually point and say 'It's that way'."
   },

@@ -51,7 +51,7 @@ export const tippingTrap: Script = {
     },
   ],
 
-  culturalNote: {
+  culturalInsights: {
     title: "Why is this funny?",
     content: "Tipping in the US is serious business. While 10% might be fine in Europe or Asia, in the US, 15-20% is the standard minimum. Leaving coins (especially quarters) implies you're just dumping your trash on the table. The waiter's 'laundry money' burn highlights how little value the coins had to him compared to the insult."
   },

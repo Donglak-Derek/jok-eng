@@ -51,7 +51,7 @@ export const doorHoldDilemma: Script = {
     },
   ],
 
-  culturalNote: {
+  culturalInsights: {
     title: "Why is this funny?",
     content: "Politeness has a 'Goldilocks zone'. If you hold a door when someone is too far away, you force them to run so they don't keep you waiting. This creates the 'awkward run/jog'. You think you're being nice, but you're actually creating a social burden."
   },

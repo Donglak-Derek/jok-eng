@@ -51,7 +51,7 @@ export const doubleDip: Script = {
     },
   ],
 
-  culturalNote: {
+  culturalInsights: {
     title: "The Double Dip Rule",
     content: "Double-dipping is when you bite a chip and then put it back into the shared dip bowl. It was famously made a social crime by the TV show 'Seinfeld'. It spreads germs and is considered extremely gross and rude in Western party culture."
   },

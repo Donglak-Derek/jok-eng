@@ -9,7 +9,7 @@ export const sarcasmGoodLuck: Script = {
   cleanedEnglish: "When 'Good Luck' means 'You will fail'. Recognizing doubt and dismissal.",
   imageUrl: "/images/scenarios/sarcasm_good_luck_clay.png",
   mode: "cloze",
-  culturalNote: {
+  culturalInsights: {
     title: "The Curse of 'That'",
     content: "'Good luck' is nice. 'Good luck with THAT' is sarcastic. Adding 'that' creates distance, implying 'I want no part of this disaster'. It is a way of washing your hands of someone's bad idea."
   },

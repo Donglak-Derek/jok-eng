@@ -9,7 +9,7 @@ export const lineCutter: Script = {
   cleanedEnglish: "How to stop someone from skipping the line without causing a scene.",
   imageUrl: "/images/scenarios/line_cutter_clay.png",
   mode: "cloze",
-  culturalNote: {
+  culturalInsights: {
     title: "The Queue Sanctity",
     content: "Cutting in line (or 'jumping the queue') is a major social crime in English-speaking cultures. However, directly shouting 'Get back!' is also seen as aggressive. The polite strategy is to assume it was a mistake and 'helpfully' inform them where the line starts."
   },

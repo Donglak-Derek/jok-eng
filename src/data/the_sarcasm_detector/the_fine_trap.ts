@@ -10,7 +10,7 @@ export const theFineTrap: Script = {
     "When 'fine' means the opposite. Learn to spot the tone difference between genuine agreement and passive-aggressive anger.",
   imageUrl: "/images/scenarios/the_fine_trap_clay.png",
   mode: "cloze",
-  culturalNote: {
+  culturalInsights: {
     title: "The Danger of 'Fine'",
     content:
       "In English, the word 'fine' is a chameleon. Said brightly, it means 'okay'. But said with a flat or dropping tone, it often means 'I am angry but avoiding a fight' or 'This is terrible'. When a partner or colleague says 'It's fine' with a sigh, DO NOT assume everything is okay.",

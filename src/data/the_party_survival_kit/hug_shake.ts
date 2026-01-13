@@ -51,7 +51,7 @@ export const hugShakeFumble: Script = {
     },
   ],
 
-  culturalNote: {
+  culturalInsights: {
     title: "Why is this funny?",
     content: "The 'Hug-Shake' is a universal moment of social panic. It happens when greeting rules collide (Formal vs Casual). Ending it with 'Good game'—a phrase used by athletes after a match—makes it even funnier because it acknowledges the physical struggle as if it were a sport."
   },

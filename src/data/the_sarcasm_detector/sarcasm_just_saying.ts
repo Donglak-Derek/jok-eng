@@ -9,7 +9,7 @@ export const sarcasmJustSaying: Script = {
   cleanedEnglish: "The coward's way of giving an unsolicited opinion. Decoding 'Just saying'.",
   imageUrl: "/images/scenarios/sarcasm_just_saying_clay.png",
   mode: "cloze",
-  culturalNote: {
+  culturalInsights: {
     title: "The Opinion Shield",
     content: "When someone ends a rude comment with 'I'm just saying', they are trying to escape responsibility. They are claiming to be a neutral observer of facts, when actually they are judging you. It means: 'Don't get mad at me for speaking the truth'."
   },

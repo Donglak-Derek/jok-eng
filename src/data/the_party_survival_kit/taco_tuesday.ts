@@ -53,7 +53,7 @@ export const tacoTuesday: Script = {
   ],
 
   // Culture Context
-  culturalNote: {
+  culturalInsights: {
     title: "Why is this funny?",
     content: "In the US, 'Taco Tuesday' isn't a holiday. It's just a marketing trick where restaurants sell cheap tacos (usually $1 or $2) on Tuesdays. It's a very casual event. Dressing up for it looks ridiculous because it's associated with saving money and eating greasy food, not fine dining."
   },

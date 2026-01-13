@@ -10,7 +10,7 @@ export const customerServiceBasics: Script = {
   imageUrl: "/images/scenarios/salon_awkwardness_3d.png",
   mode: "cloze",
 
-  culturalNote: {
+  culturalInsights: {
     title: "The 'Mirror Talk' Rule",
     content: "Hairdressers and barbers are unofficial therapists. It's polite to answer their questions, but if you close your eyes, most will take the hint that you want a 'Silent Cut'. Also, always tip 15-20% in the US, even if you hate it."
   },

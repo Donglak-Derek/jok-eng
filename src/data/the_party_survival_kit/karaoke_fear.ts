@@ -51,7 +51,7 @@ export const karaokeFear: Script = {
     },
   ],
 
-  culturalNote: {
+  culturalInsights: {
     title: "Karaoke Culture",
     content: "Karaoke is very popular in Asia and the West. In Western bars, you sing in front of strangers. The secret is that nobody cares if you are a good singer; they care if you are entertaining. 'Bohemian Rhapsody' is famously difficult to sing, making it a classic 'trap' song for beginners."
   },

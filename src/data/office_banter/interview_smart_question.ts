@@ -10,7 +10,7 @@ export const interviewSmartQuestion: Script = {
     "How to joke with a PM about bugs, show you’re not defensive, and still look like the teammate they want to work with.",
   imageUrl: "/images/scenarios/pm_banter_3d.png",
   // Engagement
-  culturalNote: {
+  culturalInsights: {
     title: "Product Managers vs. Engineers",
     content: "The relationship between PMs and Engineers is famous for its tension. PMs want things 'fast and perfect'; Engineers want things 'stable and realistic'. Humor is the best bridge. Joking about bugs or scope creep relieves tension and builds camaraderie."
   },
