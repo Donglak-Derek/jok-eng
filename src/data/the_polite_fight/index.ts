@@ -12,19 +12,28 @@ import { seatStealer } from "./seat_stealer";
 import { chattyStranger } from "./chatty_stranger";
 import { lateFriend } from "./late_friend";
 import { backseatDriver } from "./backseat_driver";
+import { partyDecline } from "./party_decline";
+import { furnitureRefusal } from "./furniture_refusal";
 
 export const politeScripts: Script[] = [
-  karenDiffuser,
-  landlordNegotiator,
-  lineCutter,
-  gymHog,
-  wrongOrder,
-  loudNeighbor,
-  unsolicitedAdvice,
-  billSplitter,
-  borrowingBlackHole,
-  seatStealer,
-  chattyStranger,
-  lateFriend,
-  backseatDriver,
+  // Public Zone (Strangers)
+  { ...karenDiffuser, section: "Public Zone (Strangers)" },
+  { ...lineCutter, section: "Public Zone (Strangers)" },
+  { ...gymHog, section: "Public Zone (Strangers)" },
+  { ...wrongOrder, section: "Public Zone (Strangers)" },
+  { ...seatStealer, section: "Public Zone (Strangers)" },
+  { ...chattyStranger, section: "Public Zone (Strangers)" },
+
+  // Home & Finance (High Stakes)
+  { ...landlordNegotiator, section: "Home & Finance" },
+  { ...loudNeighbor, section: "Home & Finance" },
+  { ...billSplitter, section: "Home & Finance" },
+  { ...borrowingBlackHole, section: "Home & Finance" },
+
+  // Friends & Family (Relationships)
+  { ...unsolicitedAdvice, section: "Friends & Family" },
+  { ...lateFriend, section: "Friends & Family" },
+  { ...backseatDriver, section: "Friends & Family" },
+  { ...partyDecline, section: "Friends & Family" },
+  { ...furnitureRefusal, section: "Friends & Family" },
 ];

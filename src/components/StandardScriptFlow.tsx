@@ -55,6 +55,12 @@ export default function StandardScriptFlow({ script }: Props) {
   const hasSavedRef = useState(false);
   const databaseRepeats = getRepeats(script.id); 
 
+  // Scroll Reset Effect
+  useEffect(() => {
+    // Force scroll to top when index changes
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [currentIndex, viewMode]);
+
   // ... (useEffect for Progress Loading/Saving unchanged)
   // Load progress
   useEffect(() => {
