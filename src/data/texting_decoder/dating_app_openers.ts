@@ -8,9 +8,10 @@ export const datingAppOpeners: Script = {
   categoryName: CATEGORY_NAMES["texting_decoder"],
   cleanedEnglish: "Decode common dating app opening lines.",
   type: "decoder",
+  section: "signal_decoders",
 
   // Engagement Data
-  imageUrl: "/images/categories/dating.svg",
+  imageUrl: "/images/scenarios/dating_openers.png",
   summaryPoints: [
      "Low effort = Low interest. 'Hey' usually means they are mass-messaging.",
      "Overly specific compliments (about your body) are often red flags.",
@@ -70,6 +71,14 @@ export const datingAppOpeners: Script = {
       actualMeaning: "I am unemployed and angry about it.",
       dangerLevel: "High - Red Flag",
       survivalTip: "Ask about their goals. If they just complain, exit."
+    },
+    {
+      id: "date-5",
+      phrase: "Not looking for anything serious",
+      literalMeaning: "I am casual.",
+      actualMeaning: "I want all the benefits of a relationship with zero responsibility.",
+      dangerLevel: "Medium - Honest",
+      survivalTip: "Believe them. Do not try to change them."
     }
   ]
 };

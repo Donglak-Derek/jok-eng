@@ -7,6 +7,10 @@ import { passiveAggressive } from "./passive_aggressive";
 import { datingAppOpeners } from "./dating_app_openers";
 import { corporateChat } from "./corporate_chat";
 
+import { textingParents } from "./texting_parents";
+import { crypticDating } from "./cryptic_dating";
+import { influencerSpeak } from "./influencer_speak";
+
 export const textingScripts: Script[] = [
   emojiGuide,
   acronyms101,
@@ -15,4 +19,7 @@ export const textingScripts: Script[] = [
   passiveAggressive,
   datingAppOpeners,
   corporateChat,
+  textingParents,
+  crypticDating,
+  influencerSpeak
 ];

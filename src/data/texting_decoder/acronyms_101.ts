@@ -3,27 +3,30 @@ import { CATEGORY_NAMES } from "@/data/categories";
 
 export const acronyms101: Script = {
   id: "acronyms-101",
-  title: "Acronyms 101 & Softeners",
+  title: "Acronyms & Softeners",
   categorySlug: "texting_decoder",
   categoryName: CATEGORY_NAMES["texting_decoder"],
-  cleanedEnglish:
-    "Common acronyms and simple hacks to stop sounding like a robot (Mistake -> Fix format).",
-    imageUrl: "/images/scenarios/texting_generic.png",
+  cleanedEnglish: "Stop sounding like a robot. Simple hacks to soften your texts.",
+  type: "script",
+  section: "slang_vocab",
+  mode: "cloze",
+  difficulty: "Mild 🌶️",
+  imageUrl: "/images/scenarios/acronyms.png",
   sentences: [
     {
       id: "a1",
-      en: "Here's the report. TL;DR: We need more budget.",
+      en: "TL;DR: We need more budget.",
       keywords: [
         { word: "summary", definition: "a brief statement of main points" },
       ],
-      scenario: "You send a 5-paragraph email update.",
+      scenario: "You send a long 5-paragraph email update.",
       badResponse: {
         text: "(Just the 5 paragraphs)",
-        why: "People are busy. They might skip your email entirely if it looks too long.",
+        why: "People are busy. They might skip the whole thing.",
       },
       goodResponse: {
-        text: "... [Email body] ... TL;DR: We need more budget.",
-        why: "Adding 'TL;DR' (Too Long; Didn't Read) at the top or bottom respects their time.",
+        text: "... Email body ... [TL;DR]: We need more budget.",
+        why: "'TL;DR' (Too Long; Didn't Read) respects their time by giving the headline first.",
       },
     },
     {
@@ -38,24 +41,24 @@ export const acronyms101: Script = {
         why: "Sounds harsh and judgmental.",
       },
       goodResponse: {
-        text: "TBH, I don't think that's a good idea.",
-        why: "'TBH' (To Be Honest) signals that you are sharing a personal opinion, not attacking them.",
+        text: "[TBH], I don't think that's a good idea.",
+        why: "'TBH' (To Be Honest) signals that this is just your opinion, not an attack.",
       },
     },
     {
       id: "a3",
       en: "IMO, we should wait.",
       keywords: [
-        { word: "opinion", definition: "a personal view or judgement" },
+        { word: "opinion", definition: "a personal view" },
       ],
-      scenario: "Suggesting a strategy change in a group chat.",
+      scenario: "Suggesting a strategy change.",
       badResponse: {
         text: "We must wait.",
         why: "Sounds bossy if you aren't the boss.",
       },
       goodResponse: {
-        text: "IMO, we should wait.",
-        why: "'IMO' (In My Opinion) softens the statement, making it a suggestion rather than a command.",
+        text: "[IMO], we should wait.",
+        why: "'IMO' (In My Opinion) softens the statement, making it a suggestion.",
       },
     },
     {
@@ -70,8 +73,8 @@ export const acronyms101: Script = {
         why: "If you're wrong, you look incompetent.",
       },
       goodResponse: {
-        text: "AFAIK, the deadline is Friday.",
-        why: "'AFAIK' (As Far As I Know) protects you. It implies 'I could be wrong, but this is what I think'.",
+        text: "[AFAIK], the deadline is Friday.",
+        why: "'AFAIK' (As Far As I Know) protects you. It implies 'I could be wrong'.",
       },
     },
     {
@@ -80,13 +83,13 @@ export const acronyms101: Script = {
       keywords: [
         { word: "uncertainty", definition: "state of being unsure" },
       ],
-      scenario: "Tech support question from a parent.",
+      scenario: "Answering a tech support question.",
       badResponse: {
         text: "I do not know.",
         why: "Sounds robotic and unhelpful.",
       },
       goodResponse: {
-        text: "IDK, maybe try restarting it?",
+        text: "[IDK], maybe try restarting it?",
         why: "'IDK' (I Don't Know) is casual and quick. It sounds more human.",
       },
     },
@@ -102,24 +105,24 @@ export const acronyms101: Script = {
         why: "Aggressive.",
       },
       goodResponse: {
-        text: "I can't talk RN.",
+        text: "I can't talk [RN].",
         why: "'RN' (Right Now) implies you might be free later. It's situational, not personal.",
       },
     },
     {
       id: "a7",
-      en: "NGL, that presentation was long.",
+      en: "NGL, that meeting was long.",
       keywords: [
         { word: "truth", definition: "fact or validity" },
       ],
       scenario: "Debriefing after a boring meeting.",
       badResponse: {
-        text: "The presentation was boring.",
+        text: "The meeting was boring.",
         why: "Just mean.",
       },
       goodResponse: {
-        text: "NGL, that presentation was long.",
-        why: "'NGL' (Not Gonna Lie) bonds you with the listener over a shared truth.",
+        text: "[NGL], that meeting was long.",
+        why: "'NGL' (Not Gonna Lie) bonds you with the listener over a shared secret truth.",
       },
     },
     {
@@ -128,14 +131,14 @@ export const acronyms101: Script = {
       keywords: [
         { word: "softener", definition: "word used to make something less harsh" },
       ],
-      scenario: "A friend complains about a minor inconvenience (dropped toast).",
+      scenario: "A friend complains about a minor inconvenience.",
       badResponse: {
         text: "That is unfortunate.",
-        why: "Sounds like a robot or a Victorian ghost.",
+        why: "Sounds like a Victorian ghost.",
       },
       goodResponse: {
-        text: "That sucks lol",
-        why: "Here, 'lol' doesn't mean you are laughing. It signals 'I acknowledge your pain but we are keeping it light'.",
+        text: "That sucks [lol]",
+        why: "Here, 'lol' doesn't mean laughing. It signals 'I acknowledge your pain but we are keeping it light'.",
       },
     },
     {
@@ -150,7 +153,7 @@ export const acronyms101: Script = {
         why: "Can sound angry or demanding.",
       },
       goodResponse: {
-        text: "Where are you?? haha",
+        text: "Where are you?? [haha]",
         why: "Adding 'haha' removes the aggression. It says 'I'm waiting, but I'm not mad yet'.",
       },
     },
@@ -166,7 +169,7 @@ export const acronyms101: Script = {
         why: "Accusatory.",
       },
       goodResponse: {
-        text: "ICYMI: We moved the meeting.",
+        text: "[ICYMI]: We moved the meeting.",
         why: "'ICYMI' (In Case You Missed It) assumes they are busy, not lazy. It's polite.",
       },
     },

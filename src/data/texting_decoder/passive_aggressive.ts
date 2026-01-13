@@ -6,12 +6,14 @@ export const passiveAggressive: Script = {
   categorySlug: "texting_decoder",
   categoryName: "Texting Decoder",
   cleanedEnglish: "Are they mad or just typing fast?",
+  type: "decoder",
+  section: "signal_decoders",
   summaryPoints: [
     "Punctuation is volume. K. is shouting silence.",
     "Brevity changes meaning. 'Fine' is rarely fine.",
     "Ellipses (...) imply something is left unsaid—usually judgment."
   ],
-    imageUrl: "/images/scenarios/texting_generic.png",
+    imageUrl: "/images/scenarios/passive_aggressive.png",
   decoderItems: [
     {
       id: "pass-1",

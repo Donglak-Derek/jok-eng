@@ -26,7 +26,11 @@ export default function ScenarioList({ scripts, onEdit, onDelete, onTogglePublic
     const dynamicSections = Array.from(new Set(scripts.map(s => s.section || "Other Scenarios"))).filter(Boolean);
     
     // Define explicit order if known, else append others
-    const explicitOrder = ["basics", "advanced", "boss_battles", "The Dating Minefield", "Social Emergencies"];
+    const explicitOrder = [
+      "basics", "advanced", "boss_battles", 
+      "The Dating Minefield", "Social Emergencies",
+      "signal_decoders", "slang_vocab", "life_work"
+    ];
     const sectionOrder = [
         ...explicitOrder.filter(key => dynamicSections.includes(key)),
         ...dynamicSections.filter(key => !explicitOrder.includes(key) && key !== "Other Scenarios")
@@ -43,17 +47,27 @@ export default function ScenarioList({ scripts, onEdit, onDelete, onTogglePublic
       advanced: "5 Advanced (The \"Cool Kid\" Stuff)",
       boss_battles: "Boss Battles (Hard/Complex)",
       "The Dating Minefield": "The Dating Minefield",
-      "Social Emergencies": "Social Emergencies"
+      "Social Emergencies": "Social Emergencies",
+      // Texting Decoder Sections
+      signal_decoders: "🚩 Signal Decoders",
+      slang_vocab: "📚 Slang & Vocabulary",
+      life_work: "💼 Life & Work Etiquette"
     };
 
     const sectionStyles: Record<string, string> = {
       "The Dating Minefield": "bg-pink-50/50 border-pink-100 rounded-3xl p-6 -mx-4 md:-mx-6",
-      "Social Emergencies": "bg-yellow-50/50 border-yellow-100 rounded-3xl p-6 -mx-4 md:-mx-6"
+      "Social Emergencies": "bg-yellow-50/50 border-yellow-100 rounded-3xl p-6 -mx-4 md:-mx-6",
+      signal_decoders: "bg-red-50/50 border-red-100 rounded-3xl p-6 -mx-4 md:-mx-6",
+      slang_vocab: "bg-purple-50/50 border-purple-100 rounded-3xl p-6 -mx-4 md:-mx-6",
+      life_work: "bg-blue-50/50 border-blue-100 rounded-3xl p-6 -mx-4 md:-mx-6"
     };
 
     const sectionHeaderStyles: Record<string, string> = {
       "The Dating Minefield": "border-pink-400 text-pink-900/80",
-      "Social Emergencies": "border-yellow-400 text-yellow-900/80"
+      "Social Emergencies": "border-yellow-400 text-yellow-900/80",
+      signal_decoders: "border-red-400 text-red-900/80",
+      slang_vocab: "border-purple-400 text-purple-900/80",
+      life_work: "border-blue-400 text-blue-900/80"
     };
 
     return (
