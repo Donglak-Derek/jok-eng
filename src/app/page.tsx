@@ -124,12 +124,11 @@ export default function Home() {
              {/* HERO SECTION */}
              <section className="text-center max-w-4xl mx-auto space-y-8">
                 <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter text-balance">
-                    Stop Nodding. <br/>
-                    <span className="text-muted">Start Joking.</span>
+                    Don&apos;t Sound Like a Robot.
                 </h1>
                 
                 <p className="text-xl md:text-2xl text-muted font-medium max-w-2xl mx-auto text-balance">
-                    Textbooks taught you to be polite. We teach you to be interesting.
+                    Master the <span className="text-primary italic">social nuance</span> of English. Create custom scenarios for <span className="text-foreground font-semibold">your actual life</span>, decode slang, and stop being robotic.
                 </p>
                 
                 <div className="pt-8">

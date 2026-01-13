@@ -7,6 +7,7 @@ import type { Script, UserScript } from "@/types";
 import { motion } from "framer-motion";
 import React from "react";
 import { Heart, Bookmark, Lock, Globe, Edit2, Trash2, User, Repeat } from "lucide-react";
+import { GenerativeCover } from "./GenerativeCover";
 
 type Props = {
   script: Script;
@@ -76,19 +77,23 @@ export default function ScenarioCard({
         className="group h-full flex flex-col bg-white rounded-lg border border-border shadow-sm hover:shadow-md transition-shadow overflow-hidden"
       >
         <Link href={href} className="flex-1 flex flex-col">
-             {/* Cover Image */}
-             {script.imageUrl && (
-                 <div className="relative w-full aspect-[2/1] bg-secondary overflow-hidden">
-                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                     <img 
-                        src={script.imageUrl} 
-                        alt={script.title} 
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                     />
-                     {/* Overlay gradient for text readability if needed, or just style */}
-                     <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                 </div>
-             )}
+              {/* Cover Image or Generative Cover */}
+              <div className="relative w-full aspect-[2/1] bg-secondary overflow-hidden">
+                  {script.imageUrl ? (
+                      <>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img 
+                            src={script.imageUrl} 
+                            alt={script.title} 
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                         {/* Overlay gradient for text readability if needed, or just style */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </>
+                  ) : (
+                      <GenerativeCover title={script.title} category={script.categoryName || "Custom"} />
+                  )}
+              </div>
 
              <div className="p-5 flex flex-col gap-3 flex-1">
                  {/* Header */}

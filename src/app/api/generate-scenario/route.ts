@@ -17,9 +17,10 @@ export async function POST(request: NextRequest) {
 
     const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
 
-    const prompt = `
-      You are an expert English tutor creating a "Jok-eng" style roleplay scenario.
-      
+      const prompt = `
+      You are an expert social communication coach creating a "Jok-eng" style roleplay script.
+      The goal is to teach "Socially Calibrated English" - not just correct grammar, but the *right* vibe.
+
       CONTEXT: ${context}
       USER NAME: ${userName || "User"}
       USER ROLE: ${myRole}
@@ -27,24 +28,26 @@ export async function POST(request: NextRequest) {
       PLOT SUMMARY: ${plot}
 
       TASK:
-      1. Create a funny, natural, and useful roleplay script (3-6 sentences).
-      2. The English should be natural "Real English", not textbook style.
-      3. For each sentence, provide the English text and 1-2 key vocabulary words with English definitions.
-      4. Crucial: For the USER'S lines, provide a "badResponse" (a common mistake/rude way to say it) and a "goodResponse" (the better way you wrote).
+      1. Create a dialogue script (4-6 exchanges).
+      2. The English MUST be "Real, Modern English" (Use idioms, softeners like 'just', 'actually', generic slang if appropriate). NO textbook robot speak.
+      3. CRITICAL: For the USER'S lines, provide a "badResponse" and a "goodResponse".
+         - badResponse: A grammatically correct but SOCIALLY WRONG way to say it (e.g., too blunt, too formal, robotic, accidental rude).
+         - goodResponse: The socially calibrated, natural way.
+         - why: Explain the SOCIAL difference (e.g., "The bad version sounds like a police report. The good version builds rapport.").
 
       OUTPUT FORMAT:
-      Return ONLY a raw JSON object (no markdown, no backticks) matching this structure:
+      Return ONLY a raw JSON object (no markdown) matching this structure:
       {
-        "title": "Short catchy title",
-        "cleanedEnglish": "One sentence summary of the goal",
+        "title": "Short catchy title (e.g. 'The awkward elevator ride')",
+        "cleanedEnglish": "One sentence summary of the social goal",
         "sentences": [
           {
             "id": "1",
-            "en": "English text",
-            "keywords": [{"word": "vocab", "definition": "English definition"}],
-            "scenario": "Short context for this line (e.g. 'Opening', 'Refusal')",
-            "badResponse": {"text": "Mistake version", "why": "Why it is bad"},
-            "goodResponse": {"text": "Better version", "why": "Why it is good"}
+            "en": "The final GOOD English text for the line",
+            "keywords": [{"word": "vocab", "definition": "Short definition"}],
+            "scenario": "The specific micro-situation (e.g. 'Trying to interrupt politely')",
+            "badResponse": {"text": "The awkward/robotic version", "why": "Why it kills the vibe"},
+            "goodResponse": {"text": "The smooth/natural version", "why": "Why it works socially"}
           }
         ]
       }
