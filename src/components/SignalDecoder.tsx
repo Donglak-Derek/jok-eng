@@ -15,7 +15,7 @@ import { db } from "@/lib/firebase";
 import { useDailyProgress } from "@/hooks/useDailyProgress";
 import { useProgress } from "@/context/ProgressContext";
 
-import { ArrowRight, Volume2, AlertTriangle, ShieldCheck, PartyPopper } from "lucide-react";
+import { Volume2, AlertTriangle, ShieldCheck, PartyPopper } from "lucide-react";
 
 type Props = {
   script: Script;

@@ -46,7 +46,9 @@ import { Script, UserScript } from "@/types";
       
       // Client-side sort by savedAt descending
       newList.sort((a, b) => {
+         // eslint-disable-next-line @typescript-eslint/no-explicit-any
          const tA = (a as any).savedAt?.seconds || 0;
+         // eslint-disable-next-line @typescript-eslint/no-explicit-any
          const tB = (b as any).savedAt?.seconds || 0;
          return tB - tA;
       });

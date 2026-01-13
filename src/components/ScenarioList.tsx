@@ -102,7 +102,7 @@ export default function ScenarioList({ scripts, onEdit, onDelete, onTogglePublic
                       onEdit={onEdit} 
                       onDelete={onDelete}
                       onTogglePublic={onTogglePublic}
-                      onLike={(id, _e) => toggleLike(id, 'userId' in script, (script as UserScript).userId)}
+                      onLike={(id) => toggleLike(id, 'userId' in script, (script as UserScript).userId)}
                       isLiked={likedSet.has(script.id)}
                     />
                   </motion.div>
@@ -130,7 +130,7 @@ export default function ScenarioList({ scripts, onEdit, onDelete, onTogglePublic
             onEdit={onEdit} 
             onDelete={onDelete}
             onTogglePublic={onTogglePublic}
-            onLike={(id, _e) => toggleLike(id, 'userId' in script, (script as UserScript).userId)}
+            onLike={(id) => toggleLike(id, 'userId' in script, (script as UserScript).userId)}
             isLiked={likedSet.has(script.id)}
           />
         </motion.div>

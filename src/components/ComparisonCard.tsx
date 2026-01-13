@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import type { Sentence } from "@/types";
 import { Button } from "@/components/Button";
 import { Volume2 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 type Props = {
   sentence: Sentence;
@@ -62,11 +62,6 @@ export default function ComparisonCard({
      return (textForCloze.match(/\[(.*?)\]/g) || []).map(m => m.slice(1, -1));
   }, [textForCloze]);
 
-  // Check if all are currently revealed locally
-  const areAllLocallyRevealed = useMemo(() => {
-     if (allHiddenWords.length === 0) return true;
-     return allHiddenWords.every(w => localRevealed.has(w));
-  }, [allHiddenWords, localRevealed]);
 
   // Render Cloze Text Helper
   const renderClozeText = (text: string) => {
