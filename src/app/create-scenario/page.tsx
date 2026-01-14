@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 
 export default function CreateScenarioPage() {
   const router = useRouter();
-  const [mode, setMode] = useState<'director' | 'form'>('director');
+  const [mode, setMode] = useState<'director' | 'form'>('form');
   const [directorValues, setDirectorValues] = useState<{
     context: string;
     myRole: string;

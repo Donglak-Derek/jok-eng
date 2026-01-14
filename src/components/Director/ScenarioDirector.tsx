@@ -30,13 +30,17 @@ export default function ScenarioDirector({ onBack, onBlueprintReady }: ScenarioD
         setSmartChips([]); // Clear chips while thinking
 
         try {
-            const res = await fetch("/api/director/chat", {
+            const res = await fetch("/api/director", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ messages: newMessages }),
             });
 
-            if (!res.ok) throw new Error("Director is on break");
+            if (!res.ok) {
+                const errData = await res.json().catch(() => ({}));
+                console.error("Director API Error:", errData);
+                throw new Error(errData.details || "Director is on break");
+            }
 
             const data = await res.json();
             
