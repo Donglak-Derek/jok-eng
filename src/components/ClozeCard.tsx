@@ -123,7 +123,7 @@ export default function ClozeCard({
         setLoading(false);
         if (audioRef.current === null) setSpeaking(false);
     }
-  }, [heard, index, onHeard, sentence, setLoading, setSpeaking, textToDisplay]);
+  }, [heard, index, onHeard, setLoading, setSpeaking, textToDisplay]);
 
   // --- Auto-Play ---
   const hasAutoPlayedRef = useRef(false);

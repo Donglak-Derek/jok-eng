@@ -7,7 +7,6 @@ import { UserScript } from "@/types";
 import ScenarioCard from "./ScenarioCard";
 import { motion } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
-import { Flame } from "lucide-react";
 
 export default function CommunityScenariosSection() {
   const [scenarios, setScenarios] = useState<UserScript[]>([]);
@@ -145,10 +144,7 @@ export default function CommunityScenariosSection() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         console.error("Error fetching community scenarios:", err);
-        if (err?.code === 'permission-denied') {
-             console.warn("Permission denied. Check Firestore Security Rules.");
-        }
-        
+        // Fallback logic
         try {
             const fallbackQ = query(
                 collectionGroup(db, "scenarios"),
@@ -177,24 +173,24 @@ export default function CommunityScenariosSection() {
   if (scenarios.length === 0) return null;
 
   return (
-    <section className="w-full mx-auto py-4">
-      <div className="flex flex-row items-center justify-between gap-3 mb-6 px-1">
-        <h2 className="text-2xl font-bold tracking-tight text-foreground">
+    <section className="w-full mx-auto py-8">
+      {/* Header: Clean & Simple */}
+      <div className="flex items-end gap-3 mb-8 px-1 border-b border-border/40 pb-4">
+        <h2 className="text-xl font-bold tracking-tight text-foreground">
             Story Feed
         </h2>
-        <div className="flex items-center gap-1 bg-red-50 text-red-600 px-2 py-1 rounded-full text-xs font-semibold">
-            <Flame className="w-3.5 h-3.5" />
-            Trending
-        </div>
+        <span className="text-sm text-muted-foreground font-medium pb-0.5">
+            Latest from the community
+        </span>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {scenarios.map((script, index) => (
             <motion.div
                 key={script.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: index * 0.05 }}
                 className="w-full"
             >
                 <ScenarioCard 

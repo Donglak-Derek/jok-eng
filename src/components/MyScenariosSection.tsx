@@ -122,18 +122,18 @@ import { useSaved } from "@/hooks/useSaved";
     const displayScenarios = activeTab === 'created' ? scenarios : savedScenarios;
 
     return (
-        <section className="mt-4 flex flex-col gap-6">
+        <section className="flex flex-col gap-6">
             <div className="flex items-center justify-between pb-4 border-b border-border">
                 <div className="flex gap-6">
                      <button 
                         onClick={() => setActiveTab('created')}
-                        className={`text-2xl font-bold transition-colors ${activeTab === 'created' ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                        className={`text-xl md:text-2xl font-bold transition-colors ${activeTab === 'created' ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
                      >
                          My Scenarios
                      </button>
                      <button 
                         onClick={() => setActiveTab('saved')}
-                        className={`text-2xl font-bold transition-colors ${activeTab === 'saved' ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                        className={`text-xl md:text-2xl font-bold transition-colors ${activeTab === 'saved' ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
                      >
                          Saved
                      </button>

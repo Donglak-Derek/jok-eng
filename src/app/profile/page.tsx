@@ -8,7 +8,7 @@ import { db } from "@/lib/firebase";
 import { UserStats } from "@/types";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Button } from "@/components/Button";
+import MyScenariosSection from "@/components/MyScenariosSection";
 
 // Rank Logic Helpers
 const getRank = (scenariosCreated: number) => {
@@ -152,16 +152,11 @@ export default function ProfilePage() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.7 }}
-                    className="mt-12 text-center"
+                    className="mt-12"
                 >
-                    <Link href="/create-scenario">
-                        <Button variant="primary" size="lg" className="w-full md:w-auto px-12 py-4 text-lg">
-                            Create New Scenario
-                        </Button>
-                    </Link>
-                    <p className="mt-4 text-muted text-sm">
-                        Level up your rank by creating more scenarios!
-                    </p>
+                    <div className="bg-card w-full rounded-3xl p-6 md:p-8 border border-border shadow-sm">
+                        <MyScenariosSection />
+                    </div>
                 </motion.div>
              </div>
         </div>

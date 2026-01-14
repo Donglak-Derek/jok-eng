@@ -4,14 +4,15 @@ import Link from "next/link";
 import Image from "next/image";
 import { categories, scripts } from "@/data";
 import Header from "@/components/Header";
-import MyScenariosSection from "@/components/MyScenariosSection";
 import CommunityScenariosSection from "@/components/CommunityScenariosSection";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/Button";
 
-type Tab = "categories" | "community" | "personal";
+import QuickStartInput from "@/components/QuickStartInput";
+
+type Tab = "categories" | "community";
 
 export default function Home() {
   const { user, loading } = useAuth();
@@ -27,32 +28,37 @@ export default function Home() {
         {/* LOGGED IN VIEW: Dashboard Mode */}
         {user ? (
           <>
-            {/* Premium Segmented Control */}
-            <div className="flex justify-center mb-8">
-                <div className="inline-flex bg-secondary/30 p-1.5 rounded-full relative">
-                    {(["categories", "community", "personal"] as const).map((tab) => (
-                        <button
-                            key={tab}
-                            onClick={() => setActiveTab(tab)}
-                            className={`
-                                relative px-6 py-2 rounded-full text-sm font-medium transition-colors duration-200 z-10
-                                ${activeTab === tab ? "text-foreground" : "text-muted-foreground hover:text-foreground"}
-                            `}
-                        >
-                            {activeTab === tab && (
-                                <motion.div
-                                    layoutId="activeTab"
-                                    className="absolute inset-0 bg-background rounded-full shadow-sm border border-border/50"
-                                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                                />
-                            )}
-                            <span className="relative z-20">
-                                {tab === "categories" && "Categories"}
-                                {tab === "community" && "Community"}
-                                {tab === "personal" && "My Studio"}
-                            </span>
-                        </button>
-                    ))}
+            {/* Dashboard Controller Card */}
+            <div className="bg-secondary/20 rounded-3xl px-3 py-4 md:p-6 mb-4 border border-border/50 flex flex-col gap-6">
+                {/* Quick Start Input */}
+                <QuickStartInput />
+
+                {/* Premium Segmented Control */}
+                <div className="flex justify-center">
+                    <div className="inline-flex bg-background/50 p-1.5 rounded-full relative shadow-sm border border-border/50 w-full md:w-auto">
+                        {(["categories", "community"] as const).map((tab) => (
+                            <button
+                                key={tab}
+                                onClick={() => setActiveTab(tab)}
+                                className={`
+                                    relative flex-1 md:flex-initial px-6 py-2 rounded-full text-sm font-medium transition-colors duration-200 z-10
+                                    ${activeTab === tab ? "text-foreground" : "text-muted-foreground hover:text-foreground"}
+                                `}
+                            >
+                                {activeTab === tab && (
+                                    <motion.div
+                                        layoutId="activeTab"
+                                        className="absolute inset-0 bg-background rounded-full shadow-md border border-border/20"
+                                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                                    />
+                                )}
+                                <span className="relative z-20">
+                                    {tab === "categories" && "Categories"}
+                                    {tab === "community" && "Community"}
+                                </span>
+                            </button>
+                        ))}
+                    </div>
                 </div>
             </div>
 
@@ -67,14 +73,14 @@ export default function Home() {
                     className="min-h-[400px]"
                 >
                     {activeTab === "categories" && (
-                        <section>
-                        <div className="mb-10">
-                            <h2 className="text-3xl font-bold tracking-tight mb-2">
-                                Pick your vibe
-                            </h2>
-                            <p className="text-muted text-lg">Choose a context to start practicing.</p>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div>
+                            <div className="mb-8">
+                                <h2 className="text-3xl font-bold tracking-tight mb-2">
+                                    Pick your vibe
+                                </h2>
+                                <p className="text-muted text-lg">Choose a context to start practicing.</p>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                             {categories.map((c) => (
                             <Link
                                 key={c.slug}
@@ -104,15 +110,11 @@ export default function Home() {
                             </Link>
                             ))}
                         </div>
-                        </section>
+                        </div>
                     )}
 
                     {activeTab === "community" && (
                         <CommunityScenariosSection />
-                    )}
-
-                    {activeTab === "personal" && (
-                        <MyScenariosSection />
                     )}
                 </motion.div>
             </AnimatePresence>
