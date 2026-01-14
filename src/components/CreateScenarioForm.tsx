@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Script, UserScript } from "@/types";
 import { useAuth } from "@/context/AuthContext";
@@ -36,6 +36,9 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
     otherRole: "", // Who is other
     plot: "",    // What happens
   });
+  const [tone, setTone] = useState("Polite");
+  const [format, setFormat] = useState("Social Dojo"); // New Format State
+  const [isStudyMode, setIsStudyMode] = useState(false); // New Study Mode State
 
   const [generatedScript, setGeneratedScript] = useState<Script | null>(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -50,6 +53,8 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 ...inputs,
+                tone,
+                format, // Pass format
                 userName: user?.displayName || user?.email?.split('@')[0] || "User"
             }),
         });
@@ -62,6 +67,7 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
         const data = await res.json();
         setGeneratedScript(data.script);
         setStep("preview");
+        setIsStudyMode(false); // Reset to review mode on new generation
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
         console.error(error);
@@ -70,6 +76,7 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
     }
   };
 
+  // ... (handleSave remains same) ...
   const handleSave = async () => {
      if (!user || !generatedScript) return;
      
@@ -128,6 +135,25 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
     if (step === "preview") setStep("input");
   };
 
+  // Random Placeholder
+  const [placeholder, setPlaceholder] = useState("Asking my boss for a raise...");
+  
+  useEffect(() => {
+     const prompts = [
+         "Asking my boss for a raise...",
+         "Breaking up with a clingy partner...",
+         "Ordering a complicated coffee...",
+         "Explaining a mistake to a client...",
+         "Returning a meal at a restaurant...",
+         "Negotiating rent with a landlord...",
+         "Small talk with a stranger in an elevator..."
+     ];
+     setPlaceholder(prompts[Math.floor(Math.random() * prompts.length)]);
+  }, []);
+
+  const TONES = ["Polite", "Direct", "Funny", "Flirty", "Professional"];
+  const FORMATS = ["Social Dojo", "Classic Script", "Rapid Fire"];
+
   return (
     <div className="w-full max-w-xl mx-auto py-6 px-4 md:py-10">
         <AnimatePresence mode="wait">
@@ -138,44 +164,23 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.98 }}
                     transition={{ duration: 0.3, ease: "easeOut" }}
-                    className="flex flex-col gap-6 md:gap-10"
+                    className="flex flex-col gap-6"
                 >
-                    {/* Header: Minimal & Bold */}
-                    <div className="flex items-center justify-between">
-                         <Link href="/" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                            Cancel
-                        </Link>
-                        <h1 className="text-lg font-semibold tracking-tight text-foreground">
-                            New Scene
-                        </h1>
-                        <div className="w-10" /> {/* Spacer for balance */}
-                    </div>
-
-                    {/* Hero Preview: Clean, no heavy shadows */}
-                    <div className="w-full aspect-[2/1] sm:aspect-[2.5/1] rounded-2xl overflow-hidden bg-secondary/20 relative shadow-sm">
-                        {inputs.context ? (
-                            <GenerativeCover 
-                                title={inputs.context} 
-                                category="Studio" 
-                                className="w-full h-full"
-                            />
-                        ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-secondary/10 text-muted-foreground/30 font-medium">
-                                Preview
+                    {/* Inputs */}
+                    <div className="space-y-6">
+                        {/* The Big One - Now Standard Size */}
+                        <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                                <label className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                                    What&rsquo;s happening?
+                                </label>
+                                <Link href="/" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-2 py-1 -mr-2">
+                                    Cancel
+                                </Link>
                             </div>
-                        )}
-                    </div>
-
-                    {/* Inputs: Apple-style Grouped List or Clean Fields */}
-                    <div className="space-y-6 md:space-y-8">
-                        {/* The Big One */}
-                        <div className="space-y-3">
-                            <label className="text-xl md:text-2xl font-bold tracking-tight text-foreground block">
-                                What&apos;s happening?
-                            </label>
                             <textarea 
-                                placeholder="Asking for a raise..."
-                                className="w-full bg-transparent border-b border-border/60 focus:border-foreground text-xl md:text-3xl font-medium placeholder:text-muted-foreground/20 py-2 outline-none transition-colors resize-none leading-tight"
+                                placeholder={placeholder}
+                                className="w-full bg-secondary/80 hover:bg-secondary focus:bg-background border border-transparent focus:border-primary/20 rounded-lg px-4 py-3 text-base md:text-lg font-medium placeholder:text-muted-foreground/40 outline-none transition-all resize-none leading-relaxed min-h-[5rem]"
                                 value={inputs.context}
                                 onChange={(e) => setInputs({...inputs, context: e.target.value})}
                                 autoFocus
@@ -183,28 +188,76 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
                             />
                         </div>
 
+                        {/* Tone Selector */}
+                        <div className="space-y-2">
+                             <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70">
+                                Vibe Check
+                            </label>
+                            <div className="flex flex-wrap gap-2">
+                                {TONES.map(t => (
+                                    <button
+                                        key={t}
+                                        onClick={() => setTone(t)}
+                                        className={`
+                                            px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 border
+                                            ${tone === t 
+                                                ? "bg-primary text-primary-foreground border-primary shadow-md scale-100" 
+                                                : "bg-secondary/50 text-muted-foreground border-transparent hover:bg-secondary hover:text-foreground hover:border-border/50"
+                                            }
+                                        `}
+                                    >
+                                        {t}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Format Selector (New) */}
+                        <div className="space-y-2">
+                             <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70">
+                                Training Style
+                            </label>
+                            <div className="flex flex-wrap gap-2">
+                                {FORMATS.map(f => (
+                                    <button
+                                        key={f}
+                                        onClick={() => setFormat(f)}
+                                        className={`
+                                            px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 border
+                                            ${format === f 
+                                                ? "bg-foreground text-background border-foreground shadow-md scale-100" 
+                                                : "bg-secondary/50 text-muted-foreground border-transparent hover:bg-secondary hover:text-foreground hover:border-border/50"
+                                            }
+                                        `}
+                                    >
+                                        {f}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
                         {/* Details Grid */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                              <div className="space-y-2">
-                                <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                                    My Role
+                                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70">
+                                    Who are you?
                                 </label>
                                 <input 
                                     type="text" 
                                     placeholder="Employee"
-                                    className="w-full bg-secondary/30 rounded-lg border-none px-4 py-3 text-base md:text-lg font-medium placeholder:text-muted-foreground/30 focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                                    className="w-full bg-secondary/80 hover:bg-secondary focus:bg-background border border-transparent focus:border-primary/20 rounded-lg px-4 py-3 text-base font-medium placeholder:text-muted-foreground/40 outline-none transition-all"
                                     value={inputs.myRole}
                                     onChange={(e) => setInputs({...inputs, myRole: e.target.value})}
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                                    Their Role
+                                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70">
+                                    Who are they?
                                 </label>
                                 <input 
                                     type="text" 
                                     placeholder="Boss"
-                                    className="w-full bg-secondary/30 rounded-lg border-none px-4 py-3 text-base md:text-lg font-medium placeholder:text-muted-foreground/30 focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                                    className="w-full bg-secondary/80 hover:bg-secondary focus:bg-background border border-transparent focus:border-primary/20 rounded-lg px-4 py-3 text-base font-medium placeholder:text-muted-foreground/40 outline-none transition-all"
                                     value={inputs.otherRole}
                                     onChange={(e) => setInputs({...inputs, otherRole: e.target.value})}
                                 />
@@ -213,25 +266,25 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
 
                         {/* Plot Twist */}
                         <div className="space-y-2">
-                            <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                                The Specifics
+                            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70">
+                                The Plot Twist
                             </label>
                             <textarea 
-                                placeholder="I need to argue why I deserve more money based on my recent project success, but they are cost-cutting."
-                                className="w-full bg-secondary/30 rounded-xl border-none px-4 py-4 text-base md:text-lg font-medium placeholder:text-muted-foreground/30 focus:ring-2 focus:ring-primary/20 outline-none transition-all h-28 md:h-32 resize-none leading-relaxed"
+                                placeholder="I need to argue why I deserve more money..."
+                                className="w-full bg-secondary/80 hover:bg-secondary focus:bg-background border border-transparent focus:border-primary/20 rounded-lg px-4 py-3 text-base font-medium placeholder:text-muted-foreground/40 outline-none transition-all h-24 resize-none leading-relaxed"
                                 value={inputs.plot}
                                 onChange={(e) => setInputs({...inputs, plot: e.target.value})}
                             />
                         </div>
                     </div>
 
-                    <div className="pt-2 md:pt-4">
+                    <div className="pt-6">
                         <Button 
                             onClick={handleGenerate}
                             disabled={!inputs.context || !inputs.plot}
                             variant="primary"
                             size="lg"
-                            className="w-full h-12 md:h-14 rounded-full text-base md:text-lg font-semibold shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 hover:opacity-90 active:scale-[0.98] transition-all"
+                            className="w-full h-14 rounded-full text-lg font-bold shadow-xl shadow-primary/25 hover:shadow-2xl hover:shadow-primary/30 hover:opacity-90 active:scale-[0.98] transition-all"
                         >
                             Create Scene
                         </Button>
@@ -272,16 +325,30 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
                         >
                             Back
                         </Button>
-                        <span className="font-semibold text-sm">Preview</span>
-                        <Button 
-                            onClick={handleSave} 
-                            disabled={isSaving}
-                            variant="ghost"
-                            size="sm"
-                            className="text-primary font-bold hover:bg-transparent p-0"
-                        >
-                            {isSaving ? "Saving..." : "Save"}
-                        </Button>
+                        <div className="flex items-center gap-2">
+                             {/* Study Mode Toggle */}
+                             <button
+                                onClick={() => setIsStudyMode(!isStudyMode)}
+                                className={`
+                                    text-xs font-semibold px-3 py-1.5 rounded-full border transition-all
+                                    ${isStudyMode 
+                                        ? "bg-primary text-primary-foreground border-primary" 
+                                        : "bg-secondary text-muted-foreground border-transparent hover:bg-secondary/80"
+                                    }
+                                `}
+                            >
+                                {isStudyMode ? "Study Mode" : "Review Mode"}
+                            </button>
+                            <Button 
+                                onClick={handleSave} 
+                                disabled={isSaving}
+                                variant="ghost"
+                                size="sm"
+                                className="text-primary font-bold hover:bg-transparent p-0 ml-2"
+                            >
+                                {isSaving ? "Saving..." : "Save"}
+                            </Button>
+                        </div>
                     </div>
 
                     <div className="space-y-6 pb-20">
@@ -298,7 +365,7 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
                                 index={idx} 
                                 heard={false} 
                                 onHeard={() => {}} 
-                                isGlobalRevealed={true}
+                                isGlobalRevealed={!isStudyMode} // If Study Mode is ON, GlobalReveal is OFF (so they are hidden)
                                 mode="standard"
                             />
                         ))}

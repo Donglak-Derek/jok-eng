@@ -13,9 +13,9 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { context, myRole, otherRole, plot, userName } = body;
+    const { context, myRole, otherRole, plot, userName, tone, format } = body;
 
-    const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
       const prompt = `
       You are an expert social communication coach creating a "Jok-eng" style roleplay script.
@@ -26,7 +26,14 @@ export async function POST(request: NextRequest) {
       USER ROLE: ${myRole}
       OTHER ROLE: ${otherRole}
       PLOT SUMMARY: ${plot}
+      DESIRED TONE: ${tone || "Polite"}
+      TRAINING FORMAT: ${format || "Social Dojo"}
 
+      FORMAT INSTRUCTIONS:
+      - "Social Dojo": Focus on bad vs good responses to teach NUANCE.
+      - "Classic Script": Focus on flow and longer dialogue. "badResponse" can be just a standard, okay-ish version, while "goodResponse" is the optimized one.
+      - "Rapid Fire": Keep sentences VERY short (5-8 words max). High intensity.
+      
       TASK:
       1. Create a dialogue script.
       2. STRICT CONSTRAINT: Break dialogue into VERY SHORT chunks. Maximum 1-2 sentences per card. Do NOT create long monologues. Users feel overwhelmed by long text.
