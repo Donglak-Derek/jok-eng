@@ -173,16 +173,14 @@ export default function CommunityScenariosSection() {
   if (scenarios.length === 0) return null;
 
   return (
-    <section className="w-full mx-auto py-8">
+    <section className="w-full mx-auto">
       {/* Header: Clean & Simple */}
-      <div className="flex items-end gap-3 mb-8 px-1 border-b border-border/40 pb-4">
-        <h2 className="text-xl font-bold tracking-tight text-foreground">
-            Story Feed
-        </h2>
-        <span className="text-sm text-muted-foreground font-medium pb-0.5">
-            Latest from the community
-        </span>
-      </div>
+      <div className="mb-8">
+            <h2 className="text-3xl font-bold tracking-tight mb-2">
+                Story Feed
+            </h2>
+            <p className="text-muted text-lg">Latest from the community</p>
+        </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {scenarios.map((script, index) => (
