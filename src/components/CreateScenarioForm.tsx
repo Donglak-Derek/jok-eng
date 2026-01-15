@@ -365,8 +365,8 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
                                 index={idx} 
                                 heard={false} 
                                 onHeard={() => {}} 
-                                isGlobalRevealed={!isStudyMode} // If Study Mode is ON, GlobalReveal is OFF (so they are hidden)
-                                mode="standard"
+                                isGlobalRevealed={!isStudyMode} 
+                                mode={isStudyMode ? "cloze" : "standard"}
                             />
                         ))}
 

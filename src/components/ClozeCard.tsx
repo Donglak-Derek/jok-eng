@@ -173,8 +173,12 @@ export default function ClozeCard({
                     e.stopPropagation();
                     if (mode === "standard") return; // No interaction in standard mode
                     
-                    // Reveal ALL words at once
-                    setLocalRevealed(new Set(allHiddenWords));
+                    // Toggle Logic: If all are revealed, hide them. Otherwise, reveal all.
+                    if (localRevealed.size === allHiddenWords.length) {
+                        setLocalRevealed(new Set());
+                    } else {
+                        setLocalRevealed(new Set(allHiddenWords));
+                    }
                 }}
                 className={`
                   inline-block rounded mx-1 px-1.5 border-b-4 transition-all duration-300
