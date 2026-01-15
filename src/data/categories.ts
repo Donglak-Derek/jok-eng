@@ -44,6 +44,12 @@ export const CATEGORY_DETAILS: Record<
     image: "/images/categories/texting_decoder.png",
     color: "cyan",
   },
+  custom: {
+    name: "My Studio",
+    description: "Your personalized training ground. Scenarios you created with AI.",
+    image: "", // No default image, uses GenerativeCover usually? Or we need a placeholder.
+    color: "indigo",
+  },
 };
 // Add new categories by extending CATEGORY_DETAILS.
 

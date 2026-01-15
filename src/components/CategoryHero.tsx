@@ -96,7 +96,7 @@ export default function CategoryHero({
                     <span className={`w-2 h-2 rounded-full ${theme.accent}`} />
                     Training Module
                 </div>
-                <h1 className={`text-4xl md:text-5xl font-black tracking-tight ${theme.text}`}>
+                <h1 className={`text-3xl md:text-5xl lg:text-6xl font-black tracking-tight ${theme.text} drop-shadow-sm`}>
                     {categoryName}
                 </h1>
                 {description && (

@@ -46,7 +46,12 @@ export default function StandardScriptFlow({ script }: Props) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [viewMode, setViewMode] = useState<"flow" | "full">("flow");
   const [isGlobalRevealed, setIsGlobalRevealed] = useState(false);
-  const [isAutoPlayEnabled, setIsAutoPlayEnabled] = useState(true);
+  // Mode State (defaults to script mode or standard)
+  const [mode, setMode] = useState<"standard" | "cloze">((script.mode as "standard" | "cloze") || "standard");
+
+  const toggleMode = () => {
+    setMode(prev => prev === "standard" ? "cloze" : "standard");
+  };
   
   const toggleAutoPlay = () => setIsAutoPlayEnabled(prev => !prev);
   const toggleGlobalReveal = () => setIsGlobalRevealed(prev => !prev);
@@ -284,8 +289,8 @@ export default function StandardScriptFlow({ script }: Props) {
                 sentence={currentSentence} 
                 index={currentIndex}
                 heard={heardSet.has(currentIndex)}
-                // ClozeCard specific props (ComparisonCard ignores mode, but ClozeCard needs it)
-                mode={script.mode || "standard"} 
+                // ClozeCard specific props
+                mode={mode} 
                 isGlobalRevealed={isGlobalRevealed}
                 // Shared Props
                 isAutoPlayEnabled={isAutoPlayEnabled}
@@ -315,7 +320,12 @@ export default function StandardScriptFlow({ script }: Props) {
         isAutoPlayEnabled={isAutoPlayEnabled}
         onToggleAutoPlay={toggleAutoPlay}
         isGlobalRevealed={isGlobalRevealed}
+        isGlobalRevealed={isGlobalRevealed}
         onToggleGlobalReveal={toggleGlobalReveal}
+        
+        // Study Mode Toggle
+        mode={mode}
+        onToggleMode={toggleMode}
         
         // Navigation
         onNext={handleNext}

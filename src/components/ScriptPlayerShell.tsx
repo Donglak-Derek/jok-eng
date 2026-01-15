@@ -21,6 +21,10 @@ type Props = {
   isGlobalRevealed?: boolean;
   onToggleGlobalReveal?: () => void;
   
+  // Study Mode Props
+  mode?: "standard" | "cloze";
+  onToggleMode?: () => void;
+  
   // Navigation Handlers
   onNext?: () => void;
   onPrev?: () => void;
@@ -43,6 +47,8 @@ export default function ScriptPlayerShell({
   onToggleAutoPlay,
   isGlobalRevealed,
   onToggleGlobalReveal,
+  mode,
+  onToggleMode,
   onNext,
   onPrev,
   onRestart,
