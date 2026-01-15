@@ -35,17 +35,23 @@ export default function QuickStartInput() {
                 onClick={handleStart}
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.99 }}
-                className="flex-1 h-12 md:h-14 bg-secondary/50 hover:bg-secondary/80 border border-transparent hover:border-border/50 rounded-full flex items-center px-4 md:px-6 cursor-pointer transition-all shadow-sm overflow-hidden"
+                className="relative flex-1 h-12 md:h-14 rounded-full flex items-center justify-center cursor-pointer transition-all shadow-sm group overflow-hidden"
             >
-                <div className="flex items-center gap-0.5 min-w-0">
-                    <span className="text-muted-foreground text-sm md:text-lg font-medium whitespace-nowrap truncate">
-                        What do you want to say?
-                    </span>
-                    <motion.span 
-                        animate={{ opacity: [1, 0, 1] }}
-                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                        className="w-0.5 h-5 bg-primary ml-1 shrink-0"
-                    />
+                {/* Animated Rainbow Border Background - Faster & Stronger */}
+                <div className="absolute inset-0 bg-gradient-to-r from-pink-500 via-red-500 via-yellow-500 via-green-500 via-blue-500 via-purple-500 to-pink-500 bg-[length:200%_auto] animate-[gradient_1.5s_linear_infinite] opacity-80 group-hover:opacity-100 transition-opacity" />
+                
+                {/* Inner Content Background */}
+                <div className="absolute inset-[3px] bg-background rounded-full z-10 flex items-center px-4 md:px-6">
+                    <div className="flex items-center gap-0.5 justify-start w-full">
+                        <span className="text-muted-foreground text-sm md:text-lg font-medium whitespace-nowrap">
+                            Practice a real situation...
+                        </span>
+                        <motion.span 
+                            animate={{ opacity: [1, 0, 1] }}
+                            transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
+                            className="w-0.5 h-5 bg-primary shrink-0"
+                        />
+                    </div>
                 </div>
             </motion.div>
         </div>

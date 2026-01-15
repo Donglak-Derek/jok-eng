@@ -89,3 +89,9 @@ body {
 .container-minimal {
   @apply max-w-5xl mx-auto px-6 w-full;
 }
+
+/* Custom Animation for Rainbow Border */
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}

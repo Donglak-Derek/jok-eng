@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { context, myRole, otherRole, plot, userName, tone, format } = body;
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
 
       const prompt = `
       You are an expert social communication coach creating a "Jok-eng" style roleplay script.
@@ -42,8 +42,12 @@ export async function POST(request: NextRequest) {
          - badResponse: A grammatically correct but SOCIALLY WRONG way to say it (e.g., too blunt, too formal, robotic, accidental rude).
          - goodResponse: The socially calibrated, natural way.
          - why: Explain the SOCIAL difference (e.g., "The bad version sounds like a police report. The good version builds rapport.").
-      5. CULTURAL CODE: At the end, provide a specific "Cultural Insight" about this situation (e.g. why Americans fake smile, or why brevity is rude in this context).
-      6. QUIZ: Generate 3 multiple-choice quiz items testing the social nuance.
+         - STRICT RULE: Do NOT output "N/A" or "None". If it is the OTHER person's line, return null for badResponse/goodResponse. If it is the USER'S line, you MUST invent a bad version.
+      5. KEYWORDS & CLOZE: You MUST identify 1-2 key vocabulary words (or phrases) per sentence that are crucial for the "vibe".
+         - IMPORTANT: In the "en" (or "goodResponse.text"), you MUST wrap these keywords in [square brackets] so the app can hide them.
+         - Example: "I would like a [refund] please."
+      6. CULTURAL CODE: At the end, provide a specific "Cultural Insight" about this situation (e.g. why Americans fake smile, or why brevity is rude in this context).
+      7. QUIZ: Generate 3 multiple-choice quiz items testing the social nuance.
 
       OUTPUT FORMAT:
       Return ONLY a raw JSON object (no markdown) matching this structure:
