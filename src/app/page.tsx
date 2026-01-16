@@ -7,6 +7,7 @@ import Header from "@/components/Header";
 import CategoryCarousel from "@/components/CategoryCarousel";
 import DesktopNavigation from "@/components/DesktopNavigation";
 import CommunityScenariosSection from "@/components/CommunityScenariosSection";
+import FloatingCreateButton from "@/components/FloatingCreateButton";
 import MyScenariosSection from "@/components/MyScenariosSection";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -30,7 +31,10 @@ export default function Home() {
       
       {/* LOGGED IN VIEW: Dashboard Mode */}
       {user ? (
-        <div className="flex min-h-screen bg-background">
+        <div className="flex min-h-screen bg-background relative">
+            {/* FAB (Mobile Only) */}
+            <FloatingCreateButton />
+
             {/* 1. DESKTOP SIDEBAR (Spotify Style) */}
             <DesktopNavigation activeTab={activeTab} onTabChange={setActiveTab} />
             
