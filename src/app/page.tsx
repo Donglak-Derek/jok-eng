@@ -44,33 +44,33 @@ export default function Home() {
                 <div className="container-minimal pt-4 md:pt-8 pb-8 flex flex-col gap-8 md:gap-10 max-w-7xl mx-auto px-4 md:px-12">
                    
                     {/* Desktop Header / Greeting - could go here, or just inline inputs */}
-                    {/* Quick Start Input - Prominent */}
-                    <div className="max-w-2xl mx-auto w-full md:mt-4">
+                    {/* Quick Start Input - Prominent HERO */}
+                    <div className="max-w-3xl mx-auto w-full md:mt-4 relative z-20">
                         <QuickStartInput />
                     </div>
 
-                    {/* MOBILE ONLY: Tabs (Segmented Control) */}
-                    <div className="md:hidden flex justify-center">
-                        <div className="inline-flex bg-secondary/50 p-1.5 rounded-full relative shadow-sm border border-border/50 w-full">
+                    {/* MOBILE ONLY: Tabs (Segmented Control) - Pushed down, subtle */}
+                    <div className="md:hidden flex justify-center sticky top-0 z-10 py-2 bg-background/80 backdrop-blur-lg -mx-4 px-4 border-b border-border/50">
+                        <div className="inline-flex bg-secondary/50 p-1 rounded-full relative shadow-sm border border-border/50 w-full max-w-[300px]">
                             {(["home", "my_scenarios"] as const).map((tab) => (
                                 <button
                                     key={tab}
                                     onClick={() => setActiveTab(tab)}
                                     className={`
-                                        relative flex-1 px-6 py-2 rounded-full text-sm font-medium transition-colors duration-200 z-10
+                                        relative flex-1 px-4 py-1.5 rounded-full text-xs font-bold transition-colors duration-200 z-10 uppercase tracking-wide
                                         ${activeTab === tab ? "text-foreground" : "text-muted-foreground hover:text-foreground"}
                                     `}
                                 >
                                     {activeTab === tab && (
                                         <motion.div
                                             layoutId="activeTabMobile"
-                                            className="absolute inset-0 bg-background rounded-full shadow-md border border-border/20"
+                                            className="absolute inset-0 bg-background rounded-full shadow-sm border border-border/10"
                                             transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                                         />
                                     )}
                                     <span className="relative z-20">
-                                        {tab === "home" && "Home"}
-                                        {tab === "my_scenarios" && "My Scenarios"}
+                                        {tab === "home" && "Discover"}
+                                        {tab === "my_scenarios" && "Library"}
                                     </span>
                                 </button>
                             ))}

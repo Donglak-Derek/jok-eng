@@ -3,7 +3,7 @@
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { User } from "lucide-react";
+import { User, ArrowRight } from "lucide-react";
 
 export default function QuickStartInput() {
     const { user } = useAuth();
@@ -15,41 +15,41 @@ export default function QuickStartInput() {
 
     return (
         <div className="flex items-center gap-3 w-full">
-            {/* Avatar - Left aligned */}
+            {/* Avatar - Left aligned (Hidden on mobile for cleaner search bar look, or keep? Let's keep for personalization but maybe larger) */}
             <div className="shrink-0 pl-1">
                 {user?.photoURL ? (
                     <img 
                         src={user.photoURL} 
                         alt={user.displayName || "User"} 
-                        className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover border border-border shadow-sm"
+                        className="w-12 h-12 md:w-14 md:h-14 rounded-full object-cover border-2 border-background shadow-md ring-2 ring-border/50"
                     />
                 ) : (
-                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 text-primary">
-                        <User className="w-5 h-5 md:w-6 md:h-6" />
+                    <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-primary/10 flex items-center justify-center border-2 border-background shadow-md ring-2 ring-primary/20 text-primary">
+                        <User className="w-6 h-6 md:w-7 md:h-7" />
                     </div>
                 )}
             </div>
 
-            {/* Fake Input - Full width remaining */}
+            {/* Fake Input - "Hero" Rainbow Style (Restored) */}
             <motion.div 
                 onClick={handleStart}
-                whileHover={{ scale: 1.01 }}
-                whileTap={{ scale: 0.99 }}
-                className="relative flex-1 h-12 md:h-14 rounded-full flex items-center justify-center cursor-pointer transition-all shadow-sm group overflow-hidden"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="relative flex-1 h-16 md:h-20 rounded-full flex items-center justify-center cursor-pointer transition-all shadow-lg hover:shadow-xl group overflow-hidden"
             >
                 {/* Animated Rainbow Border Background - Faster & Stronger */}
-                <div className="absolute inset-0 bg-gradient-to-r from-pink-500 via-red-500 via-yellow-500 via-green-500 via-blue-500 via-purple-500 to-pink-500 bg-[length:200%_auto] animate-[gradient_1.5s_linear_infinite] opacity-80 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute inset-0 bg-gradient-to-r from-pink-500 via-red-500 via-yellow-500 via-green-500 via-blue-500 via-purple-500 to-pink-500 bg-[length:200%_auto] animate-[gradient_2s_linear_infinite] opacity-90 group-hover:opacity-100 transition-opacity" />
                 
                 {/* Inner Content Background */}
-                <div className="absolute inset-[3px] bg-background rounded-full z-10 flex items-center px-4 md:px-6">
+                <div className="absolute inset-[4px] bg-background rounded-full z-10 flex items-center px-6 md:px-8">
                     <div className="flex items-center gap-0.5 justify-start w-full">
-                        <span className="text-muted-foreground text-sm md:text-lg font-medium whitespace-nowrap">
+                        <span className="text-muted-foreground text-lg md:text-xl font-medium whitespace-nowrap">
                             Create a real scenario...
                         </span>
                         <motion.span 
                             animate={{ opacity: [1, 0, 1] }}
                             transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
-                            className="w-0.5 h-5 bg-primary shrink-0"
+                            className="w-0.5 h-6 bg-primary shrink-0 ml-1"
                         />
                     </div>
                 </div>
