@@ -12,6 +12,7 @@ import MyScenariosSection from "@/components/MyScenariosSection";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
+import DailyChallengeCard from "@/components/DailyChallengeCard";
 import { Button } from "@/components/Button";
 
 import QuickStartInput from "@/components/QuickStartInput";
@@ -95,6 +96,9 @@ export default function Home() {
                                 <div className="space-y-16 md:space-y-20">
                                     {/* 1. Categories (Mobile: Carousel, Desktop: Grid) */}
                                     <CategoryCarousel />
+
+                                    {/* 1.5 Daily Challenge */}
+                                    <DailyChallengeCard />
 
                                     {/* 2. Community Feed */}
                                     <CommunityScenariosSection />

@@ -6,7 +6,7 @@ import ScenarioCard from "./ScenarioCard";
 import { motion } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
 import { scripts } from "@/data";
-import DailyChallengeCard from "./DailyChallengeCard";
+
 import { useRouter } from "next/navigation";
 
 export default function CommunityScenariosSection() {
@@ -254,8 +254,7 @@ export default function CommunityScenariosSection() {
         </div>
       </div>
 
-       {/* FEATURE 1: Daily Vibe Challenge - Only on Trending? Or always? Let's keep it on Trending/All */}
-       {activeFilter === "Trending" && <div className="mb-8"><DailyChallengeCard /></div>}
+       {/* FEATURE 1: Daily Vibe Challenge - REMOVED (Moved to page.tsx) */}
 
       {filteredScenarios.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
