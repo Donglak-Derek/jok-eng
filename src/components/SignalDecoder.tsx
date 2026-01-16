@@ -427,10 +427,13 @@ export default function SignalDecoder({ script }: Props) {
         hasFinished={isCompletion || currentStep === quizIndex}
 
         // Controls
+        // Controls
         isAutoPlayEnabled={isAutoPlayEnabled}
         onToggleAutoPlay={toggleAutoPlay}
-        isGlobalRevealed={isGlobalRevealed}
-        onToggleGlobalReveal={toggleGlobalReveal}
+        
+        // Map Global Reveal to Mode (Cloze = Hidden, Standard = Revealed)
+        mode={isGlobalRevealed ? "standard" : "cloze"}
+        onToggleMode={toggleGlobalReveal}
         
         // Navigation
         onNext={handleNext}

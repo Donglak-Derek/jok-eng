@@ -14,6 +14,7 @@ import { Button } from "@/components/Button";
 // import { GenerativeCover } from "./GenerativeCover";
 import CulturalNoteCard from "./CulturalNoteCard";
 import QuizCard from "./QuizCard";
+import { Eye, EyeOff } from "lucide-react";
 
 interface CreateScenarioFormProps {
   initialValues?: {
@@ -151,7 +152,7 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
      setPlaceholder(prompts[Math.floor(Math.random() * prompts.length)]);
   }, []);
 
-  const TONES = ["Polite", "Direct", "Funny", "Flirty", "Professional"];
+  const TONES = ["Polite", "Direct", "Funny", "Flirty", "Spicy", "Professional"];
   const FORMATS = ["Social Dojo", "Classic Script", "Rapid Fire"];
 
   return (
@@ -330,14 +331,15 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
                              <button
                                 onClick={() => setIsStudyMode(!isStudyMode)}
                                 className={`
-                                    text-xs font-semibold px-3 py-1.5 rounded-full border transition-all
-                                    ${isStudyMode 
-                                        ? "bg-primary text-primary-foreground border-primary" 
-                                        : "bg-secondary text-muted-foreground border-transparent hover:bg-secondary/80"
+                                    p-2 rounded-full transition-colors
+                                    ${!isStudyMode 
+                                        ? 'text-muted-foreground hover:bg-secondary hover:text-foreground'
+                                        : 'bg-indigo-50 text-indigo-700 ring-1 ring-indigo-200' 
                                     }
                                 `}
+                                title={!isStudyMode ? "Switch to Study Mode (Hidden)" : "Switch to Review Mode (Visible)"}
                             >
-                                {isStudyMode ? "Study Mode" : "Review Mode"}
+                                {!isStudyMode ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                             </button>
                             <Button 
                                 onClick={handleSave} 

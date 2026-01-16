@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, RotateCcw, FileText, PlayCircle, PauseCircle, Eye, EyeOff, ArrowLeft, BookOpen, Brain } from "lucide-react";
+import { ChevronLeft, ChevronRight, RotateCcw, FileText, PlayCircle, PauseCircle, Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/Button";
 
 type Props = {
@@ -18,8 +18,7 @@ type Props = {
   // Control Props
   isAutoPlayEnabled?: boolean;
   onToggleAutoPlay?: () => void;
-  isGlobalRevealed?: boolean;
-  onToggleGlobalReveal?: () => void;
+  // Global Reveal Logic merged into Study Mode Toggle
   
   // Study Mode Props
   mode?: "standard" | "cloze";
@@ -45,8 +44,6 @@ export default function ScriptPlayerShell({
   hasFinished,
   isAutoPlayEnabled,
   onToggleAutoPlay,
-  isGlobalRevealed,
-  onToggleGlobalReveal,
   mode,
   onToggleMode,
   onNext,
@@ -96,37 +93,26 @@ export default function ScriptPlayerShell({
                         </button>
                     )}
 
-                    {/* 2. Global Reveal Toggle (Eye) */}
-                    {onToggleGlobalReveal && (
-                        <button
-                            onClick={onToggleGlobalReveal}
-                            className={`
-                                p-2 rounded-full transition-colors
-                                ${isGlobalRevealed 
-                                    ? 'bg-yellow-100 text-yellow-700 ring-1 ring-yellow-300' 
-                                    : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
-                                }
-                            `}
-                            title={isGlobalRevealed ? "Hide Answers" : "Reveal All"}
-                        >
-                            {isGlobalRevealed ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
-                        </button>
-                    )}
-
-                    {/* 3. Study Mode Toggle (Book/Brain) */}
+                    {/* 2. Study Mode / Visibility Toggle (Eye) */}
+                    {/* User requested to use Eye icon for this feature, replacing the overlapping Book/Brain icon. */}
                     {onToggleMode && mode && (
                         <button
                             onClick={onToggleMode}
                             className={`
-                                p-2 rounded-full transition-colors flex items-center gap-2
-                                ${mode === 'cloze'
-                                    ? 'bg-indigo-50 text-indigo-700 ring-1 ring-indigo-200'
-                                    : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
+                                p-2 rounded-full transition-colors
+                                ${mode === 'standard' 
+                                    ? 'text-muted-foreground hover:bg-secondary hover:text-foreground'
+                                    : 'bg-indigo-50 text-indigo-700 ring-1 ring-indigo-200' 
                                 }
                             `}
-                            title={mode === 'cloze' ? "Study Mode Active" : "Review Mode"}
+                            title={mode === 'standard' ? "Switch to Study Mode (Hidden)" : "Switch to Review Mode (Visible)"}
                         >
-                            {mode === 'cloze' ? <Brain className="w-5 h-5" /> : <BookOpen className="w-5 h-5" />}
+                            {/* 
+                                Logic:
+                                - Standard (Visible) -> Show EyeOff (Click to Hide/Study)
+                                - Cloze (Hidden) -> Show Eye (Click to Reveal/Review)
+                            */}
+                            {mode === 'standard' ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                         </button>
                     )}
 

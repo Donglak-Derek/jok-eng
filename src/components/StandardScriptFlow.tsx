@@ -320,8 +320,6 @@ export default function StandardScriptFlow({ script }: Props) {
         // Controls
         isAutoPlayEnabled={isAutoPlayEnabled}
         onToggleAutoPlay={toggleAutoPlay}
-        isGlobalRevealed={isGlobalRevealed}
-        onToggleGlobalReveal={toggleGlobalReveal}
         
         // Study Mode Toggle
         mode={mode}
