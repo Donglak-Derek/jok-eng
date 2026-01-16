@@ -4,7 +4,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { categories, scripts } from "@/data";
 import Header from "@/components/Header";
+import CategoryCarousel from "@/components/CategoryCarousel";
 import CommunityScenariosSection from "@/components/CommunityScenariosSection";
+import MyScenariosSection from "@/components/MyScenariosSection";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
@@ -13,11 +15,11 @@ import { Button } from "@/components/Button";
 import QuickStartInput from "@/components/QuickStartInput";
 import InteractiveGridBackground from "@/components/Effects/InteractiveGrid";
 
-type Tab = "categories" | "community";
+type Tab = "home" | "my_scenarios";
 
 export default function Home() {
   const { user, loading } = useAuth();
-  const [activeTab, setActiveTab] = useState<Tab>("categories");
+  const [activeTab, setActiveTab] = useState<Tab>("home");
 
   if (loading) return null;
 
@@ -37,7 +39,7 @@ export default function Home() {
                 {/* Premium Segmented Control */}
                 <div className="flex justify-center">
                     <div className="inline-flex bg-background/50 p-1.5 rounded-full relative shadow-sm border border-border/50 w-full md:w-auto">
-                        {(["categories", "community"] as const).map((tab) => (
+                        {(["home", "my_scenarios"] as const).map((tab) => (
                             <button
                                 key={tab}
                                 onClick={() => setActiveTab(tab)}
@@ -54,8 +56,8 @@ export default function Home() {
                                     />
                                 )}
                                 <span className="relative z-20">
-                                    {tab === "categories" && "Categories"}
-                                    {tab === "community" && "Community"}
+                                    {tab === "home" && "Home"}
+                                    {tab === "my_scenarios" && "My Scenarios"}
                                 </span>
                             </button>
                         ))}
@@ -73,49 +75,18 @@ export default function Home() {
                     transition={{ duration: 0.15 }}
                     className="min-h-[400px]"
                 >
-                    {activeTab === "categories" && (
-                        <div>
-                            <div className="mb-8">
-                                <h2 className="text-3xl font-bold tracking-tight mb-2">
-                                    Pick your vibe
-                                </h2>
-                                <p className="text-muted text-lg">Choose a context to start practicing.</p>
-                            </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {categories.map((c) => (
-                            <Link
-                                key={c.slug}
-                                href={`/category/${c.slug}`}
-                                className="group block"
-                            >
-                                <div className="relative aspect-[3/2] overflow-hidden rounded-lg bg-secondary mb-4">
-                                    <Image
-                                        src={c.image}
-                                        alt={c.name}
-                                        fill
-                                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                                    />
-                                </div>
-                                
-                                <div className="flex justify-between items-baseline">
-                                    <h3 className="text-xl font-semibold group-hover:underline decoration-1 underline-offset-4">
-                                        {c.name}
-                                    </h3>
-                                    <span className="text-sm text-muted">
-                                        {scripts.filter((s) => s.categorySlug === c.slug).length} scripts
-                                    </span>
-                                </div>
-                                <p className="text-muted mt-1 leading-relaxed">
-                                    {c.description}
-                                </p>
-                            </Link>
-                            ))}
-                        </div>
+                    {activeTab === "home" && (
+                        <div className="space-y-12">
+                            {/* 1. Categories Carousel */}
+                            <CategoryCarousel />
+
+                            {/* 2. Community Feed ("Story Feed") */}
+                            <CommunityScenariosSection />
                         </div>
                     )}
 
-                    {activeTab === "community" && (
-                        <CommunityScenariosSection />
+                    {activeTab === "my_scenarios" && (
+                        <MyScenariosSection />
                     )}
                 </motion.div>
             </AnimatePresence>

@@ -44,7 +44,7 @@ export default function QuickStartInput() {
                 <div className="absolute inset-[3px] bg-background rounded-full z-10 flex items-center px-4 md:px-6">
                     <div className="flex items-center gap-0.5 justify-start w-full">
                         <span className="text-muted-foreground text-sm md:text-lg font-medium whitespace-nowrap">
-                            Practice a real situation...
+                            Create a real scenario...
                         </span>
                         <motion.span 
                             animate={{ opacity: [1, 0, 1] }}

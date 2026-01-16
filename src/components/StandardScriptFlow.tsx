@@ -46,6 +46,7 @@ export default function StandardScriptFlow({ script }: Props) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [viewMode, setViewMode] = useState<"flow" | "full">("flow");
   const [isGlobalRevealed, setIsGlobalRevealed] = useState(false);
+  const [isAutoPlayEnabled, setIsAutoPlayEnabled] = useState(true);
   // Mode State (defaults to script mode or standard)
   const [mode, setMode] = useState<"standard" | "cloze">((script.mode as "standard" | "cloze") || "standard");
 
@@ -319,7 +320,6 @@ export default function StandardScriptFlow({ script }: Props) {
         // Controls
         isAutoPlayEnabled={isAutoPlayEnabled}
         onToggleAutoPlay={toggleAutoPlay}
-        isGlobalRevealed={isGlobalRevealed}
         isGlobalRevealed={isGlobalRevealed}
         onToggleGlobalReveal={toggleGlobalReveal}
         
