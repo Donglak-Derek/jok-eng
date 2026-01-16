@@ -29,29 +29,14 @@ export default function CategoryCarousel() {
             <p className="text-muted-foreground text-lg">Choose a context to start practicing.</p>
          </div>
          
-         {/* Scroll Controls (Desktop) */}
-         <div className="hidden md:flex gap-2">
-            <button 
-                onClick={() => scroll("left")}
-                className="p-2 rounded-full bg-secondary hover:bg-secondary/80 text-foreground transition-colors"
-                aria-label="Scroll left"
-            >
-                <ChevronLeft className="w-5 h-5" />
-            </button>
-            <button 
-                onClick={() => scroll("right")}
-                className="p-2 rounded-full bg-secondary hover:bg-secondary/80 text-foreground transition-colors"
-                aria-label="Scroll right"
-            >
-                <ChevronRight className="w-5 h-5" />
-            </button>
-         </div>
+         {/* Scroll Controls (Desktop - Hidden if Grid is active, but we keep for now logic-wise or remove) */}
+         {/* Actually, if we use Grid on Desktop, we don't need scroll buttons. */}
       </div>
 
-      {/* Carousel Container */}
+      {/* 1. MOBILE: Carousel Container (md:hidden) */}
       <div 
         ref={scrollContainerRef}
-        className="flex gap-4 overflow-x-auto pb-8 pt-2 snap-x snap-mandatory hide-scrollbar px-4 md:px-0 -mx-4 md:mx-0"
+        className="flex md:hidden gap-4 overflow-x-auto pb-8 pt-2 snap-x snap-mandatory hide-scrollbar px-4 -mx-4"
         style={{ 
             scrollbarWidth: 'none', 
             msOverflowStyle: 'none',
@@ -59,47 +44,60 @@ export default function CategoryCarousel() {
             WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)'
         }}
       >
-        {categories.map((c) => {
-           const scriptCount = scripts.filter((s) => s.categorySlug === c.slug).length;
-           
-           return (
-            <Link
-                key={c.slug}
-                href={`/category/${c.slug}`}
-                className="group block relative min-w-[280px] w-[280px] md:w-[320px] snap-center"
-            >
-                <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-secondary mb-4 shadow-sm border border-border/50 transition-all duration-300 group-hover:shadow-md group-hover:-translate-y-1">
-                    <Image
-                        src={c.image}
-                        alt={c.name}
-                        fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                    {/* Gradient Overlay for Text Visibility */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 transition-opacity group-hover:opacity-70" />
-                    
-                    {/* Content Overlay */}
-                    <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
-                         <div className="flex justify-between items-end mb-1">
-                            <h3 className="text-xl font-bold leading-tight">
-                                {c.name}
-                            </h3>
-                         </div>
-                         <p className="text-white/80 text-sm line-clamp-2 mb-3">
-                            {c.description}
-                         </p>
-                         <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-md text-[10px] font-bold uppercase tracking-wider border border-white/10">
-                            <span>{scriptCount} Scenarios</span>
-                         </div>
-                    </div>
-                </div>
-            </Link>
-           );
-        })}
-        
-        {/* Padding element for end of scroll */}
-        <div className="w-4 shrink-0 md:hidden" />
+        {categories.map((c) => (
+             <CategoryCard key={c.slug} c={c} />
+        ))}
+        <div className="w-4 shrink-0" />
+      </div>
+
+      {/* 2. DESKTOP: Grid Container (hidden md:grid) */}
+      <div className="hidden md:grid grid-cols-4 gap-6">
+         {categories.map((c) => (
+             <CategoryCard key={c.slug} c={c} />
+        ))}
       </div>
     </section>
   );
+}
+
+// Sub-component for Cleaner Code
+function CategoryCard({ c }: { c: any }) {
+    const scriptCount = scripts.filter((s) => s.categorySlug === c.slug).length;
+    return (
+        <Link
+            href={`/category/${c.slug}`}
+            className="group block relative min-w-[280px] w-[280px] md:w-auto snap-center"
+        >
+            <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-secondary mb-4 shadow-sm border border-border/50 transition-all duration-300 group-hover:shadow-md group-hover:-translate-y-1">
+                <Image
+                    src={c.image}
+                    alt={c.name}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                
+                {/* 
+                   STRONGER GRADIENT FIX 
+                   from-black/90 -> via-black/40 -> to-transparent
+                   Ensures text pop on mobile.
+                */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
+                
+                {/* Content Overlay */}
+                <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
+                        <div className="flex justify-between items-end mb-1">
+                        <h3 className="text-xl font-bold leading-tight drop-shadow-md">
+                            {c.name}
+                        </h3>
+                        </div>
+                        <p className="text-white/90 text-sm line-clamp-2 mb-3 font-medium drop-shadow-sm">
+                        {c.description}
+                        </p>
+                        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-md text-[10px] font-bold uppercase tracking-wider border border-white/10 shadow-sm">
+                        <span>{scriptCount} Scenarios</span>
+                        </div>
+                </div>
+            </div>
+        </Link>
+    );
 }

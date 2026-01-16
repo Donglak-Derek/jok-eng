@@ -5,6 +5,7 @@ import Image from "next/image";
 import { categories, scripts } from "@/data";
 import Header from "@/components/Header";
 import CategoryCarousel from "@/components/CategoryCarousel";
+import DesktopNavigation from "@/components/DesktopNavigation";
 import CommunityScenariosSection from "@/components/CommunityScenariosSection";
 import MyScenariosSection from "@/components/MyScenariosSection";
 import { useState } from "react";
@@ -29,67 +30,82 @@ export default function Home() {
       
       {/* LOGGED IN VIEW: Dashboard Mode */}
       {user ? (
-        <div className="container-minimal pt-0 pb-8 flex flex-col gap-6">
-            <Header />
-            {/* Dashboard Controller Card */}
-            <div className="bg-secondary/20 rounded-3xl px-3 py-4 md:p-6 mb-4 border border-border/50 flex flex-col gap-6">
-                {/* Quick Start Input */}
-                <QuickStartInput />
-
-                {/* Premium Segmented Control */}
-                <div className="flex justify-center">
-                    <div className="inline-flex bg-background/50 p-1.5 rounded-full relative shadow-sm border border-border/50 w-full md:w-auto">
-                        {(["home", "my_scenarios"] as const).map((tab) => (
-                            <button
-                                key={tab}
-                                onClick={() => setActiveTab(tab)}
-                                className={`
-                                    relative flex-1 md:flex-initial px-6 py-2 rounded-full text-sm font-medium transition-colors duration-200 z-10
-                                    ${activeTab === tab ? "text-foreground" : "text-muted-foreground hover:text-foreground"}
-                                `}
-                            >
-                                {activeTab === tab && (
-                                    <motion.div
-                                        layoutId="activeTab"
-                                        className="absolute inset-0 bg-background rounded-full shadow-md border border-border/20"
-                                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                                    />
-                                )}
-                                <span className="relative z-20">
-                                    {tab === "home" && "Home"}
-                                    {tab === "my_scenarios" && "My Scenarios"}
-                                </span>
-                            </button>
-                        ))}
+        <div className="flex min-h-screen bg-background">
+            {/* 1. DESKTOP SIDEBAR (Spotify Style) */}
+            <DesktopNavigation activeTab={activeTab} onTabChange={setActiveTab} />
+            
+            {/* 2. MAIN CONTENT AREA */}
+            <div className="flex-1 md:pl-64 flex flex-col min-h-0 overflow-y-auto">
+                {/* Mobile Header (Hidden on Desktop) */}
+                <div className="md:hidden">
+                    <Header />
+                </div>
+                
+                <div className="container-minimal pt-4 md:pt-8 pb-8 flex flex-col gap-8 md:gap-10 max-w-7xl mx-auto px-4 md:px-12">
+                   
+                    {/* Desktop Header / Greeting - could go here, or just inline inputs */}
+                    {/* Quick Start Input - Prominent */}
+                    <div className="max-w-2xl mx-auto w-full md:mt-4">
+                        <QuickStartInput />
                     </div>
+
+                    {/* MOBILE ONLY: Tabs (Segmented Control) */}
+                    <div className="md:hidden flex justify-center">
+                        <div className="inline-flex bg-secondary/50 p-1.5 rounded-full relative shadow-sm border border-border/50 w-full">
+                            {(["home", "my_scenarios"] as const).map((tab) => (
+                                <button
+                                    key={tab}
+                                    onClick={() => setActiveTab(tab)}
+                                    className={`
+                                        relative flex-1 px-6 py-2 rounded-full text-sm font-medium transition-colors duration-200 z-10
+                                        ${activeTab === tab ? "text-foreground" : "text-muted-foreground hover:text-foreground"}
+                                    `}
+                                >
+                                    {activeTab === tab && (
+                                        <motion.div
+                                            layoutId="activeTabMobile"
+                                            className="absolute inset-0 bg-background rounded-full shadow-md border border-border/20"
+                                            transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                                        />
+                                    )}
+                                    <span className="relative z-20">
+                                        {tab === "home" && "Home"}
+                                        {tab === "my_scenarios" && "My Scenarios"}
+                                    </span>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Tab Content */}
+                    <AnimatePresence mode="wait">
+                        <motion.div
+                            key={activeTab}
+                            initial={{ opacity: 0, y: 5 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -5 }}
+                            transition={{ duration: 0.15 }}
+                            className="min-h-[400px]"
+                        >
+                            {activeTab === "home" && (
+                                <div className="space-y-16 md:space-y-20">
+                                    {/* 1. Categories (Mobile: Carousel, Desktop: Grid) */}
+                                    <CategoryCarousel />
+
+                                    {/* 2. Community Feed */}
+                                    <CommunityScenariosSection />
+                                </div>
+                            )}
+
+                            {activeTab === "my_scenarios" && (
+                                <div className="md:max-w-5xl md:mx-auto">
+                                    <MyScenariosSection />
+                                </div>
+                            )}
+                        </motion.div>
+                    </AnimatePresence>
                 </div>
             </div>
-
-            {/* Tab Content */}
-            <AnimatePresence mode="wait">
-                <motion.div
-                    key={activeTab}
-                    initial={{ opacity: 0, y: 5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -5 }}
-                    transition={{ duration: 0.15 }}
-                    className="min-h-[400px]"
-                >
-                    {activeTab === "home" && (
-                        <div className="space-y-12">
-                            {/* 1. Categories Carousel */}
-                            <CategoryCarousel />
-
-                            {/* 2. Community Feed ("Story Feed") */}
-                            <CommunityScenariosSection />
-                        </div>
-                    )}
-
-                    {activeTab === "my_scenarios" && (
-                        <MyScenariosSection />
-                    )}
-                </motion.div>
-            </AnimatePresence>
         </div>
       ) : (
         /* GUEST VIEW: Marketing & Info */
