@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, RotateCcw, FileText, PlayCircle, PauseCircle, Eye, EyeOff, ArrowLeft } from "lucide-react";
+import { ChevronLeft, ChevronRight, RotateCcw, FileText, PlayCircle, PauseCircle, Eye, EyeOff, ArrowLeft, BookOpen, Brain } from "lucide-react";
 import { Button } from "@/components/Button";
 
 type Props = {
@@ -110,6 +110,23 @@ export default function ScriptPlayerShell({
                             title={isGlobalRevealed ? "Hide Answers" : "Reveal All"}
                         >
                             {isGlobalRevealed ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
+                        </button>
+                    )}
+
+                    {/* 3. Study Mode Toggle (Book/Brain) */}
+                    {onToggleMode && mode && (
+                        <button
+                            onClick={onToggleMode}
+                            className={`
+                                p-2 rounded-full transition-colors flex items-center gap-2
+                                ${mode === 'cloze'
+                                    ? 'bg-indigo-50 text-indigo-700 ring-1 ring-indigo-200'
+                                    : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
+                                }
+                            `}
+                            title={mode === 'cloze' ? "Study Mode Active" : "Review Mode"}
+                        >
+                            {mode === 'cloze' ? <Brain className="w-5 h-5" /> : <BookOpen className="w-5 h-5" />}
                         </button>
                     )}
 

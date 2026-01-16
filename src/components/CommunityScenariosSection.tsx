@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import { collectionGroup, query, where, orderBy, limit, getDocs, collection, updateDoc, doc, arrayUnion, arrayRemove, increment, setDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -7,17 +5,30 @@ import { UserScript } from "@/types";
 import ScenarioCard from "./ScenarioCard";
 import { motion } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
+import { scripts } from "@/data";
 
 export default function CommunityScenariosSection() {
   const [scenarios, setScenarios] = useState<UserScript[]>([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
 
+  // Helper to shuffle array
+  const shuffleArray = (array: UserScript[]) => {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  };
+
   const handleToggleLike = async (id: string) => {
+    if (id.startsWith("sys-")) return; // Cannot like system scripts for now (or handle differently)
     if (!user) {
         alert("Please login to like scenarios.");
         return;
     }
+    
+    // ... (rest of logic same)
     
     // Optimistic Update
     setScenarios(prev => prev.map(s => {
@@ -62,12 +73,46 @@ export default function CommunityScenariosSection() {
   };
 
   const handleSave = async (id: string) => {
+      // ... (rest of logic same)
       if (!user) {
           alert("Please login to save scenarios.");
           return;
       }
       const scriptToSave = scenarios.find(s => s.id === id);
       if (!scriptToSave) return;
+      
+      // Handle System Scripts Save
+      if (id.startsWith("sys-")) {
+          if (confirm(`Save "${scriptToSave.title}" to your library?`)) {
+              // Implementation for saving system script to user library
+              // We can basically copy it as a new UserScript
+               try {
+                  const scenariosRef = collection(db, "users", user.uid, "scenarios");
+                  const newDocRef = doc(scenariosRef);
+                  const newScript = {
+                      ...scriptToSave,
+                      id: newDocRef.id,
+                      userId: user.uid,
+                      createdAt: Date.now(),
+                      isPublic: false,
+                      originalAuthor: "Jok-Eng Official",
+                      originalScenarioId: scriptToSave.id,
+                      likes: 0, 
+                      likedBy: [],
+                      shares: 0, 
+                      saves: 0,
+                  };
+                  // Remove system specific fields if any, effectively converting to User Script
+                  // Note: UserScript type extends Script, so fields match mostly.
+                  
+                  await setDoc(newDocRef, newScript);
+                  alert("Saved to your scenarios!");
+              } catch (e) {
+                  console.error("Error saving system script", e);
+              }
+          }
+          return;
+      }
 
       if (confirm(`Save "${scriptToSave.title}" to your library?`)) {
           try {
@@ -110,6 +155,7 @@ export default function CommunityScenariosSection() {
   };
 
   const handleShare = async (id: string) => {
+     if (id.startsWith("sys-")) return;
      setScenarios(prev => prev.map(s => s.id === id ? { ...s, shares: (s.shares || 0) + 1 } : s));
      try {
          const script = scenarios.find(s => s.id === id);
@@ -135,12 +181,33 @@ export default function CommunityScenariosSection() {
         );
 
         const snapshot = await getDocs(q);
-        const docs = snapshot.docs.map(doc => ({
+        const communityDocs = snapshot.docs.map(doc => ({
             ...doc.data(),
             id: doc.id
         })) as UserScript[];
+        
+        // --- MIX LOGIC ---
+        // Pick 5 random system scripts to mix in
+        const systemScripts = scripts
+            .sort(() => 0.5 - Math.random())
+            .slice(0, 5)
+            .map(s => ({
+                ...s,
+                id: `sys-${s.id}`, // Custom ID prefix
+                userId: "jok-eng-official",
+                authorName: "Jok-Eng Official",
+                createdAt: Date.now(), // Fake timestamp for sorting interaction if needed
+                isPublic: true,
+                likes: 99, // Fake likes for clout?
+                likedBy: [],
+                originalPrompt: { context: s.cleanedEnglish, myRole: "You", otherRole: "Someone", plot: "Official Scenario" },
+                imageUrl: s.imageUrl || "" // Ensure image url if available
+            } as UserScript)); // Cast to conform
+        
+        const combined = [...communityDocs, ...systemScripts];
+        // Shuffle the mixed results
+        setScenarios(shuffleArray(combined));
 
-        setScenarios(docs);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         console.error("Error fetching community scenarios:", err);
@@ -156,8 +223,23 @@ export default function CommunityScenariosSection() {
                 ...doc.data(),
                 id: doc.id
             })) as UserScript[];
-            fallbackDocs.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
-            setScenarios(fallbackDocs);
+            
+             // Fallback Mix
+             const systemScripts = scripts.slice(0, 5).map(s => ({
+                ...s,
+                id: `sys-${s.id}`,
+                userId: "jok-eng-official",
+                authorName: "Jok-Eng Official",
+                createdAt: Date.now(),
+                isPublic: true,
+                likes: 42,
+                likedBy: [],
+                originalPrompt: { context: s.cleanedEnglish, myRole: "You", otherRole: "Someone", plot: "Official Scenario" }
+            } as UserScript));
+            
+            const combined = [...fallbackDocs, ...systemScripts];
+            setScenarios(shuffleArray(combined));
+
         } catch (e2) {
             console.error("Fallback failed too", e2);
         }
@@ -179,7 +261,7 @@ export default function CommunityScenariosSection() {
             <h2 className="text-3xl font-bold tracking-tight mb-2">
                 Story Feed
             </h2>
-            <p className="text-muted text-lg">Latest from the community</p>
+            <p className="text-muted-foreground text-lg">Latest from the community</p>
         </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
