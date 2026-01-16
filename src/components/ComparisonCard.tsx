@@ -37,17 +37,21 @@ export default function ComparisonCard({
   const [loading, setLoading] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [localRevealed, setLocalRevealed] = useState<Set<string>>(new Set());
-  const [showRisk, setShowRisk] = useState(false); // New state for Bad Response interaction
+  const [showRisk, setShowRisk] = useState(false);
+  
+  // Progressive Reveal State: 0 (Situation) -> 1 (Trap) -> 2 (Solution)
+  const [step, setStep] = useState<0 | 1 | 2>(0);
 
-  // Reset risk reveal when index changes
+  // Reset state when index changes
   useEffect(() => {
+    setStep(0);
     setShowRisk(false);
+    setLocalRevealed(new Set());
   }, [index]);
 
-  // Clean text helper (for TTS) - Updated to also strip "You: " prefix
+  // Clean text helper (for TTS)
   const cleanTextForTTS = (text: string) => {
-    let clean = text.replace(/\[|\]/g, ""); // Remove brackets
-    // Remove "You: " or "You:" prefix (case insensitive)
+    let clean = text.replace(/\[|\]/g, "");
     clean = clean.replace(/^You:\s*/i, ""); 
     return clean;
   };
@@ -55,13 +59,12 @@ export default function ComparisonCard({
   // Derived State
   const isEffectiveGlobalReveal = mode === "standard" || isGlobalRevealed;
 
-  // Extract all hidden words for "Reveal All" behavior (from the Good Response or fallback)
+  // Extract all hidden words for "Reveal All" behavior
   const textForCloze = sentence.goodResponse?.text || sentence.en;
   
   const allHiddenWords = useMemo(() => {
      return (textForCloze.match(/\[(.*?)\]/g) || []).map(m => m.slice(1, -1));
   }, [textForCloze]);
-
 
   // Render Cloze Text Helper
   const renderClozeText = (text: string) => {
@@ -84,10 +87,6 @@ export default function ComparisonCard({
                 initial={false}
                 onClick={(e: React.MouseEvent) => {
                     e.stopPropagation();
-                    // Toggle Logic: 
-                    // If this word is revealed (or all are revealed), we hide all to let user "cover back".
-                    // If it is hidden, we reveal all.
-                    // This satisfies "reveal once" -> "cover back again".
                     if (isRevealed) {
                         setLocalRevealed(new Set());
                     } else {
@@ -124,7 +123,6 @@ export default function ComparisonCard({
 
     onHeard(index);
     
-    // Always speak the "Good Response"
     const rawText = sentence.goodResponse?.text || sentence.en;
     const textToSpeak = cleanTextForTTS(rawText);
     
@@ -172,23 +170,24 @@ export default function ComparisonCard({
     }
   }, [index, onHeard, sentence, speaking]);
 
-  // Auto-play logic
+  // Auto-play logic attached to Step 2
   const hasAutoPlayedRef = useRef(false);
+  
+  // Reset auto-play flag when index changes
   useEffect(() => {
      hasAutoPlayedRef.current = false;
   }, [index]);
 
+  // Trigger when entering Step 2 AND (standard mode OR user explicitly navigated)
   useEffect(() => {
-      const timer = setTimeout(() => {
-          // Only auto-play if global reveal is ON (standard mode) or user enabled it explicitly
-          // For Cloze mode, usually we wait for user interaction, but sticking to prop for now.
-          if (isAutoPlayEnabled && !hasAutoPlayedRef.current) {
-              hasAutoPlayedRef.current = true;
+      if (step === 2 && !hasAutoPlayedRef.current) {
+          hasAutoPlayedRef.current = true;
+          // Small delay to let animation settle
+          setTimeout(() => {
               handlePlay();
-          }
-      }, 500);
-      return () => clearTimeout(timer);
-  }, [isAutoPlayEnabled, index, handlePlay]);
+          }, 300);
+      }
+  }, [step, handlePlay]);
 
   // Cleanup
   useEffect(() => {
@@ -198,23 +197,46 @@ export default function ComparisonCard({
   }, []);
 
   return (
-    <div className="bg-white rounded-xl border border-border overflow-hidden shadow-sm transition-all hover:shadow-md flex flex-col h-full">
+    <div className="bg-white rounded-xl border border-border overflow-hidden shadow-sm transition-all hover:shadow-md flex flex-col h-full relative">
       
-      {/* 1. SCENARIO / CONTEXT (Made more visible) */}
-      <div className="p-6 md:p-8 pb-6 text-center border-b border-border/40 bg-slate-50/50">
+      {/* 1. SCENARIO / CONTEXT */}
+      <motion.div 
+        className={`p-6 md:p-8 pb-6 text-center border-b border-border/40 bg-slate-50/50 transition-all duration-500
+            ${step > 0 ? "opacity-40 grayscale" : "opacity-100"}
+        `}
+      >
           <div className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-3">
               The Situation
           </div>
           <div className="text-2xl md:text-3xl font-semibold text-foreground leading-snug">
               {sentence.scenario}
           </div>
-      </div>
+      </motion.div>
 
-      <div className="p-4 md:p-8 pt-6 flex flex-col gap-6">
+      <div className="flex-1 p-4 md:p-8 pt-6 flex flex-col gap-6 relative">
 
-           {/* 2. BAD RESPONSE (What to avoid) - MOVED TO TOP */}
-          {sentence.badResponse && (
-            <div className="relative pl-4 border-l-4 border-red-200 bg-red-50/30 p-5 rounded-r-xl transition-all">
+           {/* STEP 0 ACTION: Reveal Options */}
+           {step === 0 && (
+               <div className="flex-1 flex flex-col items-center justify-center min-h-[200px] animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <p className="text-muted-foreground text-lg mb-6 italic">
+                        How would you respond?
+                    </p>
+                    <Button 
+                        onClick={() => setStep(1)}
+                        className="rounded-full px-8 py-6 text-lg bg-foreground text-background hover:scale-105 transition-all shadow-xl"
+                    >
+                        Reveal Options
+                    </Button>
+               </div>
+           )}
+
+           {/* 2. BAD RESPONSE (The Trap) */}
+          {step >= 1 && sentence.badResponse && (
+            <motion.div 
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: step === 2 ? 0.4 : 1, x: 0 }}
+                className={`relative pl-4 border-l-4 border-red-200 bg-red-50/30 p-5 rounded-r-xl transition-all duration-500`}
+            >
                 <div className="text-xs font-bold text-red-400 uppercase tracking-wider mb-2 flex items-center gap-2">
                     <span className="w-4 h-4 rounded-full border border-red-300 flex items-center justify-center text-[8px] text-red-400">✕</span>
                     Avoid Saying
@@ -233,7 +255,7 @@ export default function ComparisonCard({
                             }}
                             className="text-xs font-bold text-red-500 hover:text-red-700 underline decoration-dotted transition-colors flex items-center gap-1"
                         >
-                           <span>⚠️ Analyze Risk: Why is this bad?</span>
+                           <span>⚠️ Analyze Risk</span>
                         </button>
                     ) : (
                         <motion.div 
@@ -245,12 +267,33 @@ export default function ComparisonCard({
                         </motion.div>
                     )}
                 </div>
-            </div>
+            </motion.div>
+          )}
+
+          {/* STEP 1 ACTION: See Better Way */}
+          {step === 1 && (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="flex items-center justify-center pt-8"
+              >
+                 <Button 
+                    onClick={() => setStep(2)}
+                    className="rounded-full px-8 py-6 text-lg bg-teal-600 text-white hover:bg-teal-700 hover:scale-105 transition-all shadow-xl shadow-teal-200"
+                >
+                    See Better Approach ✨
+                </Button>
+              </motion.div>
           )}
           
-          {/* 3. GOOD RESPONSE (The Solution) - Cloze Enabled */}
-          {sentence.goodResponse && (
-            <div className={`relative bg-teal-50/50 p-6 rounded-2xl border border-teal-100 shadow-sm transition-all duration-500 ${!showRisk ? 'opacity-90 grayscale-[0.3]' : 'opacity-100 grayscale-0'}`}>
+          {/* 3. GOOD RESPONSE (The Solution) */}
+          {step === 2 && sentence.goodResponse && (
+            <motion.div 
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ type: "spring", bounce: 0.4 }}
+                className={`relative bg-teal-50/50 p-6 rounded-2xl border border-teal-100 shadow-lg shadow-teal-100/50`}
+            >
                  <div className="text-xs font-bold text-teal-700 uppercase tracking-wider mb-4 flex items-center gap-2">
                     <span className="bg-teal-100 px-2 py-0.5 rounded text-[10px]">Star Answer</span>
                     <span>Better Approach</span>
@@ -266,39 +309,45 @@ export default function ComparisonCard({
                         {sentence.goodResponse.why}
                     </div>
                 </div>
-            </div>
+
+                 {/* KEYWORDS */}
+                {(isEffectiveGlobalReveal || localRevealed.size > 0) && sentence.keywords && sentence.keywords.length > 0 && (
+                    <div className="flex flex-wrap justify-start gap-2 mt-4 animate-in fade-in slide-in-from-top-2 duration-300">
+                        {sentence.keywords.map((k) => {
+                            const isWordRevealed = isEffectiveGlobalReveal || localRevealed.has(k.word);
+                            if (!isWordRevealed) return null;
+                            return (
+                                <span key={k.word} className="text-sm px-3 py-1 bg-white text-teal-900 rounded-full border border-teal-200 shadow-sm">
+                                    <span className="font-bold">{k.word}</span>: {k.definition}
+                                </span>
+                            );
+                        })}
+                    </div>
+                )}
+            </motion.div>
           )}
 
-          {/* 4. KEYWORDS (Hidden by default, reveal with cloze) */}
-           {(isEffectiveGlobalReveal || localRevealed.size > 0) && sentence.keywords && sentence.keywords.length > 0 && (
-              <div className="flex flex-wrap justify-center gap-2 animate-in fade-in slide-in-from-top-2 duration-300">
-                  {sentence.keywords.map((k) => {
-                      // Only show if revealed
-                      const isWordRevealed = isEffectiveGlobalReveal || localRevealed.has(k.word);
-                      if (!isWordRevealed) return null;
-
-                      return (
-                        <span key={k.word} className="text-sm px-3 py-1 bg-white text-teal-900 rounded-full border border-teal-200 shadow-sm">
-                            <span className="font-bold">{k.word}</span>: {k.definition}
-                        </span>
-                      );
-                  })}
-              </div>
+          {/* 5. PLAY BUTTON (Always visible in Step 2) */}
+          {step === 2 && (
+             <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="mt-auto pt-4"
+             >
+                  <Button
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        handlePlay();
+                    }}
+                    variant={speaking ? "outline" : "primary"}
+                    size="lg"
+                    isLoading={loading}
+                    className="w-full h-14 text-lg font-medium rounded-xl shadow-sm hover:shadow-md transition-all active:scale-[0.99]"
+                  >
+                      {speaking ? <AudioVisualizer /> : <span className="flex items-center gap-2"><Volume2 className="w-5 h-5" /> Listen Again</span>}
+                  </Button>
+             </motion.div>
           )}
-
-          {/* 5. PLAY BUTTON */}
-          <Button
-            onClick={(e) => {
-                e.stopPropagation();
-                handlePlay();
-            }}
-            variant={speaking ? "outline" : "primary"}
-            size="lg"
-            isLoading={loading}
-            className="w-full h-14 text-lg font-medium rounded-xl shadow-sm hover:shadow-md transition-all active:scale-[0.99]"
-          >
-              {speaking ? <AudioVisualizer /> : <span className="flex items-center gap-2"><Volume2 className="w-5 h-5" /> Listen to Native Speaker</span>}
-          </Button>
 
       </div>
     </div>

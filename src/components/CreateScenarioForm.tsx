@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Script, UserScript } from "@/types";
 import { useAuth } from "@/context/AuthContext";
-import Link from "next/link";
+
 import { db } from "@/lib/firebase";
 import { collection, setDoc, doc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
@@ -24,6 +24,73 @@ interface CreateScenarioFormProps {
     plot: string;
   }
 }
+
+// --- Surprise Me Logic ---
+const TONES = ["Polite", "Direct", "Funny", "Flirty", "Spicy", "Professional"];
+const FORMATS = ["Social Dojo", "Classic Script", "Rapid Fire"];
+
+const SCENARIO_PROMPTS = [
+    {
+       context: "Asking my boss for a raise...",
+       myRole: "Employee",
+       otherRole: "Boss",
+       plot: "I need to argue why I deserve more money..."
+    },
+    {
+       context: "Breaking up with a clingy partner...",
+       myRole: "Partner",
+       otherRole: "Clingy Boyfriend/Girlfriend",
+       plot: "I need to be gentle but firm because they are very sensitive..."
+    },
+    {
+       context: "Ordering a complicated coffee...",
+       myRole: "Coffee Snob",
+       otherRole: "Barista",
+       plot: "I have very specific dietary requirements and I'm in a rush..."
+    },
+    {
+       context: "Explaining a mistake to a client...",
+       myRole: "Account Manager",
+       otherRole: "Angry Client",
+       plot: "I need to apologize without admitting liability for the server outage..."
+    },
+    {
+       context: "Returning a meal at a restaurant...",
+       myRole: "Diner",
+       otherRole: "Waiter",
+       plot: "The food is cold and I want a refund, but I hate confrontation..."
+    },
+    {
+       context: "Negotiating rent with a landlord...",
+       myRole: "Tenant",
+       otherRole: "Landlord",
+       plot: "I can't afford the increase and need to negotiate a smaller hike..."
+    },
+    {
+       context: "Small talk with a stranger in an elevator...",
+       myRole: "Person",
+       otherRole: "Stranger",
+       plot: "The silence is awkward and I want to break the ice..."
+    },
+    {
+        context: "Confessing a secret crush...",
+        myRole: "Friend",
+        otherRole: "Crush",
+        plot: "I've been hiding my feelings for years and can't take it anymore..."
+    },
+    {
+        context: "Apologizing for forgetting a birthday...",
+        myRole: "Forgetful Friend",
+        otherRole: "Birthday Person",
+        plot: "I completely missed their big 30th bash and need to make it right..."
+    },
+    {
+        context: "Confronting a roommate about dirty dishes...",
+        myRole: "Clean Freak",
+        otherRole: "Messy Roommate",
+        plot: "The sink is full again and we have guests coming over in an hour..."
+    }
+];
 
 export default function CreateScenarioForm({ initialValues }: CreateScenarioFormProps) {
   const { user } = useAuth();
@@ -136,24 +203,28 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
     if (step === "preview") setStep("input");
   };
 
-  // Random Placeholder
-  const [placeholder, setPlaceholder] = useState("Asking my boss for a raise...");
-  
-  useEffect(() => {
-     const prompts = [
-         "Asking my boss for a raise...",
-         "Breaking up with a clingy partner...",
-         "Ordering a complicated coffee...",
-         "Explaining a mistake to a client...",
-         "Returning a meal at a restaurant...",
-         "Negotiating rent with a landlord...",
-         "Small talk with a stranger in an elevator..."
-     ];
-     setPlaceholder(prompts[Math.floor(Math.random() * prompts.length)]);
-  }, []);
 
-  const TONES = ["Polite", "Direct", "Funny", "Flirty", "Spicy", "Professional"];
-  const FORMATS = ["Social Dojo", "Classic Script", "Rapid Fire"];
+
+    const [placeholder, setPlaceholder] = useState(SCENARIO_PROMPTS[0]);
+
+    useEffect(() => {
+        setPlaceholder(SCENARIO_PROMPTS[Math.floor(Math.random() * SCENARIO_PROMPTS.length)]);
+    }, []);
+
+    const handleSurpriseMe = () => {
+        const randomScenario = SCENARIO_PROMPTS[Math.floor(Math.random() * SCENARIO_PROMPTS.length)];
+        setInputs({
+            ...inputs, // keep any other state if we add more
+            context: randomScenario.context,
+            myRole: randomScenario.myRole,
+            otherRole: randomScenario.otherRole,
+            plot: randomScenario.plot
+        });
+        setPlaceholder(randomScenario);
+        // Optional: Add a small tone shift for fun
+        const randomTone = TONES[Math.floor(Math.random() * TONES.length)];
+        setTone(randomTone);
+    };
 
   return (
     <div className="w-full max-w-xl mx-auto py-6 px-4 md:py-10">
@@ -167,116 +238,148 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
                     transition={{ duration: 0.3, ease: "easeOut" }}
                     className="flex flex-col gap-6"
                 >
-                    {/* Inputs */}
-                    <div className="space-y-6">
-                        {/* The Big One - Now Standard Size */}
-                        <div className="space-y-2">
-                            <div className="flex items-center justify-between">
-                                <label className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-                                    What&rsquo;s happening?
-                                </label>
-                                <Link href="/" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-2 py-1 -mr-2">
-                                    Cancel
-                                </Link>
-                            </div>
-                            <textarea 
-                                placeholder={placeholder}
-                                className="w-full bg-secondary/80 hover:bg-secondary focus:bg-background border border-transparent focus:border-primary/20 rounded-lg px-4 py-3 text-base md:text-lg font-medium placeholder:text-muted-foreground/40 outline-none transition-all resize-none leading-relaxed min-h-[5rem]"
-                                value={inputs.context}
-                                onChange={(e) => setInputs({...inputs, context: e.target.value})}
-                                autoFocus
-                                rows={2}
-                            />
-                        </div>
+                    {/* Vibrant Header Container */}
+                    <div className="relative overflow-hidden rounded-3xl p-[1px] bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 shadow-2xl">
+                         <div className="bg-background rounded-[23px] p-6 md:p-8 relative overflow-hidden">
+                            {/* Decorative Background Blobs */}
+                            <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/10 rounded-full blur-[80px] -mr-16 -mt-16 pointer-events-none" />
+                            <div className="absolute bottom-0 left-0 w-48 h-48 bg-pink-500/10 rounded-full blur-[60px] -ml-12 -mb-12 pointer-events-none" />
 
-                        {/* Tone Selector */}
-                        <div className="space-y-2">
-                             <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70">
-                                Vibe Check
-                            </label>
-                            <div className="flex flex-wrap gap-2">
-                                {TONES.map(t => (
+                            <div className="relative z-10 flex flex-col gap-6">
+                                
+                                {/* Header & Surprise Button */}
+                                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                                    <div>
+                                        <h1 className="text-2xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-pink-600 to-purple-600">
+                                            Director&apos;s Chair
+                                        </h1>
+                                        <p className="text-muted-foreground text-sm font-medium mt-1">
+                                            Craft your perfect practice scenario.
+                                        </p>
+                                    </div>
                                     <button
-                                        key={t}
-                                        onClick={() => setTone(t)}
-                                        className={`
-                                            px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 border
-                                            ${tone === t 
-                                                ? "bg-primary text-primary-foreground border-primary shadow-md scale-100" 
-                                                : "bg-secondary/50 text-muted-foreground border-transparent hover:bg-secondary hover:text-foreground hover:border-border/50"
-                                            }
-                                        `}
+                                        onClick={handleSurpriseMe}
+                                        className="group relative inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-bold text-sm shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 hover:scale-105 active:scale-95 transition-all w-full sm:w-auto justify-center overflow-hidden"
                                     >
-                                        {t}
+                                        <span className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                                        <span className="relative flex items-center gap-2">
+                                            ✨ Surprise Me
+                                        </span>
                                     </button>
-                                ))}
-                            </div>
-                        </div>
+                                </div>
 
-                        {/* Format Selector (New) */}
-                        <div className="space-y-2">
-                             <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70">
-                                Training Style
-                            </label>
-                            <div className="flex flex-wrap gap-2">
-                                {FORMATS.map(f => (
-                                    <button
-                                        key={f}
-                                        onClick={() => setFormat(f)}
-                                        className={`
-                                            px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 border
-                                            ${format === f 
-                                                ? "bg-foreground text-background border-foreground shadow-md scale-100" 
-                                                : "bg-secondary/50 text-muted-foreground border-transparent hover:bg-secondary hover:text-foreground hover:border-border/50"
-                                            }
-                                        `}
-                                    >
-                                        {f}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
+                                <div className="h-px w-full bg-border/50" />
 
-                        {/* Details Grid */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                             <div className="space-y-2">
-                                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70">
-                                    Who are you?
-                                </label>
-                                <input 
-                                    type="text" 
-                                    placeholder="Employee"
-                                    className="w-full bg-secondary/80 hover:bg-secondary focus:bg-background border border-transparent focus:border-primary/20 rounded-lg px-4 py-3 text-base font-medium placeholder:text-muted-foreground/40 outline-none transition-all"
-                                    value={inputs.myRole}
-                                    onChange={(e) => setInputs({...inputs, myRole: e.target.value})}
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70">
-                                    Who are they?
-                                </label>
-                                <input 
-                                    type="text" 
-                                    placeholder="Boss"
-                                    className="w-full bg-secondary/80 hover:bg-secondary focus:bg-background border border-transparent focus:border-primary/20 rounded-lg px-4 py-3 text-base font-medium placeholder:text-muted-foreground/40 outline-none transition-all"
-                                    value={inputs.otherRole}
-                                    onChange={(e) => setInputs({...inputs, otherRole: e.target.value})}
-                                />
-                            </div>
-                        </div>
+                                {/* Inputs */}
+                                <div className="space-y-6">
+                                    {/* 1. Details Grid (Who) */}
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                         <div className="space-y-2 group">
+                                            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70 group-focus-within:text-purple-500 transition-colors">
+                                                Who are you?
+                                            </label>
+                                            <input 
+                                                type="text" 
+                                                placeholder={placeholder.myRole}
+                                                className="w-full bg-secondary/30 hover:bg-secondary/50 focus:bg-background border border-transparent focus:border-purple-500/50 rounded-xl px-4 py-3 text-base font-semibold placeholder:text-muted-foreground/40 outline-none transition-all shadow-sm focus:shadow-purple-500/20"
+                                                value={inputs.myRole}
+                                                onChange={(e) => setInputs({...inputs, myRole: e.target.value})}
+                                            />
+                                        </div>
+                                        <div className="space-y-2 group">
+                                            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70 group-focus-within:text-purple-500 transition-colors">
+                                                Who are they?
+                                            </label>
+                                            <input 
+                                                type="text" 
+                                                placeholder={placeholder.otherRole}
+                                                className="w-full bg-secondary/30 hover:bg-secondary/50 focus:bg-background border border-transparent focus:border-purple-500/50 rounded-xl px-4 py-3 text-base font-semibold placeholder:text-muted-foreground/40 outline-none transition-all shadow-sm focus:shadow-purple-500/20"
+                                                value={inputs.otherRole}
+                                                onChange={(e) => setInputs({...inputs, otherRole: e.target.value})}
+                                            />
+                                        </div>
+                                    </div>
 
-                        {/* Plot Twist */}
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70">
-                                The Plot Twist
-                            </label>
-                            <textarea 
-                                placeholder="I need to argue why I deserve more money..."
-                                className="w-full bg-secondary/80 hover:bg-secondary focus:bg-background border border-transparent focus:border-primary/20 rounded-lg px-4 py-3 text-base font-medium placeholder:text-muted-foreground/40 outline-none transition-all h-24 resize-none leading-relaxed"
-                                value={inputs.plot}
-                                onChange={(e) => setInputs({...inputs, plot: e.target.value})}
-                            />
-                        </div>
+                                    {/* 2. Context (Where) */}
+                                    <div className="space-y-2 group">
+                                        <div className="flex items-center justify-between">
+                                            <label className="text-sm font-bold uppercase tracking-wider text-muted-foreground group-focus-within:text-pink-600 transition-colors">
+                                                What&rsquo;s happening?
+                                            </label>
+                                        </div>
+                                        <textarea 
+                                            placeholder={placeholder.context}
+                                            className="w-full bg-secondary/30 hover:bg-secondary/50 focus:bg-background border border-transparent focus:border-pink-500/50 rounded-xl px-4 py-3 text-base md:text-lg font-medium placeholder:text-muted-foreground/40 outline-none transition-all resize-none leading-relaxed min-h-[5rem] shadow-sm focus:shadow-pink-500/20"
+                                            value={inputs.context}
+                                            onChange={(e) => setInputs({...inputs, context: e.target.value})}
+                                            autoFocus
+                                            rows={2}
+                                        />
+                                    </div>
+
+                                    {/* 3. Plot Twist (What) */}
+                                    <div className="space-y-2 group">
+                                        <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70 group-focus-within:text-indigo-500 transition-colors">
+                                            The Plot Twist
+                                        </label>
+                                        <textarea 
+                                            placeholder={placeholder.plot}
+                                            className="w-full bg-secondary/30 hover:bg-secondary/50 focus:bg-background border border-transparent focus:border-indigo-500/50 rounded-xl px-4 py-3 text-base font-medium placeholder:text-muted-foreground/40 outline-none transition-all h-24 resize-none leading-relaxed shadow-sm focus:shadow-indigo-500/20"
+                                            value={inputs.plot}
+                                            onChange={(e) => setInputs({...inputs, plot: e.target.value})}
+                                        />
+                                    </div>
+
+                                    {/* 4. Tone (How) */}
+                                    <div className="space-y-2">
+                                         <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70">
+                                            Vibe Check
+                                        </label>
+                                        <div className="flex flex-wrap gap-2">
+                                            {TONES.map(t => (
+                                                <button
+                                                    key={t}
+                                                    onClick={() => setTone(t)}
+                                                    className={`
+                                                        px-4 py-2 rounded-full text-sm font-bold transition-all duration-200 border
+                                                        ${tone === t 
+                                                            ? "bg-gradient-to-r from-pink-500 to-purple-500 text-white border-transparent shadow-lg shadow-purple-500/30 scale-105" 
+                                                            : "bg-secondary/50 text-muted-foreground border-transparent hover:bg-secondary hover:text-foreground hover:scale-105"
+                                                        }
+                                                    `}
+                                                >
+                                                    {t}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* 5. Format (Meta) */}
+                                    <div className="space-y-2">
+                                         <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70">
+                                            Training Style
+                                        </label>
+                                        <div className="flex flex-wrap gap-2">
+                                            {FORMATS.map(f => (
+                                                <button
+                                                    key={f}
+                                                    onClick={() => setFormat(f)}
+                                                    className={`
+                                                        px-4 py-2 rounded-full text-sm font-bold transition-all duration-200 border
+                                                        ${format === f 
+                                                            ? "bg-foreground text-background border-foreground shadow-md scale-105" 
+                                                            : "bg-secondary/50 text-muted-foreground border-transparent hover:bg-secondary hover:text-foreground hover:scale-105"
+                                                        }
+                                                    `}
+                                                >
+                                                    {f}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                         </div>
                     </div>
 
                     <div className="pt-6">
