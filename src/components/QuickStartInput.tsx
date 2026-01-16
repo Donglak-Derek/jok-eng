@@ -3,7 +3,7 @@
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { User, ArrowRight } from "lucide-react";
+import { User } from "lucide-react";
 
 export default function QuickStartInput() {
     const { user } = useAuth();

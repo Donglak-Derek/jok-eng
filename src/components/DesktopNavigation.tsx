@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
-import { Home, Library, PlusCircle, Settings, LogOut, User } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { Home, Library, PlusCircle, LogOut, User } from "lucide-react";
+// import { usePathname } from "next/navigation";
 
 type Tab = "home" | "my_scenarios";
 
@@ -14,7 +14,7 @@ type Props = {
 
 export default function DesktopNavigation({ activeTab, onTabChange }: Props) {
     const { user, logout } = useAuth();
-    const pathname = usePathname();
+    // const pathname = usePathname();
 
     return (
         <aside className="hidden md:flex w-64 bg-black flex-col h-screen fixed left-0 top-0 z-50 text-neutral-400 p-6">

@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
-import { collectionGroup, query, where, orderBy, limit, getDocs, collection, updateDoc, doc, arrayUnion, arrayRemove, increment, setDoc } from "firebase/firestore";
+import { collectionGroup, query, where, orderBy, limit, getDocs, updateDoc, doc, arrayUnion, arrayRemove, increment } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { UserScript } from "@/types";
 import ScenarioCard from "./ScenarioCard";
 import { motion } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
 import { scripts } from "@/data";
+import DailyChallengeCard from "./DailyChallengeCard";
+import { useRouter } from "next/navigation";
 
 export default function CommunityScenariosSection() {
   const [scenarios, setScenarios] = useState<UserScript[]>([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
+  const router = useRouter();
 
   // Helper to shuffle array
   const shuffleArray = (array: UserScript[]) => {
@@ -72,86 +75,32 @@ export default function CommunityScenariosSection() {
     }
   };
 
-  const handleSave = async (id: string) => {
-      // ... (rest of logic same)
-      if (!user) {
-          alert("Please login to save scenarios.");
-          return;
-      }
-      const scriptToSave = scenarios.find(s => s.id === id);
-      if (!scriptToSave) return;
-      
-      // Handle System Scripts Save
-      if (id.startsWith("sys-")) {
-          if (confirm(`Save "${scriptToSave.title}" to your library?`)) {
-              // Implementation for saving system script to user library
-              // We can basically copy it as a new UserScript
-               try {
-                  const scenariosRef = collection(db, "users", user.uid, "scenarios");
-                  const newDocRef = doc(scenariosRef);
-                  const newScript = {
-                      ...scriptToSave,
-                      id: newDocRef.id,
-                      userId: user.uid,
-                      createdAt: Date.now(),
-                      isPublic: false,
-                      originalAuthor: "Jok-Eng Official",
-                      originalScenarioId: scriptToSave.id,
-                      likes: 0, 
-                      likedBy: [],
-                      shares: 0, 
-                      saves: 0,
-                  };
-                  // Remove system specific fields if any, effectively converting to User Script
-                  // Note: UserScript type extends Script, so fields match mostly.
-                  
-                  await setDoc(newDocRef, newScript);
-                  alert("Saved to your scenarios!");
-              } catch (e) {
-                  console.error("Error saving system script", e);
-              }
-          }
-          return;
-      }
+  // Feature 2: REMIX (Viral Growth) replacing Save
+  const handleRemix = async (scriptId: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!user) {
+        alert("Please login to remix scenarios!");
+        return;
+    }
 
-      if (confirm(`Save "${scriptToSave.title}" to your library?`)) {
-          try {
-              const scenariosRef = collection(db, "users", user.uid, "scenarios");
-              const newDocRef = doc(scenariosRef);
+    const script = scenarios.find(s => s.id === scriptId);
+    if (!script) return;
 
-              const newScript = {
-                  ...scriptToSave,
-                  id: newDocRef.id,
-                  userId: user.uid,
-                  createdAt: Date.now(),
-                  isPublic: false,
-                  originalAuthor: scriptToSave.authorName || "Unknown", 
-                  originalScenarioId: scriptToSave.id,
-                  likes: 0,
-                  likedBy: [],
-                  shares: 0,
-                  saves: 0,
-                  commentsCount: 0,
-              };
-              
-              await setDoc(newDocRef, newScript);
-              
-              try {
-                 const originalRef = doc(db, "users", scriptToSave.userId, "scenarios", scriptToSave.id);
-                 await updateDoc(originalRef, {
-                     saves: increment(1)
-                 });
-                 setScenarios(prev => prev.map(s => s.id === id ? { ...s, saves: (s.saves || 0) + 1 } : s));
-              } catch (updateErr) {
-                  console.warn("Could not increment save count (likely permission)", updateErr);
-              }
+    // Use URL params to pass data to the Creator
+    const params = new URLSearchParams();
+    
+    // Pass Title
+    params.set("remixTitle", script.title);
+    
+    // Pass Context (Context for user scenarios is often just the context string)
+    // For System scripts (Daily Vibe etc), it might be cleanedEnglish or context.
+    const contextToUse = script.context || script.cleanedEnglish || "";
+    params.set("remixContext", contextToUse);
 
-              alert("Saved to your scenarios!");
-          } catch (err) {
-              console.error("Error saving:", err);
-              alert("Failed to save.");
-          }
-      }
+    // Navigate to Creator
+    router.push(`/create-scenario?${params.toString()}`);
   };
 
   const handleShare = async (id: string) => {
@@ -251,39 +200,90 @@ export default function CommunityScenariosSection() {
     fetchCommunityScenarios();
   }, []);
 
+  /* Feature 3: Smart Chips (Feed Filtering) */
+  const [activeFilter, setActiveFilter] = useState("Trending");
+  const FILTERS = ["Trending", "Professional", "Spicy", "Funny"];
+
+  const filteredScenarios = scenarios.filter(s => {
+      if (activeFilter === "Trending") return true;
+      const text = (s.title + " " + s.cleanedEnglish + " " + (s.context || "") + " " + (s.originalPrompt?.context || "")).toLowerCase();
+      
+      if (activeFilter === "Professional") {
+          return ["work", "boss", "office", "salary", "interview", "professional", "job", "career", "client"].some(k => text.includes(k));
+      }
+      if (activeFilter === "Spicy") {
+          return ["date", "flirt", "love", "romance", "crush", "break up", "partner", "sexy", "spicy"].some(k => text.includes(k));
+      }
+      if (activeFilter === "Funny") {
+          return ["funny", "joke", "laugh", "comedy", "prank", "awkward", "silly"].some(k => text.includes(k));
+      }
+      return true;
+  });
+
   if (loading) return null;
-  if (scenarios.length === 0) return null;
+  // if (scenarios.length === 0) return null; // Don't return null here, empty state might be better, or just let filtered handle it.
 
   return (
     <section className="w-full mx-auto">
       {/* Header: Clean & Simple */}
-      <div className="mb-8">
+      <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
             <h2 className="text-3xl font-bold tracking-tight mb-2">
                 Story Feed
             </h2>
             <p className="text-muted-foreground text-lg">Latest from the community</p>
         </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {scenarios.map((script, index) => (
-            <motion.div
-                key={script.id}
-                initial={{ opacity: 0, scale: 0.98 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: index * 0.05 }}
-                className="w-full"
-            >
-                <ScenarioCard 
-                    script={script} 
-                    index={index} 
-                    onLike={handleToggleLike}
-                    onSave={handleSave}
-                    onShare={handleShare}
-                    isLiked={user ? script.likedBy?.includes(user.uid) : false}
-                />
-            </motion.div>
-        ))}
+        
+        {/* Smart Chips */}
+        <div className="flex flex-wrap gap-2">
+            {FILTERS.map(f => (
+                <button
+                    key={f}
+                    onClick={() => setActiveFilter(f)}
+                    className={`
+                        px-4 py-1.5 rounded-full text-sm font-semibold transition-all
+                        ${activeFilter === f
+                            ? "bg-foreground text-background shadow-md scale-105"
+                            : "bg-secondary text-muted-foreground hover:bg-secondary/80"
+                        }
+                    `}
+                >
+                    {f}
+                </button>
+            ))}
+        </div>
       </div>
+
+       {/* FEATURE 1: Daily Vibe Challenge - Only on Trending? Or always? Let's keep it on Trending/All */}
+       {activeFilter === "Trending" && <div className="mb-8"><DailyChallengeCard /></div>}
+
+      {filteredScenarios.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredScenarios.map((script, index) => (
+                <motion.div
+                    key={script.id}
+                    layout // Animate layout changes when filtering
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.3 }}
+                    className="w-full"
+                >
+                    <ScenarioCard 
+                        script={script} 
+                        index={index} 
+                        onLike={handleToggleLike}
+                        onRemix={handleRemix}
+                        onShare={handleShare}
+                        isLiked={user ? script.likedBy?.includes(user.uid) : false}
+                    />
+                </motion.div>
+            ))}
+          </div>
+      ) : (
+          <div className="text-center py-20 text-muted-foreground">
+              <p>No {activeFilter.toLowerCase()} vibes found. Be the first to create one!</p>
+          </div>
+      )}
     </section>
   );
 }

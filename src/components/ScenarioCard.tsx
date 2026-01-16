@@ -6,7 +6,7 @@ import { useProgress } from "@/context/ProgressContext";
 import type { Script, UserScript } from "@/types";
 import { motion } from "framer-motion";
 import React from "react";
-import { Heart, Bookmark, Lock, Edit2, Trash2, User, Repeat } from "lucide-react";
+import { Heart, Lock, Edit2, Trash2, User, Repeat, Shuffle } from "lucide-react";
 import { GenerativeCover } from "./GenerativeCover";
 
 type Props = {
@@ -16,7 +16,7 @@ type Props = {
   onDelete?: (id: string, e: React.MouseEvent) => void;
   onTogglePublic?: (id: string, current: boolean, e: React.MouseEvent) => void;
   onLike?: (id: string, e: React.MouseEvent) => void;
-  onSave?: (id: string, e: React.MouseEvent) => void;
+  onRemix?: (id: string, e: React.MouseEvent) => void;
   onShare?: (id: string, e: React.MouseEvent) => void;
   isLiked?: boolean;
 };
@@ -27,7 +27,7 @@ export default function ScenarioCard({
     onDelete, 
     onTogglePublic, 
     onLike,
-    onSave, 
+    onRemix, 
     isLiked 
 }: Props) {
 
@@ -144,12 +144,14 @@ export default function ScenarioCard({
                                 )}
                             </div>
                         )}
-                         {onSave && (
+                         {onRemix && (
                             <button 
-                                onClick={(e) => { e.preventDefault(); e.stopPropagation(); onSave(script.id, e); }}
-                                className="hover:text-foreground transition-colors"
+                                onClick={(e) => { e.preventDefault(); e.stopPropagation(); onRemix(script.id, e); }}
+                                className="flex items-center gap-1 hover:text-purple-500 transition-colors ml-2"
+                                title="Remix this scenario"
                             >
-                                <Bookmark className="w-3.5 h-3.5" />
+                                <span className="text-[10px] font-bold uppercase tracking-wide opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0">Remix</span>
+                                <Shuffle className="w-3.5 h-3.5" />
                             </button>
                          )}
                     </div>

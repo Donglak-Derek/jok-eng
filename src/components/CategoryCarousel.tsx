@@ -3,21 +3,14 @@
 import Link from "next/link";
 import Image from "next/image";
 import { categories, scripts } from "@/data";
-import { useRef } from "react";
-import { ChevronRight, ChevronLeft } from "lucide-react";
+// import { useRef } from "react";
+// import { ChevronRight, ChevronLeft } from "lucide-react";
+import { Category } from "@/types";
 
 export default function CategoryCarousel() {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  // const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  const scroll = (direction: "left" | "right") => {
-    if (scrollContainerRef.current) {
-      const scrollAmount = 300;
-      scrollContainerRef.current.scrollBy({
-        left: direction === "right" ? scrollAmount : -scrollAmount,
-        behavior: "smooth",
-      });
-    }
-  };
+  /* Scroll logic removed in favor of Grid/Native Swipe */
 
   return (
     <section className="relative group/carousel">
@@ -28,14 +21,11 @@ export default function CategoryCarousel() {
             </h2>
             <p className="text-muted-foreground text-lg">Choose a context to start practicing.</p>
          </div>
-         
-         {/* Scroll Controls (Desktop - Hidden if Grid is active, but we keep for now logic-wise or remove) */}
-         {/* Actually, if we use Grid on Desktop, we don't need scroll buttons. */}
       </div>
 
       {/* 1. MOBILE: Carousel Container (md:hidden) */}
       <div 
-        ref={scrollContainerRef}
+        // ref={scrollContainerRef}
         className="flex md:hidden gap-4 overflow-x-auto pb-8 pt-2 snap-x snap-mandatory hide-scrollbar px-4 -mx-4"
         style={{ 
             scrollbarWidth: 'none', 
@@ -61,7 +51,7 @@ export default function CategoryCarousel() {
 }
 
 // Sub-component for Cleaner Code
-function CategoryCard({ c }: { c: any }) {
+function CategoryCard({ c }: { c: Category }) {
     const scriptCount = scripts.filter((s) => s.categorySlug === c.slug).length;
     return (
         <Link

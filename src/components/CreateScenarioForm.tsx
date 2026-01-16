@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 // For preview, we want to see sentences.
 import ClozeCard from "./ClozeCard";
 import { Button } from "@/components/Button";
-import { GenerativeCover } from "./GenerativeCover";
+// import { GenerativeCover } from "./GenerativeCover";
 import CulturalNoteCard from "./CulturalNoteCard";
 import QuizCard from "./QuizCard";
 
@@ -68,10 +68,10 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
         setGeneratedScript(data.script);
         setStep("preview");
         setIsStudyMode(false); // Reset to review mode on new generation
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
+    } catch (error) {
         console.error(error);
-        alert(`Error: ${error.message}`);
+        const err = error as Error;
+        alert(`Error: ${err.message || "Unknown error"}`);
         setStep("input");
     }
   };

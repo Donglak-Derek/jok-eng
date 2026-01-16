@@ -1,13 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Header from "@/components/Header";
 import CreateScenarioForm from "@/components/CreateScenarioForm";
 import ScenarioDirector from "@/components/Director/ScenarioDirector";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
-export default function CreateScenarioPage() {
+function CreateScenarioContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [mode, setMode] = useState<'director' | 'form'>('form');
   const [directorValues, setDirectorValues] = useState<{
     context: string;
@@ -15,6 +16,24 @@ export default function CreateScenarioPage() {
     otherRole: string;
     plot: string;
   } | undefined>(undefined);
+
+  // Check for Remix params on mount
+  useEffect(() => {
+     const remixContext = searchParams.get("remixContext");
+     const remixTitle = searchParams.get("remixTitle");
+
+     if (remixContext) {
+         setMode('form');
+         setDirectorValues({
+             context: remixContext,
+             // If we had title, we could append it or just use context.
+             // Usually Context is enough to start.
+             myRole: "", 
+             otherRole: "",
+             plot: ""
+         });
+     }
+  }, [searchParams]);
 
   const handleDirectorFinish = (blueprint: { context: string; myRole: string; otherRole: string; plot: string }) => {
       setDirectorValues(blueprint);
@@ -53,4 +72,12 @@ export default function CreateScenarioPage() {
         </div>
     </div>
   );
+}
+
+export default function CreateScenarioPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+            <CreateScenarioContent />
+        </Suspense>
+    );
 }

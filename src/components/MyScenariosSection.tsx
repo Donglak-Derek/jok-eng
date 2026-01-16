@@ -187,11 +187,6 @@ import { useSaved } from "@/hooks/useSaved";
                                 onTogglePublic={activeTab === 'created' ? handleTogglePublic : undefined}
                                 onEdit={activeTab === 'created' ? handleEdit : undefined}
                                 onDelete={activeTab === 'created' ? handleDelete : undefined}
-                                // Enable Save functionality everywhere? Yes.
-                                onSave={ undefined /* ScenarioCard likely uses hook or parent, but wait, ScenarioCard uses onSave prop */ }
-                                // Actually, ScenarioCard doesn't self-manage save state unless passed IS_LIKED. 
-                                // But implementing save toggle inside MyScenarios list is tricky if logic is in card.
-                                // I'll leave onSave undefined here for now, assuming cards in "Saved" are already saved.
                                 // Users can unsave by going to the card detail.
                             />
                         </motion.div>
