@@ -119,3 +119,12 @@ export interface UserStats {
   totalPractices: number;
   totalLikesReceived: number;
 }
+
+export interface UserProfile {
+  uid: string;
+  occupation: string;
+  hobbies: string[];
+  humorStyle: string; // e.g., "Witty", "Dad Jokes", "Sarcastic"
+  motherLanguage: string; // To help with specific translation nuances
+  onboardingCompleted: boolean;
+}
