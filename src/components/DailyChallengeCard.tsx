@@ -44,14 +44,8 @@ export default function DailyChallengeCard() {
 
             <div className="relative z-10 p-6 md:p-8 flex flex-col md:flex-row items-center gap-8">
                 
-                {/* Mobile Badge */}
-                <div className="md:hidden inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-xs font-bold tracking-wider uppercase border border-white/10">
-                    <Calendar className="w-3 h-3" />
-                     Today&apos;s Challenge
-                </div>
-
                 {/* Visual Side */}
-                <div className="relative w-full md:w-48 aspect-[3/4] md:aspect-square shrink-0 rounded-2xl overflow-hidden shadow-2xl skew-x-1 ring-1 ring-white/20">
+                <div className="relative w-full md:w-48 aspect-[2.5/1] md:aspect-square shrink-0 rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/20">
                     <Image 
                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         src={(dailyScript as any).image || (dailyScript as any).imageUrl || "/images/placeholder.jpg"} 
@@ -67,11 +61,7 @@ export default function DailyChallengeCard() {
                 </div>
 
                 {/* Content Side */}
-                <div className="flex-1 text-center md:text-left space-y-4">
-                    <div className="hidden md:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-xs font-bold tracking-wider uppercase border border-white/10 mb-2">
-                        <Calendar className="w-3 h-3" />
-                         Today&apos;s Challenge
-                    </div>
+                <div className="flex-1 text-center md:text-left space-y-4 min-w-0">
                     
                     <h2 className="text-3xl md:text-4xl font-black leading-tight">
                         {dailyScript.title}

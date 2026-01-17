@@ -49,8 +49,12 @@ export default function StandardScriptFlow({ script }: Props) {
   const [viewMode, setViewMode] = useState<"flow" | "full">("flow");
   const [isGlobalRevealed, setIsGlobalRevealed] = useState(false);
   const [isAutoPlayEnabled, setIsAutoPlayEnabled] = useState(true);
-  // Mode State (defaults to script mode or standard)
-  const [mode, setMode] = useState<"standard" | "cloze">((script.mode as "standard" | "cloze") || "standard");
+  
+  // Custom Scenarios default to "cloze" (Hidden), System ones stay "standard" (Visible)
+  const isUserScript = "userId" in script;
+  const defaultMode = isUserScript ? "cloze" : "standard";
+  
+  const [mode, setMode] = useState<"standard" | "cloze">((script.mode as "standard" | "cloze") || defaultMode);
 
   const toggleMode = () => {
     setMode(prev => prev === "standard" ? "cloze" : "standard");

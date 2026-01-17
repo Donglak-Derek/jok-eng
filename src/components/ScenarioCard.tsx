@@ -55,9 +55,9 @@ export default function ScenarioCard({
         transition={{ duration: 0.2 }}
         className="group h-full flex flex-col bg-white rounded-xl border border-border/40 overflow-hidden transition-all duration-300 hover:border-border/80 hover:shadow-sm"
       >
-        <Link href={href} className="flex-1 flex flex-col">
-              {/* Cover Image or Generative Cover */}
-              <div className="relative w-full aspect-[1.8/1] bg-secondary/10 overflow-hidden">
+        <Link href={href} className="flex-1 flex flex-col min-w-0">
+              {/* Cover Image: Instagram Style (Big & Visual) */}
+              <div className="relative w-full aspect-[4/3] md:aspect-[1.8/1] bg-secondary/10 overflow-hidden shrink-0">
                   {script.imageUrl ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img 
@@ -70,9 +70,9 @@ export default function ScenarioCard({
                   )}
               </div>
 
-             <div className="p-5 flex flex-col gap-2 flex-1 relative">
+             <div className="p-4 md:p-5 flex flex-col gap-2 flex-1 relative min-w-0">
                  {/* Title & Context */}
-                <div>
+                <div className="min-w-0">
                      {/* Simpler Type Label or just removed for minimalism? Keeping it tiny. */}
                      <div className="flex items-center justify-between mb-2">
                          <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60">

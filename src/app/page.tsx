@@ -29,7 +29,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground selection:bg-black selection:text-white">
-    <div className="min-h-screen flex flex-col bg-background text-foreground selection:bg-black selection:text-white">
       
       {/* LOGGED IN VIEW: Dashboard Mode */}
       {user ? (
@@ -41,7 +40,7 @@ export default function Home() {
             <DesktopNavigation activeTab={activeTab} onTabChange={setActiveTab} />
             
             {/* 2. MAIN CONTENT AREA */}
-            <div className="flex-1 md:pl-64 flex flex-col min-h-0 overflow-y-auto">
+            <div className="flex-1 md:pl-64 flex flex-col min-h-0 overflow-y-auto w-full max-w-[100vw] overflow-x-hidden">
                 {/* Mobile Header (Hidden on Desktop) */}
                 <div className="md:hidden">
                     <Header />
@@ -100,10 +99,14 @@ export default function Home() {
                                     {/* 1. Categories (Mobile: Carousel, Desktop: Grid) */}
                                     <CategoryCarousel />
 
-                                    <hr className="border-t border-border/50 max-w-2xl mx-auto" />
-
                                     {/* 1.5 Daily Challenge */}
-                                    <DailyChallengeCard />
+                                    <div>
+                                        <div className="mb-6">
+                                            <h2 className="text-3xl font-bold tracking-tight mb-2">Today&apos;s Challenge</h2>
+                                            <p className="text-muted-foreground text-lg">Daily practice to keep your streak alive.</p>
+                                        </div>
+                                        <DailyChallengeCard />
+                                    </div>
 
                                     {/* 2. Community Feed */}
                                     <CommunityScenariosSection />
@@ -133,7 +136,7 @@ export default function Home() {
                     <InteractiveGridBackground />
                     
                     <div className="container-minimal relative z-10 text-center space-y-8">
-                        <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold tracking-tighter text-balance leading-[0.9]">
+                        <h1 className="text-5xl xs:text-6xl md:text-8xl lg:text-9xl font-bold tracking-tighter text-balance leading-[0.9]">
                             Don&apos;t just learn English. <span className="text-transparent bg-clip-text bg-gradient-to-br from-primary to-blue-600 block sm:inline">Live it.</span>
                         </h1>
                         
@@ -239,7 +242,6 @@ export default function Home() {
            </div>
         </div>
       )}
-    </div>
     </div>
   );
 }

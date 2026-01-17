@@ -24,20 +24,25 @@ export default function CategoryCarousel() {
       </div>
 
       {/* 1. MOBILE: Carousel Container (md:hidden) */}
-      <div 
-        // ref={scrollContainerRef}
-        className="flex md:hidden gap-4 overflow-x-auto pb-8 pt-2 snap-x snap-mandatory hide-scrollbar px-4 -mx-4"
-        style={{ 
-            scrollbarWidth: 'none', 
-            msOverflowStyle: 'none',
-            maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
-            WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)'
-        }}
-      >
-        {categories.map((c) => (
-             <CategoryCard key={c.slug} c={c} />
-        ))}
-        <div className="w-4 shrink-0" />
+      {/* Wrapper to contain the bleed so it doesn't push page width */}
+      {/* 1. MOBILE: Carousel Container (md:hidden) */}
+      {/* Breakout: Force 100vw width relative to viewport, centered, to avoid parent width pollution */}
+      <div className="md:hidden relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-x-hidden bg-background">
+          <div 
+            // ref={scrollContainerRef}
+            className="flex gap-4 overflow-x-auto pb-8 pt-2 snap-x snap-mandatory hide-scrollbar"
+            style={{ 
+                scrollbarWidth: 'none', 
+                msOverflowStyle: 'none',
+                maskImage: 'linear-gradient(to right, transparent, black 5%, black 95%, transparent)',
+                WebkitMaskImage: 'linear-gradient(to right, transparent, black 5%, black 95%, transparent)'
+            }}
+          >
+            {categories.map((c) => (
+                <CategoryCard key={c.slug} c={c} />
+            ))}
+            <div className="w-4 shrink-0" />
+          </div>
       </div>
 
       {/* 2. DESKTOP: Grid Container (hidden md:grid) */}

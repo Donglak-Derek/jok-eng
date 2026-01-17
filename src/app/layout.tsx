@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { AuthProvider } from "@/context/AuthContext";
 import { ProgressProvider } from "@/context/ProgressContext";
 import OnboardingModal from "@/components/OnboardingModal";
@@ -14,6 +14,13 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Jok-eng",
   description: "Learn English with cleaned scripts, sentences, and keywords",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({

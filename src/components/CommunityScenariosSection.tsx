@@ -111,9 +111,9 @@ export default function CommunityScenariosSection() {
             q = query(
                 collectionGroup(db, "scenarios"),
                 where("isPublic", "==", true),
+                orderBy("likes", "desc"), // Requires Index!
                 // TEMPORARY FIX: Switch to 'createdAt' while 'likes' index builds
-                // orderBy("likes", "desc"), 
-                orderBy("createdAt", "desc"), 
+                // orderBy("createdAt", "desc"), 
                 limit(20)
             );
         } 

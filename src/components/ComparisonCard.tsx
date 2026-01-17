@@ -218,12 +218,12 @@ export default function ComparisonCard({
            {/* STEP 0 ACTION: Reveal Options */}
            {step === 0 && (
                <div className="flex-1 flex flex-col items-center justify-center min-h-[200px] animate-in fade-in slide-in-from-bottom-4 duration-500">
-                    <p className="text-muted-foreground text-lg mb-6 italic">
+                    <p className="text-3xl md:text-4xl font-bold text-center mb-8 bg-[linear-gradient(110deg,#9333ea,45%,#ec4899,55%,#9333ea)] bg-[length:200%_100%] bg-clip-text text-transparent animate-[shimmer_3s_infinite] leading-tight drop-shadow-sm">
                         How would you respond?
                     </p>
                     <Button 
                         onClick={() => setStep(1)}
-                        className="rounded-full px-8 py-6 text-lg bg-foreground text-background hover:scale-105 transition-all shadow-xl"
+                        className="rounded-full px-10 py-7 text-xl font-bold bg-foreground text-background hover:scale-105 transition-all shadow-xl shadow-purple-500/20"
                     >
                         Reveal Options
                     </Button>

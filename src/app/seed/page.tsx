@@ -5,11 +5,13 @@ import { scripts } from "@/data";
 import { db } from "@/lib/firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { Button } from "@/components/Button";
-import { Loader2, CheckCircle, AlertTriangle } from "lucide-react";
+import { Loader2, CheckCircle, AlertTriangle, Copy } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 export default function SeedPage() {
   const [status, setStatus] = useState<"idle" | "uploading" | "done" | "error">("idle");
   const [log, setLog] = useState<string[]>([]);
+  const { user } = useAuth(); // Get current user
 
   const handleSeed = async () => {
     setStatus("uploading");
@@ -36,7 +38,7 @@ export default function SeedPage() {
                  updatedAt: Date.now(),
                  // Ensure search fields present
                  cleanTitle: script.title.toLowerCase(),
-                 tags: ["official", ...(script.category.split(" "))] 
+                 tags: ["official", ...(script.categoryName ? script.categoryName.split(" ") : [])] 
              };
 
              await setDoc(docRef, data, { merge: true });
@@ -73,6 +75,13 @@ export default function SeedPage() {
                 <p className="text-neutral-400">
                     This will upload {scripts.length} static scenarios to Firestore under the user ID <code>jok-eng-official</code>.
                 </p>
+                
+                {user && (
+                    <div className="bg-blue-900/20 border border-blue-800 p-4 rounded-lg mt-4">
+                        <p className="text-sm text-blue-300 mb-1">Your Admin UID (Give this to the Developer):</p>
+                        <code className="text-white font-mono break-all select-all">{user.uid}</code>
+                    </div>
+                )}
             </div>
 
             <Button 

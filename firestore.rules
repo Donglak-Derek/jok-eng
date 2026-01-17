@@ -4,8 +4,9 @@ service cloud.firestore {
     
     // 1. User Root Profile (For Stats like totalScenariosCreated)
     match /users/{userId} {
-      allow read: if request.auth != null; // Allow auth users to read profiles (needed for stats/names)
-      allow write: if request.auth != null && request.auth.uid == userId;
+      allow read: if request.auth != null; 
+      // SECURE: Only the specific Admin UID can write to 'jok-eng-official'
+      allow write: if request.auth != null && (request.auth.uid == userId || (userId == "jok-eng-official" && request.auth.uid == "Hx4sxBjGaLST6c3MRWtrKn60c702"));
 
       // 1.1 User Progress (Private to user)
       match /progress/{progressId} {
@@ -23,10 +24,9 @@ service cloud.firestore {
       }
     }
 
-    // 2. User Scenarios
     match /users/{userId}/scenarios/{scenarioId} {
-      // Owner can do everything
-      allow write: if request.auth != null && request.auth.uid == userId;
+      // Owner can do everything (OR verified Admin for official content)
+      allow write: if request.auth != null && (request.auth.uid == userId || (userId == "jok-eng-official" && request.auth.uid == "Hx4sxBjGaLST6c3MRWtrKn60c702"));
       
       // Anyone can read if it is Public, otherwise only Owner
       allow read: if (request.auth != null && request.auth.uid == userId) || resource.data.isPublic == true;

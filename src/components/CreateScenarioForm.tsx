@@ -397,19 +397,7 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
             )}
 
             {step === "loading" && (
-                <motion.div 
-                    key="loading"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-6"
-                >
-                    <div className="w-16 h-16 border-4 border-secondary border-t-foreground rounded-full animate-spin" />
-                    <div>
-                        <h3 className="text-xl font-medium">Directing Scene...</h3>
-                        <p className="text-muted-foreground mt-2">Writing dialogue & casting roles</p>
-                    </div>
-                </motion.div>
+                <LoadingDirector params={inputs} />
             )}
 
             {step === "preview" && generatedScript && (
@@ -495,4 +483,72 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
         </AnimatePresence>
     </div>
   );
+}
+
+function LoadingDirector({ params }: { params: { context: string, myRole: string, otherRole: string } }) {
+    const [msgIndex, setMsgIndex] = useState(0);
+    
+    const messages = [
+        "🎬 Hiring actors for " + (params.otherRole || "the scene") + "...",
+        "🧠 Brainstorming " + (params.myRole ? `what a ${params.myRole} would say...` : "dialogue..."),
+        "✍️ Drafting the perfect comeback...",
+        "🌶️ Adding a pinch of drama...",
+        "🎭 Rehearsing the final lines...",
+        "✨ Polishing the script..."
+    ];
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setMsgIndex(prev => (prev + 1) % messages.length);
+        }, 800);
+        return () => clearInterval(interval);
+    }, []);
+
+    return (
+        <motion.div 
+            key="loading"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="flex flex-col items-center justify-center min-h-[50vh] text-center space-y-8 py-10"
+        >
+            {/* Animated Icon Container */}
+            <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-tr from-pink-500 to-purple-500 rounded-full blur-xl opacity-20 animate-pulse" />
+                <div className="w-24 h-24 bg-gradient-to-tr from-pink-500 via-purple-500 to-indigo-500 rounded-full flex items-center justify-center shadow-lg relative z-10 animate-[bounce_2s_infinite]">
+                     <span className="text-4xl animate-[spin_3s_linear_infinite]">🎬</span>
+                </div>
+            </div>
+
+            <div className="space-y-4 max-w-sm">
+                <h3 className="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-pink-600 to-purple-600">
+                    Directing Scene...
+                </h3>
+                
+                <div className="h-12 flex items-center justify-center overflow-hidden relative">
+                    <AnimatePresence mode="wait">
+                        <motion.p 
+                            key={msgIndex}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            className="text-lg font-medium text-foreground/80 absolute w-full"
+                        >
+                            {messages[msgIndex]}
+                        </motion.p>
+                    </AnimatePresence>
+                </div>
+            </div>
+            
+            {/* Progress Bar Visual */}
+            <div className="w-64 h-2 bg-secondary rounded-full overflow-hidden">
+                <motion.div 
+                    className="h-full bg-gradient-to-r from-pink-500 to-purple-500"
+                    initial={{ width: "0%" }}
+                    animate={{ width: "100%" }}
+                    transition={{ duration: 4, ease: "easeInOut" }}
+                />
+            </div>
+        </motion.div>
+    );
 }
