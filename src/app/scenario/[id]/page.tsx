@@ -1,9 +1,28 @@
+"use client";
+
+import { useEffect, useState, use } from "react";
+import { useAuth } from "@/context/AuthContext";
+import { doc, getDoc, getDocs, collectionGroup, query, where } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import ScriptClient from "@/app/script/[id]/ScriptClient";
+import { UserScript } from "@/types";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/Button";
 import { scripts } from "@/data";
 
-// ... existing imports
+type Props = { params: Promise<{ id: string }> };
 
 export default function ScenarioPage({ params }: Props) {
-  // ... existing code
+  const { id } = use(params);
+  const { user, loading: authLoading } = useAuth();
+  const router = useRouter();
+  
+  const [script, setScript] = useState<UserScript | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (authLoading) return;
 
     async function fetchScenario() {
         try {

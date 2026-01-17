@@ -2,10 +2,8 @@
 
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
-import { doc, onSnapshot } from "firebase/firestore";
-import { db } from "@/lib/firebase";
 
 import StreakDisplay from "./StreakDisplay";
 

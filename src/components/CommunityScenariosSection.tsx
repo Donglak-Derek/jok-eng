@@ -1,37 +1,29 @@
 import { useEffect, useState } from "react";
-import { collectionGroup, query, where, orderBy, limit, getDocs, updateDoc, doc, arrayUnion, arrayRemove, increment } from "firebase/firestore";
+import { collectionGroup, query, where, orderBy, limit, getDocs, updateDoc, doc, arrayUnion, arrayRemove, increment, setDoc, deleteDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { UserScript } from "@/types";
 import ScenarioCard from "./ScenarioCard";
 import { motion } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
 import { scripts } from "@/data";
-
 import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
 
 export default function CommunityScenariosSection() {
   const [scenarios, setScenarios] = useState<UserScript[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeFilter, setActiveFilter] = useState("Trending");
   const { user } = useAuth();
   const router = useRouter();
 
-  // Helper to shuffle array
-  const shuffleArray = (array: UserScript[]) => {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-  };
+  const FILTERS = ["Trending", "Professional", "Spicy", "Funny"];
 
   const handleToggleLike = async (id: string) => {
-    if (id.startsWith("sys-")) return; // Cannot like system scripts for now (or handle differently)
+    if (id.startsWith("sys-")) return; 
     if (!user) {
         alert("Please login to like scenarios.");
         return;
     }
-    
-    // ... (rest of logic same)
     
     // Optimistic Update
     setScenarios(prev => prev.map(s => {
@@ -49,25 +41,34 @@ export default function CommunityScenariosSection() {
         if (!script) return;
         
         const scriptRef = doc(db, "users", script.userId, "scenarios", id);
+        const userLikesRef = doc(db, "users", user.uid, "likes", id); // PERSONAL COLLECTION SYNC
         const isLiked = script.likedBy?.includes(user.uid);
         
         if (isLiked) {
+             // Unlike
              await updateDoc(scriptRef, {
                  likes: increment(-1),
                  likedBy: arrayRemove(user.uid)
              });
-             const authorRef = doc(db, "users", script.userId);
-             await updateDoc(authorRef, {
+             await updateDoc(doc(db, "users", script.userId), {
                  totalLikesReceived: increment(-1)
              });
+             // Remove from personal likes
+             await deleteDoc(userLikesRef);
+
         } else {
+             // Like
              await updateDoc(scriptRef, {
                  likes: increment(1),
                  likedBy: arrayUnion(user.uid)
              });
-             const authorRef = doc(db, "users", script.userId);
-             await updateDoc(authorRef, {
+             await updateDoc(doc(db, "users", script.userId), {
                  totalLikesReceived: increment(1)
+             });
+             // Add to personal likes
+             await setDoc(userLikesRef, { 
+                likedAt: Date.now(),
+                scenarioId: id
              });
         }
     } catch (err) {
@@ -75,31 +76,16 @@ export default function CommunityScenariosSection() {
     }
   };
 
-  // Feature 2: REMIX (Viral Growth) replacing Save
   const handleRemix = async (scriptId: string, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
-    if (!user) {
-        alert("Please login to remix scenarios!");
-        return;
-    }
-
+    if (!user) { alert("Please login to remix scenarios!"); return; }
     const script = scenarios.find(s => s.id === scriptId);
     if (!script) return;
-
-    // Use URL params to pass data to the Creator
     const params = new URLSearchParams();
-    
-    // Pass Title
     params.set("remixTitle", script.title);
-    
-    // Pass Context (Context for user scenarios is often just the context string)
-    // For System scripts (Daily Vibe etc), it might be cleanedEnglish or context.
     const contextToUse = script.context || script.cleanedEnglish || "";
     params.set("remixContext", contextToUse);
-
-    // Navigate to Creator
     router.push(`/create-scenario?${params.toString()}`);
   };
 
@@ -109,25 +95,37 @@ export default function CommunityScenariosSection() {
      try {
          const script = scenarios.find(s => s.id === id);
          if (!script) return;
-         
-         const scriptRef = doc(db, "users", script.userId, "scenarios", id);
-         await updateDoc(scriptRef, {
-             shares: increment(1)
-         });
-     } catch (err) {
-         console.error("Error incrementing share count:", err);
-     }
+         await updateDoc(doc(db, "users", script.userId, "scenarios", id), { shares: increment(1) });
+     } catch (err) { console.error("Error incrementing share:", err); }
   };
 
+  // Fetch Logic based on Active Filter
   useEffect(() => {
-    const fetchCommunityScenarios = async () => {
+    const fetchScenarios = async () => {
+      setLoading(true);
       try {
-        const q = query(
-            collectionGroup(db, "scenarios"),
-            where("isPublic", "==", true),
-             orderBy("createdAt", "desc"),
-             limit(10)
-        );
+        let q;
+        
+        // "Trending" -> Sort by Likes
+        if (activeFilter === "Trending") {
+            q = query(
+                collectionGroup(db, "scenarios"),
+                where("isPublic", "==", true),
+                // TEMPORARY FIX: Switch to 'createdAt' while 'likes' index builds
+                // orderBy("likes", "desc"), 
+                orderBy("createdAt", "desc"), 
+                limit(20)
+            );
+        } 
+        // Others -> Sort by Latest (then filter locally)
+        else {
+            q = query(
+                collectionGroup(db, "scenarios"),
+                where("isPublic", "==", true),
+                orderBy("createdAt", "desc"),
+                limit(50) // Fetch more to ensuring filtering works
+            );
+        }
 
         const snapshot = await getDocs(q);
         const communityDocs = snapshot.docs.map(doc => ({
@@ -135,106 +133,44 @@ export default function CommunityScenariosSection() {
             id: doc.id
         })) as UserScript[];
         
-        // --- MIX LOGIC ---
-        // Pick 5 random system scripts to mix in
-        const systemScripts = scripts
-            .sort(() => 0.5 - Math.random())
-            .slice(0, 5)
-            .map(s => ({
-                ...s,
-                id: `sys-${s.id}`, // Custom ID prefix
-                userId: "jok-eng-official",
-                authorName: "Jok-Eng Official",
-                createdAt: Date.now(), // Fake timestamp for sorting interaction if needed
-                isPublic: true,
-                likes: 99, // Fake likes for clout?
-                likedBy: [],
-                originalPrompt: { context: s.cleanedEnglish, myRole: "You", otherRole: "Someone", plot: "Official Scenario" },
-                imageUrl: s.imageUrl || "" // Ensure image url if available
-            } as UserScript)); // Cast to conform
-        
-        const combined = [...communityDocs, ...systemScripts];
-        // Shuffle the mixed results
-        setScenarios(shuffleArray(combined));
+        // No more mixing! Pure DB data.
+        setScenarios(communityDocs);
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (err: any) {
-        console.error("Error fetching community scenarios:", err);
-        // Fallback logic
-        try {
-            const fallbackQ = query(
-                collectionGroup(db, "scenarios"),
-                where("isPublic", "==", true),
-                limit(10)
-            );
-            const fallbackSnap = await getDocs(fallbackQ);
-            const fallbackDocs = fallbackSnap.docs.map(doc => ({
-                ...doc.data(),
-                id: doc.id
-            })) as UserScript[];
-            
-             // Fallback Mix
-             const systemScripts = scripts.slice(0, 5).map(s => ({
-                ...s,
-                id: `sys-${s.id}`,
-                userId: "jok-eng-official",
-                authorName: "Jok-Eng Official",
-                createdAt: Date.now(),
-                isPublic: true,
-                likes: 42,
-                likedBy: [],
-                originalPrompt: { context: s.cleanedEnglish, myRole: "You", otherRole: "Someone", plot: "Official Scenario" }
-            } as UserScript));
-            
-            const combined = [...fallbackDocs, ...systemScripts];
-            setScenarios(shuffleArray(combined));
-
-        } catch (e2) {
-            console.error("Fallback failed too", e2);
-        }
+      } catch (err) {
+        console.error("Error fetching scenarios:", err);
+        // Fallback for missing index
+        const fallbackQ = query(collectionGroup(db, "scenarios"), where("isPublic", "==", true), limit(10));
+        const snap = await getDocs(fallbackQ);
+        setScenarios(snap.docs.map(d => ({ ...d.data(), id: d.id } as UserScript)));
       } finally {
         setLoading(false);
       }
     };
 
-    fetchCommunityScenarios();
-  }, []);
+    fetchScenarios();
+  }, [activeFilter]);
 
-  /* Feature 3: Smart Chips (Feed Filtering) */
-  const [activeFilter, setActiveFilter] = useState("Trending");
-  const FILTERS = ["Trending", "Professional", "Spicy", "Funny"];
-
-  const filteredScenarios = scenarios.filter(s => {
+  // Client-Side Filter for Categories (until Tags are in DB)
+  const displayScenarios = scenarios.filter(s => {
       if (activeFilter === "Trending") return true;
-      const text = (s.title + " " + s.cleanedEnglish + " " + (s.context || "") + " " + (s.originalPrompt?.context || "")).toLowerCase();
+      const text = (s.title + " " + s.cleanedEnglish + " " + (s.context || "")).toLowerCase();
       
-      if (activeFilter === "Professional") {
-          return ["work", "boss", "office", "salary", "interview", "professional", "job", "career", "client"].some(k => text.includes(k));
-      }
-      if (activeFilter === "Spicy") {
-          return ["date", "flirt", "love", "romance", "crush", "break up", "partner", "sexy", "spicy"].some(k => text.includes(k));
-      }
-      if (activeFilter === "Funny") {
-          return ["funny", "joke", "laugh", "comedy", "prank", "awkward", "silly"].some(k => text.includes(k));
-      }
+      if (activeFilter === "Professional") return ["work", "boss", "office", "salary", "interview", "job", "career", "business"].some(k => text.includes(k));
+      if (activeFilter === "Spicy") return ["date", "flirt", "romance", "crush", "sexy", "love", "partner"].some(k => text.includes(k));
+      if (activeFilter === "Funny") return ["funny", "joke", "laugh", "comedy", "prank", "silly", "weird"].some(k => text.includes(k));
       return true;
   });
 
-  if (loading) return null;
-  // if (scenarios.length === 0) return null; // Don't return null here, empty state might be better, or just let filtered handle it.
-
   return (
     <section className="w-full mx-auto">
-      {/* Header: Clean & Simple */}
       <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-            <h2 className="text-3xl font-bold tracking-tight mb-2">
-                Story Feed
-            </h2>
-            <p className="text-muted-foreground text-lg">Latest from the community</p>
+            <h2 className="text-3xl font-bold tracking-tight mb-2">Story Feed</h2>
+            <p className="text-muted-foreground text-lg">
+                {activeFilter === "Trending" ? "Top rated content" : `Best in ${activeFilter}`}
+            </p>
         </div>
         
-        {/* Smart Chips */}
         <div className="flex flex-wrap gap-2">
             {FILTERS.map(f => (
                 <button
@@ -242,10 +178,7 @@ export default function CommunityScenariosSection() {
                     onClick={() => setActiveFilter(f)}
                     className={`
                         px-4 py-1.5 rounded-full text-sm font-semibold transition-all
-                        ${activeFilter === f
-                            ? "bg-foreground text-background shadow-md scale-105"
-                            : "bg-secondary text-muted-foreground hover:bg-secondary/80"
-                        }
+                        ${activeFilter === f ? "bg-foreground text-background shadow-md scale-105" : "bg-secondary text-muted-foreground hover:bg-secondary/80"}
                     `}
                 >
                     {f}
@@ -254,15 +187,17 @@ export default function CommunityScenariosSection() {
         </div>
       </div>
 
-       {/* FEATURE 1: Daily Vibe Challenge - REMOVED (Moved to page.tsx) */}
-
-      {filteredScenarios.length > 0 ? (
+      {loading ? (
+        <div className="flex justify-center py-20">
+            <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+        </div>
+      ) : displayScenarios.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredScenarios.map((script, index) => (
+            {displayScenarios.map((script, index) => (
                 <motion.div
                     key={script.id}
-                    layout // Animate layout changes when filtering
-                    initial={{ opacity: 0, scale: 0.9 }}
+                    layout 
+                    initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.3 }}
                     className="w-full"
@@ -279,8 +214,14 @@ export default function CommunityScenariosSection() {
             ))}
           </div>
       ) : (
-          <div className="text-center py-20 text-muted-foreground">
-              <p>No {activeFilter.toLowerCase()} vibes found. Be the first to create one!</p>
+          <div className="text-center py-20 bg-secondary/20 rounded-3xl border border-dashed border-border">
+              <p className="text-muted-foreground text-lg">No {activeFilter.toLowerCase()} stories found yet.</p>
+              <button 
+                onClick={() => router.push("/create-scenario")}
+                className="mt-4 text-primary font-bold hover:underline"
+              >
+                  Be the first to write one!
+              </button>
           </div>
       )}
     </section>
