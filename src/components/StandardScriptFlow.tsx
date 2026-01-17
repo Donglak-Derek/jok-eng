@@ -13,6 +13,8 @@ import { useAuth } from "@/context/AuthContext";
 import { updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useDailyProgress } from "@/hooks/useDailyProgress";
+import { calculateNewStreak } from "@/lib/gamification";
+import { getDoc } from "firebase/firestore";
 import { PartyPopper } from "lucide-react";
 import StandardFullView from "./StandardFullView";
 import CulturalNoteCard from "@/components/CulturalNoteCard";
@@ -102,9 +104,30 @@ export default function StandardScriptFlow({ script }: Props) {
             }, { merge: true });
 
             const userRef = doc(db, "users", user.uid);
+            
+            // --- STREAK LOGIC ---
+            const userSnap = await getDoc(userRef);
+            let currentStreak = 0;
+            let lastPractice = 0;
+            let longestStreak = 0;
+
+            if (userSnap.exists()) {
+                const data = userSnap.data();
+                currentStreak = data.currentStreak || 0;
+                lastPractice = data.lastPracticeTimestamp || 0;
+                longestStreak = data.longestStreak || 0;
+            }
+
+            const { newStreak } = calculateNewStreak(currentStreak, lastPractice);
+            const newLongest = Math.max(longestStreak, newStreak);
+
             await updateDoc(userRef, {
-                totalPractices: increment(1)
+                totalPractices: increment(1),
+                currentStreak: newStreak,
+                lastPracticeTimestamp: Date.now(), // Store as number for easier math
+                longestStreak: newLongest
             });
+            // --------------------
             
             if (isOwner) {
                  await updateDoc(doc(db, "users", user.uid, "scenarios", script.id), {

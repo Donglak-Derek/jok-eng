@@ -1,36 +1,29 @@
-"use client";
+import { scripts } from "@/data";
 
-import { useEffect, useState, use } from "react";
-import { useAuth } from "@/context/AuthContext";
-import { doc, getDoc, getDocs, collectionGroup, query, where } from "firebase/firestore";
-import { db } from "@/lib/firebase";
-import ScriptClient from "@/app/script/[id]/ScriptClient";
-import { UserScript } from "@/types";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/Button";
-
-type Props = { params: Promise<{ id: string }> };
+// ... existing imports
 
 export default function ScenarioPage({ params }: Props) {
-  const { id } = use(params);
-  const { user, loading: authLoading } = useAuth();
-  const router = useRouter();
-  
-  const [script, setScript] = useState<UserScript | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (authLoading) return;
-    
-    // Note: Guests can view public scenarios, so we don't return early if !user
+  // ... existing code
 
     async function fetchScenario() {
         try {
             let foundScript: UserScript | null = null;
 
-            // 1. If logged in, try finding in own collection first (faster/guaranteed permission)
-            if (user) {
+            // 0. Check Static Scripts first (Fastest)
+            const staticScript = scripts.find((s) => s.id === id);
+            if (staticScript) {
+                // Adapt static script to UserScript type (add dummy userId/likes if needed)
+                foundScript = { 
+                    ...staticScript, 
+                    userId: "system", 
+                    isPublic: true, 
+                    likes: 0, 
+                    createdAt: Date.now() 
+                } as unknown as UserScript;
+            }
+
+            // 1. If logged in, try finding in own collection (User Custom)
+            if (!foundScript && user) {
                 const docRef = doc(db, "users", user.uid, "scenarios", id);
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {

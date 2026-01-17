@@ -13,6 +13,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
 import DailyChallengeCard from "@/components/DailyChallengeCard";
+import StreakWidget from "@/components/StreakWidget";
 import { Button } from "@/components/Button";
 
 import QuickStartInput from "@/components/QuickStartInput";
@@ -54,6 +55,8 @@ export default function Home() {
                         <QuickStartInput />
                     </div>
 
+                    <StreakWidget />
+
                     {/* MOBILE ONLY: Tabs (Segmented Control) - Pushed down, subtle */}
                     <div className="md:hidden flex justify-center sticky top-0 z-10 py-2 bg-background/80 backdrop-blur-lg -mx-4 px-4 border-b border-border/50">
                         <div className="inline-flex bg-secondary/50 p-1 rounded-full relative shadow-sm border border-border/50 w-full max-w-[300px]">
@@ -93,9 +96,11 @@ export default function Home() {
                             className="min-h-[400px]"
                         >
                             {activeTab === "home" && (
-                                <div className="space-y-16 md:space-y-20">
+                                <div className="space-y-8 md:space-y-20">
                                     {/* 1. Categories (Mobile: Carousel, Desktop: Grid) */}
                                     <CategoryCarousel />
+
+                                    <hr className="border-t border-border/50 max-w-2xl mx-auto" />
 
                                     {/* 1.5 Daily Challenge */}
                                     <DailyChallengeCard />

@@ -6,6 +6,7 @@ import CategoryHero from "@/components/CategoryHero";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { CATEGORY_DETAILS } from "@/data/categories";
+import Header from "@/components/Header";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -38,12 +39,15 @@ export default async function CategoryPage({ params }: Props) {
   const colorName = categoryDetails?.color || "blue";
 
   return (
-    <div className="min-h-dvh text-foreground">
-      <div className="max-w-md md:max-w-3xl lg:max-w-5xl mx-auto px-4 md:px-6 lg:px-8 py-5 md:py-8 flex flex-col gap-5 md:gap-6">
+    <div className="min-h-dvh flex flex-col bg-background text-foreground">
+      <div className="md:hidden">
+         <Header />
+      </div>
+      <div className="max-w-md md:max-w-3xl lg:max-w-5xl mx-auto px-4 md:px-6 lg:px-8 py-5 md:py-8 flex flex-col gap-5 md:gap-6 w-full">
         <div className="mb-6">
           <Link 
             href="/" 
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium text-muted-foreground bg-secondary/30 hover:bg-secondary hover:text-foreground transition-all mb-6 w-fit group"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold text-foreground bg-background border border-border shadow-sm hover:bg-secondary transition-all mb-6 w-fit group z-20 relative"
           >
             <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
             Back to Categories

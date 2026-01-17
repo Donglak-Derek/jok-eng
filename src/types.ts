@@ -118,6 +118,9 @@ export interface UserStats {
   totalScenariosCreated: number;
   totalPractices: number;
   totalLikesReceived: number;
+  currentStreak?: number;
+  lastPracticeTimestamp?: number; // Milliseconds
+  longestStreak?: number;
 }
 
 export interface UserProfile {

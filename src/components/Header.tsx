@@ -2,15 +2,20 @@
 
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
+import { doc, onSnapshot } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+
+import StreakDisplay from "./StreakDisplay";
 
 export default function Header() {
   const { user, logout } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  // streak state removed, handled by StreakDisplay
 
   return (
-    <header className="sticky top-0 z-50 w-full px-4 md:px-6 py-3 bg-white/80 backdrop-blur-md border-b border-border flex items-center justify-center md:justify-between">
+    <header className="sticky top-0 z-50 w-full px-4 md:px-6 py-3 bg-white/80 backdrop-blur-md border-b border-border flex items-center justify-between md:justify-between">
       <div className="flex-1 flex justify-start">
         <Link href="/" className="group flex items-center gap-2">
             <h1 className="font-sans font-bold text-xl tracking-tight text-foreground group-hover:opacity-80 transition-opacity">
@@ -24,64 +29,69 @@ export default function Header() {
 
       <div className="flex items-center gap-2 md:gap-4">
         {user ? (
-            <div className="relative">
-                <button 
-                    onClick={() => setDropdownOpen(!dropdownOpen)}
-                    className="flex items-center gap-2 md:gap-3 focus:outline-none group"
-                >
-                    <span className="hidden md:block text-sm font-medium text-foreground group-hover:text-primary transition-colors">
-                        {user.displayName?.split(' ')[0] || "User"}
-                    </span>
-                    {user.photoURL ? (
-                        <Image 
-                            src={user.photoURL} 
-                            alt={user.displayName || "User"} 
-                            width={32} 
-                            height={32} 
-                            className="rounded-full ring-2 ring-transparent group-hover:ring-border transition-all"
-                        />
-                    ) : (
-                        <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-secondary-foreground text-xs font-bold group-hover:ring-2 group-hover:ring-border transition-all">
-                            {user.displayName?.charAt(0) || "U"}
-                        </div>
-                    )}
-                </button>
+            <>
+                {/* Streak Icon */}
+                <StreakDisplay />
 
-                {dropdownOpen && (
-                    <>
-                        <div className="fixed inset-0 z-40 bg-transparent" onClick={() => setDropdownOpen(false)} />
-                        <div className="absolute right-0 mt-2 w-56 bg-white border border-border rounded-lg shadow-lg py-1 z-50 overflow-hidden">
-                            <div className="px-4 py-3 border-b border-border bg-secondary/30">
-                                <p className="font-medium text-sm text-foreground truncate">{user.displayName}</p>
-                                <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                <div className="relative">
+                    <button 
+                        onClick={() => setDropdownOpen(!dropdownOpen)}
+                        className="flex items-center gap-2 md:gap-3 focus:outline-none group"
+                    >
+                        <span className="hidden md:block text-sm font-medium text-foreground group-hover:text-primary transition-colors">
+                            {user.displayName?.split(' ')[0] || "User"}
+                        </span>
+                        {user.photoURL ? (
+                            <Image 
+                                src={user.photoURL} 
+                                alt={user.displayName || "User"} 
+                                width={32} 
+                                height={32} 
+                                className="rounded-full ring-2 ring-transparent group-hover:ring-border transition-all"
+                            />
+                        ) : (
+                            <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-secondary-foreground text-xs font-bold group-hover:ring-2 group-hover:ring-border transition-all">
+                                {user.displayName?.charAt(0) || "U"}
                             </div>
-                            <Link 
-                                href="/profile" 
-                                className="block px-4 py-2 text-sm text-foreground hover:bg-secondary transition-colors"
-                                onClick={() => setDropdownOpen(false)}
-                            >
-                                My Profile
-                            </Link>
-                            <Link 
-                                href="/my-scenarios" 
-                                className="block px-4 py-2 text-sm text-foreground hover:bg-secondary transition-colors"
-                                onClick={() => setDropdownOpen(false)}
-                            >
-                                My Scenarios
-                            </Link>
-                            <button
-                                onClick={() => {
-                                    logout();
-                                    setDropdownOpen(false);
-                                }}
-                                className="w-full text-left block px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
-                            >
-                                Logout
-                            </button>
-                        </div>
-                    </>
-                )}
-            </div>
+                        )}
+                    </button>
+
+                    {dropdownOpen && (
+                        <>
+                            <div className="fixed inset-0 z-40 bg-transparent" onClick={() => setDropdownOpen(false)} />
+                            <div className="absolute right-0 mt-2 w-56 bg-white border border-border rounded-lg shadow-lg py-1 z-50 overflow-hidden">
+                                <div className="px-4 py-3 border-b border-border bg-secondary/30">
+                                    <p className="font-medium text-sm text-foreground truncate">{user.displayName}</p>
+                                    <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                                </div>
+                                <Link 
+                                    href="/profile" 
+                                    className="block px-4 py-2 text-sm text-foreground hover:bg-secondary transition-colors"
+                                    onClick={() => setDropdownOpen(false)}
+                                >
+                                    My Profile
+                                </Link>
+                                <Link 
+                                    href="/my-scenarios" 
+                                    className="block px-4 py-2 text-sm text-foreground hover:bg-secondary transition-colors"
+                                    onClick={() => setDropdownOpen(false)}
+                                >
+                                    My Scenarios
+                                </Link>
+                                <button
+                                    onClick={() => {
+                                        logout();
+                                        setDropdownOpen(false);
+                                    }}
+                                    className="w-full text-left block px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                                >
+                                    Logout
+                                </button>
+                            </div>
+                        </>
+                    )}
+                </div>
+            </>
         ) : (
             <Link 
                 href="/login"

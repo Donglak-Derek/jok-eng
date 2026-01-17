@@ -41,16 +41,21 @@ export default function QuickStartInput() {
                 <div className="absolute inset-0 bg-gradient-to-r from-pink-500 via-red-500 via-yellow-500 via-green-500 via-blue-500 via-purple-500 to-pink-500 bg-[length:200%_auto] animate-[gradient_2s_linear_infinite] opacity-90 group-hover:opacity-100 transition-opacity" />
                 
                 {/* Inner Content Background */}
-                <div className="absolute inset-[4px] bg-background rounded-full z-10 flex items-center px-6 md:px-8">
-                    <div className="flex items-center gap-0.5 justify-start w-full">
-                        <span className="text-muted-foreground text-lg md:text-xl font-medium whitespace-nowrap">
-                            Create a real scenario...
+                <div className="absolute inset-[3px] bg-background rounded-full z-10 flex items-center pl-6 pr-3 shadow-inner">
+                    <div className="flex items-center gap-0.5 justify-start flex-1 min-w-0">
+                        <span className="text-muted-foreground/80 text-lg md:text-xl font-medium whitespace-nowrap truncate">
+                            Roleplay Anything...
                         </span>
                         <motion.span 
                             animate={{ opacity: [1, 0, 1] }}
                             transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
-                            className="w-0.5 h-6 bg-primary shrink-0 ml-1"
+                            className="w-0.5 h-6 bg-primary shrink-0 ml-0.5"
                         />
+                    </div>
+                    
+                    {/* Action Button */}
+                    <div className="w-10 h-10 md:w-12 md:h-12 bg-primary rounded-full flex items-center justify-center text-primary-foreground shadow-md group-hover:scale-105 transition-transform">
+                        <span className="text-xl">✨</span>
                     </div>
                 </div>
             </motion.div>

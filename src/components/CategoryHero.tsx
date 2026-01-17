@@ -126,7 +126,7 @@ export default function CategoryHero({
                         animate={{ opacity: 1, y: 0 }}
                         className="flex items-center gap-2 text-sm font-bold text-emerald-600 mt-1"
                     >
-                        <Trophy className="w-4 h-4" />
+                        <Trophy className="w-5 h-5" />
                         Category Mastered!
                     </motion.div>
                 )}
@@ -183,8 +183,8 @@ export default function CategoryHero({
                 </div>
 
                 <Link href={`/script/${nextUpScript.id}`} className="block">
-                    <Button className={`w-full ${theme.accent} hover:opacity-90 border-transparent text-white shadow-md shadow-orange-500/20`}>
-                        <Play className="w-4 h-4 mr-2" fill="currentColor" />
+                    <Button className={`w-full ${theme.accent} hover:opacity-90 border-transparent text-white shadow-md shadow-orange-500/20 py-6 text-base`}>
+                        <Play className="w-5 h-5 mr-2" fill="currentColor" />
                         Start Training
                     </Button>
                 </Link>

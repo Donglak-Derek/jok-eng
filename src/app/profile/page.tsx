@@ -9,6 +9,7 @@ import { UserStats } from "@/types";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import MyScenariosSection from "@/components/MyScenariosSection";
+import Header from "@/components/Header";
 
 // Rank Logic Helpers
 const getRank = (scenariosCreated: number) => {
@@ -45,7 +46,9 @@ export default function ProfilePage() {
                         userId: user.uid,
                         totalScenariosCreated: 0,
                         totalPractices: 0,
-                        totalLikesReceived: 0
+                        totalLikesReceived: 0,
+                        currentStreak: 0,
+                        longestStreak: 0
                     });
                 }
             } catch (err) {
@@ -73,20 +76,15 @@ export default function ProfilePage() {
 
     return (
         <div className="min-h-screen bg-background text-foreground pb-20">
-             {/* Header Section */}
-             <div className="relative pt-24 pb-12 overflow-hidden">
+             {/* Profile Hero Section */}
+             <div className="relative pt-6 pb-8 overflow-hidden">
                 <div className="absolute inset-0 bg-secondary/5 z-0" />
                 <div className="container max-w-4xl mx-auto px-6 relative z-10 text-center">
-                    <div className="absolute top-0 left-6">
-                        <Link href="/" className="text-sm font-bold text-muted hover:text-foreground transition-colors flex items-center gap-1">
-                            <span>←</span> Back to Home
-                        </Link>
-                    </div>
-
+                    
                     <motion.div 
                         initial={{ scale: 0.5, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
-                        className="w-32 h-32 md:w-40 md:h-40 mx-auto rounded-full border-4 border-background shadow-2xl overflow-hidden mb-6"
+                        className="w-24 h-24 md:w-32 md:h-32 mx-auto rounded-full border-4 border-background shadow-xl overflow-hidden mb-4"
                     >
                          {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img 
@@ -100,7 +98,7 @@ export default function ProfilePage() {
                         initial={{ y: 20, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ delay: 0.1 }}
-                        className="text-3xl md:text-5xl font-bold mb-2"
+                        className="text-2xl md:text-3xl font-bold mb-2"
                     >
                         {user.displayName || "Anonymous Director"}
                     </motion.h1>
@@ -109,7 +107,7 @@ export default function ProfilePage() {
                         initial={{ y: 20, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ delay: 0.2 }}
-                        className={`inline-block px-4 py-1.5 rounded-full bg-gradient-to-r ${rank.color} text-white font-bold text-sm md:text-base shadow-lg mb-4`}
+                        className={`inline-block px-3 py-1 rounded-full bg-gradient-to-r ${rank.color} text-white font-bold text-xs md:text-sm shadow-md mb-2`}
                     >
                         {rank.title}
                     </motion.div>
@@ -118,7 +116,7 @@ export default function ProfilePage() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.3 }}
-                        className="text-muted text-sm md:text-base"
+                        className="text-muted text-xs md:text-sm"
                     >
                         Member since {joinDate}
                     </motion.p>
@@ -126,8 +124,8 @@ export default function ProfilePage() {
              </div>
 
              {/* Stats Grid */}
-             <div className="container max-w-4xl mx-auto px-6 -mt-8 relative z-20">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+             <div className="container max-w-4xl mx-auto px-4 -mt-4 relative z-20">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                     <StatsCard 
                         icon="🎬" 
                         label="Scripts Written" 
@@ -145,6 +143,18 @@ export default function ProfilePage() {
                         label="Rehearsals Done" 
                         value={stats?.totalPractices || 0} 
                         delay={0.6}
+                    />
+                    <StatsCard 
+                        icon="🔥" 
+                        label="Current Streak" 
+                        value={stats?.currentStreak || 0} 
+                        delay={0.7}
+                    />
+                    <StatsCard 
+                        icon="🏆" 
+                        label="Longest Streak" 
+                        value={stats?.longestStreak || 0} 
+                        delay={0.8}
                     />
                 </div>
 
