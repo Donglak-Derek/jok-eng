@@ -30,6 +30,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log("Auth state changed - User:", user);
+        console.log("Auth state changed - Photo URL:", user.photoURL);
+      }
       setUser(user);
       setLoading(false);
     });
@@ -40,7 +44,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signInWithGoogle = async () => {
     try {
         const provider = new GoogleAuthProvider();
-        await signInWithPopup(auth, provider);
+        provider.addScope('https://www.googleapis.com/auth/userinfo.profile');
+        provider.addScope('https://www.googleapis.com/auth/userinfo.email');
+
+        const result = await signInWithPopup(auth, provider);
+        console.log("User signed in:", result.user);
+        console.log("Photo URL:", result.user.photoURL);
     } catch (error) {
         console.error("Error signing in with Google", error);
         throw error;
