@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Script } from "@/types";
 import { scripts } from "@/data";
-import { Play, Calendar } from "lucide-react";
+import { Play } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 

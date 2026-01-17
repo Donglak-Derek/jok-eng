@@ -20,7 +20,7 @@ function CreateScenarioContent() {
   // Check for Remix params on mount
   useEffect(() => {
      const remixContext = searchParams.get("remixContext");
-     const remixTitle = searchParams.get("remixTitle");
+     // const remixTitle = searchParams.get("remixTitle");
 
      if (remixContext) {
          setMode('form');

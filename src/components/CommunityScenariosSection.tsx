@@ -5,7 +5,7 @@ import { UserScript } from "@/types";
 import ScenarioCard from "./ScenarioCard";
 import { motion } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
-import { scripts } from "@/data";
+// import { scripts } from "@/data";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 

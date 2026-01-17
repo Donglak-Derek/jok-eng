@@ -32,18 +32,18 @@ export default function InteractiveGridBackground() {
     // Alphabet
     const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!?@#$&";
     
-    // Brand Colors (Tailwind mapped manually for canvas)
-    const COLORS = [
-        "rgba(79, 70, 229, 0.25)",  // Primary (lighter for text)
-        "rgba(14, 165, 233, 0.25)", // Sky
-        "rgba(244, 63, 94, 0.20)",  // Rose
-        "rgba(148, 163, 184, 0.20)" // Slate
-    ];
-
     useEffect(() => {
         const canvas = canvasRef.current;
         const container = containerRef.current;
         if (!canvas || !container) return;
+
+        // Brand Colors (Tailwind mapped manually for canvas)
+        const COLORS = [
+            "rgba(79, 70, 229, 0.25)",  // Primary (lighter for text)
+            "rgba(14, 165, 233, 0.25)", // Sky
+            "rgba(244, 63, 94, 0.20)",  // Rose
+            "rgba(148, 163, 184, 0.20)" // Slate
+        ];
 
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
@@ -76,7 +76,7 @@ export default function InteractiveGridBackground() {
                 // Random slow movement
                 const vx = (Math.random() - 0.5) * 0.5; // Slower for text
                 const vy = (Math.random() - 0.5) * 0.5;
-                const color = COLORS[Math.floor(Math.random() * COLORS.length)];
+               const color = COLORS[Math.floor(Math.random() * COLORS.length)];
                 const char = CHARS[Math.floor(Math.random() * CHARS.length)];
 
                 particles.push({

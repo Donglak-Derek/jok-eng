@@ -502,7 +502,7 @@ function LoadingDirector({ params }: { params: { context: string, myRole: string
             setMsgIndex(prev => (prev + 1) % messages.length);
         }, 800);
         return () => clearInterval(interval);
-    }, []);
+    }, [messages.length]);
 
     return (
         <motion.div 

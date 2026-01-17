@@ -28,8 +28,7 @@ const AudioVisualizer = () => (
 export default function ComparisonCard({ 
   sentence, 
   index, 
-  onHeard, 
-  isAutoPlayEnabled,
+  onHeard,
   mode = "standard",
   isGlobalRevealed = false
 }: Props) {

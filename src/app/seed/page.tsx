@@ -5,7 +5,7 @@ import { scripts } from "@/data";
 import { db } from "@/lib/firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { Button } from "@/components/Button";
-import { Loader2, CheckCircle, AlertTriangle, Copy } from "lucide-react";
+import { Loader2, CheckCircle, AlertTriangle } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 
 export default function SeedPage() {
@@ -55,10 +55,10 @@ export default function SeedPage() {
 
         setStatus("done");
 
-    } catch (err: any) {
+    } catch (err) {
         console.error(err);
         setStatus("error");
-        setLog(prev => [...prev, `❌ Error: ${err.message}`]);
+        setLog(prev => [...prev, `❌ Error: ${(err as Error).message}`]);
     }
   };
 

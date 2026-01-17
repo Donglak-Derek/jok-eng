@@ -4,6 +4,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { User } from "lucide-react";
+import Image from "next/image";
 
 export default function QuickStartInput() {
     const { user } = useAuth();
@@ -18,9 +19,12 @@ export default function QuickStartInput() {
             {/* Avatar - Left aligned (Hidden on mobile for cleaner search bar look, or keep? Let's keep for personalization but maybe larger) */}
             <div className="shrink-0 pl-1">
                 {user?.photoURL ? (
-                    <img 
+                    <Image 
                         src={user.photoURL} 
                         alt={user.displayName || "User"} 
+                        width={56}
+                        height={56}
+                        unoptimized
                         className="w-12 h-12 md:w-14 md:h-14 rounded-full object-cover border-2 border-background shadow-md ring-2 ring-border/50"
                     />
                 ) : (

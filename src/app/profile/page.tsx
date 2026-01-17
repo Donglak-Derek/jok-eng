@@ -7,9 +7,9 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { UserStats } from "@/types";
 import { motion } from "framer-motion";
-import Link from "next/link";
+// import Link from "next/link";
 import MyScenariosSection from "@/components/MyScenariosSection";
-import Header from "@/components/Header";
+// import Header from "@/components/Header";
 
 // Rank Logic Helpers
 const getRank = (scenariosCreated: number) => {
