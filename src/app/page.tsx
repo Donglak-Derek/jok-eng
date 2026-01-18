@@ -57,7 +57,7 @@ export default function Home() {
                     <StreakWidget />
 
                     {/* MOBILE ONLY: Tabs (Segmented Control) - Pushed down, subtle */}
-                    <div className="md:hidden flex justify-center sticky top-0 z-10 py-2 bg-background/80 backdrop-blur-lg -mx-4 px-4 border-b border-border/50">
+                    <div className="md:hidden flex justify-center sticky top-0 z-10 py-0 bg-background/80 backdrop-blur-lg -mx-4 px-4 border-b border-border/50">
                         <div className="inline-flex bg-secondary/50 p-1 rounded-full relative shadow-sm border border-border/50 w-full max-w-[300px]">
                             {(["home", "my_scenarios"] as const).map((tab) => (
                                 <button
@@ -96,16 +96,22 @@ export default function Home() {
                         >
                             {activeTab === "home" && (
                                 <div className="space-y-8 md:space-y-20">
-                                    {/* 1. Categories (Mobile: Carousel, Desktop: Grid) */}
-                                    <CategoryCarousel />
-
-                                    {/* 1.5 Daily Challenge */}
+                                    {/* 1. Daily Challenge (Now First) */}
                                     <div>
-                                        <div className="mb-6">
-                                            <h2 className="text-3xl font-bold tracking-tight mb-2">Today&apos;s Challenge</h2>
-                                            <p className="text-muted-foreground text-lg">Daily practice to keep your streak alive.</p>
+                                        <div className="mb-4 md:mb-6">
+                                            <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-1 md:mb-2">Today&apos;s Challenge</h2>
+                                            <p className="text-muted-foreground text-base md:text-lg">Daily practice to keep your streak alive.</p>
                                         </div>
                                         <DailyChallengeCard />
+                                    </div>
+
+                                    {/* 2. Categories */}
+                                     <div>
+                                         <div className="mb-4 md:mb-6">
+                                            <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-1 md:mb-2">Pick your vibe</h2>
+                                            <p className="text-muted-foreground text-base md:text-lg">Explore curated scenarios.</p>
+                                        </div>
+                                        <CategoryCarousel />
                                     </div>
 
                                     {/* 2. Community Feed */}
@@ -126,9 +132,7 @@ export default function Home() {
       ) : (
         /* GUEST VIEW: Marketing & Info */
         <div className="flex flex-col">
-           <div className="container-minimal pt-0">
-                <Header />
-           </div>
+            <Header />
 
            <div className="flex flex-col gap-24 pb-12">
                 {/* HERO SECTION - Full Width */}

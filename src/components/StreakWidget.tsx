@@ -61,14 +61,29 @@ export default function StreakWidget() {
 
     if (status === "at_risk") {
         title = "Streak Frozen! ❄️";
-        message = "You missed a day, but we saved your streak. Practice NOW or lose it!";
+        message = "You missed yesterday! Practice NOW to save your streak.";
         bgClass = "bg-gradient-to-r from-blue-100 to-cyan-50 border-blue-200";
         icon = <AlertTriangle className="w-6 h-6 text-blue-500" />;
+    } else if (status === "lost" && streak > 0) {
+        title = "Streak Extinguished 💨";
+        message = "It's been over 48h. Practice to start a fresh fire!";
+        bgClass = "bg-gradient-to-r from-gray-100 to-slate-50 border-gray-200";
+        icon = <Flame className="w-6 h-6 text-gray-400" />;
     } else if (streak === 0) {
         title = "Start a Streak! 🚀";
         message = "Practice today to light the fire!";
         bgClass = "bg-gradient-to-r from-yellow-50 to-orange-50 border-orange-100";
         icon = <Flame className="w-6 h-6 text-gray-300" />;
+    } else if (streak === 1) {
+         title = "Flame Ignited! 🔥";
+         message = "You started! Practice tomorrow (within 24h) to build the fire.";
+         bgClass = "bg-gradient-to-r from-orange-100 to-red-50 border-orange-200";
+         icon = <Flame className="w-6 h-6 text-orange-500 fill-orange-500" />;
+    } else if (streak % 10 === 0) {
+        title = "Milestone Reached! 🎉";
+        message = `${streak} days of fire! You are unstoppable.`;
+        bgClass = "bg-gradient-to-r from-purple-100 to-pink-50 border-purple-200";
+        icon = <Flame className="w-6 h-6 text-purple-500 fill-purple-500 animate-pulse" />;
     }
 
     const handleDismiss = () => {
@@ -83,10 +98,10 @@ export default function StreakWidget() {
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: "auto" }}
                     exit={{ opacity: 0, height: 0 }}
-                    className={`relative w-full rounded-2xl border p-4 flex items-center justify-between shadow-sm mb-6 ${bgClass}`}
+                    className={`relative w-full rounded-2xl border p-3 md:p-4 flex items-center justify-between shadow-sm mb-3 md:mb-6 ${bgClass}`}
                 >
                     <div className="flex items-center gap-4">
-                        <div className="p-3 bg-white/80 backdrop-blur rounded-full shadow-sm">
+                        <div className="p-2 md:p-3 bg-white/80 backdrop-blur rounded-full shadow-sm">
                             {icon}
                         </div>
                         <div>
