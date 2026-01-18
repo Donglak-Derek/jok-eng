@@ -9,7 +9,7 @@ export const theVaguePlansDecoder: Script = {
   categoryName: CATEGORY_NAMES["the_party_survival_kit"],
   section: "boss_battles",
   cleanedEnglish: "Translating 'Let's do this again' into reality.",
-  imageUrl: "/images/scenarios/vague_plans.png",
+  imageUrl: "/images/scenarios/vague_plans_3d.png",
   difficulty: "Spicy 🌶️🌶️🌶️",
   type: "decoder",
   

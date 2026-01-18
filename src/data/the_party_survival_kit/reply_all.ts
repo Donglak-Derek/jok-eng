@@ -8,7 +8,7 @@ export const replyAllApocalypse: Script = {
   categoryName: CATEGORY_NAMES["the_party_survival_kit"],
   section: "advanced",
   cleanedEnglish: "Sending a private rant to the entire company by mistake.",
-  imageUrl: "/images/scenarios/reply_all.png",
+  imageUrl: "/images/scenarios/reply_all_3d.png",
   difficulty: "Spicy 🌶️🌶️🌶️",
   mode: "cloze",
   type: "script",

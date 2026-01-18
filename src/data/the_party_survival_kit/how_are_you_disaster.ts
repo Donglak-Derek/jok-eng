@@ -8,7 +8,7 @@ export const howAreYouDisaster: Script = {
   categoryName: CATEGORY_NAMES["the_party_survival_kit"],
   section: "basics",
   cleanedEnglish: "When 'small talk' accidentally becomes a therapy session.",
-  imageUrl: "/images/scenarios/how_are_you.png",
+  imageUrl: "/images/scenarios/how_are_you_3d.png",
   difficulty: "Medium 🌶️🌶️",
   mode: "cloze",
   type: "script",

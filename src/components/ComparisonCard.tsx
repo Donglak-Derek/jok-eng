@@ -313,7 +313,10 @@ export default function ComparisonCard({
                 {(isEffectiveGlobalReveal || localRevealed.size > 0) && sentence.keywords && sentence.keywords.length > 0 && (
                     <div className="flex flex-wrap justify-start gap-2 mt-4 animate-in fade-in slide-in-from-top-2 duration-300">
                         {sentence.keywords.map((k) => {
-                            const isWordRevealed = isEffectiveGlobalReveal || localRevealed.has(k.word);
+                            // Check for case-insensitive match (e.g. "seamless" in text vs "Seamless" in definitions)
+                            const isWordRevealed = isEffectiveGlobalReveal || 
+                                Array.from(localRevealed).some(r => r.toLowerCase() === k.word.toLowerCase());
+                                
                             if (!isWordRevealed) return null;
                             return (
                                 <span key={k.word} className="text-sm px-3 py-1 bg-white text-teal-900 rounded-full border border-teal-200 shadow-sm">

@@ -8,7 +8,7 @@ export const bathroomLine: Script = {
   categoryName: CATEGORY_NAMES["the_party_survival_kit"],
   section: "basics",
   cleanedEnglish: "The worst place for small talk.",
-  imageUrl: "/images/scenarios/bathroom_line.png",
+  imageUrl: "/images/scenarios/bathroom_line_3d.png",
   difficulty: "Mild 🌶️",
   mode: "cloze",
   type: "script",

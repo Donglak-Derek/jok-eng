@@ -8,7 +8,7 @@ export const potluckPanic: Script = {
   categoryName: CATEGORY_NAMES["the_party_survival_kit"],
   section: "basics",
   cleanedEnglish: "When you bring chips to a gourmet feast.",
-  imageUrl: "/images/scenarios/potluck_panic.png",
+  imageUrl: "/images/scenarios/potluck_panic_3d.png",
   difficulty: "Mild 🌶️",
   mode: "cloze",
   type: "script",

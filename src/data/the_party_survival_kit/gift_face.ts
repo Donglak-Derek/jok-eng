@@ -8,7 +8,7 @@ export const giftFace: Script = {
   categoryName: CATEGORY_NAMES["the_party_survival_kit"],
   section: "boss_battles",
   cleanedEnglish: "Pretending to love ugly socks is an art form.",
-  imageUrl: "/images/scenarios/gift_face.png",
+  imageUrl: "/images/scenarios/gift_face_3d.png",
   difficulty: "Spicy 🌶️🌶️🌶️",
   mode: "cloze",
   type: "script",

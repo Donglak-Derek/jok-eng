@@ -9,7 +9,7 @@ export const theCancelPlansDecoder: Script = {
   categoryName: CATEGORY_NAMES["the_party_survival_kit"],
   section: "boss_battles",
   cleanedEnglish: "How to bail on plans without losing friends.",
-  imageUrl: "/images/scenarios/cancel_plans.png",
+  imageUrl: "/images/scenarios/cancel_plans_3d.png",
   difficulty: "Spicy 🌶️🌶️🌶️",
   type: "decoder",
   

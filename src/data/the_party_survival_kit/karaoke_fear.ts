@@ -8,7 +8,7 @@ export const karaokeFear: Script = {
   categoryName: CATEGORY_NAMES["the_party_survival_kit"],
   section: "boss_battles",
   cleanedEnglish: "Singing badly is a requirement, not a mistake.",
-  imageUrl: "/images/scenarios/karaoke_fear.png",
+  imageUrl: "/images/scenarios/karaoke_fear_3d.png",
   difficulty: "Medium 🌶️🌶️",
   mode: "cloze",
   type: "script",

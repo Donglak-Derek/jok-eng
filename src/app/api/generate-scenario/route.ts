@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { context, myRole, otherRole, plot, userName, tone, format } = body;
+    const { context, myRole, otherRole, plot, userName, tone, format, userProfile } = body;
 
     const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
 
@@ -28,6 +28,11 @@ export async function POST(request: NextRequest) {
       PLOT SUMMARY: ${plot}
       DESIRED TONE: ${tone || "Polite"}
       TRAINING FORMAT: ${format || "Social Dojo"}
+
+      USER PROFILE (Customize based on this if relevant):
+      - OCCUPATION: ${userProfile?.occupation || "Not specified"} (Use professional metaphors if applicable)
+      - HUMOR STYLE: ${userProfile?.humorStyle || "Not specified"} (Reflect this in the 'Good Response' style)
+      - MOTHER LANGUAGE: ${userProfile?.motherLanguage || "Not specified"} (Highlight specific common mistakes for this language group if relevant)
 
       FORMAT INSTRUCTIONS:
       - "Social Dojo": Focus on bad vs good responses to teach NUANCE.

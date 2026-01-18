@@ -8,7 +8,7 @@ export const elevatorWeather: Script = {
   categoryName: CATEGORY_NAMES["the_party_survival_kit"],
   section: "basics",
   cleanedEnglish: "When you run out of things to say and become a meteorologist.",
-  imageUrl: "/images/scenarios/elevator_weather.png",
+  imageUrl: "/images/scenarios/elevator_weather_3d.png",
   difficulty: "Mild 🌶️",
   mode: "cloze",
   type: "script",

@@ -8,7 +8,7 @@ export const doubleDip: Script = {
   categoryName: CATEGORY_NAMES["the_party_survival_kit"],
   section: "advanced",
   cleanedEnglish: "One chip, one dip. That is the law.",
-  imageUrl: "/images/scenarios/double_dip.png",
+  imageUrl: "/images/scenarios/double_dip_3d.png",
   difficulty: "Mild 🌶️",
   mode: "cloze",
   type: "script",

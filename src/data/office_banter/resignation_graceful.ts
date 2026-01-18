@@ -70,8 +70,9 @@ export const resignationGraceful: Script = {
       id: "quit-2",
       en: "The 'Transition' Plan",
       keywords: [
-        { word: "Seamless", definition: "Smooth and continuous" },
-        { word: "Handoff", definition: "Transferring responsibility" }
+        { word: "Seamless", definition: "Smooth and continuous, without any awkward breaks" },
+        { word: "Handoff", definition: "The act of transferring responsibility to someone else" },
+        { word: "Train", definition: "To teach a person a particular skill or type of behavior" }
       ],
       scenario: "Discussing next steps",
       badResponse: {
@@ -79,7 +80,7 @@ export const resignationGraceful: Script = {
           why: "Unprofessional."
       },
       goodResponse: {
-          text: "My goal is a [seamless handoff]. I've started documenting processes. Who should I [train] on these tasks?",
+          text: "My goal is a [seamless] [handoff]. I've started documenting processes. Who should I [train] on these tasks?",
           why: "Ensures a glowing recommendation later."
       }
     },
@@ -87,8 +88,8 @@ export const resignationGraceful: Script = {
       id: "quit-3",
       en: "The Exit Interview",
       keywords: [
-        { word: "Constructive", definition: "Serving a useful purpose" },
-        { word: "Diplomatic", definition: "Sensitive and effective communication" }
+        { word: "Clarity", definition: "The quality of being coherent and intelligible" },
+        { word: "Growth", definition: "The process of developing physically, mentally, or spiritually" }
       ],
       scenario: "HR asks the real reason",
       badResponse: {
@@ -96,7 +97,7 @@ export const resignationGraceful: Script = {
           why: "They won't fix it, and it burns a bridge."
       },
       goodResponse: {
-          text: "I was looking for more growth in X, which this new role provides. The team is great, but could benefit from [clarity] on Y.",
+          text: "I was looking for more [growth] in X, which this new role provides. The team is great, but could benefit from [clarity] on Y.",
           why: "Constructive, not destructive."
       }
     },

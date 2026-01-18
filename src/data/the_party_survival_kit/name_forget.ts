@@ -8,7 +8,7 @@ export const nameForget: Script = {
   categoryName: CATEGORY_NAMES["the_party_survival_kit"],
   section: "advanced",
   cleanedEnglish: "Meeting someone and forgetting their name 10 seconds later.",
-  imageUrl: "/images/scenarios/name_forget.png",
+  imageUrl: "/images/scenarios/name_forget_3d.png",
   difficulty: "Medium 🌶️🌶️",
   mode: "cloze",
   type: "script",

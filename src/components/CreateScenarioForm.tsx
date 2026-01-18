@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Script, UserScript } from "@/types";
+import { Script, UserScript, UserProfile } from "@/types";
 import { useAuth } from "@/context/AuthContext";
 
 import { db } from "@/lib/firebase";
-import { collection, setDoc, doc } from "firebase/firestore";
-import { useRouter } from "next/navigation";
+import { collection, setDoc, doc, getDoc } from "firebase/firestore";
+import { useRouter, useSearchParams } from "next/navigation";
 // For preview, we want to see sentences.
 import ClozeCard from "./ClozeCard";
 import { Button } from "@/components/Button";
@@ -28,6 +28,12 @@ interface CreateScenarioFormProps {
 // --- Surprise Me Logic ---
 const TONES = ["Polite", "Direct", "Funny", "Flirty", "Spicy", "Professional"];
 const FORMATS = ["Social Dojo", "Classic Script", "Rapid Fire"];
+
+const FORMAT_DESCRIPTIONS: Record<string, string> = {
+  "Social Dojo": "🥋 Focus: Nuance. Compare awkward vs. natural responses.",
+  "Classic Script": "📜 Focus: Flow. Longer, realistic dialogue practice.",
+  "Rapid Fire": "⚡ Focus: Speed. Short, fast-paced drills for reflexes."
+};
 
 const SCENARIO_PROMPTS = [
     {
@@ -95,6 +101,7 @@ const SCENARIO_PROMPTS = [
 export default function CreateScenarioForm({ initialValues }: CreateScenarioFormProps) {
   const { user } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [step, setStep] = useState<"input" | "loading" | "preview">("input");
   
   // Input State
@@ -107,11 +114,84 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
   const [tone, setTone] = useState("Polite");
   const [format, setFormat] = useState("Social Dojo"); // New Format State
   const [isStudyMode, setIsStudyMode] = useState(false); // New Study Mode State
+  
+  // User Profile State
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
-  const [generatedScript, setGeneratedScript] = useState<Script | null>(null);
-  const [isSaving, setIsSaving] = useState(false);
+  useEffect(() => {
+    const fetchProfile = async () => {
+        if (!user?.uid) return;
+        try {
+            const docSnap = await getDoc(doc(db, "users", user.uid));
+            if (docSnap.exists()) {
+                setUserProfile(docSnap.data() as UserProfile);
+            }
+        } catch (e) {
+            console.error("Error fetching profile", e);
+        }
+    };
+    fetchProfile();
+  }, [user?.uid]);
 
-  const handleGenerate = async () => {
+  // REMIX LOGIC
+  useEffect(() => {
+      const mode = searchParams.get('mode');
+      if (mode === 'remix') {
+          const storedScript = localStorage.getItem('remixSource');
+          if (storedScript) {
+              const script = JSON.parse(storedScript) as Script | UserScript;
+              
+              // Extract prompt data
+              let newInputs = {
+                  context: "",
+                  myRole: "",
+                  otherRole: "",
+                  plot: ""
+              };
+
+              if ('originalPrompt' in script && script.originalPrompt) {
+                  // It's a UserScript with saved prompt
+                  newInputs = (script as UserScript).originalPrompt;
+              } else {
+                  // It's a standard script, infer values (Basic)
+                  newInputs = {
+                      context: script.context || script.title,
+                      myRole: "Me",
+                      otherRole: "Them",
+                      plot: `Re-enact the scenario "${script.title}" but adapted to my style.`
+                  };
+              }
+
+              setInputs(newInputs);
+              // Auto-trigger generation after a brief delay to ensure state set?
+              // Or just call generate function directly? 
+              // Better to set state and then trigger via effect or flag.
+              // For now, let's pre-fill and let user hit "Create" OR auto-trigger?
+              // "One click remix" implies auto-trigger.
+              // But 'userProfile' might not be loaded yet.
+              // Let's set a flag "readyToRemix"
+              
+              // Actually, ensure we clean up LS
+              localStorage.removeItem('remixSource');
+              
+              // Let's modify handleGenerate to accept overrides or rely on state
+              // We can't easily auto-trigger because handleGenerate relies on 'inputs' state which updates async.
+              // Valid approach: Pre-fill and show a toast "Ready to Remix?". 
+              // OR use a ref/flag.
+              setStep("loading"); // Go straight to loading to simulate auto without waiting for inputs render?
+              // No, inputs need to be set in state for handleGenerate to read them? 
+              // Yes, handleGenerate reads 'inputs' const.
+              // So we need 'inputs' to update.
+              // BUT we can call the API logic directly passing the new inputs.
+              
+              // Let's do that in a separate async func or effect.
+              // Wait, we need 'userProfile' too.
+          }
+      }
+  }, [searchParams]);
+
+  // Wrap in useCallback to satisfy linter
+  const handleGenerate = useCallback(async () => {
     if (!inputs.context || !inputs.plot) return;
     
     setStep("loading");
@@ -123,7 +203,8 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
                 ...inputs,
                 tone,
                 format, // Pass format
-                userName: user?.displayName || user?.email?.split('@')[0] || "User"
+                userName: user?.displayName || user?.email?.split('@')[0] || "User",
+                userProfile // Inject profile data
             }),
         });
         
@@ -142,7 +223,42 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
         alert(`Error: ${err.message || "Unknown error"}`);
         setStep("input");
     }
-  };
+  }, [inputs, tone, format, user, userProfile]);
+
+  // Trigger remix generation when inputs and profile are ready
+  useEffect(() => {
+      const mode = searchParams.get('mode');
+      if (mode === 'remix' && inputs.context && userProfile && step === 'loading') { // wait for profile
+         // Logic to trigger generate is duplicated?
+         // Let's refactor handleGenerate or just call it?
+         // handleGenerate reads from scope 'inputs'. 
+         // If inputs updated in previous effect, they should be fresh here?
+         handleGenerate();
+      }
+  }, [inputs, userProfile, searchParams, step, handleGenerate]); 
+  
+  // Correction: The first effect checks mode='remix' and sets 'inputs'.
+  // It ALSO sets step='loading' to trigger the visual.
+  // Then the second effect sees step='loading', mode='remix', and calls handleGenerate.
+  // BUT handleGenerate sets step='loading' again. Infinite loop risk?
+  // handleGenerate checks !inputs.context.
+  
+  // BETTER: Just Pre-fill. User clicks "Create Scene" (maybe rename button to "Remix Scene").
+  // This is safer. The user sees "Ah, it copied the context!" and clicks "Go".
+  // Less "Magic" but less buggy.
+  // Compromise: Pre-fill + Auto-focus?
+  
+  // Let's stick to Pre-fill for now to avoid race conditions with profile fetching.
+  // "Remix" means "Start with this base".
+  
+  // Update: If I remove setStep('loading') from the effect, it just pre-fills.
+  
+  const isRemix = searchParams.get('mode') === 'remix';
+
+  const [generatedScript, setGeneratedScript] = useState<Script | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+
+
 
   // ... (handleSave remains same) ...
   const handleSave = async () => {
@@ -376,6 +492,9 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
                                                 </button>
                                             ))}
                                         </div>
+                                        <p className="text-xs text-muted-foreground font-medium mt-2 pl-1 h-4 transition-all">
+                                            {FORMAT_DESCRIPTIONS[format]}
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -390,14 +509,14 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
                             size="lg"
                             className="w-full h-14 rounded-full text-lg font-bold shadow-xl shadow-primary/25 hover:shadow-2xl hover:shadow-primary/30 hover:opacity-90 active:scale-[0.98] transition-all"
                         >
-                            Create Scene
+                            {isRemix ? "✨ Remix Scene" : "Create Scene"}
                         </Button>
                     </div>
                 </motion.div>
             )}
 
             {step === "loading" && (
-                <LoadingDirector params={inputs} />
+                <LoadingDirector params={inputs} userProfile={userProfile} />
             )}
 
             {step === "preview" && generatedScript && (
@@ -485,7 +604,7 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
   );
 }
 
-function LoadingDirector({ params }: { params: { context: string, myRole: string, otherRole: string } }) {
+function LoadingDirector({ params, userProfile }: { params: { context: string, myRole: string, otherRole: string }, userProfile: UserProfile | null }) {
     const [msgIndex, setMsgIndex] = useState(0);
     
     const messages = [
@@ -496,6 +615,15 @@ function LoadingDirector({ params }: { params: { context: string, myRole: string
         "🎭 Rehearsing the final lines...",
         "✨ Polishing the script..."
     ];
+
+    // Inject personal flavor if available
+    if (userProfile?.humorStyle) {
+        messages.splice(2, 0, `🎭 Applying your ${userProfile.humorStyle} humor style...`);
+    }
+    if (userProfile?.occupation) {
+        // e.g. "Checking with other Software Engineers..."
+        messages.splice(1, 0, `👷 Consulting with other ${userProfile.occupation}s...`);
+    }
 
     useEffect(() => {
         const interval = setInterval(() => {

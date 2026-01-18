@@ -3,20 +3,33 @@
 import { motion } from "framer-motion";
 import type { Script, UserScript } from "@/types";
 import ScenarioCard from "@/components/ScenarioCard";
+import { useRouter } from "next/navigation";
 
 type Props = {
   scripts: Script[];
   onEdit?: (id: string, e: React.MouseEvent) => void;
   onDelete?: (id: string, e: React.MouseEvent) => void;
   onTogglePublic?: (id: string, current: boolean, e: React.MouseEvent) => void;
+  onRemix?: (script: Script) => void;
   // onLike and likedSet removed from props as they are handled internally
 };
 
 
 import { useLikes } from "@/hooks/useLikes";
 
-export default function ScenarioList({ scripts, onEdit, onDelete, onTogglePublic }: Props) {
+export default function ScenarioList({ scripts, onEdit, onDelete, onTogglePublic, onRemix }: Props) {
   const { likedSet, toggleLike } = useLikes();
+  const router = useRouter();
+
+  const handleRemix = (script: Script) => {
+      if (onRemix) {
+          onRemix(script);
+      } else {
+          // Default Remix Behavior (for Standard Scenarios)
+          localStorage.setItem('remixSource', JSON.stringify(script));
+          router.push('/create-scenario?mode=remix');
+      }
+  };
 
   // Check if we have sections
   const hasSections = scripts.some(s => s.section);
@@ -102,7 +115,9 @@ export default function ScenarioList({ scripts, onEdit, onDelete, onTogglePublic
                       onEdit={onEdit} 
                       onDelete={onDelete}
                       onTogglePublic={onTogglePublic}
+
                       onLike={(id) => toggleLike(id, 'userId' in script, (script as UserScript).userId)}
+                      onRemix={() => handleRemix(script)}
                       isLiked={likedSet.has(script.id)}
                     />
                   </motion.div>
@@ -131,6 +146,7 @@ export default function ScenarioList({ scripts, onEdit, onDelete, onTogglePublic
             onDelete={onDelete}
             onTogglePublic={onTogglePublic}
             onLike={(id) => toggleLike(id, 'userId' in script, (script as UserScript).userId)}
+            onRemix={() => handleRemix(script)}
             isLiked={likedSet.has(script.id)}
           />
         </motion.div>

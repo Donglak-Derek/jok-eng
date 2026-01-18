@@ -92,6 +92,16 @@ import { useSaved } from "@/hooks/useSaved";
       }
     };
 
+    const handleRemix = (scriptId: string, e: React.MouseEvent) => {
+        e.preventDefault();
+        const script = scenarios.find(s => s.id === scriptId);
+        if (!script) return;
+
+        // Store source script for the generator
+        localStorage.setItem('remixSource', JSON.stringify(script));
+        router.push('/create-scenario?mode=remix');
+    };
+
     if (loading) return null;
 
     if (!user) {
@@ -187,6 +197,7 @@ import { useSaved } from "@/hooks/useSaved";
                                 onTogglePublic={activeTab === 'created' ? handleTogglePublic : undefined}
                                 onEdit={activeTab === 'created' ? handleEdit : undefined}
                                 onDelete={activeTab === 'created' ? handleDelete : undefined}
+                                onRemix={handleRemix}
                                 // Users can unsave by going to the card detail.
                             />
                         </motion.div>

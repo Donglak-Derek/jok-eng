@@ -8,7 +8,7 @@ export const zoomFail: Script = {
   categoryName: CATEGORY_NAMES["the_party_survival_kit"],
   section: "advanced",
   cleanedEnglish: "The modern horror story of thinking you are muted when you are definitely not.",
-  imageUrl: "/images/scenarios/zoom_fail.png",
+  imageUrl: "/images/scenarios/zoom_fail_3d.png",
   difficulty: "Medium 🌶️🌶️",
   mode: "cloze",
   type: "script",

@@ -9,7 +9,7 @@ export const theInvitationDecoder: Script = {
   categoryName: CATEGORY_NAMES["the_party_survival_kit"],
   section: "boss_battles",
   cleanedEnglish: "Understanding dress codes and aggressive politeness.",
-  imageUrl: "/images/scenarios/invitation.png",
+  imageUrl: "/images/scenarios/invitation_decoder_3d.png",
   difficulty: "Spicy 🌶️🌶️🌶️",
   type: "decoder",
   
