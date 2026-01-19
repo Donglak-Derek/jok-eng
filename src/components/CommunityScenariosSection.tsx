@@ -193,8 +193,26 @@ export default function CommunityScenariosSection() {
        return scoreB - scoreA; // High score first
   });
 
+  const handleSmartRemix = async (scriptId: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!user || !userProfile?.occupation) return;
+    
+    const script = scenarios.find(s => s.id === scriptId);
+    if (!script) return;
+
+    // Save for retrieval
+    localStorage.setItem('remixSource', JSON.stringify(script));
+
+    const params = new URLSearchParams();
+    params.set("mode", "remix");
+    params.set("adaptTo", userProfile.occupation); // KEY: Pass occupation intent
+    router.push(`/create-scenario?${params.toString()}`);
+  };
+
   return (
     <section className="w-full mx-auto">
+      {/* ... keeping header same ... */}
       <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
             <h2 className="text-3xl font-bold tracking-tight mb-2">Story Feed</h2>
@@ -244,6 +262,15 @@ export default function CommunityScenariosSection() {
                         index={index} 
                         onLike={handleToggleLike}
                         onRemix={handleRemix}
+                        onSmartRemix={ 
+                            // Only show Smart Adapt if: 
+                            // 1. User has occupation 
+                            // 2. Author is different (or generic)
+                            // 3. Not already same author type
+                            userProfile?.occupation && script.authorOccupation !== userProfile.occupation 
+                            ? handleSmartRemix 
+                            : undefined 
+                        }
                         onShare={handleShare}
                         isLiked={user ? script.likedBy?.includes(user.uid) : false}
                     />

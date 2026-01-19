@@ -6,7 +6,7 @@ import { useProgress } from "@/context/ProgressContext";
 import type { Script, UserScript } from "@/types";
 import { motion } from "framer-motion";
 import React from "react";
-import { Heart, Lock, Edit2, Trash2, User, Repeat, Shuffle } from "lucide-react";
+import { Heart, Lock, Edit2, Trash2, User, Repeat, Shuffle, Sparkles } from "lucide-react";
 import { GenerativeCover } from "./GenerativeCover";
 
 type Props = {
@@ -17,6 +17,7 @@ type Props = {
   onTogglePublic?: (id: string, current: boolean, e: React.MouseEvent) => void;
   onLike?: (id: string, e: React.MouseEvent) => void;
   onRemix?: (id: string, e: React.MouseEvent) => void;
+  onSmartRemix?: (id: string, e: React.MouseEvent) => void;
   onShare?: (id: string, e: React.MouseEvent) => void;
   isLiked?: boolean;
 };
@@ -27,7 +28,8 @@ export default function ScenarioCard({
     onDelete, 
     onTogglePublic, 
     onLike,
-    onRemix, 
+    onRemix,
+    onSmartRemix, 
     isLiked 
 }: Props) {
 
@@ -150,9 +152,19 @@ export default function ScenarioCard({
                                 className="flex items-center gap-1 hover:text-purple-500 transition-colors ml-2"
                                 title="Remix this scenario"
                             >
-                                <span className="text-[10px] font-bold uppercase tracking-wide opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0">Remix</span>
+                                <span className="text-[10px] font-bold uppercase tracking-wide opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0 hidden sm:inline-block">Remix</span>
                                 <Shuffle className="w-3.5 h-3.5" />
                             </button>
+                         )}
+                         {onSmartRemix && (
+                             <button
+                                 onClick={(e) => { e.preventDefault(); e.stopPropagation(); onSmartRemix(script.id, e); }}
+                                 className="flex items-center gap-1 hover:text-amber-500 transition-colors ml-2"
+                                 title="Adapt for my job"
+                             >
+                                  <span className="text-[10px] font-bold uppercase tracking-wide opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0 hidden sm:inline-block text-amber-500">Adapt</span>
+                                 <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                             </button>
                          )}
                     </div>
                 </div>

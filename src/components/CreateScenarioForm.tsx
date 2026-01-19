@@ -183,9 +183,11 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
     fetchProfile();
   }, [user?.uid]);
 
-  // REMIX LOGIC
+  // REMIX & ADAPT LOGIC
   useEffect(() => {
       const mode = searchParams.get('mode');
+      const adaptTo = searchParams.get('adaptTo'); // e.g. "Chef"
+      
       if (mode === 'remix') {
           const storedScript = localStorage.getItem('remixSource');
           if (storedScript) {
@@ -200,10 +202,8 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
               };
 
               if ('originalPrompt' in script && script.originalPrompt) {
-                  // It's a UserScript with saved prompt
-                  newInputs = (script as UserScript).originalPrompt;
+                  newInputs = { ...(script as UserScript).originalPrompt };
               } else {
-                  // It's a standard script, infer values (Basic)
                   newInputs = {
                       context: script.context || script.title,
                       myRole: "Me",
@@ -212,30 +212,21 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
                   };
               }
 
+              // --- SMART ADAPTATION OVERRIDE ---
+              if (adaptTo) {
+                   newInputs.myRole = adaptTo; 
+                   // Keep otherRole as is, or make it generic if it was specific? 
+                   // Let's force generic to let AI decide appropriate counterpart
+                   newInputs.otherRole = "Colleague / Client"; 
+                   
+                   newInputs.context = `(Adapting: ${script.title})`;
+                   // Magic Instruction
+                   newInputs.plot = `[ORIGINAL PLOT]: ${newInputs.plot}\n\n[INSTRUCTION]: REWRITE this exact scenario to take place in a ${adaptTo} workplace context. Keep the same conflict/lesson, but change the jargon and setting.`;
+              }
+              // ---------------------------------
+
               setInputs(newInputs);
-              // Auto-trigger generation after a brief delay to ensure state set?
-              // Or just call generate function directly? 
-              // Better to set state and then trigger via effect or flag.
-              // For now, let's pre-fill and let user hit "Create" OR auto-trigger?
-              // "One click remix" implies auto-trigger.
-              // But 'userProfile' might not be loaded yet.
-              // Let's set a flag "readyToRemix"
-              
-              // Actually, ensure we clean up LS
               localStorage.removeItem('remixSource');
-              
-              // Let's modify handleGenerate to accept overrides or rely on state
-              // We can't easily auto-trigger because handleGenerate relies on 'inputs' state which updates async.
-              // Valid approach: Pre-fill and show a toast "Ready to Remix?". 
-              // OR use a ref/flag.
-              setStep("loading"); // Go straight to loading to simulate auto without waiting for inputs render?
-              // No, inputs need to be set in state for handleGenerate to read them? 
-              // Yes, handleGenerate reads 'inputs' const.
-              // So we need 'inputs' to update.
-              // BUT we can call the API logic directly passing the new inputs.
-              
-              // Let's do that in a separate async func or effect.
-              // Wait, we need 'userProfile' too.
           }
       }
   }, [searchParams]);
