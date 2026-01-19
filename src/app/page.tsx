@@ -141,50 +141,51 @@ export default function Home() {
                     
                     <div className="container-minimal relative z-10 text-center space-y-8">
                         <h1 className="text-5xl xs:text-6xl md:text-8xl lg:text-9xl font-bold tracking-tighter text-balance leading-[0.9]">
-                            Don&apos;t just learn English. <span className="text-transparent bg-clip-text bg-gradient-to-br from-primary to-blue-600 block sm:inline">Live it.</span>
+                            English that knows <span className="text-transparent bg-clip-text bg-gradient-to-br from-primary to-blue-600 block sm:inline">your situation.</span>
                         </h1>
                         
                         <p className="text-xl md:text-3xl text-muted font-medium max-w-3xl mx-auto text-balance leading-relaxed">
-                            The AI Director puts <span className="text-foreground font-bold underline decoration-primary/50 underline-offset-4">YOU</span> in the scene. Practice the exact conversations you need for your actual life.
+                            Stop practicing &quot;The cat is on the table.&quot; Start practicing &quot;My PR was merged&quot; or &quot;The latte is too hot.&quot; <br />
+                            <span className="text-foreground font-bold underline decoration-primary/50 underline-offset-4">We adapt every scenario to YOU.</span>
                         </p>
                         
                         <div className="pt-8">
                             <Link href="/login" passHref>
                             <Button className="rounded-full px-10 py-8 text-xl font-bold bg-primary text-white hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary/20">
-                                Start Being Funny
+                                Get Your Personal Script
                             </Button>
                             </Link>
                         </div>
                     </div>
                 </section>
 
-                {/* WHY IT'S FUN (Scenario Showcase) */}
+                {/* WHY IT&apos;S FUN (Scenario Showcase) */}
                 <section className="container-minimal py-16 border-t border-border">
                     <div className="text-center mb-16 space-y-4">
-                    <h2 className="text-4xl md:text-5xl font-bold tracking-tight">Stop studying. Start rehearsing.</h2>
+                    <h2 className="text-4xl md:text-5xl font-bold tracking-tight">The &quot;Smart Remix&quot; Engine.</h2>
                     <p className="text-xl text-muted max-w-2xl mx-auto">
-                        Textbooks don&apos;t teach you how to ask for a raise or flirt at a bar. We do.
+                        Don&apos;t see a scenario for your job? Click one button, and our AI rewrites it for your specific role.
                     </p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {[
                             { 
-                                emoji: "😰",
-                                title: "The Situation", 
-                                desc: "You have a super awkward conflict coming up at work.",
+                                emoji: "👩‍🍳",
+                                title: "You&apos;re a Chef", 
+                                desc: "You see a scenario about an IT conflict.",
                                 bg: "bg-orange-500/10 border-orange-500/20 text-orange-700" 
                             },
                             { 
-                                emoji: "🤖",
-                                title: "The Director", 
-                                desc: "Tells the AI: 'I need to politely disagree with my boss about the budget.'",
-                                bg: "bg-blue-500/10 border-blue-500/20 text-blue-700"
+                                emoji: "✨",
+                                title: "Magic Adapt", 
+                                desc: "You click &apos;Adapt&apos;. The AI keeps the lesson but changes &apos;Bug&apos; to &apos;Burnt Steak&apos;.",
+                                bg: "bg-purple-500/10 border-purple-500/20 text-purple-700"
                             },
                             { 
-                                emoji: "🎭",
-                                title: "The Rehearsal", 
-                                desc: "You get a custom script to practice until you're confident.",
+                                emoji: "📈",
+                                title: "Community Grows", 
+                                desc: "Now other Chefs see your new scenario in their Professional Feed.",
                                 bg: "bg-green-500/10 border-green-500/20 text-green-700"
                             }
                         ].map((step, i) => (
@@ -206,28 +207,28 @@ export default function Home() {
                 <section className="container-minimal py-16">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
                         <div className="space-y-8">
-                            <h2 className="text-4xl md:text-5xl font-bold tracking-tight">Everything you need to sound local.</h2>
+                            <h2 className="text-4xl md:text-5xl font-bold tracking-tight">Features designed for professionals.</h2>
                             <p className="text-xl text-muted leading-relaxed">
-                                Forget generic phrases. Our curated packs cover the actual conversations that happen in offices, bars, and awkward dates.
+                                You don&apos;t need another generic app. You need a tool that understands your career context.
                             </p>
                             <ul className="space-y-6 text-xl font-medium">
                                 <li className="flex items-center gap-4">
-                                    <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20 text-primary">✨</span>
-                                    Curated &quot;Vibe&quot; Packs
+                                    <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20 text-primary">👔</span>
+                                    <span>**Professional Feed**: See just content from your peers.</span>
                                 </li>
                                 <li className="flex items-center gap-4">
-                                    <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20 text-primary">🔥</span>
-                                    Community Scenarios
+                                    <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20 text-primary">✨</span>
+                                    <span>**One-Click Remix**: Turn any story into your story.</span>
                                 </li>
                                 <li className="flex items-center gap-4">
                                     <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20 text-primary">🎬</span>
-                                    AI Scenario Director
+                                    <span>**AI Director**: Get coached on tone, not just grammar.</span>
                                 </li>
                             </ul>
                         </div>
                         <div className="aspect-square bg-secondary/30 rounded-[3rem] p-12 flex items-center justify-center relative overflow-hidden group">
                             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                            <div className="text-9xl opacity-20 group-hover:scale-110 transition-transform duration-500">🎙️</div>
+                            <div className="text-9xl opacity-20 group-hover:scale-110 transition-transform duration-500">🚀</div>
                         </div>
                     </div>
                 </section>
@@ -240,7 +241,7 @@ export default function Home() {
                         <Link href="#">Terms</Link>
                     </div>
                     <p>
-                        © {new Date().getFullYear()} JOK-ENG. Built for the cool late starters.
+                        © {new Date().getFullYear()} JOK-ENG. The Networked English Utility.
                     </p>
                 </footer>
            </div>
