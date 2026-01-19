@@ -110,6 +110,8 @@ export async function POST(request: NextRequest) {
         categorySlug: "custom",
         categoryName: "Custom Scenario",
         cleanedEnglish: data.cleanedEnglish,
+        tone: tone || "Polite", // Persist the requested tone
+        format: format || "Social Dojo", // Persist the requested format
         culturalInsights: data.culturalInsights, // NEW
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         quizItems: data.quizItems?.map((q: any) => ({ ...q, id: uuidv4() })), // NEW: Map with IDs if needed, or simple array

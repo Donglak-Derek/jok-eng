@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 // import Image from "next/image";
-import { categories, scripts } from "@/data";
+// import { categories, scripts } from "@/data";
 import Header from "@/components/Header";
 import CategoryCarousel from "@/components/CategoryCarousel";
 import DesktopNavigation from "@/components/DesktopNavigation";

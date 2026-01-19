@@ -3,13 +3,11 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { UserStats } from "@/types";
+import { UserStats, JOB_CATEGORIES, UserProfile } from "@/types";
 import { motion } from "framer-motion";
-// import Link from "next/link";
 import MyScenariosSection from "@/components/MyScenariosSection";
-// import Header from "@/components/Header";
 
 // Rank Logic Helpers
 const getRank = (scenariosCreated: number) => {
@@ -24,7 +22,9 @@ export default function ProfilePage() {
     const { user, loading: authLoading } = useAuth();
     const router = useRouter();
     const [stats, setStats] = useState<UserStats | null>(null);
+    const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
     const [loading, setLoading] = useState(true);
+    const [isEditing, setIsEditing] = useState(false);
 
     useEffect(() => {
         if (authLoading) return;
@@ -33,15 +33,19 @@ export default function ProfilePage() {
             return;
         }
 
-        const fetchStats = async () => {
+        const fetchData = async () => {
             try {
-                const docRef = doc(db, "users", user.uid);
-                const docSnap = await getDoc(docRef);
+                // Fetch Stats
+                const statsRef = doc(db, "users", user.uid);
+                const statsSnap = await getDoc(statsRef);
                 
-                if (docSnap.exists()) {
-                    setStats(docSnap.data() as UserStats);
+                if (statsSnap.exists()) {
+                    setStats(statsSnap.data() as UserStats);
+                    // Also try to get profile data if it's merged or separate? 
+                    // Current schema seems to mix them or use same doc?
+                    // Let's assume same doc for now based on previous code.
+                    setUserProfile(statsSnap.data() as unknown as UserProfile);
                 } else {
-                    // Initialize empty stats if none exist
                     setStats({
                         userId: user.uid,
                         totalScenariosCreated: 0,
@@ -52,13 +56,13 @@ export default function ProfilePage() {
                     });
                 }
             } catch (err) {
-                console.error("Error fetching stats:", err);
+                console.error("Error fetching data:", err);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchStats();
+        fetchData();
     }, [user, authLoading, router]);
 
     if (authLoading || loading) {
@@ -81,6 +85,15 @@ export default function ProfilePage() {
                 <div className="absolute inset-0 bg-secondary/5 z-0" />
                 <div className="container max-w-4xl mx-auto px-6 relative z-10 text-center">
                     
+                     <div className="absolute top-4 right-4 z-50">
+                        <button 
+                            onClick={() => setIsEditing(true)}
+                            className="bg-secondary/80 hover:bg-secondary backdrop-blur text-xs font-bold px-4 py-2 rounded-full border border-white/10 transition-all text-foreground/80 hover:text-foreground"
+                        >
+                            Review Profile ✏️
+                        </button>
+                     </div>
+
                     <motion.div 
                         initial={{ scale: 0.5, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
@@ -112,11 +125,24 @@ export default function ProfilePage() {
                         {rank.title}
                     </motion.div>
 
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                         transition={{ delay: 0.25 }}
+                         className="mb-2"
+                    >
+                        {userProfile?.occupation && (
+                             <span className="text-sm font-medium px-3 py-1 bg-secondary rounded-full text-secondary-foreground">
+                                {userProfile.occupation}
+                             </span>
+                        )}
+                    </motion.div>
+
                     <motion.p 
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.3 }}
-                        className="text-muted text-xs md:text-sm"
+                        className="text-muted-foreground text-xs md:text-sm"
                     >
                         Member since {joinDate}
                     </motion.p>
@@ -169,6 +195,16 @@ export default function ProfilePage() {
                     </div>
                 </motion.div>
              </div>
+
+             {/* Edit Profile Modal */}
+             {isEditing && user && (
+                 <EditProfileModal 
+                    user={user} 
+                    onClose={() => setIsEditing(false)} 
+                    // Pass the profile data, fallback to empty object if null
+                    initialData={userProfile || {} as UserProfile} 
+                 />
+             )}
         </div>
     );
 }
@@ -185,9 +221,93 @@ function StatsCard({ icon, label, value, delay }: { icon: string, label: string,
             <div className="text-3xl font-bold bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent mb-1">
                 {value}
             </div>
-            <div className="text-xs uppercase tracking-wider text-muted font-bold">
+            <div className="text-xs uppercase tracking-wider text-muted-foreground font-bold">
                 {label}
             </div>
         </motion.div>
+    );
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function EditProfileModal({ user, onClose, initialData }: { user: any, onClose: () => void, initialData: UserProfile }) {
+    const [occupation, setOccupation] = useState(initialData?.occupation || "");
+    const [saving, setSaving] = useState(false);
+
+    const handleSave = async () => {
+        setSaving(true);
+        try {
+            await setDoc(doc(db, "users", user.uid), {
+                occupation: occupation,
+            }, { merge: true });
+            
+            window.location.reload(); 
+        } catch (e) {
+            console.error(e);
+            alert("Failed to save.");
+            setSaving(false);
+        }
+    };
+
+    return (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+            <motion.div 
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="bg-card w-full max-w-md rounded-3xl border border-border shadow-2xl overflow-hidden"
+            >
+                <div className="p-6 space-y-6">
+                    <div className="text-center">
+                        <h2 className="text-2xl font-bold">Your Professional Identity 🆔</h2>
+                        <p className="text-muted-foreground text-sm mt-1">
+                            We use this to show you relevant stories from your peers.
+                        </p>
+                    </div>
+                    
+                    <div className="space-y-3">
+                        <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                            What is your field?
+                        </label>
+                        <div className="relative">
+                            <select 
+                                className="w-full bg-secondary/50 rounded-xl px-4 py-3 font-medium outline-none focus:ring-2 ring-primary/50 appearance-none text-foreground"
+                                value={occupation}
+                                onChange={(e) => setOccupation(e.target.value)}
+                            >
+                                <option value="">Select your role...</option>
+                                {Object.entries(JOB_CATEGORIES).map(([group, roles]) => (
+                                    <optgroup key={group} label={group}>
+                                        {roles.map(role => (
+                                            <option key={role} value={role}>{role}</option>
+                                        ))}
+                                    </optgroup>
+                                ))}
+                            </select>
+                             <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
+                                ▼
+                            </div>
+                        </div>
+                         <p className="text-xs text-muted-foreground/60">
+                            *This helps Chefs see Chef content, Devs see Dev content, etc.
+                        </p>
+                    </div>
+
+                    <div className="flex gap-3 pt-2">
+                        <button 
+                            onClick={onClose}
+                            className="flex-1 py-3 font-bold text-muted-foreground hover:bg-secondary rounded-xl transition-colors"
+                        >
+                            Cancel
+                        </button>
+                         <button 
+                            onClick={handleSave}
+                            disabled={!occupation || saving}
+                            className="flex-1 py-3 font-bold bg-primary text-primary-foreground hover:opacity-90 rounded-xl transition-all disabled:opacity-50"
+                        >
+                            {saving ? "Saving..." : "Save Identity"}
+                        </button>
+                    </div>
+                </div>
+            </motion.div>
+        </div>
     );
 }

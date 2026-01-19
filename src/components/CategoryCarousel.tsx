@@ -14,14 +14,7 @@ export default function CategoryCarousel() {
 
   return (
     <section className="relative group/carousel">
-      <div className="mb-4 px-4 md:px-0 flex items-baseline justify-between">
-         <div>
-            <h2 className="text-3xl font-bold tracking-tight mb-1">
-                Pick your vibe
-            </h2>
-            <p className="text-muted-foreground text-lg">Choose a context to start practicing.</p>
-         </div>
-      </div>
+      {/* Header removed to avoid duplication in page.tsx */}
 
       {/* 1. MOBILE: Carousel Container (md:hidden) */}
       {/* Wrapper to contain the bleed so it doesn't push page width */}

@@ -1,6 +1,6 @@
 import { scripts } from "@/data";
 import ScriptClient from "./ScriptClient";
-import { notFound } from "next/navigation";
+// import { notFound } from "next/navigation";
 import { Metadata } from "next";
 
 type Props = {
@@ -15,8 +15,10 @@ export async function generateMetadata(
   const script = scripts.find((s) => s.id === id);
  
   if (!script) {
+    // Fallback for dynamic scripts (we can't easily fetch title server-side without admin SDK)
     return {
-      title: "Script Not Found | Jok-Eng",
+      title: "Custom Scenario | Jok-Eng", 
+      description: "A custom roleplay scenario."
     };
   }
  
@@ -36,11 +38,9 @@ export default async function ScriptPage({ params }: Props) {
   const { id } = await params;
   const script = scripts.find((s) => s.id === id);
   
-  if (!script) {
-    notFound();
-  }
-
-  const jsonLd = {
+  // Don't 404 here. Let Client try to fetch by ID if not in static list.
+  
+  const jsonLd = script ? {
     '@context': 'https://schema.org',
     '@type': 'LearningResource',
     name: script.title,
@@ -50,15 +50,17 @@ export default async function ScriptPage({ params }: Props) {
     teaches: script.cleanedEnglish,
     inLanguage: 'en-US',
     isAccessibleForFree: true,
-  };
+  } : null;
 
   return (
     <>
-        <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-        <ScriptClient script={script} />
+        {jsonLd && (
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
+        )}
+        <ScriptClient script={script} scriptId={id} />
     </>
   );
 }

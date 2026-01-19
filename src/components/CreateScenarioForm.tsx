@@ -35,6 +35,56 @@ const FORMAT_DESCRIPTIONS: Record<string, string> = {
   "Rapid Fire": "⚡ Focus: Speed. Short, fast-paced drills for reflexes."
 };
 
+// --- Combinatorial Surprise Me Logic ---
+const CONTEXTS = [
+  "Asking my boss for a raise...",
+  "Breaking up with a clingy partner...",
+  "Ordering a complicated coffee...",
+  "Explaining a mistake to a client...",
+  "Returning a meal at a restaurant...",
+  "Negotiating rent with a landlord...",
+  "Small talk with a stranger in an elevator...",
+  "Confessing a secret crush...",
+  "Apologizing for forgetting a birthday...",
+  "Confronting a roommate about dirty dishes...",
+  "Asking a stranger to take a photo...",
+  "Declining a wedding invitation...",
+  "Asking for a refund on a used item...",
+  "Meeting a partner's parents for the first time...",
+  "Critiquing a colleague's work..."
+];
+
+const ROLES = [
+  { my: "Employee", other: "Boss" },
+  { my: "Partner", other: "Clingy Boyfriend/Girlfriend" },
+  { my: "Coffee Snob", other: "Barista" },
+  { my: "Account Manager", other: "Angry Client" },
+  { my: "Diner", other: "Waiter" },
+  { my: "Tenant", other: "Landlord" },
+  { my: "Person", other: "Stranger" },
+  { my: "Friend", other: "Crush" },
+  { my: "Forgetful Friend", other: "Birthday Person" },
+  { my: "Clean Freak", other: "Messy Roommate" },
+  { my: "Tourist", other: "Local" },
+  { my: "Guest", other: "Bride/Groom" },
+  { my: "Customer", other: "Store Manager" },
+  { my: "Nervous Partner", other: "Strict Dad" },
+  { my: "Team Lead", other: "Junior Dev" }
+];
+
+const PLOTS = [
+  "I need to be firm but polite.",
+  "I'm terrified of confrontation but need to speak up.",
+  "I want to be charming and witty.",
+  "I made a huge mistake and need to fix it.",
+  "I need to negotiate a better deal.",
+  "The situation is extremely awkward.",
+  "I want to flirt without being creepy.",
+  "I need to set a boundary without being mean.",
+  "I'm trying to impress them.",
+  "They are being unreasonable and I need to de-escalate."
+];
+
 const SCENARIO_PROMPTS = [
     {
        context: "Asking my boss for a raise...",
@@ -214,16 +264,70 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
         }
         
         const data = await res.json();
-        setGeneratedScript(data.script);
-        setStep("preview");
-        setIsStudyMode(false); // Reset to review mode on new generation
+        
+        // --- DIRECT TO TRAINING (Skip Preview) ---
+        // 1. Auto-save immediately
+        const scriptId = await autoSaveScript(data.script, inputs, user, userProfile);
+        
+        if (scriptId) {
+            router.push(`/script/${scriptId}`);
+        } else {
+            // Fallback if save fails (shouldn't happen often)
+            setGeneratedScript(data.script);
+            setStep("preview");
+        }
     } catch (error) {
         console.error(error);
         const err = error as Error;
         alert(`Error: ${err.message || "Unknown error"}`);
         setStep("input");
     }
-  }, [inputs, tone, format, user, userProfile]);
+  }, [inputs, tone, format, user, userProfile, router]); // Added router to dep
+
+  // Helper to auto-save without blocking UI logic too much
+  const autoSaveScript = async (
+    script: Script, 
+    originalInputs: { context: string; myRole: string; otherRole: string; plot: string }, 
+    currentUser: { uid: string; displayName?: string | null; photoURL?: string | null } | null,
+    profile: UserProfile | null
+  ): Promise<string | null> => {
+      if (!currentUser) return null;
+      try {
+         const { collection, doc, setDoc, increment } = await import("firebase/firestore"); // Dynamic import for perf
+         
+         const scenariosCollectionRef = collection(db, "users", currentUser.uid, "scenarios");
+         const newScriptRef = doc(scenariosCollectionRef);
+         
+         const userScript: Omit<UserScript, "id"> = {
+             ...script,
+             userId: currentUser.uid,
+             createdAt: Date.now(),
+             authorName: currentUser.displayName || "Anonymous",
+             authorPhotoURL: currentUser.photoURL || undefined,
+             authorOccupation: profile?.occupation, // Save occupation
+             originalPrompt: originalInputs,
+             isPublic: true // Default to public as per "Community" goal
+         };
+         
+         // eslint-disable-next-line @typescript-eslint/no-explicit-any
+         const sanitize = (obj: any): any => {
+           return JSON.parse(JSON.stringify(obj, (key, value) => {
+             return value === undefined ? null : value;
+           }));
+         };
+
+         await setDoc(newScriptRef, { ...sanitize(userScript), id: newScriptRef.id });
+         
+         // Update stats
+         const userRef = doc(db, "users", currentUser.uid);
+         setDoc(userRef, { totalScenariosCreated: increment(1) }, { merge: true }).catch(console.error);
+
+         return newScriptRef.id;
+      } catch (e) {
+          console.error("Auto-save failed", e);
+          return null;
+      }
+  };
 
   // Trigger remix generation when inputs and profile are ready
   useEffect(() => {
@@ -283,6 +387,7 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
              createdAt: Date.now(),
              authorName: user.displayName || user.email?.split('@')[0] || "Anonymous",
              authorPhotoURL: user.photoURL || undefined,
+             authorOccupation: userProfile?.occupation,
              originalPrompt: inputs,
              isPublic: true
          };
@@ -324,19 +429,29 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
     const [placeholder, setPlaceholder] = useState(SCENARIO_PROMPTS[0]);
 
     useEffect(() => {
-        setPlaceholder(SCENARIO_PROMPTS[Math.floor(Math.random() * SCENARIO_PROMPTS.length)]);
+        // Init placeholder
+        setPlaceholder({
+            context: CONTEXTS[0],
+            myRole: ROLES[0].my,
+            otherRole: ROLES[0].other,
+            plot: PLOTS[0]
+        });
     }, []);
 
     const handleSurpriseMe = () => {
-        const randomScenario = SCENARIO_PROMPTS[Math.floor(Math.random() * SCENARIO_PROMPTS.length)];
+        // Combinatorial randomness
+        const randomContext = CONTEXTS[Math.floor(Math.random() * CONTEXTS.length)];
+        const randomRolePair = ROLES[Math.floor(Math.random() * ROLES.length)];
+        const randomPlot = PLOTS[Math.floor(Math.random() * PLOTS.length)];
+
         setInputs({
-            ...inputs, // keep any other state if we add more
-            context: randomScenario.context,
-            myRole: randomScenario.myRole,
-            otherRole: randomScenario.otherRole,
-            plot: randomScenario.plot
+            ...inputs, 
+            context: randomContext,
+            myRole: randomRolePair.my,
+            otherRole: randomRolePair.other,
+            plot: randomPlot
         });
-        setPlaceholder(randomScenario);
+        
         // Optional: Add a small tone shift for fun
         const randomTone = TONES[Math.floor(Math.random() * TONES.length)];
         setTone(randomTone);
@@ -471,10 +586,15 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
                                     </div>
 
                                     {/* 5. Format (Meta) */}
-                                    <div className="space-y-2">
-                                         <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70">
-                                            Training Style
-                                        </label>
+                                    <div className="space-y-3">
+                                         <div className="flex flex-col gap-1.5">
+                                            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70">
+                                                Training Style
+                                            </label>
+                                            <p className="text-xs text-muted-foreground font-medium min-h-[1.5rem] h-auto transition-all opacity-80 leading-relaxed pr-2">
+                                                {FORMAT_DESCRIPTIONS[format]}
+                                            </p>
+                                         </div>
                                         <div className="flex flex-wrap gap-2">
                                             {FORMATS.map(f => (
                                                 <button
@@ -492,9 +612,6 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
                                                 </button>
                                             ))}
                                         </div>
-                                        <p className="text-xs text-muted-foreground font-medium mt-2 pl-1 h-4 transition-all">
-                                            {FORMAT_DESCRIPTIONS[format]}
-                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -653,14 +770,14 @@ function LoadingDirector({ params, userProfile }: { params: { context: string, m
                     Directing Scene...
                 </h3>
                 
-                <div className="h-12 flex items-center justify-center overflow-hidden relative">
+                <div className="h-24 flex items-center justify-center overflow-hidden relative px-4">
                     <AnimatePresence mode="wait">
                         <motion.p 
                             key={msgIndex}
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -10 }}
-                            className="text-lg font-medium text-foreground/80 absolute w-full"
+                            className="text-lg md:text-xl font-medium text-foreground/80 absolute w-full text-balance leading-relaxed"
                         >
                             {messages[msgIndex]}
                         </motion.p>

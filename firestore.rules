@@ -53,9 +53,9 @@ service cloud.firestore {
       }
     }
     
-    // 4. Collection Group (For Community Section Query)
+    // 4. Collection Group (For Community Section Query AND ScriptClient lookup)
     match /{path=**}/scenarios/{scenarioId} {
-      allow read: if resource.data.isPublic == true;
+      allow read: if resource.data.isPublic == true || (request.auth != null && resource.data.userId == request.auth.uid);
     }
   }
 }

@@ -50,6 +50,8 @@ export type Script = {
   mode?: "standard" | "cloze"; // New mode for StoryTeller
   difficulty?: "Mild 🌶️" | "Medium 🌶️🌶️" | "Spicy 🌶️🌶️🌶️";
   context?: string;
+  tone?: string; // e.g. "Spicy", "Funny"
+  format?: string; // e.g. "Social Dojo"
   segments?: {
     step: string;
     text: string;
@@ -86,6 +88,7 @@ export type UserScript = Script & {
   createdAt: number; // timestamp
   authorName?: string;
   authorPhotoURL?: string;
+  authorOccupation?: string; // NEW: For Smart Feed
   likes?: number; // count
   likedBy?: string[]; // user IDs
   originalScenarioId?: string; // For saved copies
@@ -131,3 +134,13 @@ export interface UserProfile {
   motherLanguage: string; // To help with specific translation nuances
   onboardingCompleted: boolean;
 }
+
+export const JOB_CATEGORIES = {
+  "Tech & Data": ["Software Engineer", "Data Scientist", "Product Manager", "Designer", "IT Support"],
+  "Business & Finance": ["Sales Rep", "Marketing", "HR Specialist", "Accountant", "Consultant"],
+  "Healthcare": ["Doctor", "Nurse", "Pharmacist", "Therapist"],
+  "Service & Hospitality": ["Chef / Cook", "Server / Barista", "Retail Staff", "Customer Support", "Hotel Staff"],
+  "Education": ["Teacher", "Professor", "Student"],
+  "Trades & Labor": ["Construction", "Electrician", "Driver", "Logistics"],
+  "Other": ["Freelancer", "Founder", "Other"]
+};

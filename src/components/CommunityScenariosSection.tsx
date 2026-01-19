@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { collectionGroup, query, where, orderBy, limit, getDocs, updateDoc, doc, arrayUnion, arrayRemove, increment, setDoc, deleteDoc } from "firebase/firestore";
+import { collectionGroup, query, where, orderBy, limit, getDocs, getDoc, updateDoc, doc, arrayUnion, arrayRemove, increment, setDoc, deleteDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { UserScript } from "@/types";
 import ScenarioCard from "./ScenarioCard";
@@ -13,11 +13,21 @@ export default function CommunityScenariosSection() {
   const [scenarios, setScenarios] = useState<UserScript[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState("Trending");
+  const [userProfile, setUserProfile] = useState<{ occupation?: string } | null>(null); // New State
   const { user } = useAuth();
   const router = useRouter();
 
   const FILTERS = ["Trending", "Professional", "Spicy", "Funny"];
 
+  // Fetch User Profile on Mount
+  useEffect(() => {
+    if (!user) return;
+    getDoc(doc(db, "users", user.uid)).then(snap => {
+        if (snap.exists()) setUserProfile(snap.data() as { occupation?: string });
+    });
+  }, [user]);
+
+  // ... (Like/Share/Remix handlers remain same) ...
   const handleToggleLike = async (id: string) => {
     if (id.startsWith("sys-")) return; 
     if (!user) {
@@ -111,19 +121,16 @@ export default function CommunityScenariosSection() {
             q = query(
                 collectionGroup(db, "scenarios"),
                 where("isPublic", "==", true),
-                orderBy("likes", "desc"), // Requires Index!
-                // TEMPORARY FIX: Switch to 'createdAt' while 'likes' index builds
-                // orderBy("createdAt", "desc"), 
+                orderBy("likes", "desc"), 
                 limit(20)
             );
-        } 
-        // Others -> Sort by Latest (then filter locally)
-        else {
+        } else {
+            // For others, fetch broadly then sort client-side
             q = query(
                 collectionGroup(db, "scenarios"),
                 where("isPublic", "==", true),
                 orderBy("createdAt", "desc"),
-                limit(50) // Fetch more to ensuring filtering works
+                limit(50) 
             );
         }
 
@@ -133,12 +140,10 @@ export default function CommunityScenariosSection() {
             id: doc.id
         })) as UserScript[];
         
-        // No more mixing! Pure DB data.
         setScenarios(communityDocs);
 
       } catch (err) {
         console.error("Error fetching scenarios:", err);
-        // Fallback for missing index
         const fallbackQ = query(collectionGroup(db, "scenarios"), where("isPublic", "==", true), limit(10));
         const snap = await getDocs(fallbackQ);
         setScenarios(snap.docs.map(d => ({ ...d.data(), id: d.id } as UserScript)));
@@ -150,15 +155,42 @@ export default function CommunityScenariosSection() {
     fetchScenarios();
   }, [activeFilter]);
 
-  // Client-Side Filter for Categories (until Tags are in DB)
-  const displayScenarios = scenarios.filter(s => {
+  // Client-Side Filter & Sort
+  const displayScenarios = scenarios
+    .filter(s => {
       if (activeFilter === "Trending") return true;
+      
+      // 1. Check direct Tag match
+      if (s.tone && s.tone.toLowerCase() === activeFilter.toLowerCase()) return true;
+
+      // 2. Keyword fallback
       const text = (s.title + " " + s.cleanedEnglish + " " + (s.context || "")).toLowerCase();
       
-      if (activeFilter === "Professional") return ["work", "boss", "office", "salary", "interview", "job", "career", "business"].some(k => text.includes(k));
-      if (activeFilter === "Spicy") return ["date", "flirt", "romance", "crush", "sexy", "love", "partner"].some(k => text.includes(k));
-      if (activeFilter === "Funny") return ["funny", "joke", "laugh", "comedy", "prank", "silly", "weird"].some(k => text.includes(k));
+      if (activeFilter === "Professional") {
+          return ["work", "boss", "office", "salary", "interview", "job", "career", "business", "colleague", "manager", "client"].some(k => text.includes(k));
+      }
+      if (activeFilter === "Spicy") {
+          return ["date", "flirt", "romance", "crush", "sexy", "love", "partner", "hot", "kiss", "relationship"].some(k => text.includes(k));
+      }
+      if (activeFilter === "Funny") {
+          return ["funny", "joke", "laugh", "comedy", "prank", "silly", "weird", "hilarious", "humor", "awkward"].some(k => text.includes(k));
+      }
       return true;
+  })
+  .sort((a, b) => { // SMART SORT
+       if (activeFilter !== "Professional" || !userProfile?.occupation) return 0;
+
+       // Score Logic for Professional Feed
+       const getScore = (script: UserScript) => {
+           if (script.authorOccupation === userProfile.occupation) return 10; // Exact Job Match (Golden)
+           // Add fuzzier logic later if needed (e.g. Category group match)
+           return 0;
+       };
+
+       const scoreA = getScore(a);
+       const scoreB = getScore(b);
+
+       return scoreB - scoreA; // High score first
   });
 
   return (
@@ -168,6 +200,11 @@ export default function CommunityScenariosSection() {
             <h2 className="text-3xl font-bold tracking-tight mb-2">Story Feed</h2>
             <p className="text-muted-foreground text-lg">
                 {activeFilter === "Trending" ? "Top rated content" : `Best in ${activeFilter}`}
+                {activeFilter === "Professional" && userProfile?.occupation && (
+                    <span className="ml-2 text-sm bg-primary/10 text-primary px-2 py-1 rounded-full animate-pulse">
+                         ✨ Tailored for {userProfile.occupation}s
+                    </span>
+                )}
             </p>
         </div>
         
