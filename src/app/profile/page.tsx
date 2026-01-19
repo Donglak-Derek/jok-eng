@@ -231,13 +231,17 @@ function StatsCard({ icon, label, value, delay }: { icon: string, label: string,
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function EditProfileModal({ user, onClose, initialData }: { user: any, onClose: () => void, initialData: UserProfile }) {
     const [occupation, setOccupation] = useState(initialData?.occupation || "");
+    const [ageGroup, setAgeGroup] = useState(initialData?.ageGroup || "");
+    const [targetLocation, setTargetLocation] = useState(initialData?.targetLocation || "");
     const [saving, setSaving] = useState(false);
 
     const handleSave = async () => {
         setSaving(true);
         try {
             await setDoc(doc(db, "users", user.uid), {
-                occupation: occupation,
+                occupation,
+                ageGroup,
+                targetLocation
             }, { merge: true });
             
             window.location.reload(); 
@@ -263,32 +267,67 @@ function EditProfileModal({ user, onClose, initialData }: { user: any, onClose: 
                         </p>
                     </div>
                     
-                    <div className="space-y-3">
-                        <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                            What is your field?
-                        </label>
-                        <div className="relative">
-                            <select 
-                                className="w-full bg-secondary/50 rounded-xl px-4 py-3 font-medium outline-none focus:ring-2 ring-primary/50 appearance-none text-foreground"
-                                value={occupation}
-                                onChange={(e) => setOccupation(e.target.value)}
-                            >
-                                <option value="">Select your role...</option>
-                                {Object.entries(JOB_CATEGORIES).map(([group, roles]) => (
-                                    <optgroup key={group} label={group}>
-                                        {roles.map(role => (
-                                            <option key={role} value={role}>{role}</option>
-                                        ))}
-                                    </optgroup>
-                                ))}
-                            </select>
-                             <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
-                                ▼
+                    <div className="space-y-4">
+                        {/* Job Input */}
+                        <div className="space-y-2">
+                            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                                Professional Field
+                            </label>
+                            <div className="relative">
+                                <select 
+                                    className="w-full bg-secondary/50 rounded-xl px-4 py-3 font-medium outline-none focus:ring-2 ring-primary/50 appearance-none text-foreground"
+                                    value={occupation}
+                                    onChange={(e) => setOccupation(e.target.value)}
+                                >
+                                    <option value="">Select your role...</option>
+                                    {Object.entries(JOB_CATEGORIES).map(([group, roles]) => (
+                                        <optgroup key={group} label={group}>
+                                            {roles.map(role => (
+                                                <option key={role} value={role}>{role}</option>
+                                            ))}
+                                        </optgroup>
+                                    ))}
+                                </select>
+                                 <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">▼</div>
                             </div>
                         </div>
-                         <p className="text-xs text-muted-foreground/60">
-                            *This helps Chefs see Chef content, Devs see Dev content, etc.
-                        </p>
+
+                        {/* Vibe Factors */}
+                         <div className="grid grid-cols-2 gap-3">
+                            <div className="space-y-2">
+                                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Age Group</label>
+                                <div className="relative">
+                                    <select 
+                                        className="w-full bg-secondary/50 rounded-xl px-4 py-3 font-medium outline-none focus:ring-2 ring-primary/50 appearance-none text-foreground text-sm"
+                                        value={ageGroup}
+                                        onChange={(e) => setAgeGroup(e.target.value)}
+                                    >
+                                        <option value="">Select...</option>
+                                        {["Teens", "20s", "30s", "40s", "50s+"].map(a => (
+                                            <option key={a} value={a}>{a}</option>
+                                        ))}
+                                    </select>
+                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">▼</div>
+                                </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Target Country</label>
+                                <div className="relative">
+                                    <select 
+                                        className="w-full bg-secondary/50 rounded-xl px-4 py-3 font-medium outline-none focus:ring-2 ring-primary/50 appearance-none text-foreground text-sm"
+                                        value={targetLocation}
+                                        onChange={(e) => setTargetLocation(e.target.value)}
+                                    >
+                                        <option value="">Select...</option>
+                                        {["USA", "UK", "Australia", "Canada"].map(l => (
+                                            <option key={l} value={l}>{l}</option>
+                                        ))}
+                                    </select>
+                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">▼</div>
+                                </div>
+                            </div>
+                         </div>
                     </div>
 
                     <div className="flex gap-3 pt-2">

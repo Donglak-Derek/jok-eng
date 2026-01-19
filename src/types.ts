@@ -129,6 +129,11 @@ export interface UserStats {
 export interface UserProfile {
   uid: string;
   occupation: string;
+  // NEW VIBE FACTORS
+  ageGroup?: "Teens" | "20s" | "30s" | "40s" | "50s+";
+  targetLocation?: "USA" | "UK" | "Australia" | "Canada"; // For idioms
+  gender?: "Male" | "Female" | "Non-binary"; // Optional, affects perspective
+  interests?: string[]; // e.g. "Tech", "Art" (Phase 2)
   hobbies: string[];
   humorStyle: string; // e.g., "Witty", "Dad Jokes", "Sarcastic"
   motherLanguage: string; // To help with specific translation nuances

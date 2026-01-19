@@ -186,14 +186,14 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
   // REMIX & ADAPT LOGIC
   useEffect(() => {
       const mode = searchParams.get('mode');
-      const adaptTo = searchParams.get('adaptTo'); // e.g. "Chef"
+      const adaptTo = searchParams.get('adaptTo'); // e.g. "Chef" OR "20s in London"
+      const adaptType = searchParams.get('adaptType'); // "job" or "vibe"
       
       if (mode === 'remix') {
           const storedScript = localStorage.getItem('remixSource');
           if (storedScript) {
               const script = JSON.parse(storedScript) as Script | UserScript;
               
-              // Extract prompt data
               let newInputs = {
                   context: "",
                   myRole: "",
@@ -212,16 +212,21 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
                   };
               }
 
-              // --- SMART ADAPTATION OVERRIDE ---
+              // --- CONTEXT-AWARE ADAPTATION ---
               if (adaptTo) {
-                   newInputs.myRole = adaptTo; 
-                   // Keep otherRole as is, or make it generic if it was specific? 
-                   // Let's force generic to let AI decide appropriate counterpart
-                   newInputs.otherRole = "Colleague / Client"; 
-                   
                    newInputs.context = `(Adapting: ${script.title})`;
-                   // Magic Instruction
-                   newInputs.plot = `[ORIGINAL PLOT]: ${newInputs.plot}\n\n[INSTRUCTION]: REWRITE this exact scenario to take place in a ${adaptTo} workplace context. Keep the same conflict/lesson, but change the jargon and setting.`;
+                   
+                   if (adaptType === 'job') {
+                       // PROFESSIONAL: Change the SETTING and JARGON
+                       newInputs.myRole = adaptTo; 
+                       newInputs.otherRole = "Colleague / Client"; 
+                       newInputs.plot = `[ORIGINAL PLOT]: ${newInputs.plot}\n\n[INSTRUCTION]: REWRITE this exact scenario to take place in a ${adaptTo} workplace context. Keep the same conflict/lesson, but change the jargon and setting to match this profession.`;
+                   } 
+                   else if (adaptType === 'vibe') {
+                       // SOCIAL: Change the IDIOMS and CULTURE (Keep roles similar)
+                       // adaptTo string is like "20s in London"
+                       newInputs.plot = `[ORIGINAL PLOT]: ${newInputs.plot}\n\n[INSTRUCTION]: REWRITE this scenario for a person who is ${adaptTo}. Keep the exact same situation and meaning, but change the SLANG, IDIOMS, and CULTURAL REFERENCES to match this specific demographic and location. Do NOT change the topic, just the 'voice'.`;
+                   }
               }
               // ---------------------------------
 

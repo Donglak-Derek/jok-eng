@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { collectionGroup, query, where, orderBy, limit, getDocs, getDoc, updateDoc, doc, arrayUnion, arrayRemove, increment, setDoc, deleteDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { UserScript } from "@/types";
+import { UserScript, UserProfile } from "@/types";
 import ScenarioCard from "./ScenarioCard";
 import { motion } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
@@ -13,7 +13,7 @@ export default function CommunityScenariosSection() {
   const [scenarios, setScenarios] = useState<UserScript[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState("Trending");
-  const [userProfile, setUserProfile] = useState<{ occupation?: string } | null>(null); // New State
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null); // Use full type
   const { user } = useAuth();
   const router = useRouter();
 
@@ -23,7 +23,7 @@ export default function CommunityScenariosSection() {
   useEffect(() => {
     if (!user) return;
     getDoc(doc(db, "users", user.uid)).then(snap => {
-        if (snap.exists()) setUserProfile(snap.data() as { occupation?: string });
+        if (snap.exists()) setUserProfile(snap.data() as UserProfile);
     });
   }, [user]);
 
@@ -196,18 +196,47 @@ export default function CommunityScenariosSection() {
   const handleSmartRemix = async (scriptId: string, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!user || !userProfile?.occupation) return;
+    if (!user) return;
     
+    // Determine Adaptation Context
+    let adaptType = "generic";
+    let adaptTarget = "";
+
+    if (activeFilter === "Professional" && userProfile?.occupation) {
+        adaptType = "job";
+        adaptTarget = userProfile.occupation;
+    } else if ((activeFilter === "Funny" || activeFilter === "Spicy") && userProfile?.ageGroup && userProfile?.targetLocation) {
+        // No more casting needed
+        adaptType = "vibe";
+        adaptTarget = `${userProfile.ageGroup} in ${userProfile.targetLocation}`;
+    }
+
+    if (adaptType === "generic") return; // Should not trigger if no data
+
     const script = scenarios.find(s => s.id === scriptId);
     if (!script) return;
 
-    // Save for retrieval
     localStorage.setItem('remixSource', JSON.stringify(script));
 
     const params = new URLSearchParams();
     params.set("mode", "remix");
-    params.set("adaptTo", userProfile.occupation); // KEY: Pass occupation intent
+    params.set("adaptType", adaptType); // "job" or "vibe"
+    params.set("adaptTo", adaptTarget); // "Chef" or "20s in London"
     router.push(`/create-scenario?${params.toString()}`);
+  };
+
+  // Helper to determine if Smart Button should show
+  const canSmartRemix = (script: UserScript) => {
+      // 1. Professional Context
+      if (activeFilter === "Professional" && userProfile?.occupation && script.authorOccupation !== userProfile.occupation) {
+          return true;
+      }
+      // 2. Vibe Context (Social)
+      // If user has Vibe Data (Age/Loc) and viewing Social content
+      if ((activeFilter === "Funny" || activeFilter === "Spicy") && userProfile?.ageGroup) {
+          return true;
+      }
+      return false;
   };
 
   return (
@@ -263,13 +292,7 @@ export default function CommunityScenariosSection() {
                         onLike={handleToggleLike}
                         onRemix={handleRemix}
                         onSmartRemix={ 
-                            // Only show Smart Adapt if: 
-                            // 1. User has occupation 
-                            // 2. Author is different (or generic)
-                            // 3. Not already same author type
-                            userProfile?.occupation && script.authorOccupation !== userProfile.occupation 
-                            ? handleSmartRemix 
-                            : undefined 
+                            canSmartRemix(script) ? handleSmartRemix : undefined
                         }
                         onShare={handleShare}
                         isLiked={user ? script.likedBy?.includes(user.uid) : false}
