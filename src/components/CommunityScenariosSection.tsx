@@ -31,7 +31,10 @@ export default function CommunityScenariosSection() {
   const handleRemix = async (scriptId: string, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!user) { alert("Please login to remix scenarios!"); return; }
+    if (!user) { 
+        router.push("/login");
+        return; 
+    }
     
     // Check both lists
     const allScenarios = [...scenarios, ...(originalScripts as UserScript[])];
@@ -130,7 +133,10 @@ export default function CommunityScenariosSection() {
   const handleSmartRemix = async (scriptId: string, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!user) return;
+    if (!user) {
+        router.push("/login"); // Redirect to login for guests
+        return;
+    }
     
     let adaptType = "generic";
     let adaptTarget = "";
