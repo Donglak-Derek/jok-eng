@@ -232,7 +232,6 @@ function StatsCard({ icon, label, value, delay }: { icon: string, label: string,
 function EditProfileModal({ user, onClose, initialData }: { user: any, onClose: () => void, initialData: UserProfile }) {
     const [occupation, setOccupation] = useState(initialData?.occupation || "");
     const [ageGroup, setAgeGroup] = useState(initialData?.ageGroup || "");
-    const [targetLocation, setTargetLocation] = useState(initialData?.targetLocation || "");
     const [saving, setSaving] = useState(false);
 
     const handleSave = async () => {
@@ -241,7 +240,7 @@ function EditProfileModal({ user, onClose, initialData }: { user: any, onClose: 
             await setDoc(doc(db, "users", user.uid), {
                 occupation,
                 ageGroup,
-                targetLocation
+                // Removed targetLocation for now based on strategic review
             }, { merge: true });
             
             window.location.reload(); 
@@ -293,39 +292,20 @@ function EditProfileModal({ user, onClose, initialData }: { user: any, onClose: 
                         </div>
 
                         {/* Vibe Factors */}
-                         <div className="grid grid-cols-2 gap-3">
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Age Group</label>
-                                <div className="relative">
-                                    <select 
-                                        className="w-full bg-secondary/50 rounded-xl px-4 py-3 font-medium outline-none focus:ring-2 ring-primary/50 appearance-none text-foreground text-sm"
-                                        value={ageGroup}
-                                        onChange={(e) => setAgeGroup(e.target.value)}
-                                    >
-                                        <option value="">Select...</option>
-                                        {["Teens", "20s", "30s", "40s", "50s+"].map(a => (
-                                            <option key={a} value={a}>{a}</option>
-                                        ))}
-                                    </select>
-                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">▼</div>
-                                </div>
-                            </div>
-
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Target Country</label>
-                                <div className="relative">
-                                    <select 
-                                        className="w-full bg-secondary/50 rounded-xl px-4 py-3 font-medium outline-none focus:ring-2 ring-primary/50 appearance-none text-foreground text-sm"
-                                        value={targetLocation}
-                                        onChange={(e) => setTargetLocation(e.target.value)}
-                                    >
-                                        <option value="">Select...</option>
-                                        {["USA", "UK", "Australia", "Canada"].map(l => (
-                                            <option key={l} value={l}>{l}</option>
-                                        ))}
-                                    </select>
-                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">▼</div>
-                                </div>
+                         <div className="space-y-2">
+                            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Age Group</label>
+                            <div className="relative">
+                                <select 
+                                    className="w-full bg-secondary/50 rounded-xl px-4 py-3 font-medium outline-none focus:ring-2 ring-primary/50 appearance-none text-foreground text-sm"
+                                    value={ageGroup}
+                                    onChange={(e) => setAgeGroup(e.target.value)}
+                                >
+                                    <option value="">Select...</option>
+                                    {["Teens", "20s", "30s", "40s", "50s+"].map(a => (
+                                        <option key={a} value={a}>{a}</option>
+                                    ))}
+                                </select>
+                                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">▼</div>
                             </div>
                          </div>
                     </div>

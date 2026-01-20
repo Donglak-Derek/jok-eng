@@ -224,8 +224,8 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
                    } 
                    else if (adaptType === 'vibe') {
                        // SOCIAL: Change the IDIOMS and CULTURE (Keep roles similar)
-                       // adaptTo string is like "20s in London"
-                       newInputs.plot = `[ORIGINAL PLOT]: ${newInputs.plot}\n\n[INSTRUCTION]: REWRITE this scenario for a person who is ${adaptTo}. Keep the exact same situation and meaning, but change the SLANG, IDIOMS, and CULTURAL REFERENCES to match this specific demographic and location. Do NOT change the topic, just the 'voice'.`;
+                       // adaptTo string is now just "20s" or "Teens"
+                       newInputs.plot = `[ORIGINAL PLOT]: ${newInputs.plot}\n\n[INSTRUCTION]: REWRITE this scenario for a person who is ${adaptTo}. Keep the exact same situation and meaning, but change the SLANG, IDIOMS, and CULTURAL REFERENCES to match this specific age group. Do NOT change the topic, just the 'voice'.`;
                    }
               }
               // ---------------------------------
@@ -301,6 +301,7 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
              authorName: currentUser.displayName || "Anonymous",
              authorPhotoURL: currentUser.photoURL || undefined,
              authorOccupation: profile?.occupation, // Save occupation
+             authorAgeGroup: profile?.ageGroup, // Save age group
              originalPrompt: originalInputs,
              isPublic: true // Default to public as per "Community" goal
          };
@@ -384,6 +385,7 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
              authorName: user.displayName || user.email?.split('@')[0] || "Anonymous",
              authorPhotoURL: user.photoURL || undefined,
              authorOccupation: userProfile?.occupation,
+             authorAgeGroup: userProfile?.ageGroup,
              originalPrompt: inputs,
              isPublic: true
          };

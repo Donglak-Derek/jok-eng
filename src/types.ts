@@ -89,6 +89,7 @@ export type UserScript = Script & {
   authorName?: string;
   authorPhotoURL?: string;
   authorOccupation?: string; // NEW: For Smart Feed
+  authorAgeGroup?: string; // NEW: For Vibe Context
   likes?: number; // count
   likedBy?: string[]; // user IDs
   originalScenarioId?: string; // For saved copies
@@ -131,7 +132,6 @@ export interface UserProfile {
   occupation: string;
   // NEW VIBE FACTORS
   ageGroup?: "Teens" | "20s" | "30s" | "40s" | "50s+";
-  targetLocation?: "USA" | "UK" | "Australia" | "Canada"; // For idioms
   gender?: "Male" | "Female" | "Non-binary"; // Optional, affects perspective
   interests?: string[]; // e.g. "Tech", "Art" (Phase 2)
   hobbies: string[];

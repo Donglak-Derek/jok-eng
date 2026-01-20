@@ -93,6 +93,28 @@ export default function ScenarioCard({
                     <p className="text-muted-foreground text-sm line-clamp-2 mt-1 leading-relaxed">
                         {script.cleanedEnglish || script.context}
                     </p>
+
+                    {/* Context Badges (Vibe/Job) */}
+                    {(isUserScript && (
+                        (script as UserScript).authorOccupation || 
+                        (script as UserScript).authorAgeGroup
+                    )) && (
+                        <div className="flex flex-wrap gap-1.5 mt-3">
+                            {/* Job Badge */}
+                            {(script as UserScript).authorOccupation && (
+                                <span className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-medium bg-blue-50 text-blue-700 border border-blue-100">
+                                    💼 {(script as UserScript).authorOccupation}
+                                </span>
+                            )}
+                            
+                             {/* Age Badge */}
+                             {(script as UserScript).authorAgeGroup && (
+                                <span className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-medium bg-amber-50 text-amber-700 border border-amber-100">
+                                    🎂 {(script as UserScript).authorAgeGroup}
+                                </span>
+                            )}
+                        </div>
+                    )}
                 </div>
                 
                 <div className="flex-1" /> {/* Spacer */}

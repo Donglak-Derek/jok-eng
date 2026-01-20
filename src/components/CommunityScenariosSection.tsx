@@ -205,10 +205,10 @@ export default function CommunityScenariosSection() {
     if (activeFilter === "Professional" && userProfile?.occupation) {
         adaptType = "job";
         adaptTarget = userProfile.occupation;
-    } else if ((activeFilter === "Funny" || activeFilter === "Spicy") && userProfile?.ageGroup && userProfile?.targetLocation) {
-        // No more casting needed
+    } else if ((activeFilter === "Funny" || activeFilter === "Spicy") && userProfile?.ageGroup) {
+        // Vibe = Age Only now
         adaptType = "vibe";
-        adaptTarget = `${userProfile.ageGroup} in ${userProfile.targetLocation}`;
+        adaptTarget = `${userProfile.ageGroup}`;
     }
 
     if (adaptType === "generic") return; // Should not trigger if no data
