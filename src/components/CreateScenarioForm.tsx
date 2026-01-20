@@ -231,7 +231,8 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
               // ---------------------------------
 
               setInputs(newInputs);
-              localStorage.removeItem('remixSource');
+              // Do not remove immediately to avoid React Strict Mode double-fire clearing it before use
+              // localStorage.removeItem('remixSource'); 
           }
       }
   }, [searchParams]);

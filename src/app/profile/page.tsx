@@ -7,7 +7,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { UserStats, JOB_CATEGORIES, UserProfile } from "@/types";
 import { motion } from "framer-motion";
-import MyScenariosSection from "@/components/MyScenariosSection";
+
 
 // Rank Logic Helpers
 const getRank = (scenariosCreated: number) => {
@@ -76,7 +76,7 @@ export default function ProfilePage() {
     if (!user) return null;
 
     const rank = getRank(stats?.totalScenariosCreated || 0);
-    const joinDate = user.metadata.creationTime ? new Date(user.metadata.creationTime).toLocaleDateString(undefined, { month: 'long', year: 'numeric' }) : "Unknown";
+
 
     return (
         <div className="min-h-screen bg-background text-foreground pb-20">
@@ -85,12 +85,14 @@ export default function ProfilePage() {
                 <div className="absolute inset-0 bg-secondary/5 z-0" />
                 <div className="container max-w-4xl mx-auto px-6 relative z-10 text-center">
                     
-                     <div className="absolute top-4 right-4 z-50">
+                     {/* Back Button */}
+                     <div className="absolute top-0 left-4 md:left-0 z-50">
                         <button 
-                            onClick={() => setIsEditing(true)}
-                            className="bg-secondary/80 hover:bg-secondary backdrop-blur text-xs font-bold px-4 py-2 rounded-full border border-white/10 transition-all text-foreground/80 hover:text-foreground"
+                            onClick={() => router.push("/")}
+                            className="bg-secondary/80 hover:bg-secondary backdrop-blur p-2 rounded-full border border-white/10 transition-all text-foreground/80 hover:text-foreground"
+                            title="Back to Home"
                         >
-                            Review Profile ✏️
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
                         </button>
                      </div>
 
@@ -111,10 +113,24 @@ export default function ProfilePage() {
                         initial={{ y: 20, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ delay: 0.1 }}
-                        className="text-2xl md:text-3xl font-bold mb-2"
+                        className="text-2xl md:text-3xl font-bold mb-1"
                     >
                         {user.displayName || "Anonymous Director"}
                     </motion.h1>
+
+                    <motion.div
+                       initial={{ opacity: 0 }}
+                       animate={{ opacity: 1 }}
+                       transition={{ delay: 0.15 }}
+                       className="mb-3"
+                    >
+                        <button 
+                            onClick={() => setIsEditing(true)}
+                            className="text-xs font-bold text-primary hover:underline hover:text-primary/80 transition-colors"
+                        >
+                            Edit Profile Invity ✏️
+                        </button>
+                    </motion.div>
                     
                     <motion.div 
                         initial={{ y: 20, opacity: 0 }}
@@ -138,14 +154,7 @@ export default function ProfilePage() {
                         )}
                     </motion.div>
 
-                    <motion.p 
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.3 }}
-                        className="text-muted-foreground text-xs md:text-sm"
-                    >
-                        Member since {joinDate}
-                    </motion.p>
+
                 </div>
              </div>
 
@@ -184,16 +193,7 @@ export default function ProfilePage() {
                     />
                 </div>
 
-                <motion.div 
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.7 }}
-                    className="mt-12"
-                >
-                    <div className="bg-card w-full rounded-3xl p-6 md:p-8 border border-border shadow-sm">
-                        <MyScenariosSection />
-                    </div>
-                </motion.div>
+
              </div>
 
              {/* Edit Profile Modal */}
@@ -215,14 +215,19 @@ function StatsCard({ icon, label, value, delay }: { icon: string, label: string,
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay }}
-            className="bg-card/80 backdrop-blur border border-secondary/20 rounded-2xl p-6 text-center shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all"
+            className="group relative bg-card rounded-2xl p-5 text-center transition-all duration-300 hover:bg-secondary/30"
         >
-            <div className="text-4xl mb-2">{icon}</div>
-            <div className="text-3xl font-bold bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent mb-1">
-                {value}
-            </div>
-            <div className="text-xs uppercase tracking-wider text-muted-foreground font-bold">
-                {label}
+            {/* Subtle Gradient Glow on Hover */}
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-purple-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
+            
+            <div className="relative z-10">
+                <div className="text-3xl mb-1 filter drop-shadow-sm">{icon}</div>
+                <div className="text-2xl font-black text-foreground mb-0.5 tracking-tight group-hover:scale-105 transition-transform duration-300">
+                    {value}
+                </div>
+                <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">
+                    {label}
+                </div>
             </div>
         </motion.div>
     );

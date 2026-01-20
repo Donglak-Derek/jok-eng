@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Youtube, Instagram } from "lucide-react";
+import { Youtube, Instagram, Linkedin } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -18,25 +18,48 @@ export default function Footer() {
         {/* Social Links */}
         <div className="flex items-center gap-6">
           <Link 
-            href="https://www.instagram.com" 
+            href="#" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-muted-foreground hover:text-black transition-colors p-2 hover:bg-gray-100 rounded-full"
+            title="TikTok"
+          >
+             {/* Custom TikTok SVG */}
+             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5v4a9 9 0 0 1-9-9Z" />
+             </svg>
+            <span className="sr-only">TikTok</span>
+          </Link>
+          <Link 
+            href="#" 
             target="_blank" 
             rel="noopener noreferrer"
             className="text-muted-foreground hover:text-pink-600 transition-colors p-2 hover:bg-pink-50 rounded-full"
+            title="Instagram"
           >
             <Instagram className="w-6 h-6" />
             <span className="sr-only">Instagram</span>
           </Link>
           <Link 
-            href="https://www.youtube.com" 
+            href="#" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-muted-foreground hover:text-blue-700 transition-colors p-2 hover:bg-blue-50 rounded-full"
+            title="LinkedIn"
+          >
+            <Linkedin className="w-6 h-6" />
+            <span className="sr-only">LinkedIn</span>
+          </Link>
+          <Link 
+            href="#" 
             target="_blank" 
             rel="noopener noreferrer"
             className="text-muted-foreground hover:text-red-600 transition-colors p-2 hover:bg-red-50 rounded-full"
+            title="YouTube"
           >
             <Youtube className="w-6 h-6" />
             <span className="sr-only">YouTube</span>
           </Link>
-          {/* Placeholder for X/Twitter if needed later */}
-          {/* <Link href="#" className="text-muted-foreground hover:text-blue-500 transition-colors"><Twitter className="w-5 h-5"/></Link> */}
         </div>
 
         {/* Mini Links */}

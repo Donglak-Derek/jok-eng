@@ -98,7 +98,7 @@ export default function StreakWidget() {
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: "auto" }}
                     exit={{ opacity: 0, height: 0 }}
-                    className={`relative w-full rounded-2xl border p-3 md:p-4 flex items-center justify-between shadow-sm mb-3 md:mb-6 ${bgClass}`}
+                    className={`relative w-full rounded-2xl border p-3 md:p-4 flex items-center justify-between shadow-sm mb-0 md:mb-0 ${bgClass}`}
                 >
                     <div className="flex items-center gap-4">
                         <div className="p-2 md:p-3 bg-white/80 backdrop-blur rounded-full shadow-sm">

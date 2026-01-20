@@ -51,11 +51,10 @@ export default function StandardScriptFlow({ script }: Props) {
   const [isAutoPlayEnabled, setIsAutoPlayEnabled] = useState(true);
   
   // Custom Scenarios comparison scenarios default to "cloze" (Hidden), others stay "standard" (Visible)
-  const isUserScript = "userId" in script;
-  const hasComparison = script.sentences?.some(s => !!(s.badResponse && s.goodResponse));
+
   
-  // Per user feedback: Comparison scenarios ("Better Approach") should have clozes hidden by default
-  const defaultMode = (isUserScript || hasComparison) ? "cloze" : "standard";
+  // Per user feedback: Default to "cloze" (Hidden) so they can test themselves first.
+  const defaultMode = "cloze";
   
   const [mode, setMode] = useState<"standard" | "cloze">((script.mode as "standard" | "cloze") || defaultMode);
 

@@ -6,7 +6,7 @@ import { useProgress } from "@/context/ProgressContext";
 import type { Script, UserScript } from "@/types";
 import { motion } from "framer-motion";
 import React from "react";
-import { Heart, Lock, Edit2, Trash2, User, Repeat, Shuffle, Sparkles } from "lucide-react";
+import { Heart, Lock, Edit2, Trash2, Repeat, Shuffle, Sparkles } from "lucide-react";
 import { GenerativeCover } from "./GenerativeCover";
 
 type Props = {
@@ -58,139 +58,129 @@ export default function ScenarioCard({
         className="group h-full flex flex-col bg-white rounded-xl border border-border/40 overflow-hidden transition-all duration-300 hover:border-border/80 hover:shadow-sm"
       >
         <Link href={href} className="flex-1 flex flex-col min-w-0">
-              {/* Cover Image: Instagram Style (Big & Visual) */}
-              <div className="relative w-full aspect-[4/3] md:aspect-[1.8/1] bg-secondary/10 overflow-hidden shrink-0">
-                  {script.imageUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img 
-                          src={script.imageUrl} 
-                          alt={script.title} 
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                      />
-                  ) : (
-                      <GenerativeCover title={script.title} category={script.categoryName || "Custom"} />
-                  )}
-              </div>
-
-             <div className="p-4 md:p-5 flex flex-col gap-2 flex-1 relative min-w-0">
-                 {/* Title & Context */}
-                <div className="min-w-0">
-                     {/* Simpler Type Label or just removed for minimalism? Keeping it tiny. */}
-                     <div className="flex items-center justify-between mb-2">
-                         <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60">
-                             {script.categoryName || "Scenario"}
-                         </span>
-                         {mounted && repeats > 0 && (
-                            <span className="flex items-center gap-1 text-[10px] font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded-full">
-                                <Repeat className="w-3 h-3" />
-                                {repeats}
-                            </span>
-                        )}
-                     </div>
-                    <h3 className="font-semibold text-lg text-foreground leading-tight group-hover:text-primary transition-colors">
-                        {script.title}
-                    </h3>
-                    <p className="text-muted-foreground text-sm line-clamp-2 mt-1 leading-relaxed">
-                        {script.cleanedEnglish || script.context}
-                    </p>
-
-                    {/* Context Badges (Vibe/Job) */}
-                    {(isUserScript && (
-                        (script as UserScript).authorOccupation || 
-                        (script as UserScript).authorAgeGroup
-                    )) && (
-                        <div className="flex flex-wrap gap-1.5 mt-3">
-                            {/* Job Badge */}
-                            {(script as UserScript).authorOccupation && (
-                                <span className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-medium bg-blue-50 text-blue-700 border border-blue-100">
-                                    💼 {(script as UserScript).authorOccupation}
-                                </span>
+                      {/* Cover Image */}
+                      <div className="relative w-full aspect-[4/3] md:aspect-[1.8/1] bg-secondary/10 overflow-hidden shrink-0">
+                          {script.imageUrl ? (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img 
+                                  src={script.imageUrl} 
+                                  alt={script.title} 
+                                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                              />
+                          ) : (
+                              <GenerativeCover title={script.title} category={script.categoryName || "Custom"} />
+                          )}
+                           
+                           {/* Floating Badge: Repeats */}
+                           {mounted && repeats > 0 && (
+                                <div className="absolute top-2 right-2 flex items-center gap-1 text-[10px] font-bold text-white bg-black/40 backdrop-blur-md px-2 py-1 rounded-full">
+                                    <Repeat className="w-3 h-3" />
+                                    {repeats}
+                                </div>
                             )}
-                            
-                             {/* Age Badge */}
-                             {(script as UserScript).authorAgeGroup && (
-                                <span className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-medium bg-amber-50 text-amber-700 border border-amber-100">
-                                    🎂 {(script as UserScript).authorAgeGroup}
-                                </span>
+                      </div>
+        
+                     <div className="p-4 flex flex-col gap-1 flex-1 relative min-w-0">
+                         {/* Title & Context */}
+                        <div className="min-w-0">
+                            <h3 className="font-bold text-lg text-foreground leading-tight group-hover:text-primary transition-colors mb-1">
+                                {script.title}
+                            </h3>
+                            <p className="text-muted-foreground text-sm line-clamp-2 leading-relaxed opacity-90">
+                                {script.cleanedEnglish || script.context}
+                            </p>
+        
+                            {/* Context Badges (Vibe/Job) */}
+                            {(isUserScript && (
+                                (script as UserScript).authorOccupation || 
+                                (script as UserScript).authorAgeGroup
+                            )) && (
+                                <div className="flex flex-wrap gap-1.5 mt-3">
+                                    {(script as UserScript).authorOccupation && (
+                                        <span className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-medium bg-blue-50 text-blue-700 border border-blue-100">
+                                            💼 {(script as UserScript).authorOccupation}
+                                        </span>
+                                    )}
+                                     {(script as UserScript).authorAgeGroup && (
+                                        <span className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-medium bg-amber-50 text-amber-700 border border-amber-100">
+                                            🎂 {(script as UserScript).authorAgeGroup}
+                                        </span>
+                                    )}
+                                </div>
                             )}
                         </div>
-                    )}
-                </div>
-                
-                <div className="flex-1" /> {/* Spacer */}
-
-                {/* Footer: Minimal & Clean */}
-                <div className="pt-4 mt-2 border-t border-border/30 flex items-center justify-between text-xs text-muted-foreground">
-                    <div className="flex items-center gap-1.5">
-                        <User className="w-3.5 h-3.5 opacity-50" />
-                        <span className="font-medium opacity-80">{authorName || "Jok-Eng"}</span>
-                    </div>
-
-                    <div className="flex items-center gap-4">
-                        {/* Interactive Like */}
-                        {isUserScript && (
-                            <button 
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    if (onLike) onLike(script.id, e);
-                                }}
-                                className="flex items-center gap-1 hover:text-red-500 transition-colors"
-                            >
-                                <Heart className={`w-3.5 h-3.5 ${isLiked ? "fill-red-500 text-red-500" : ""}`} />
-                                <span className={isLiked ? "text-red-500 font-medium" : ""}>{likeCount}</span>
-                            </button>
-                        )}
-
-                        {/* Public Toggle (Only show lock if private) */}
-                        {onTogglePublic && !isPublic && (
-                             <button
-                                 onClick={(e) => { e.preventDefault(); e.stopPropagation(); onTogglePublic(script.id, true, e); }}
-                                 className="hover:text-foreground text-amber-500 flex items-center gap-1"
-                             >
-                                 <Lock className="w-3.5 h-3.5" />
-                                 <span>Private</span>
-                             </button>
-                        )}
                         
-                        {/* Edit/Delete (Minimal Icons) */}
-                        {(onEdit || onDelete) && (
-                            <div className="flex gap-3 pl-2 border-l border-border/30">
-                                {onEdit && (
-                                    <button onClick={(e) => onEdit(script.id, e)} className="hover:text-foreground transition-colors">
-                                        <Edit2 className="w-3.5 h-3.5" />
-                                    </button>
-                                )}
-                                {onDelete && (
-                                    <button onClick={(e) => onDelete(script.id, e)} className="hover:text-red-600 transition-colors">
-                                        <Trash2 className="w-3.5 h-3.5" />
-                                    </button>
-                                )}
+                        <div className="flex-1" /> {/* Spacer */}
+        
+                        {/* Footer: Minimal & Clean */}
+                        <div className="pt-4 mt-2 flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                {/* Author Name Only - No Icon */}
+                                <span className="text-xs font-semibold text-muted-foreground/80">{authorName || "Jok-Eng"}</span>
                             </div>
-                        )}
-                         {onRemix && (
-                            <button 
-                                onClick={(e) => { e.preventDefault(); e.stopPropagation(); onRemix(script.id, e); }}
-                                className="flex items-center gap-1 hover:text-purple-500 transition-colors ml-2"
-                                title="Remix this scenario"
-                            >
-                                <span className="text-[10px] font-bold uppercase tracking-wide opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0 hidden sm:inline-block">Remix</span>
-                                <Shuffle className="w-3.5 h-3.5" />
-                            </button>
-                         )}
-                         {onSmartRemix && (
-                             <button
-                                 onClick={(e) => { e.preventDefault(); e.stopPropagation(); onSmartRemix(script.id, e); }}
-                                 className="flex items-center gap-1 hover:text-amber-500 transition-colors ml-2"
-                                 title="Adapt for my job"
-                             >
-                                  <span className="text-[10px] font-bold uppercase tracking-wide opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0 hidden sm:inline-block text-amber-500">Adapt</span>
-                                 <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                             </button>
-                         )}
+        
+                            <div className="flex items-center gap-5">
+                                {/* Interactive Like */}
+                                {isUserScript && (
+                                    <button 
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            if (onLike) onLike(script.id, e);
+                                        }}
+                                        className="flex items-center gap-1.5 hover:text-red-500 transition-colors group/like"
+                                    >
+                                        <Heart className={`w-5 h-5 transition-transform group-active/like:scale-75 ${isLiked ? "fill-red-500 text-red-500" : "text-muted-foreground"}`} />
+                                        <span className={`text-xs font-medium ${isLiked ? "text-red-500" : "text-muted-foreground"}`}>{likeCount}</span>
+                                    </button>
+                                )}
+        
+                                {/* Public Toggle */}
+                                {onTogglePublic && !isPublic && (
+                                     <button
+                                         onClick={(e) => { e.preventDefault(); e.stopPropagation(); onTogglePublic(script.id, true, e); }}
+                                         className="hover:text-foreground text-amber-500"
+                                     >
+                                         <Lock className="w-5 h-5" />
+                                     </button>
+                                )}
+                                
+                                {/* Edit/Delete */}
+                                {(onEdit || onDelete) && (
+                                    <div className="flex gap-4 border-l border-border/30 pl-4">
+                                        {onEdit && (
+                                            <button onClick={(e) => onEdit(script.id, e)} className="text-muted-foreground hover:text-foreground transition-colors">
+                                                <Edit2 className="w-5 h-5" />
+                                            </button>
+                                        )}
+                                        {onDelete && (
+                                            <button onClick={(e) => onDelete(script.id, e)} className="text-muted-foreground hover:text-red-600 transition-colors">
+                                                <Trash2 className="w-5 h-5" />
+                                            </button>
+                                        )}
+                                    </div>
+                                )}
+                                 {onRemix && (
+                                    <button 
+                                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); onRemix(script.id, e); }}
+                                        className="text-muted-foreground hover:text-purple-500 transition-colors ml-1"
+                                        title="Remix this scenario"
+                                    >
+                                        <Shuffle className="w-5 h-5" />
+                                    </button>
+                                 )}
+                                 {onSmartRemix && (
+                                     <button
+                                         onClick={(e) => { e.preventDefault(); e.stopPropagation(); onSmartRemix(script.id, e); }}
+                                         className="text-amber-500 hover:text-amber-600 transition-colors ml-1"
+                                         title="Adapt for my job"
+                                     >
+                                         <Sparkles className="w-5 h-5 fill-amber-500/20" />
+                                     </button>
+                                 )}
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
         </Link>
       </motion.div>
     </div>
