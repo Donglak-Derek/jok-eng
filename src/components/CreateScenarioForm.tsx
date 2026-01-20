@@ -305,7 +305,7 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
           console.error("Auto-save failed", e);
           return null;
       }
-  }, []);
+  }, [remixSourceId, remixAuthorId]);
 
   // Wrap in useCallback to satisfy linter
   const handleGenerate = useCallback(async () => {

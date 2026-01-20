@@ -26,6 +26,16 @@ const HOBBIES = [
   "Gaming 🎮", "Travel ✈️", "Cooking 🍳", "Reading 📚", "Art & Design 🎨"
 ];
 
+const SUPERPOWERS = [
+  "Empathy / Listener 👂", "Quick Wit ⚡", "Storytelling 📖", 
+  "Logical / Facts 🧠", "Peacemaker 🕊️", "Energy / Hype 🔋"
+];
+
+const KRYPTONITES = [
+  "Small Talk 🐜", "Confrontation 🥊", "Public Speaking 🎤", 
+  "Flirting 💘", "Saying 'No' 🙅", "Networking 🤝"
+];
+
 export default function OnboardingModal() {
   const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
@@ -36,6 +46,8 @@ export default function OnboardingModal() {
   const [selectedHobbies, setSelectedHobbies] = useState<string[]>([]);
   const [humorStyle, setHumorStyle] = useState("");
   const [motherLanguage, setMotherLanguage] = useState("");
+  const [superpower, setSuperpower] = useState("");
+  const [kryptonite, setKryptonite] = useState("");
 
   // Check if user needs onboarding
   useEffect(() => {
@@ -45,7 +57,8 @@ export default function OnboardingModal() {
       try {
         const userDoc = await getDoc(doc(db, "users", user.uid));
         // If doc exists but no onboarding data, OR doc doesn't exist (new user)
-        if (!userDoc.exists() || !userDoc.data().onboardingCompleted) {
+        // PHASE 3: Also force open if "superpower" is missing (The Vibe Update rollout)
+        if (!userDoc.exists() || !userDoc.data().onboardingCompleted || !userDoc.data().superpower) {
             
             // Only show if we haven't already dismissed it this session? 
             // For now, let's force it until they complete it.
@@ -71,7 +84,7 @@ export default function OnboardingModal() {
 
   const handleSubmit = async () => {
     if (!user) return;
-    if (!occupation || !humorStyle || !motherLanguage) return; // Basic validation
+    if (!occupation || !humorStyle || !motherLanguage || !superpower || !kryptonite) return; // Basic validation
 
     setLoading(true);
     try {
@@ -81,6 +94,8 @@ export default function OnboardingModal() {
         hobbies: selectedHobbies,
         humorStyle,
         motherLanguage,
+        superpower,
+        kryptonite,
         onboardingCompleted: true
       };
 
@@ -175,7 +190,51 @@ export default function OnboardingModal() {
               </div>
             </div>
 
-            {/* 4. Hobbies */}
+            {/* 4. Superpower */}
+            <div className="space-y-2">
+              <label className="text-sm font-bold text-foreground">
+                Your Conversational Superpower 🦸
+              </label>
+              <div className="grid grid-cols-2 gap-2">
+                {SUPERPOWERS.map((sp) => (
+                  <button
+                    key={sp}
+                    onClick={() => setSuperpower(sp)}
+                    className={`px-3 py-2 rounded-lg text-sm font-medium border transition-all text-left ${
+                      superpower === sp 
+                        ? "bg-primary/10 border-primary text-primary" 
+                        : "bg-secondary/30 border-transparent hover:bg-secondary text-muted-foreground"
+                    }`}
+                  >
+                    {sp}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* 5. Kryptonite */}
+            <div className="space-y-2">
+              <label className="text-sm font-bold text-foreground">
+                Your Kryptonite (Weak Point) 💎
+              </label>
+              <div className="grid grid-cols-2 gap-2">
+                {KRYPTONITES.map((kp) => (
+                  <button
+                    key={kp}
+                    onClick={() => setKryptonite(kp)}
+                    className={`px-3 py-2 rounded-lg text-sm font-medium border transition-all text-left ${
+                      kryptonite === kp 
+                        ? "bg-red-500/10 border-red-500/50 text-red-600" 
+                        : "bg-secondary/30 border-transparent hover:bg-secondary text-muted-foreground"
+                    }`}
+                  >
+                    {kp}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* 6. Hobbies */}
             <div className="space-y-2">
               <label className="text-sm font-bold text-foreground">
                 Interests & Hobbies (Pick up to 3) 🎯
@@ -203,7 +262,7 @@ export default function OnboardingModal() {
           <div className="p-6 border-t border-border bg-secondary/10 text-right">
             <button
               onClick={handleSubmit}
-              disabled={!occupation || !humorStyle || !motherLanguage || loading}
+              disabled={!occupation || !humorStyle || !motherLanguage || !superpower || !kryptonite || loading}
               className="px-8 py-3 rounded-full bg-primary text-primary-foreground font-bold shadow-lg shadow-primary/25 hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-95"
             >
               {loading ? "Saving..." : "Start Learning 🚀"}

@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 
 type Props = {
   scripts: Script[];
-  onEdit?: (id: string, e: React.MouseEvent) => void;
+
   onDelete?: (id: string, e: React.MouseEvent) => void;
   onTogglePublic?: (id: string, current: boolean, e: React.MouseEvent) => void;
   onRemix?: (script: Script) => void;
@@ -16,7 +16,7 @@ type Props = {
 
 
 
-export default function ScenarioList({ scripts, onEdit, onDelete, onTogglePublic, onRemix }: Props) {
+export default function ScenarioList({ scripts, onDelete, onTogglePublic, onRemix }: Props) {
   const router = useRouter();
 
   const handleRemix = (script: Script) => {
@@ -110,7 +110,6 @@ export default function ScenarioList({ scripts, onEdit, onDelete, onTogglePublic
                     <ScenarioCard 
                       script={script} 
                       index={index} 
-                      onEdit={onEdit} 
                       onDelete={onDelete}
                       onTogglePublic={onTogglePublic}
                       onRemix={() => handleRemix(script)}
@@ -137,7 +136,6 @@ export default function ScenarioList({ scripts, onEdit, onDelete, onTogglePublic
           <ScenarioCard 
             script={script} 
             index={index} 
-            onEdit={onEdit} 
             onDelete={onDelete}
             onTogglePublic={onTogglePublic}
             onRemix={() => handleRemix(script)}

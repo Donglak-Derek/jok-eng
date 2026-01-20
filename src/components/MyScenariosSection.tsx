@@ -50,11 +50,6 @@ import { useSaved } from "@/hooks/useSaved";
 
     /* ... handlers ... */
     // Handlers need to be defined here from original file
-    const handleEdit = (id: string, e: React.MouseEvent) => {
-      e.preventDefault();
-      router.push(`/scenario/${id}/edit`);
-    };
-
     const handleDelete = async (id: string, e: React.MouseEvent) => {
       e.preventDefault();
       if (!user) return;
@@ -195,7 +190,7 @@ import { useSaved } from "@/hooks/useSaved";
                                 index={index}
                                 // Only pass edit/delete handlers if it's CREATED tab
                                 onTogglePublic={activeTab === 'created' ? handleTogglePublic : undefined}
-                                onEdit={activeTab === 'created' ? handleEdit : undefined}
+
                                 onDelete={activeTab === 'created' ? handleDelete : undefined}
                                 onRemix={handleRemix}
                                 // Users can unsave by going to the card detail.

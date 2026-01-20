@@ -6,13 +6,12 @@ import { useProgress } from "@/context/ProgressContext";
 import type { Script, UserScript } from "@/types";
 import { motion } from "framer-motion";
 import React from "react";
-import { Lock, Edit2, Trash2, Repeat, Shuffle, Sparkles } from "lucide-react";
+import { Lock, Trash2, Repeat, Shuffle, Sparkles } from "lucide-react";
 import { GenerativeCover } from "./GenerativeCover";
 
 type Props = {
   script: Script;
   index: number;
-  onEdit?: (id: string, e: React.MouseEvent) => void;
   onDelete?: (id: string, e: React.MouseEvent) => void;
   onTogglePublic?: (id: string, current: boolean, e: React.MouseEvent) => void;
   onRemix?: (id: string, e: React.MouseEvent) => void;
@@ -22,7 +21,6 @@ type Props = {
 
 export default function ScenarioCard({ 
     script, 
-    onEdit, 
     onDelete, 
     onTogglePublic, 
     onRemix,
@@ -135,18 +133,14 @@ export default function ScenarioCard({
                                 )}
                                 
                                 {/* Edit/Delete */}
-                                {(onEdit || onDelete) && (
+                                {onDelete && (
                                     <div className="flex gap-4 border-l border-border/30 pl-4">
-                                        {onEdit && (
-                                            <button onClick={(e) => onEdit(script.id, e)} className="text-muted-foreground hover:text-foreground transition-colors">
-                                                <Edit2 className="w-5 h-5" />
-                                            </button>
-                                        )}
                                         {onDelete && (
                                             <button onClick={(e) => onDelete(script.id, e)} className="text-muted-foreground hover:text-red-600 transition-colors">
                                                 <Trash2 className="w-5 h-5" />
                                             </button>
                                         )}
+
                                     </div>
                                 )}
                                      {onRemix && (
@@ -157,13 +151,13 @@ export default function ScenarioCard({
                                                 bg-gradient-to-r from-violet-600 to-indigo-600 
                                                 text-white shadow-md hover:shadow-lg hover:shadow-indigo-500/30 
                                                 transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]
-                                                ml-2 flex items-center gap-1.5
+                                                ml-2 flex items-center gap-2
                                             "
-                                            title="Remix this scenario"
+                                            title="Customize this scenario for your situation"
                                         >
                                             <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300 pointer-events-none" />
-                                            <Shuffle className="w-3.5 h-3.5" />
-                                            <span className="text-xs font-bold tracking-wide uppercase">Remix</span>
+                                            <Sparkles className="w-3.5 h-3.5 fill-white/20 animate-pulse" />
+                                            <span className="text-xs font-bold tracking-wide uppercase">Customize</span>
                                         </button>
                                      )}
                                      {onSmartRemix && (

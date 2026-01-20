@@ -102,10 +102,7 @@ export default function CustomCategoryPage() {
         ) : (
             <ScenarioList 
               scripts={scenarios} 
-              onEdit={(id, e) => {
-                e.preventDefault();
-                router.push(`/scenario/${id}/edit`);
-              }}
+
               onDelete={async (id, e) => {
                 e.preventDefault();
                 if (!confirm("Are you sure you want to delete this scenario?")) return;

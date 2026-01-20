@@ -58,25 +58,14 @@ export default function CommunityScenariosSection() {
     const fetchScenarios = async () => {
       setLoading(true);
       try {
-        let q;
-        
-        // "Trending" -> Sort by Likes
-        if (activeFilter === "Trending") {
-            q = query(
-                collectionGroup(db, "scenarios"),
-                where("isPublic", "==", true),
-                orderBy("remixCount", "desc"), 
-                limit(20)
-            );
-        } else {
-            // For others, fetch broadly then sort client-side
-            q = query(
-                collectionGroup(db, "scenarios"),
-                where("isPublic", "==", true),
-                orderBy("createdAt", "desc"),
-                limit(50) 
-            );
-        }
+        // ALWAYS fetch by createdAt first to ensure we get results (legacy docs miss 'remixCount')
+        // We will sort by remixCount client-side.
+        const q = query(
+            collectionGroup(db, "scenarios"),
+            where("isPublic", "==", true),
+            orderBy("createdAt", "desc"),
+            limit(50) 
+        );
 
         const snapshot = await getDocs(q);
         const communityDocs = snapshot.docs.map(doc => ({
@@ -88,9 +77,8 @@ export default function CommunityScenariosSection() {
 
       } catch (err) {
         console.error("Error fetching scenarios:", err);
-        const fallbackQ = query(collectionGroup(db, "scenarios"), where("isPublic", "==", true), limit(10));
-        const snap = await getDocs(fallbackQ);
-        setScenarios(snap.docs.map(d => ({ ...d.data(), id: d.id } as UserScript)));
+        // Fallback or empty state
+        setScenarios([]);
       } finally {
         setLoading(false);
       }
@@ -122,6 +110,11 @@ export default function CommunityScenariosSection() {
       return true;
   })
   .sort((a, b) => { // SMART SORT
+       // 1. Trending: Sort by remixCount
+       if (activeFilter === "Trending") {
+           return (b.remixCount || 0) - (a.remixCount || 0);
+       }
+
        if (activeFilter !== "Professional" || !userProfile?.occupation) return 0;
 
        // Score Logic for Professional Feed
@@ -233,7 +226,9 @@ export default function CommunityScenariosSection() {
                     <ScenarioCard 
                         script={script} 
                         index={index} 
-
+                        onRemix={handleRemix}
+                        onSmartRemix={canSmartRemix(script) ? handleSmartRemix : undefined}
+                        onShare={handleShare}
                     />
                 </motion.div>
             ))}

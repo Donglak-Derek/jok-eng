@@ -127,6 +127,8 @@ export interface UserProfile {
   hobbies: string[];
   humorStyle: string; // e.g., "Witty", "Dad Jokes", "Sarcastic"
   motherLanguage: string; // To help with specific translation nuances
+  superpower?: string; // e.g. "Empathy", "Wit"
+  kryptonite?: string; // e.g. "Small Talk", "Confrontation"
   onboardingCompleted: boolean;
 }
 

@@ -33,6 +33,8 @@ export async function POST(request: NextRequest) {
       - OCCUPATION: ${userProfile?.occupation || "Not specified"} (Use professional metaphors if applicable)
       - HUMOR STYLE: ${userProfile?.humorStyle || "Not specified"} (Reflect this in the 'Good Response' style)
       - MOTHER LANGUAGE: ${userProfile?.motherLanguage || "Not specified"} (Highlight specific common mistakes for this language group if relevant)
+      - SUPERPOWER: ${userProfile?.superpower || "Not specified"} (Leverage this strength in the 'Good Response')
+      - KRYPTONITE: ${userProfile?.kryptonite || "Not specified"} (Address this fear directly in the 'Why' explanation)
 
       FORMAT INSTRUCTIONS:
       - "Social Dojo": Focus on bad vs good responses to teach NUANCE.
