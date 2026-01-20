@@ -50,7 +50,7 @@ export default function ProfilePage() {
                         userId: user.uid,
                         totalScenariosCreated: 0,
                         totalPractices: 0,
-                        totalLikesReceived: 0,
+                        totalRemixesInspired: 0,
                         currentStreak: 0,
                         longestStreak: 0
                     });
@@ -168,9 +168,9 @@ export default function ProfilePage() {
                         delay={0.4}
                     />
                     <StatsCard 
-                        icon="❤️" 
-                        label="Applause Received" 
-                        value={stats?.totalLikesReceived || 0} 
+                        icon="🔀" 
+                        label="Remixes Inspired" 
+                        value={stats?.totalRemixesInspired || 0} 
                         delay={0.5}
                     />
                     <StatsCard 
@@ -235,6 +235,7 @@ function StatsCard({ icon, label, value, delay }: { icon: string, label: string,
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function EditProfileModal({ user, onClose, initialData }: { user: any, onClose: () => void, initialData: UserProfile }) {
+    const [name, setName] = useState(user.displayName || "");
     const [occupation, setOccupation] = useState(initialData?.occupation || "");
     const [ageGroup, setAgeGroup] = useState(initialData?.ageGroup || "");
     const [saving, setSaving] = useState(false);
@@ -242,10 +243,18 @@ function EditProfileModal({ user, onClose, initialData }: { user: any, onClose: 
     const handleSave = async () => {
         setSaving(true);
         try {
+            // Dynamically import updateProfile to ensure client-side execution
+            const { updateProfile } = await import("firebase/auth");
+            
+            // 1. Update Auth Profile (Display Name)
+            if (name !== user.displayName) {
+                await updateProfile(user, { displayName: name });
+            }
+
+            // 2. Update Firestore Profile
             await setDoc(doc(db, "users", user.uid), {
                 occupation,
                 ageGroup,
-                // Removed targetLocation for now based on strategic review
             }, { merge: true });
             
             window.location.reload(); 
@@ -265,13 +274,27 @@ function EditProfileModal({ user, onClose, initialData }: { user: any, onClose: 
             >
                 <div className="p-6 space-y-6">
                     <div className="text-center">
-                        <h2 className="text-2xl font-bold">Your Professional Identity 🆔</h2>
+                        <h2 className="text-2xl font-bold">Your Identity 🆔</h2>
                         <p className="text-muted-foreground text-sm mt-1">
-                            We use this to show you relevant stories from your peers.
+                            How should we call you and what do you do?
                         </p>
                     </div>
                     
                     <div className="space-y-4">
+                         {/* Name Input */}
+                         <div className="space-y-2">
+                            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                                Display Name
+                            </label>
+                            <input 
+                                type="text"
+                                className="w-full bg-secondary/50 rounded-xl px-4 py-3 font-medium outline-none focus:ring-2 ring-primary/50 text-foreground"
+                                placeholder="Your Name"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                            />
+                        </div>
+
                         {/* Job Input */}
                         <div className="space-y-2">
                             <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
@@ -324,7 +347,7 @@ function EditProfileModal({ user, onClose, initialData }: { user: any, onClose: 
                         </button>
                          <button 
                             onClick={handleSave}
-                            disabled={!occupation || saving}
+                            disabled={!name || !occupation || saving}
                             className="flex-1 py-3 font-bold bg-primary text-primary-foreground hover:opacity-90 rounded-xl transition-all disabled:opacity-50"
                         >
                             {saving ? "Saving..." : "Save Identity"}

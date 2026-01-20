@@ -28,63 +28,7 @@ export default function CommunityScenariosSection() {
   }, [user]);
 
   // ... (Like/Share/Remix handlers remain same) ...
-  const handleToggleLike = async (id: string) => {
-    if (id.startsWith("sys-")) return; 
-    if (!user) {
-        alert("Please login to like scenarios.");
-        return;
-    }
-    
-    // Optimistic Update
-    setScenarios(prev => prev.map(s => {
-        if (s.id !== id) return s;
-        const isLiked = s.likedBy?.includes(user.uid);
-        const newLikes = (s.likes || 0) + (isLiked ? -1 : 1);
-        const newLikedBy = isLiked 
-            ? s.likedBy?.filter(uid => uid !== user.uid) 
-            : [...(s.likedBy || []), user.uid];
-        return { ...s, likes: newLikes, likedBy: newLikedBy };
-    }));
 
-    try {
-        const script = scenarios.find(s => s.id === id);
-        if (!script) return;
-        
-        const scriptRef = doc(db, "users", script.userId, "scenarios", id);
-        const userLikesRef = doc(db, "users", user.uid, "likes", id); // PERSONAL COLLECTION SYNC
-        const isLiked = script.likedBy?.includes(user.uid);
-        
-        if (isLiked) {
-             // Unlike
-             await updateDoc(scriptRef, {
-                 likes: increment(-1),
-                 likedBy: arrayRemove(user.uid)
-             });
-             await updateDoc(doc(db, "users", script.userId), {
-                 totalLikesReceived: increment(-1)
-             });
-             // Remove from personal likes
-             await deleteDoc(userLikesRef);
-
-        } else {
-             // Like
-             await updateDoc(scriptRef, {
-                 likes: increment(1),
-                 likedBy: arrayUnion(user.uid)
-             });
-             await updateDoc(doc(db, "users", script.userId), {
-                 totalLikesReceived: increment(1)
-             });
-             // Add to personal likes
-             await setDoc(userLikesRef, { 
-                likedAt: Date.now(),
-                scenarioId: id
-             });
-        }
-    } catch (err) {
-        console.error("Error toggling like:", err);
-    }
-  };
 
   const handleRemix = async (scriptId: string, e: React.MouseEvent) => {
     e.preventDefault();
@@ -121,7 +65,7 @@ export default function CommunityScenariosSection() {
             q = query(
                 collectionGroup(db, "scenarios"),
                 where("isPublic", "==", true),
-                orderBy("likes", "desc"), 
+                orderBy("remixCount", "desc"), 
                 limit(20)
             );
         } else {
@@ -289,13 +233,7 @@ export default function CommunityScenariosSection() {
                     <ScenarioCard 
                         script={script} 
                         index={index} 
-                        onLike={handleToggleLike}
-                        onRemix={handleRemix}
-                        onSmartRemix={ 
-                            canSmartRemix(script) ? handleSmartRemix : undefined
-                        }
-                        onShare={handleShare}
-                        isLiked={user ? script.likedBy?.includes(user.uid) : false}
+
                     />
                 </motion.div>
             ))}

@@ -183,6 +183,10 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
     fetchProfile();
   }, [user?.uid]);
 
+  // Remix Tracking
+  const [remixSourceId, setRemixSourceId] = useState<string | null>(null);
+  const [remixAuthorId, setRemixAuthorId] = useState<string | null>(null);
+
   // REMIX & ADAPT LOGIC
   useEffect(() => {
       const mode = searchParams.get('mode');
@@ -193,7 +197,10 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
           const storedScript = localStorage.getItem('remixSource');
           if (storedScript) {
               const script = JSON.parse(storedScript) as Script | UserScript;
-              
+              // Capture source lineage
+              if ('id' in script) setRemixSourceId(script.id);
+              if ('userId' in script) setRemixAuthorId((script as UserScript).userId);
+
               let newInputs = {
                   context: "",
                   myRole: "",
@@ -237,6 +244,69 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
       }
   }, [searchParams]);
 
+  // Helper to auto-save without blocking UI logic too much
+  const autoSaveScript = useCallback(async (
+    script: Script, 
+    originalInputs: { context: string; myRole: string; otherRole: string; plot: string }, 
+    currentUser: { uid: string; displayName?: string | null; photoURL?: string | null } | null,
+    profile: UserProfile | null,
+    sourceId?: string | null,
+    sourceAuthorId?: string | null
+  ): Promise<string | null> => {
+      if (!currentUser) return null;
+      try {
+         const { collection, doc, setDoc, increment, updateDoc } = await import("firebase/firestore"); // Dynamic import for perf
+         
+         const scenariosCollectionRef = collection(db, "users", currentUser.uid, "scenarios");
+         const newScriptRef = doc(scenariosCollectionRef);
+         
+         const userScript: Omit<UserScript, "id"> = {
+             ...script,
+             userId: currentUser.uid,
+             createdAt: Date.now(),
+             authorName: currentUser.displayName || "Anonymous",
+             authorPhotoURL: currentUser.photoURL || undefined,
+             authorOccupation: profile?.occupation, // Save occupation
+             authorAgeGroup: profile?.ageGroup, // Save age group
+             originalPrompt: originalInputs,
+             isPublic: true, // Default to public as per "Community" goal
+             remixCount: 0,
+             // Lineage
+             originalScenarioId: sourceId || undefined,
+             isRemix: !!sourceId
+         };
+         
+         // eslint-disable-next-line @typescript-eslint/no-explicit-any
+         const sanitize = (obj: any): any => {
+           return JSON.parse(JSON.stringify(obj, (key, value) => {
+             return value === undefined ? null : value;
+           }));
+         };
+
+         await setDoc(newScriptRef, { ...sanitize(userScript), id: newScriptRef.id });
+         
+         // Update user stats
+         const userRef = doc(db, "users", currentUser.uid);
+         setDoc(userRef, { totalScenariosCreated: increment(1) }, { merge: true }).catch(console.error);
+
+         // --- REMIX ATTRIBUTION ---
+         if (sourceId && sourceAuthorId) {
+             // 1. Increment 'remixCount' on the original scenario
+             const originalRef = doc(db, "users", sourceAuthorId, "scenarios", sourceId);
+             updateDoc(originalRef, { remixCount: increment(1) }).catch(e => console.error("Failed to count remix", e));
+
+             // 2. Increment 'totalRemixesInspired' on the original author
+             const authorRef = doc(db, "users", sourceAuthorId);
+             setDoc(authorRef, { totalRemixesInspired: increment(1) }, { merge: true }).catch(console.error);
+         }
+
+         return newScriptRef.id;
+      } catch (e) {
+          console.error("Auto-save failed", e);
+          return null;
+      }
+  }, []);
+
   // Wrap in useCallback to satisfy linter
   const handleGenerate = useCallback(async () => {
     if (!inputs.context || !inputs.plot) return;
@@ -264,7 +334,14 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
         
         // --- DIRECT TO TRAINING (Skip Preview) ---
         // 1. Auto-save immediately
-        const scriptId = await autoSaveScript(data.script, inputs, user, userProfile);
+        const scriptId = await autoSaveScript(
+            data.script, 
+            inputs, 
+            user, 
+            userProfile,
+            remixSourceId,
+            remixAuthorId
+        );
         
         if (scriptId) {
             router.push(`/script/${scriptId}`);
@@ -279,53 +356,9 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
         alert(`Error: ${err.message || "Unknown error"}`);
         setStep("input");
     }
-  }, [inputs, tone, format, user, userProfile, router]); // Added router to dep
+  }, [inputs, tone, format, user, userProfile, router, autoSaveScript]);
 
-  // Helper to auto-save without blocking UI logic too much
-  const autoSaveScript = async (
-    script: Script, 
-    originalInputs: { context: string; myRole: string; otherRole: string; plot: string }, 
-    currentUser: { uid: string; displayName?: string | null; photoURL?: string | null } | null,
-    profile: UserProfile | null
-  ): Promise<string | null> => {
-      if (!currentUser) return null;
-      try {
-         const { collection, doc, setDoc, increment } = await import("firebase/firestore"); // Dynamic import for perf
-         
-         const scenariosCollectionRef = collection(db, "users", currentUser.uid, "scenarios");
-         const newScriptRef = doc(scenariosCollectionRef);
-         
-         const userScript: Omit<UserScript, "id"> = {
-             ...script,
-             userId: currentUser.uid,
-             createdAt: Date.now(),
-             authorName: currentUser.displayName || "Anonymous",
-             authorPhotoURL: currentUser.photoURL || undefined,
-             authorOccupation: profile?.occupation, // Save occupation
-             authorAgeGroup: profile?.ageGroup, // Save age group
-             originalPrompt: originalInputs,
-             isPublic: true // Default to public as per "Community" goal
-         };
-         
-         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-         const sanitize = (obj: any): any => {
-           return JSON.parse(JSON.stringify(obj, (key, value) => {
-             return value === undefined ? null : value;
-           }));
-         };
 
-         await setDoc(newScriptRef, { ...sanitize(userScript), id: newScriptRef.id });
-         
-         // Update stats
-         const userRef = doc(db, "users", currentUser.uid);
-         setDoc(userRef, { totalScenariosCreated: increment(1) }, { merge: true }).catch(console.error);
-
-         return newScriptRef.id;
-      } catch (e) {
-          console.error("Auto-save failed", e);
-          return null;
-      }
-  };
 
   // Trigger remix generation when inputs and profile are ready
   useEffect(() => {
@@ -388,7 +421,10 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
              authorOccupation: userProfile?.occupation,
              authorAgeGroup: userProfile?.ageGroup,
              originalPrompt: inputs,
-             isPublic: true
+             isPublic: true,
+             remixCount: 0,
+             originalScenarioId: remixSourceId || undefined,
+             isRemix: !!remixSourceId
          };
          
          const finalScript = {
@@ -401,11 +437,21 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
          
          // 2. Increment User Stats (Optimistic)
          try {
-            const { increment } = await import("firebase/firestore"); 
+            const { increment, updateDoc } = await import("firebase/firestore"); 
             const userRef = doc(db, "users", user.uid);
             await setDoc(userRef, {
                 totalScenariosCreated: increment(1)
             }, { merge: true });
+
+            // --- REMIX ATTRIBUTION (Manual Save) ---
+            if (remixSourceId && remixAuthorId) {
+                const originalRef = doc(db, "users", remixAuthorId, "scenarios", remixSourceId);
+                updateDoc(originalRef, { remixCount: increment(1) }).catch(e => console.error(e));
+
+                const authorRef = doc(db, "users", remixAuthorId);
+                setDoc(authorRef, { totalRemixesInspired: increment(1) }, { merge: true }).catch(console.error);
+            }
+
          } catch (statErr) {
             console.error("Failed to update user stats:", statErr);
          }

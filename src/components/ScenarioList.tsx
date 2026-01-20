@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import type { Script, UserScript } from "@/types";
+import type { Script } from "@/types";
 import ScenarioCard from "@/components/ScenarioCard";
 import { useRouter } from "next/navigation";
 
@@ -15,10 +15,8 @@ type Props = {
 };
 
 
-import { useLikes } from "@/hooks/useLikes";
 
 export default function ScenarioList({ scripts, onEdit, onDelete, onTogglePublic, onRemix }: Props) {
-  const { likedSet, toggleLike } = useLikes();
   const router = useRouter();
 
   const handleRemix = (script: Script) => {
@@ -115,10 +113,7 @@ export default function ScenarioList({ scripts, onEdit, onDelete, onTogglePublic
                       onEdit={onEdit} 
                       onDelete={onDelete}
                       onTogglePublic={onTogglePublic}
-
-                      onLike={(id) => toggleLike(id, 'userId' in script, (script as UserScript).userId)}
                       onRemix={() => handleRemix(script)}
-                      isLiked={likedSet.has(script.id)}
                     />
                   </motion.div>
                 ))}
@@ -145,9 +140,7 @@ export default function ScenarioList({ scripts, onEdit, onDelete, onTogglePublic
             onEdit={onEdit} 
             onDelete={onDelete}
             onTogglePublic={onTogglePublic}
-            onLike={(id) => toggleLike(id, 'userId' in script, (script as UserScript).userId)}
             onRemix={() => handleRemix(script)}
-            isLiked={likedSet.has(script.id)}
           />
         </motion.div>
       ))}

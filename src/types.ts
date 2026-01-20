@@ -102,26 +102,16 @@ export type UserScript = Script & {
   };
   isPublic?: boolean;
   repeats?: number;
-  commentsCount?: number;
   shares?: number;
   saves?: number;
+  remixCount?: number;
 };
-
-export interface Comment {
-  id: string;
-  scenarioId: string;
-  userId: string;
-  userName: string;
-  userPhotoURL?: string;
-  text: string;
-  createdAt: number;
-}
 
 export interface UserStats {
   userId: string;
   totalScenariosCreated: number;
   totalPractices: number;
-  totalLikesReceived: number;
+  totalRemixesInspired: number;
   currentStreak?: number;
   lastPracticeTimestamp?: number; // Milliseconds
   longestStreak?: number;

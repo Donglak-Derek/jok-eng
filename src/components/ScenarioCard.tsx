@@ -6,7 +6,7 @@ import { useProgress } from "@/context/ProgressContext";
 import type { Script, UserScript } from "@/types";
 import { motion } from "framer-motion";
 import React from "react";
-import { Heart, Lock, Edit2, Trash2, Repeat, Shuffle, Sparkles } from "lucide-react";
+import { Lock, Edit2, Trash2, Repeat, Shuffle, Sparkles } from "lucide-react";
 import { GenerativeCover } from "./GenerativeCover";
 
 type Props = {
@@ -15,11 +15,9 @@ type Props = {
   onEdit?: (id: string, e: React.MouseEvent) => void;
   onDelete?: (id: string, e: React.MouseEvent) => void;
   onTogglePublic?: (id: string, current: boolean, e: React.MouseEvent) => void;
-  onLike?: (id: string, e: React.MouseEvent) => void;
   onRemix?: (id: string, e: React.MouseEvent) => void;
   onSmartRemix?: (id: string, e: React.MouseEvent) => void;
   onShare?: (id: string, e: React.MouseEvent) => void;
-  isLiked?: boolean;
 };
 
 export default function ScenarioCard({ 
@@ -27,16 +25,14 @@ export default function ScenarioCard({
     onEdit, 
     onDelete, 
     onTogglePublic, 
-    onLike,
     onRemix,
     onSmartRemix, 
-    isLiked 
 }: Props) {
 
   const isUserScript = 'userId' in script;
   const isPublic = isUserScript && (script as UserScript).isPublic;
   const authorName = isUserScript ? (script as UserScript).authorName : undefined;
-  const likeCount = isUserScript ? (script as UserScript).likes || 0 : 0;
+
   
   const { getRepeats } = useProgress();
   const contextRepeats = getRepeats(script.id);
@@ -120,19 +116,12 @@ export default function ScenarioCard({
                             </div>
         
                             <div className="flex items-center gap-5">
-                                {/* Interactive Like */}
-                                {isUserScript && (
-                                    <button 
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            e.stopPropagation();
-                                            if (onLike) onLike(script.id, e);
-                                        }}
-                                        className="flex items-center gap-1.5 hover:text-red-500 transition-colors group/like"
-                                    >
-                                        <Heart className={`w-5 h-5 transition-transform group-active/like:scale-75 ${isLiked ? "fill-red-500 text-red-500" : "text-muted-foreground"}`} />
-                                        <span className={`text-xs font-medium ${isLiked ? "text-red-500" : "text-muted-foreground"}`}>{likeCount}</span>
-                                    </button>
+                                {/* Remix Count (Was Like) */}
+                                {isUserScript && (script as UserScript).remixCount !== undefined && (script as UserScript).remixCount! > 0 && (
+                                    <div className="flex items-center gap-1.5 text-muted-foreground" title="Remixes inspired">
+                                        <Shuffle className="w-4 h-4" />
+                                        <span className="text-xs font-medium">{(script as UserScript).remixCount}</span>
+                                    </div>
                                 )}
         
                                 {/* Public Toggle */}
@@ -160,24 +149,36 @@ export default function ScenarioCard({
                                         )}
                                     </div>
                                 )}
-                                 {onRemix && (
-                                    <button 
-                                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); onRemix(script.id, e); }}
-                                        className="text-muted-foreground hover:text-purple-500 transition-colors ml-1"
-                                        title="Remix this scenario"
-                                    >
-                                        <Shuffle className="w-5 h-5" />
-                                    </button>
-                                 )}
-                                 {onSmartRemix && (
-                                     <button
-                                         onClick={(e) => { e.preventDefault(); e.stopPropagation(); onSmartRemix(script.id, e); }}
-                                         className="text-amber-500 hover:text-amber-600 transition-colors ml-1"
-                                         title="Adapt for my job"
-                                     >
-                                         <Sparkles className="w-5 h-5 fill-amber-500/20" />
-                                     </button>
-                                 )}
+                                     {onRemix && (
+                                        <button 
+                                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); onRemix(script.id, e); }}
+                                            className="
+                                                relative overflow-hidden group/btn px-4 py-1.5 rounded-full 
+                                                bg-gradient-to-r from-violet-600 to-indigo-600 
+                                                text-white shadow-md hover:shadow-lg hover:shadow-indigo-500/30 
+                                                transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]
+                                                ml-2 flex items-center gap-1.5
+                                            "
+                                            title="Remix this scenario"
+                                        >
+                                            <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300 pointer-events-none" />
+                                            <Shuffle className="w-3.5 h-3.5" />
+                                            <span className="text-xs font-bold tracking-wide uppercase">Remix</span>
+                                        </button>
+                                     )}
+                                     {onSmartRemix && (
+                                         <button
+                                             onClick={(e) => { e.preventDefault(); e.stopPropagation(); onSmartRemix(script.id, e); }}
+                                             className="
+                                                 p-2 rounded-full text-amber-500 bg-amber-50 hover:bg-amber-100 
+                                                 hover:text-amber-700 hover:scale-105 transition-all ml-1
+                                                 border border-amber-200/50
+                                             "
+                                             title="Adapt for my job (Smart Remix)"
+                                         >
+                                             <Sparkles className="w-4 h-4 fill-amber-500/10" />
+                                         </button>
+                                     )}
                             </div>
                         </div>
                     </div>
