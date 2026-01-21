@@ -90,6 +90,7 @@ export type UserScript = Script & {
   authorPhotoURL?: string;
   authorOccupation?: string; // NEW: For Smart Feed
   authorAgeGroup?: string; // NEW: For Vibe Context
+  authorCountry?: string; // NEW: For Cultural Context
   likes?: number; // count
   likedBy?: string[]; // user IDs
   originalScenarioId?: string; // For saved copies

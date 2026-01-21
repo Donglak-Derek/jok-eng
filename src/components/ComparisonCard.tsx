@@ -30,13 +30,13 @@ export default function ComparisonCard({
   index, 
   onHeard,
   mode = "standard",
-  isGlobalRevealed = false
+  isGlobalRevealed = false,
+  isAutoPlayEnabled = true
 }: Props) {
   const [speaking, setSpeaking] = useState(false);
   const [loading, setLoading] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [localRevealed, setLocalRevealed] = useState<Set<string>>(new Set());
-  const [showRisk, setShowRisk] = useState(false);
   
   // Progressive Reveal State: 0 (Situation) -> 1 (Trap) -> 2 (Solution)
   const [step, setStep] = useState<0 | 1 | 2>(0);
@@ -44,7 +44,6 @@ export default function ComparisonCard({
   // Reset state when index changes
   useEffect(() => {
     setStep(0);
-    setShowRisk(false);
     setLocalRevealed(new Set());
   }, [index]);
 
@@ -179,14 +178,14 @@ export default function ComparisonCard({
 
   // Trigger when entering Step 2 AND (standard mode OR user explicitly navigated)
   useEffect(() => {
-      if (step === 2 && !hasAutoPlayedRef.current) {
+      if (step === 2 && !hasAutoPlayedRef.current && isAutoPlayEnabled) {
           hasAutoPlayedRef.current = true;
           // Small delay to let animation settle
           setTimeout(() => {
               handlePlay();
           }, 300);
       }
-  }, [step, handlePlay]);
+  }, [step, handlePlay, isAutoPlayEnabled]);
 
   // Cleanup
   useEffect(() => {
@@ -201,7 +200,7 @@ export default function ComparisonCard({
       {/* 1. SCENARIO / CONTEXT */}
       <motion.div 
         className={`p-6 md:p-8 pb-6 text-center border-b border-border/40 bg-slate-50/50 transition-all duration-500
-            ${step > 0 ? "opacity-40 grayscale" : "opacity-100"}
+            ${step > 0 ? "opacity-100" : "opacity-100"} 
         `}
       >
           <div className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-3">
@@ -232,39 +231,24 @@ export default function ComparisonCard({
            {/* 2. BAD RESPONSE (The Trap) */}
           {step >= 1 && sentence.badResponse && (
             <motion.div 
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: step === 2 ? 0.4 : 1, x: 0 }}
-                className={`relative pl-4 border-l-4 border-red-200 bg-red-50/30 p-5 rounded-r-xl transition-all duration-500`}
+                initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                animate={{ opacity: step === 2 ? 0.6 : 1, scale: 1, y: 0 }}
+                className={`relative bg-red-50/50 p-6 rounded-2xl border border-red-100 shadow-lg shadow-red-100/50`}
             >
-                <div className="text-xs font-bold text-red-400 uppercase tracking-wider mb-2 flex items-center gap-2">
-                    <span className="w-4 h-4 rounded-full border border-red-300 flex items-center justify-center text-[8px] text-red-400">✕</span>
-                    Avoid Saying
+                <div className="text-xs font-bold text-red-700 uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <span className="bg-red-100 px-2 py-0.5 rounded text-[10px] border border-red-200">Avoid</span>
+                    <span>Common Suggestion</span>
                 </div>
-                <div className="text-lg text-muted-foreground/80 line-through decoration-red-300/60 decoration-2 mb-2 font-medium">
+                
+                <div className="text-2xl md:text-3xl font-bold leading-relaxed text-red-950/60 text-left line-through decoration-red-900/40">
                     &quot;{sentence.badResponse.text}&quot;
                 </div>
                 
-                {/* INTERACTIVE TOGGLE */}
-                <div className="mt-2">
-                    {!showRisk ? (
-                        <button 
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setShowRisk(true);
-                            }}
-                            className="text-xs font-bold text-red-500 hover:text-red-700 underline decoration-dotted transition-colors flex items-center gap-1"
-                        >
-                           <span>⚠️ Analyze Risk</span>
-                        </button>
-                    ) : (
-                        <motion.div 
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            className="text-sm text-red-600/90 italic p-2 bg-red-100/50 rounded-md"
-                        >
-                            <span className="font-semibold not-italic">Risk:</span> {sentence.badResponse.why}
-                        </motion.div>
-                    )}
+                <div className="mt-4 flex gap-3 items-start opacity-90">
+                    <div className="mt-1 text-lg">⚠️</div>
+                    <div className="text-base font-medium text-red-800/80 leading-normal">
+                         <span className="font-bold mr-1">Risk:</span>{sentence.badResponse.why}
+                    </div>
                 </div>
             </motion.div>
           )}
@@ -294,7 +278,7 @@ export default function ComparisonCard({
                 className={`relative bg-teal-50/50 p-6 rounded-2xl border border-teal-100 shadow-lg shadow-teal-100/50`}
             >
                  <div className="text-xs font-bold text-teal-700 uppercase tracking-wider mb-4 flex items-center gap-2">
-                    <span className="bg-teal-100 px-2 py-0.5 rounded text-[10px]">Star Answer</span>
+                    <span className="bg-teal-100 px-2 py-0.5 rounded text-[10px] border border-teal-200">Star Answer</span>
                     <span>Better Approach</span>
                 </div>
                 
@@ -319,7 +303,7 @@ export default function ComparisonCard({
                                 
                             if (!isWordRevealed) return null;
                             return (
-                                <span key={k.word} className="text-sm px-3 py-1 bg-white text-teal-900 rounded-full border border-teal-200 shadow-sm">
+                                <span key={k.word} className="text-sm px-3 py-1.5 bg-white text-teal-900 rounded-md border border-teal-200 shadow-sm leading-snug">
                                     <span className="font-bold">{k.word}</span>: {k.definition}
                                 </span>
                             );

@@ -54,10 +54,10 @@ export default function ScriptPlayerShell({
 }: Props) {
 
   return (
-    <div className="min-h-screen flex flex-col relative bg-background text-foreground">
+    <div className="fixed inset-0 z-[100] flex flex-col bg-background text-foreground overflow-hidden">
       
       {/* --- HEADER --- */}
-      <header className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-border">
+      <header className="flex-none w-full bg-white/80 backdrop-blur-md border-b border-border z-10">
          <div className="max-w-3xl mx-auto px-4 py-3 md:px-6 md:py-4 flex flex-col gap-4">
              <div className="flex items-center gap-4">
                  {/* Back Button */}
@@ -147,16 +147,16 @@ export default function ScriptPlayerShell({
     </header>
 
       {/* --- CONTENT BODY --- */}
-      <main className="flex-1 max-w-3xl mx-auto px-4 py-8 md:px-6 md:py-12 flex flex-col w-full h-full">
-        <div className="flex-1 flex flex-col justify-center min-h-[400px]">
+      <main className="flex-1 w-full overflow-y-auto overscroll-contain pb-8">
+        <div className="max-w-3xl mx-auto px-4 py-8 md:px-6 md:py-12 flex flex-col justify-center min-h-full">
              {children}
         </div>
       </main>
 
       {/* --- FOOTER (Navigation) --- */}
       {!hasFinished && (
-        <div className="sticky bottom-0 left-0 right-0 p-6 bg-white/90 backdrop-blur-sm border-t border-border z-40">
-            <div className="max-w-3xl mx-auto flex items-center justify-between">
+        <div className="flex-none bg-white border-t border-border z-10 pb-safe">
+            <div className="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
                 
                 {/* Restart */}
                 <Button 

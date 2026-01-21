@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 // import Image from "next/image";
 // import { categories, scripts } from "@/data";
 import Header from "@/components/Header";
@@ -14,10 +13,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
 import DailyChallengeCard from "@/components/DailyChallengeCard";
 import StreakWidget from "@/components/StreakWidget";
-import { Button } from "@/components/Button";
 
 import QuickStartInput from "@/components/QuickStartInput";
-import InteractiveGridBackground from "@/components/Effects/InteractiveGrid";
 import LandingHero from "@/components/LandingHero";
 import RemixShowcase from "@/components/RemixShowcase";
 

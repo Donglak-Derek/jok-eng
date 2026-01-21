@@ -100,6 +100,11 @@ export default function ScenarioCard({
                                             🎂 {(script as UserScript).authorAgeGroup}
                                         </span>
                                     )}
+                                     {(script as UserScript).authorCountry && (
+                                        <span className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">
+                                            🌍 {(script as UserScript).authorCountry}
+                                        </span>
+                                    )}
                                 </div>
                             )}
                         </div>
