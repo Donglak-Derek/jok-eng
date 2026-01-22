@@ -3,10 +3,11 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { UserStats, JOB_CATEGORIES, UserProfile } from "@/types";
+import { UserStats, UserProfile, GENERATION_GROUPS, JOB_CATEGORIES, CULTURE_OPTIONS } from "@/types";
 import { motion } from "framer-motion";
+import { X, Loader2 } from "lucide-react";
 
 
 // Rank Logic Helpers
@@ -41,9 +42,6 @@ export default function ProfilePage() {
                 
                 if (statsSnap.exists()) {
                     setStats(statsSnap.data() as UserStats);
-                    // Also try to get profile data if it's merged or separate? 
-                    // Current schema seems to mix them or use same doc?
-                    // Let's assume same doc for now based on previous code.
                     setUserProfile(statsSnap.data() as unknown as UserProfile);
                 } else {
                     setStats({
@@ -233,126 +231,153 @@ function StatsCard({ icon, label, value, delay }: { icon: string, label: string,
     );
 }
 
+
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function EditProfileModal({ user, onClose, initialData }: { user: any, onClose: () => void, initialData: UserProfile }) {
-    const [name, setName] = useState(user.displayName || "");
-    const [occupation, setOccupation] = useState(initialData?.occupation || "");
-    const [ageGroup, setAgeGroup] = useState(initialData?.ageGroup || "");
+    const [formData, setFormData] = useState<Partial<UserProfile>>({
+        displayName: user.displayName || "",
+        occupation: initialData?.occupation || "",
+        ageGroup: initialData?.ageGroup || undefined, // undefined to match type
+        humorStyle: initialData?.humorStyle || "",
+        motherLanguage: initialData?.motherLanguage || "" 
+    });
     const [saving, setSaving] = useState(false);
 
     const handleSave = async () => {
         setSaving(true);
         try {
-            // Dynamically import updateProfile to ensure client-side execution
-            const { updateProfile } = await import("firebase/auth");
-            
-            // 1. Update Auth Profile (Display Name)
-            if (name !== user.displayName) {
-                await updateProfile(user, { displayName: name });
-            }
-
-            // 2. Update Firestore Profile
-            await setDoc(doc(db, "users", user.uid), {
-                occupation,
-                ageGroup,
-            }, { merge: true });
-            
+            const userRef = doc(db, "users", user.uid);
+            await updateDoc(userRef, {
+                ...formData,
+                displayName: formData.displayName // Ensure display name is synced
+            });
             window.location.reload(); 
         } catch (e) {
-            console.error(e);
-            alert("Failed to save.");
+            console.error("Failed to update profile", e);
+            alert("Failed to save profile.");
+        } finally {
             setSaving(false);
+            onClose();
         }
     };
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
             <motion.div 
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                className="bg-card w-full max-w-md rounded-3xl border border-border shadow-2xl overflow-hidden"
+                className="bg-background w-full max-w-md rounded-3xl p-6 md:p-8 shadow-2xl relative animate-in fade-in zoom-in-95 duration-200"
             >
-                <div className="p-6 space-y-6">
-                    <div className="text-center">
-                        <h2 className="text-2xl font-bold">Your Identity 🆔</h2>
-                        <p className="text-muted-foreground text-sm mt-1">
-                            How should we call you and what do you do?
-                        </p>
-                    </div>
-                    
-                    <div className="space-y-4">
-                         {/* Name Input */}
-                         <div className="space-y-2">
-                            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                                Display Name
-                            </label>
-                            <input 
-                                type="text"
-                                className="w-full bg-secondary/50 rounded-xl px-4 py-3 font-medium outline-none focus:ring-2 ring-primary/50 text-foreground"
-                                placeholder="Your Name"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                            />
-                        </div>
+                <button onClick={onClose} className="absolute top-4 right-4 p-2 rounded-full hover:bg-secondary transition-colors">
+                    <X className="w-5 h-5" />
+                </button>
 
-                        {/* Job Input */}
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                                Professional Field
-                            </label>
-                            <div className="relative">
-                                <select 
-                                    className="w-full bg-secondary/50 rounded-xl px-4 py-3 font-medium outline-none focus:ring-2 ring-primary/50 appearance-none text-foreground"
-                                    value={occupation}
-                                    onChange={(e) => setOccupation(e.target.value)}
-                                >
-                                    <option value="">Select your role...</option>
-                                    {Object.entries(JOB_CATEGORIES).map(([group, roles]) => (
+                <h2 className="text-2xl font-black tracking-tight mb-6">Edit Identity</h2>
+                
+                <div className="space-y-5">
+                    {/* Name */}
+                    <div className="space-y-1">
+                        <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Display Name</label>
+                        <input 
+                            value={formData.displayName as string} 
+                            onChange={e => setFormData({...formData, displayName: e.target.value})}
+                            className="w-full bg-secondary/50 rounded-xl px-4 py-3 font-semibold focus:ring-2 ring-primary/20 outline-none transition-all"
+                            placeholder="Your Name"
+                        />
+                    </div>
+
+                    {/* Culture / Origin (NEW) */}
+                    <div className="space-y-1">
+                        <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Native Language / Origin</label>
+                        <select 
+                            value={formData.motherLanguage || ""} 
+                            onChange={e => setFormData({...formData, motherLanguage: e.target.value})}
+                            className="w-full bg-secondary/50 rounded-xl px-4 py-3 font-medium focus:ring-2 ring-emerald-500/20 outline-none appearance-none"
+                        >
+                            <option value="">Select Origin...</option>
+                            {CULTURE_OPTIONS.map(c => (
+                                <option key={c} value={c}>{c}</option>
+                            ))}
+                        </select>
+                         <p className="text-[10px] text-muted-foreground">Used to customize scenarios for your culture.</p>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        {/* Generation (Was Age) */}
+                         <div className="space-y-1">
+                            <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Generation</label>
+                            <select 
+                                value={formData.ageGroup || ""} 
+                                onChange={e => setFormData({...formData, ageGroup: e.target.value as any})}
+                                className="w-full bg-secondary/50 rounded-xl px-4 py-3 font-medium focus:ring-2 ring-primary/20 outline-none appearance-none"
+                            >
+                                <option value="">Select...</option>
+                                {GENERATION_GROUPS.map(g => (
+                                    <option key={g} value={g}>{g}</option>
+                                ))}
+                            </select>
+                        </div>
+                        
+                         {/* Job */}
+                         <div className="space-y-1">
+                            <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Occupation</label>
+                            <select 
+                                value={formData.occupation || ""} 
+                                onChange={e => setFormData({...formData, occupation: e.target.value})}
+                                className="w-full bg-secondary/50 rounded-xl px-4 py-3 font-medium focus:ring-2 ring-primary/20 outline-none appearance-none"
+                            >
+                                <option value="">Select...</option>
+                                {/* Handle Array vs Object for JOB_CATEGORIES if definition changed */}
+                                {Array.isArray(JOB_CATEGORIES) ? (
+                                    JOB_CATEGORIES.map(j => (
+                                        <option key={j} value={j}>{j}</option>
+                                    ))
+                                ) : (
+                                    Object.entries(JOB_CATEGORIES).map(([group, roles]) => (
                                         <optgroup key={group} label={group}>
                                             {roles.map(role => (
                                                 <option key={role} value={role}>{role}</option>
                                             ))}
                                         </optgroup>
-                                    ))}
-                                </select>
-                                 <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">▼</div>
-                            </div>
+                                    ))
+                                )}
+
+                            </select>
                         </div>
-
-                        {/* Vibe Factors */}
-                         <div className="space-y-2">
-                            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Age Group</label>
-                            <div className="relative">
-                                <select 
-                                    className="w-full bg-secondary/50 rounded-xl px-4 py-3 font-medium outline-none focus:ring-2 ring-primary/50 appearance-none text-foreground text-sm"
-                                    value={ageGroup}
-                                    onChange={(e) => setAgeGroup(e.target.value)}
-                                >
-                                    <option value="">Select...</option>
-                                    {["Teens", "20s", "30s", "40s", "50s+"].map(a => (
-                                        <option key={a} value={a}>{a}</option>
-                                    ))}
-                                </select>
-                                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">▼</div>
-                            </div>
-                         </div>
                     </div>
 
-                    <div className="flex gap-3 pt-2">
-                        <button 
-                            onClick={onClose}
-                            className="flex-1 py-3 font-bold text-muted-foreground hover:bg-secondary rounded-xl transition-colors"
+                     {/* Humor Style */}
+                     <div className="space-y-1">
+                        <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Humor Style</label>
+                         <select 
+                                value={formData.humorStyle || ""} 
+                                onChange={e => setFormData({...formData, humorStyle: e.target.value})}
+                                className="w-full bg-secondary/50 rounded-xl px-4 py-3 font-medium focus:ring-2 ring-primary/20 outline-none appearance-none"
                         >
-                            Cancel
-                        </button>
-                         <button 
-                            onClick={handleSave}
-                            disabled={!name || !occupation || saving}
-                            className="flex-1 py-3 font-bold bg-primary text-primary-foreground hover:opacity-90 rounded-xl transition-all disabled:opacity-50"
-                        >
-                            {saving ? "Saving..." : "Save Identity"}
-                        </button>
+                            <option value="">Select...</option>
+                            <option value="Witty">Witty</option>
+                            <option value="Dry">Dry</option>
+                            <option value="Sarcastic">Sarcastic</option>
+                            <option value="Dad Jokes">Dad Jokes</option>
+                            <option value="Silly">Silly</option>
+                            <option value="Dark">Dark</option>
+                        </select>
                     </div>
+                </div>
+
+                <div className="mt-8">
+                    <button 
+                        onClick={handleSave}
+                        disabled={saving}
+                        className="w-full py-4 rounded-xl bg-foreground text-background font-bold text-lg hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                    >
+                        {saving && <Loader2 className="w-5 h-5 animate-spin" />}
+                        {saving ? "Saving..." : "Save Identity"}
+                    </button>
+                    <button onClick={onClose} className="w-full py-3 mt-2 text-sm font-bold text-muted-foreground hover:text-foreground">
+                        Cancel
+                    </button>
                 </div>
             </motion.div>
         </div>

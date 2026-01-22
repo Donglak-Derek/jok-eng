@@ -120,9 +120,10 @@ export interface UserStats {
 
 export interface UserProfile {
   uid: string;
+  displayName?: string;
   occupation: string;
   // NEW VIBE FACTORS
-  ageGroup?: "Teens" | "20s" | "30s" | "40s" | "50s+";
+  ageGroup?: (typeof GENERATION_GROUPS)[number]; // Replaced "Age Groups" with "Generations" for better Vibe/Privacy
   gender?: "Male" | "Female" | "Non-binary"; // Optional, affects perspective
   interests?: string[]; // e.g. "Tech", "Art" (Phase 2)
   hobbies: string[];
@@ -132,6 +133,29 @@ export interface UserProfile {
   kryptonite?: string; // e.g. "Small Talk", "Confrontation"
   onboardingCompleted: boolean;
 }
+
+// Replaced "Age Groups" with "Generations" for better Vibe/Privacy
+export const GENERATION_GROUPS = [
+  "Gen Z (Zoomer)",
+  "Millennial",
+  "Gen X",
+  "Boomer", 
+  "Silent Gen"
+] as const;
+
+export const CULTURE_OPTIONS = [
+  "Korea 🇰🇷",
+  "Japan 🇯🇵",
+  "China 🇨🇳",
+  "USA 🇺🇸",
+  "UK 🇬🇧",
+  "Europe 🇪🇺",
+  "Latin America 🌎",
+  "India 🇮🇳",
+  "Middle East 🕌",
+  "Southeast Asia 🌏",
+  "Other"
+] as const;
 
 export const JOB_CATEGORIES = {
   "Tech & Data": ["Software Engineer", "Data Scientist", "Product Manager", "Designer", "IT Support"],

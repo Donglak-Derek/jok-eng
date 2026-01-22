@@ -6,127 +6,182 @@ import { Button } from "@/components/Button";
 import Link from "next/link";
 import { ArrowRight, Wand2, RefreshCcw } from "lucide-react";
 
-export default function RemixShowcase() {
-  const [activeTab, setActiveTab] = useState<"chef" | "tech" | "social">("chef");
+const TABS = [
+  { id: "career", label: "Career 💼", color: "from-blue-500 to-indigo-500" },
+  { id: "culture", label: "Culture 🇰🇷", color: "from-red-500 to-pink-500" },
+  { id: "vibe", label: "Vibe ⚡", color: "from-amber-400 to-orange-500" }
+];
 
-  const scenarios = {
-    chef: {
-      icon: "🍳",
-      role: "Chef",
-      original: "You need to explain a software bug to a client.",
-      remixed: "You need to explain a burnt steak to a VIP guest.",
-      color: "from-orange-500 to-red-500"
+const EXAMPLES = {
+  career: {
+    original: {
+      category: "Professional",
+      title: "The Project Update",
+      lines: [
+        "I'm done with the first part.",
+        "It took longer than expected.",
+        "I need more time for the rest."
+      ]
     },
-    tech: {
-      icon: "💻",
-      role: "Developer",
-      original: "You are asking for a refund at a coffee shop.",
-      remixed: "You are asking for a resource increase from DevOps.",
-        color: "from-blue-500 to-cyan-500"
-    },
-    social: {
-      icon: "🥂",
-      role: "Social",
-      original: "You are negotiating a salary raise.",
-      remixed: "You are negotiating who pays the dinner bill.",
-        color: "from-pink-500 to-purple-500"
+    remixed: {
+      category: "Chef Edition 👨‍🍳",
+      title: "Kitchen Status",
+      lines: [
+        "Mise-en-place is complete, Chef.",
+        "The prep ran into the weeds.",
+        "I need 5 minutes on the proteins!"
+      ]
     }
-  };
+  },
+  culture: {
+    original: {
+      category: "Direct (Western)",
+      title: "Declining an Invitation",
+      lines: [
+        "No, I can't come to your party.",
+        "I have too much work to do.",
+        "Maybe next time."
+      ]
+    },
+    remixed: {
+      category: "Korean Manner 🙇",
+      title: "Polite Refusal",
+      lines: [
+        "I would love to go, but...",
+        "Arguments with my schedule are difficult.",
+        "Please have fun without me this time!"
+      ]
+    }
+  },
+  vibe: {
+    original: {
+      category: "Standard English",
+      title: "That's Amazing",
+      lines: [
+        "This food is very delicious.",
+        "You are extremely talented.",
+        "I am having a great time."
+      ]
+    },
+    remixed: {
+      category: "Gen Z Vibe ✨",
+      title: "The Glaze",
+      lines: [
+        "This hits different, no cap.",
+        "You're actually the goat.",
+        "The vibes are immaculate."
+      ]
+    }
+  }
+};
+
+export default function RemixShowcase() {
+  const [activeTab, setActiveTab] = useState("career");
 
   return (
-    <section className="container-minimal py-12 md:py-24 border-t border-border/50">
-      <div className="text-center mb-8 md:mb-16 space-y-4">
-        <div className="inline-flex items-center justify-center p-3 rounded-2xl bg-secondary mb-2 md:mb-4">
-            <Wand2 className="w-6 h-6 md:w-8 md:h-8 text-primary" />
+    <section className="py-20 relative overflow-hidden">
+      <div className="container px-4 mx-auto max-w-5xl">
+        <div className="text-center mb-16 space-y-4">
+          <h2 className="text-4xl md:text-5xl font-black tracking-tight">
+            The <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">Smart Remix Engine</span>
+          </h2>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            Real life happens in context. Adapt any scenario to fit your <strong className="text-foreground">Job</strong>, your <strong className="text-foreground">Culture</strong>, and your <strong className="text-foreground">Vibe</strong>.
+          </p>
         </div>
-        <h2 className="text-3xl md:text-5xl font-bold tracking-tight">The &quot;Smart Remix&quot; Engine.</h2>
-        <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
-            Adapt scenarios not just for your job, but for your culture. Explain kimchi to a westerner? Done.
-        </p>
-      </div>
+      
+        {/* Tabs */}
+        <div className="flex justify-center gap-4 mb-12 flex-wrap">
+          {TABS.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`
+                relative px-6 py-3 rounded-full text-lg font-bold transition-all duration-300
+                ${activeTab === tab.id 
+                  ? "bg-foreground text-background scale-110 shadow-xl" 
+                  : "bg-secondary/50 text-muted-foreground hover:bg-secondary hover:text-foreground"
+                }
+              `}
+            >
+              {tab.label}
+              {activeTab === tab.id && (
+                <motion.div
+                  layoutId="activeTab"
+                  className={`absolute inset-0 rounded-full bg-gradient-to-r ${tab.color} opacity-20 -z-10 blur-lg`}
+                />
+              )}
+            </button>
+          ))}
+        </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-start">
-        {/* Left: Controls */}
-        <div className="lg:col-span-4 flex flex-row lg:flex-col gap-3 lg:gap-4 overflow-x-auto pb-2 lg:pb-0 scrollbar-hide snap-x px-1">
-            {(Object.keys(scenarios) as Array<keyof typeof scenarios>).map((key) => (
-                <button
-                    key={key}
-                    onClick={() => setActiveTab(key)}
-                    className={`
-                        text-left p-4 lg:p-6 rounded-2xl lg:rounded-3xl border transition-all duration-300 relative overflow-hidden group flex-shrink-0 snap-center min-w-[140px] lg:min-w-0 flex-1
-                        ${activeTab === key 
-                            ? "bg-secondary border-primary/50 shadow-lg" 
-                            : "bg-background border-border hover:border-primary/20"}
-                    `}
-                >
-                    <div className="flex flex-col lg:flex-row items-center lg:items-center gap-2 lg:gap-4 relative z-10 justify-center lg:justify-start">
-                        <span className="text-3xl lg:text-4xl group-hover:scale-110 transition-transform duration-300">{scenarios[key].icon}</span>
-                        <div className="text-center lg:text-left">
-                            <h3 className={`font-bold text-sm md:text-lg ${activeTab === key ? "text-foreground" : "text-muted-foreground"}`}>
-                                {scenarios[key].role}
-                            </h3>
-                        </div>
-                         {activeTab === key && (
-                            <motion.div 
-                                layoutId="active-indicator"
-                                className="absolute right-4 top-1/2 -translate-y-1/2 text-primary hidden lg:block"
-                            >
-                                <ArrowRight className="w-6 h-6" />
-                            </motion.div>
-                        )}
+        {/* Comparison Cards */}
+        <div className="grid md:grid-cols-2 gap-8 items-center">
+            {/* Original Card */}
+            <div className="bg-card border border-border/50 rounded-3xl p-8 shadow-sm scale-95 opacity-80 hover:opacity-100 transition-opacity">
+                <div className="flex items-center gap-3 mb-6">
+                    <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-xl">
+                        😐
                     </div>
-                </button>
-            ))}
-        </div>
-
-        {/* Right: Demo Area */}
-        <div className="lg:col-span-8">
-            <div className="relative bg-secondary/30 rounded-3xl lg:rounded-[3rem] p-5 md:p-12 border border-border/50 overflow-hidden">
-                 <AnimatePresence mode="wait">
-                    <motion.div
-                        key={activeTab}
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -20 }}
-                        transition={{ duration: 0.3 }}
-                        className="flex flex-col gap-4 md:gap-8"
-                    >
-                         {/* Card 1: Original */}
-                         <div className="bg-background rounded-xl md:rounded-2xl p-4 md:p-6 shadow-sm border border-border/50 opacity-60 scale-95 origin-bottom-left">
-                            <div className="text-[10px] md:text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1 md:mb-2">Original Scenario</div>
-                            <p className="text-base md:text-lg text-foreground/80 leading-snug">{scenarios[activeTab].original}</p>
-                         </div>
-
-                        {/* Arrow */}
-                         <div className="flex justify-center -my-6 md:-my-4 relative z-10">
-                            <div className={`p-2 md:p-3 rounded-full bg-gradient-to-r ${scenarios[activeTab].color} text-white shadow-lg shadow-purple-500/20`}>
-                                <RefreshCcw className="w-5 h-5 md:w-6 md:h-6 animate-spin-slow" />
-                            </div>
-                         </div>
-
-                         {/* Card 2: Remixed */}
-                         <div className="bg-background rounded-2xl md:rounded-3xl p-6 md:p-8 shadow-xl border-2 border-primary/20 relative overflow-hidden mt-2 md:mt-0">
-                            <div className={`absolute top-0 left-0 w-1 h-full bg-gradient-to-b ${scenarios[activeTab].color}`} />
-                            <div className="flex items-center gap-2 mb-2 md:mb-3">
-                                <span className="px-2 py-0.5 rounded-md bg-primary/10 text-primary text-[10px] md:text-xs font-bold uppercase">Magically Adapted</span>
-                            </div>
-                            <p className="text-xl md:text-3xl font-bold text-foreground leading-tight">
-                                {scenarios[activeTab].remixed}
-                            </p>
-                         </div>
-                    </motion.div>
-                 </AnimatePresence>
-                 
-                 <div className="mt-6 md:mt-8 text-center bg-background/50 rounded-xl p-4 backdrop-blur-sm">
-                     <p className="mb-3 md:mb-4 text-sm md:text-base text-muted-foreground">Ready to remix your own?</p>
-                     <Link href="/login" passHref>
-                        <Button variant="outline" className="w-full md:w-auto rounded-full px-8 border-primary/20 hover:bg-primary/5 hover:text-primary">
-                            Try Smart Remix Now
-                        </Button>
-                     </Link>
-                 </div>
+                    <div>
+                        <div className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Original</div>
+                        <div className="font-bold text-lg">{EXAMPLES[activeTab as keyof typeof EXAMPLES].original.title}</div>
+                    </div>
+                </div>
+                <div className="space-y-4 font-medium text-muted-foreground">
+                    {EXAMPLES[activeTab as keyof typeof EXAMPLES].original.lines.map((line, i) => (
+                        <div key={i} className="flex gap-3">
+                            <span className="opacity-30 select-none">0{i+1}</span>
+                            <span>{line}</span>
+                        </div>
+                    ))}
+                </div>
             </div>
+
+            {/* Remixed Card */}
+            <AnimatePresence mode="wait">
+                <motion.div 
+                    key={activeTab}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    className="relative"
+                >
+                    <div className="bg-gradient-to-br from-indigo-900 via-purple-900 to-black text-white rounded-3xl p-8 shadow-2xl relative overflow-hidden border border-white/10">
+                        {/* Background Glow */}
+                        <div className={`absolute top-0 right-0 w-64 h-64 bg-gradient-to-b ${TABS.find(t => t.id === activeTab)?.color} opacity-20 blur-[80px] rounded-full -mr-16 -mt-16`} />
+                        
+                        <div className="flex items-center gap-3 mb-6 relative z-10">
+                            <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur flex items-center justify-center text-xl">
+                                ✨
+                            </div>
+                            <div>
+                                <div className="text-xs font-bold uppercase tracking-widest text-white/60">Remixed for</div>
+                                <div className="font-bold text-lg text-white">
+                                    {EXAMPLES[activeTab as keyof typeof EXAMPLES].remixed.category}
+                                </div>
+                            </div>
+                        </div>
+                        <div className="space-y-4 font-medium text-indigo-100 relative z-10">
+                             {EXAMPLES[activeTab as keyof typeof EXAMPLES].remixed.lines.map((line, i) => (
+                                <div key={i} className="flex gap-3">
+                                    <span className="opacity-30 select-none">0{i+1}</span>
+                                    <span className="text-white text-lg">{line}</span>
+                                </div>
+                            ))}
+                        </div>
+
+                         {/* Floating Tag */}
+                         <div className="absolute bottom-6 right-6">
+                            <span className="px-3 py-1 rounded-full bg-white/10 border border-white/20 text-xs font-bold backdrop-blur">
+                                Generated by AI
+                            </span>
+                         </div>
+                    </div>
+                </motion.div>
+            </AnimatePresence>
         </div>
+
       </div>
     </section>
   );
