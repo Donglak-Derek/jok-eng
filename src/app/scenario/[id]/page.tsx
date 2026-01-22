@@ -17,72 +17,86 @@ export default function ScenarioPage({ params }: Props) {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
   
-  const [script, setScript] = useState<UserScript | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+    const [script, setScript] = useState<UserScript | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (authLoading) return;
+    useEffect(() => {
+        if (authLoading) return;
 
-    async function fetchScenario() {
-        try {
-            let foundScript: UserScript | null = null;
+        let unsubscribe: () => void;
 
-            // 0. Check Static Scripts first (Fastest)
-            const staticScript = scripts.find((s) => s.id === id);
-            if (staticScript) {
-                // Adapt static script to UserScript type (add dummy userId/likes if needed)
-                foundScript = { 
-                    ...staticScript, 
-                    userId: "system", 
-                    isPublic: true, 
-                    likes: 0, 
-                    createdAt: Date.now() 
-                } as unknown as UserScript;
-            }
-
-            // 1. If logged in, try finding in own collection (User Custom)
-            if (!foundScript && user) {
-                const docRef = doc(db, "users", user.uid, "scenarios", id);
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    foundScript = { id: docSnap.id, ...docSnap.data() } as UserScript;
+        async function setupScenarioListener() {
+            setLoading(true);
+            try {
+                // 0. Check Static Scripts first (Fastest) - No listener needed for static
+                const staticScript = scripts.find((s) => s.id === id);
+                if (staticScript) {
+                    setScript({ 
+                        ...staticScript, 
+                        userId: "system", 
+                        isPublic: true, 
+                        likes: 0, 
+                        createdAt: Date.now() 
+                    } as unknown as UserScript);
+                    setLoading(false);
+                    return;
                 }
-            }
 
-            // 2. If not found yet (or guest), try searching globally (Community/Public)
-            if (!foundScript) {
-                // Search all 'scenarios' collections for this ID
-                // Note: Firestore Rules will ensure we only get it if it's Public (or ours)
-                // We MUST filter by isPublic to satisfy the security rule condition for list queries
+                // 1. If logged in, try finding in own collection (User Custom)
+                if (user) {
+                    const docRef = doc(db, "users", user.uid, "scenarios", id);
+                    const docSnap = await getDoc(docRef); // Check existence first to decide path
+                    
+                    if (docSnap.exists()) {
+                        const { onSnapshot } = await import("firebase/firestore");
+                        unsubscribe = onSnapshot(docRef, (snap) => {
+                            if (snap.exists()) {
+                                setScript({ id: snap.id, ...snap.data() } as UserScript);
+                            } else {
+                                // If deleted while viewing
+                                setError("Scenario was deleted.");
+                            }
+                            setLoading(false);
+                        });
+                        return;
+                    }
+                }
+
+                // 2. If not found yet (or guest), try searching globally (Community/Public)
+                // Since community scripts are in subcollections, we need to find the specific path first
+                // or continue using a query listener.
                 const q = query(
                     collectionGroup(db, "scenarios"), 
                     where("id", "==", id),
                     where("isPublic", "==", true)
                 );
-                const querySnapshot = await getDocs(q);
                 
-                if (!querySnapshot.empty) {
-                    const docSnap = querySnapshot.docs[0];
-                    foundScript = { id: docSnap.id, ...docSnap.data() } as UserScript;
-                }
-            }
+                const { onSnapshot } = await import("firebase/firestore");
+                unsubscribe = onSnapshot(q, (snapshot) => {
+                    if (!snapshot.empty) {
+                        const docSnap = snapshot.docs[0];
+                        setScript({ id: docSnap.id, ...docSnap.data() } as UserScript);
+                    } else {
+                        // Only set error if we haven't found a script yet (and not loading initial static)
+                        if (!script) setError("Scenario not found or you don't have permission.");
+                    }
+                    setLoading(false);
+                });
 
-            if (foundScript) {
-                setScript(foundScript);
-            } else {
-                setError("Scenario not found or you don't have permission.");
+            } catch (err) {
+                console.error("Error setting up scenario listener:", err);
+                setError("Failed to load scenario.");
+                setLoading(false);
             }
-        } catch (err) {
-            console.error("Error fetching scenario:", err);
-            setError("Failed to load scenario.");
-        } finally {
-            setLoading(false);
         }
-    }
 
-    fetchScenario();
-  }, [user, authLoading, id]);
+        setupScenarioListener();
+
+        return () => {
+            if (unsubscribe) unsubscribe();
+        };
+    }, [user, authLoading, id]);
 
   if (authLoading || loading) {
       return (

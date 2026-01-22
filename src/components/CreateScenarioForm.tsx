@@ -717,7 +717,7 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
                                 }`}
                             >
                                 {canCreateScenario() 
-                                    ? `⚡ Credits: ${credits.remaining} / ${credits.limit}`
+                                    ? (credits.limit > 50 ? "⚡ Pro Access: Unlimited" : `⚡ Credits: ${credits.remaining} / ${credits.limit}`)
                                     : "🚫 Daily Limit Reached (Tap to Upgrade)"
                                 }
                             </button>

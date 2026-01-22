@@ -7,6 +7,7 @@ import { AudioLines } from "lucide-react";
 import { motion } from "framer-motion";
 import { playScenarioAudio } from "@/lib/tts"; // Centralized TTS
 import { useAuth } from "@/context/AuthContext"; // For profile/limits
+import PremiumVoiceUpsell from "@/components/subscription/PremiumVoiceUpsell";
 
 type Props = {
   sentence: Sentence;
@@ -273,6 +274,7 @@ export default function ClozeCard({
       >
           {speaking ? <AudioVisualizer /> : <span className="flex items-center gap-2"><AudioLines className="w-5 h-5" /> Play Audio</span>}
       </Button>
+      <PremiumVoiceUpsell />
     </div>
   );
 }

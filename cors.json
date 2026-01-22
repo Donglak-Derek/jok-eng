@@ -1,0 +1,8 @@
+[
+  {
+    "origin": ["http://localhost:3000", "https://jok-eng.vercel.app", "https://jok-eng.firebaseapp.com"],
+    "method": ["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"],
+    "responseHeader": ["Content-Type", "Access-Control-Allow-Origin", "x-goog-resumable"],
+    "maxAgeSeconds": 3600
+  }
+]

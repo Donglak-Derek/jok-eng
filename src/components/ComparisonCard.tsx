@@ -7,6 +7,7 @@ import { Volume2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { playScenarioAudio } from "@/lib/tts";
 import { useAuth } from "@/context/AuthContext";
+import PremiumVoiceUpsell from "@/components/subscription/PremiumVoiceUpsell";
 
 type Props = {
   sentence: Sentence;
@@ -358,6 +359,7 @@ export default function ComparisonCard({
                   >
                       {speaking ? <AudioVisualizer /> : <span className="flex items-center gap-2"><Volume2 className="w-5 h-5" /> Listen Again</span>}
                   </Button>
+                  <PremiumVoiceUpsell />
              </motion.div>
           )}
 

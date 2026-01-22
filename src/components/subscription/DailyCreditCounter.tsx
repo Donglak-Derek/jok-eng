@@ -9,7 +9,14 @@ export default function DailyCreditCounter() {
     const { credits, isPro } = useSubscription();
     const [showUpgrade, setShowUpgrade] = useState(false);
 
-    if (isPro) return null; // Or show specific Pro badge?
+    if (isPro) {
+        return (
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-yellow-500/30 bg-yellow-500/10 text-yellow-500 font-bold text-xs select-none">
+                <Zap className="w-3.5 h-3.5 fill-yellow-500" />
+                <span>PRO</span>
+            </div>
+        );
+    }
 
     return (
         <>

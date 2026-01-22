@@ -103,9 +103,11 @@ export async function playScenarioAudio(
         uploadAudioToStorage(cacheId, audioBlob).then(async (downloadUrl) => {
             console.log("💾 Audio Cached:", downloadUrl);
             
-            // Only owner/admin can update Firestore
             const ownerId = (scenario as any).userId;
-            if (ownerId !== dbUser.uid) return;
+            const isAdmin = (dbUser as any).role === 'admin';
+            
+            // Only owner or admin can update Firestore
+            if (ownerId !== dbUser.uid && !isAdmin) return;
 
             const scriptRef = doc(db, `users/${dbUser.uid}/scenarios`, scenario.id); 
             

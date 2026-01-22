@@ -9,29 +9,50 @@ interface UpgradeModalProps {
     reason?: "gen_limit" | "tts_limit";
 }
 
+import { createPortal } from "react-dom";
+import { useEffect, useState } from "react";
+
 export default function UpgradeModal({ isOpen, onClose, reason = "gen_limit" }: UpgradeModalProps) {
-    if (!isOpen) return null;
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const title = reason === "gen_limit" 
         ? "You've hit your daily limit! 🛑" 
         : "Unlock Premium Voices 🎙️";
 
     const limits = [
-        { feature: "Daily Scenarios", free: "3 / day", pro: "15 / day" },
-        { feature: "AI Voice", free: "Standard", pro: "Premium Google Cloud" },
+        { feature: "Daily Ai Creation Limit", free: "3 scenarios / day", pro: "15 scenarios / day" },
+        { feature: "AI Voice", free: "Standard Robotic", pro: "Human-like Neural" },
         { feature: "Replays", free: "Unlimited", pro: "Unlimited" },
         { feature: "Storage", free: "Last 5", pro: "Unlimited" },
     ];
 
-    return (
+    if (!mounted) return null;
+
+    return createPortal(
         <AnimatePresence>
-            <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-                <motion.div 
-                    initial={{ scale: 0.9, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: 0.9, opacity: 0 }}
-                    className="bg-background w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl border border-border relative"
-                >
+            {isOpen && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                    {/* Backdrop */}
+                    <motion.div 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={onClose}
+                        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+                    />
+                    
+                    {/* Modal */}
+                    <motion.div 
+                        initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                        animate={{ scale: 1, opacity: 1, y: 0 }}
+                        exit={{ scale: 0.9, opacity: 0, y: 20 }}
+                        className="bg-background w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl border border-border relative z-10 max-h-[90vh] overflow-y-auto"
+                        onClick={(e) => e.stopPropagation()}
+                    >
                     <button onClick={onClose} className="absolute top-4 right-4 p-2 rounded-full hover:bg-secondary/50 transition-colors z-10">
                         <X className="w-5 h-5 opacity-50" />
                     </button>
@@ -48,10 +69,10 @@ export default function UpgradeModal({ isOpen, onClose, reason = "gen_limit" }: 
                         <div className="bg-secondary/30 rounded-2xl p-1">
                             <table className="w-full text-sm">
                                 <thead>
-                                    <tr className="text-muted-foreground/60 text-xs uppercase tracking-wider">
-                                        <th className="px-4 py-2 text-left font-bold">Feature</th>
-                                        <th className="px-4 py-2 text-center font-bold">Free</th>
-                                        <th className="px-4 py-2 text-center font-bold text-indigo-500">Pro</th>
+                                    <tr className="text-foreground text-xs uppercase tracking-wider border-b border-border/50">
+                                        <th className="px-4 py-3 text-left font-black">Feature</th>
+                                        <th className="px-4 py-3 text-center font-black">Free</th>
+                                        <th className="px-4 py-3 text-center font-black text-indigo-600">Pro</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-border/50">
@@ -79,7 +100,9 @@ export default function UpgradeModal({ isOpen, onClose, reason = "gen_limit" }: 
                         </p>
                     </div>
                 </motion.div>
-            </div>
-        </AnimatePresence>
+                </div>
+            )}
+        </AnimatePresence>,
+        document.body
     );
 }
