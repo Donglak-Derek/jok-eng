@@ -2,6 +2,8 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Check, Lock } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+
 
 interface UpgradeModalProps {
     isOpen: boolean;
@@ -14,10 +16,46 @@ import { useEffect, useState } from "react";
 
 export default function UpgradeModal({ isOpen, onClose, reason = "gen_limit" }: UpgradeModalProps) {
     const [mounted, setMounted] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const { user } = useAuth();
 
     useEffect(() => {
         setMounted(true);
     }, []);
+
+    const handleCheckout = async () => {
+        if (!user) {
+            alert("Please sign in to upgrade!");
+            return;
+        }
+
+        const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID;
+        
+        setLoading(true);
+        try {
+            const res = await fetch("/api/checkout_sessions", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    userId: user.uid,
+                    email: user.email,
+                    priceId, 
+                }),
+            });
+
+            const { url, error } = await res.json();
+            if (error) throw new Error(error);
+
+            if (url) {
+                window.location.href = url;
+            }
+        } catch (err: any) {
+            console.error("Checkout failed:", err);
+            alert("Checkout failed: " + err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const title = reason === "gen_limit" 
         ? "You've hit your daily limit! 🛑" 
@@ -88,15 +126,20 @@ export default function UpgradeModal({ isOpen, onClose, reason = "gen_limit" }: 
                         </div>
 
                         <button 
-                            className="w-full py-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-black text-lg shadow-lg hover:shadow-indigo-500/25 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
-                            onClick={() => alert("Payment intent would go here! This is a demo.")}
+                            className="w-full py-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-black text-lg shadow-lg hover:shadow-indigo-500/25 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                            onClick={handleCheckout}
+                            disabled={loading}
                         >
-                            <Lock className="w-5 h-5" />
-                            Unlock Pro - $9/mo
+                            {loading ? (
+                                <span className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></span>
+                            ) : (
+                                <Lock className="w-5 h-5" />
+                            )}
+                            {loading ? "Processing..." : "Unlock Pro - $9/mo"}
                         </button>
                         
                         <p className="text-center text-xs text-muted-foreground">
-                            Cancel anytime. 7-day money back guarantee.
+                             Stripe Secure Payment. Cancel anytime.
                         </p>
                     </div>
                 </motion.div>
