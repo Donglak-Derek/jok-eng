@@ -100,13 +100,36 @@ export async function POST(request: NextRequest) {
     const text = response.text();
 
     // Clean up markdown if present
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) {
-        throw new Error("No JSON found in response");
+    // Robust JSON Extraction (Balanced Braces)
+    const start = text.indexOf('{');
+    if (start === -1) throw new Error("No JSON found in response");
+    
+    let nesting = 0;
+    let inString = false;
+    let escaped = false;
+    let end = -1;
+    
+    for (let i = start; i < text.length; i++) {
+        const char = text[i];
+        if (inString) {
+            if (char === '\\') escaped = !escaped;
+            else if (char === '"' && !escaped) inString = false;
+            else escaped = false;
+        } else {
+            if (char === '"') inString = true;
+            else if (char === '{') nesting++;
+            else if (char === '}') {
+                nesting--;
+                if (nesting === 0) {
+                    end = i;
+                    break;
+                }
+            }
+        }
     }
     
-    // Use the extracted JSON string
-    const jsonString = jsonMatch[0];
+    if (end === -1) throw new Error("Malformed JSON: Unbalanced braces");
+    const jsonString = text.substring(start, end + 1);
     
     console.log("AI Raw Response (Cleaned):", jsonString); 
 
