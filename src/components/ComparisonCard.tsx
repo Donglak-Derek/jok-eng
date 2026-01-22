@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
-import type { Sentence } from "@/types";
+import type { Sentence, Script } from "@/types";
 import { Button } from "@/components/Button";
 import { Volume2 } from "lucide-react";
 import { motion } from "framer-motion";
+import { playScenarioAudio } from "@/lib/tts";
+import { useAuth } from "@/context/AuthContext";
 
 type Props = {
   sentence: Sentence;
@@ -13,6 +15,7 @@ type Props = {
   isAutoPlayEnabled?: boolean;
   mode?: "standard" | "cloze";
   isGlobalRevealed?: boolean;
+  script?: Script;
 };
 
 // Helper to visualize audio playing
@@ -31,8 +34,10 @@ export default function ComparisonCard({
   onHeard,
   mode = "standard",
   isGlobalRevealed = false,
-  isAutoPlayEnabled = true
+  isAutoPlayEnabled = true,
+  script,
 }: Props) {
+  const { userProfile } = useAuth();
   const [speaking, setSpeaking] = useState(false);
   const [loading, setLoading] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -127,46 +132,64 @@ export default function ComparisonCard({
     setLoading(true);
     setSpeaking(true);
 
-    try {
-      const params = new URLSearchParams({
-        text: textToSpeak,
-        voice: "en-US-AriaNeural", 
-      });
-      
-      const audio = new Audio(`/api/tts?${params}`);
-      audioRef.current = audio;
-      
-      await new Promise<void>((resolve, reject) => {
-        audio.oncanplay = () => setLoading(false);
-        audio.onended = () => {
-          setSpeaking(false);
-          resolve();
-        };
-        audio.onerror = (e) => {
-          setSpeaking(false);
-          reject(e);
-        };
-        audio.play().catch((e) => {
-           setSpeaking(false);
-           reject(e);
+    if (script) {
+        playScenarioAudio(userProfile, script, {
+           text: textToSpeak,
+           sentenceId: sentence.id,
+           onStart: () => setSpeaking(true),
+           onEnd: () => {
+               setSpeaking(false);
+               setLoading(false);
+           },
+           onError: (err) => {
+               console.error(err);
+               setSpeaking(false);
+               setLoading(false);
+           }
         });
-      });
-      
-    } catch (error) {
-       console.warn("TTS fallback", error);
-       if (window.speechSynthesis) {
-           const u = new SpeechSynthesisUtterance(textToSpeak);
-           setLoading(false);
-           u.onend = () => setSpeaking(false);
-           window.speechSynthesis.speak(u);
-       } else {
-           setSpeaking(false);
-           setLoading(false);
-       }
-    } finally {
-        setLoading(false);
+    } else {
+        // Fallback
+        try {
+          const params = new URLSearchParams({
+            text: textToSpeak,
+            voice: "en-US-AriaNeural", 
+          });
+          
+          const audio = new Audio(`/api/tts?${params}`);
+          audioRef.current = audio;
+          
+          await new Promise<void>((resolve, reject) => {
+            audio.oncanplay = () => setLoading(false);
+            audio.onended = () => {
+              setSpeaking(false);
+              resolve();
+            };
+            audio.onerror = (e) => {
+              setSpeaking(false);
+              reject(e);
+            };
+            audio.play().catch((e) => {
+               setSpeaking(false);
+               reject(e);
+            });
+          });
+          
+        } catch (error) {
+           console.warn("TTS fallback", error);
+           if (window.speechSynthesis) {
+               const u = new SpeechSynthesisUtterance(textToSpeak);
+               setLoading(false);
+               u.onend = () => setSpeaking(false);
+               window.speechSynthesis.speak(u);
+           } else {
+               setSpeaking(false);
+               setLoading(false);
+           }
+        } finally {
+            setLoading(false);
+        }
     }
-  }, [index, onHeard, sentence, speaking]);
+  }, [index, onHeard, sentence, speaking, userProfile, script]);
 
   // Auto-play logic attached to Step 2
   const hasAutoPlayedRef = useRef(false);
@@ -178,6 +201,9 @@ export default function ComparisonCard({
 
   // Trigger when entering Step 2 AND (standard mode OR user explicitly navigated)
   useEffect(() => {
+    // Check if script exists, if so check if we have cached audio?
+    // Not directly available here, but playScenarioAudio handles it silently.
+    
       if (step === 2 && !hasAutoPlayedRef.current && isAutoPlayEnabled) {
           hasAutoPlayedRef.current = true;
           // Small delay to let animation settle

@@ -324,6 +324,7 @@ export default function StandardScriptFlow({ script }: Props) {
                 sentence={currentSentence} 
                 index={currentIndex}
                 heard={heardSet.has(currentIndex)}
+                script={script} // Pass script for caching
                 // ClozeCard specific props
                 mode={mode} 
                 isGlobalRevealed={isGlobalRevealed}

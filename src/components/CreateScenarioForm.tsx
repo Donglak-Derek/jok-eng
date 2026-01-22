@@ -4,6 +4,8 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Script, UserScript, UserProfile } from "@/types";
 import { useAuth } from "@/context/AuthContext";
+import { useSubscription } from "@/hooks/useSubscription"; // Phase 2 Hook
+import UpgradeModal from "@/components/subscription/UpgradeModal"; // Phase 4 Modal
 
 import { db } from "@/lib/firebase";
 import { collection, setDoc, doc, getDoc } from "firebase/firestore";
@@ -167,6 +169,10 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
   
   // User Profile State
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  
+  // Phase 4: Subscription Logic
+  const { credits, canCreateScenario, incrementUsage } = useSubscription();
+  const [showUpgrade, setShowUpgrade] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -327,6 +333,12 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
   // Wrap in useCallback to satisfy linter
   const handleGenerate = useCallback(async () => {
     if (!inputs.context || !inputs.plot) return;
+
+    // Check Limits
+    if (!canCreateScenario()) {
+        setShowUpgrade(true);
+        return;
+    }
     
     setStep("loading");
     try {
@@ -361,6 +373,8 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
         );
         
         if (scriptId) {
+            // Deduct Credit on successful save
+            await incrementUsage();
             router.push(`/script/${scriptId}`);
         } else {
             // Fallback if save fails (shouldn't happen often)
@@ -691,7 +705,26 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
                         >
                             {isRemix ? "✨ Remix Scene" : "Create Scene"}
                         </Button>
+                        
+                        {/* Phase 4: Credit Counter */}
+                        <div className="mt-3 text-center">
+                            <button 
+                                onClick={() => !canCreateScenario() && setShowUpgrade(true)}
+                                className={`text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full border transition-all ${
+                                    canCreateScenario() 
+                                    ? "border-emerald-500/30 text-emerald-600 bg-emerald-50"
+                                    : "border-red-500/30 text-red-600 bg-red-50 hover:bg-red-100 cursor-pointer"
+                                }`}
+                            >
+                                {canCreateScenario() 
+                                    ? `⚡ Credits: ${credits.remaining} / ${credits.limit}`
+                                    : "🚫 Daily Limit Reached (Tap to Upgrade)"
+                                }
+                            </button>
+                        </div>
                     </div>
+                    
+                    <UpgradeModal isOpen={showUpgrade} onClose={() => setShowUpgrade(false)} reason="gen_limit" />
                 </motion.div>
             )}
 

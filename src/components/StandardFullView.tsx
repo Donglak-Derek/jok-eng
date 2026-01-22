@@ -4,6 +4,8 @@ import { Script } from "@/types";
 import { Button } from "@/components/Button";
 import { ChevronLeft, Volume2, Play } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
+import { playScenarioAudio } from "@/lib/tts";
+import { useAuth } from "@/context/AuthContext";
 
 type Props = {
   script: Script;
@@ -12,7 +14,8 @@ type Props = {
 
 export default function StandardFullView({ script, onBack }: Props) {
   const [speakingIndex, setSpeakingIndex] = useState<number | null>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null); // Track audio
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { userProfile } = useAuth(); // Needed for TTS check
 
   useEffect(() => {
       return () => {
@@ -24,36 +27,21 @@ export default function StandardFullView({ script, onBack }: Props) {
       };
   }, []);
 
-  const speak = async (text: string, index: number) => {
+  const speak = async (text: string, index: number, sentenceId: string) => {
     if (typeof window === "undefined") return;
     if (speakingIndex !== null) return;
 
-    setSpeakingIndex(index);
-
-    try {
-      const params = new URLSearchParams({
-        text: text,
-        voice: "en-US-AriaNeural",
-      });
-
-      const audio = new Audio(`/api/tts?${params}`);
-      audioRef.current = audio;
-      
-      await new Promise<void>((resolve, reject) => {
-        audio.onended = () => resolve();
-        audio.onerror = (e) => reject(e);
-        audio.play().catch(reject);
-      });
-    } catch {
-       const u = new SpeechSynthesisUtterance(text);
-       u.lang = "en-US";
-       u.onend = () => setSpeakingIndex(null);
-       window.speechSynthesis.speak(u);
-       return;
-    } finally {
-        // Handled in onend for fallback, but for audio api we reset after await
-    }
-    setSpeakingIndex(null);
+    // Use Centralized Service
+    playScenarioAudio(userProfile, script, {
+        text,
+        sentenceId,
+        onStart: () => setSpeakingIndex(index),
+        onEnd: () => setSpeakingIndex(null),
+        onError: (err) => {
+            console.error(err);
+            setSpeakingIndex(null);
+        }
+    });
   };
 
   return (
@@ -99,7 +87,7 @@ export default function StandardFullView({ script, onBack }: Props) {
                 </div>
                 <div className="flex-shrink-0">
                     <button
-                        onClick={() => speak(sentence.goodResponse ? sentence.goodResponse.text : sentence.en, index)}
+                        onClick={() => speak(sentence.goodResponse ? sentence.goodResponse.text : sentence.en, index, sentence.id)}
                         disabled={speakingIndex !== null}
                         className={`p-2 rounded-full transition-colors ${
                             speakingIndex === index 

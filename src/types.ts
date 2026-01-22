@@ -17,6 +17,7 @@ export type Sentence = {
     text: string;
     why: string;
   };
+  audioUrl?: string; // Cached audio for sentence
 };
 
 export type DecoderItem = {
@@ -60,6 +61,7 @@ export type Script = {
   }[];
   decoderItems?: DecoderItem[];
   // Phase 1: New Engagement Fields
+  audioUrl?: string; // New: For Audio Caching
   imageUrl?: string; 
   culturalInsights?: {
     title: string;
@@ -132,6 +134,22 @@ export interface UserProfile {
   superpower?: string; // e.g. "Empathy", "Wit"
   kryptonite?: string; // e.g. "Small Talk", "Confrontation"
   onboardingCompleted: boolean;
+  subscription?: UserSubscription;
+}
+
+export interface UserSubscription {
+  tier: 'free' | 'pro' | 'admin';
+  status: 'active' | 'canceled' | 'expired' | 'past_due';
+  credits: {
+    dailyLimit: number;
+    usage: number; // Renamed from remaining to usage for easier counting
+    lastRefill: number; // Timestamp
+  };
+  features: {
+    premiumTTS: boolean;
+    advancedAnalytics: boolean;
+    unlimitedRemix: boolean;
+  };
 }
 
 // Replaced "Age Groups" with "Generations" for better Vibe/Privacy

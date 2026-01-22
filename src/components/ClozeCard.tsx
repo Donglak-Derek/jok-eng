@@ -1,10 +1,12 @@
 "use client";
 
 import { useMemo, useState, useRef, useEffect, useCallback } from "react";
-import type { Sentence } from "@/types";
+import type { Sentence, Script } from "@/types";
 import { Button } from "@/components/Button";
 import { AudioLines } from "lucide-react";
 import { motion } from "framer-motion";
+import { playScenarioAudio } from "@/lib/tts"; // Centralized TTS
+import { useAuth } from "@/context/AuthContext"; // For profile/limits
 
 type Props = {
   sentence: Sentence;
@@ -16,6 +18,8 @@ type Props = {
   isGlobalRevealed?: boolean;
   // External Controls
   isAutoPlayEnabled?: boolean;
+  // Context
+  script?: Script;
 };
 
 // --- Animations ---
@@ -50,6 +54,7 @@ export default function ClozeCard({
   mode = "standard",
   isGlobalRevealed = false,
   isAutoPlayEnabled = false,
+  script, // Add script
 }: Props) {
   const [speaking, setSpeaking] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -76,10 +81,13 @@ export default function ClozeCard({
       return matches ? matches.map(m => m.slice(1, -1)) : [];
   }, [textToDisplay]);
 
+  const { userProfile } = useAuth();
+
   // --- TTS Handling ---
   const handlePlay = useCallback(async () => {
     if (typeof window === "undefined") return;
     
+    // Stop any current audio
     if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current = null;
@@ -87,43 +95,45 @@ export default function ClozeCard({
 
     if (!heard) onHeard(index);
 
-    const textToSpeak = cleanText(textToDisplay);
     setLoading(true);
     setSpeaking(true);
 
-    try {
-      const params = new URLSearchParams({ text: textToSpeak, voice: "en-US-AriaNeural" });
-      const audio = new Audio(`/api/tts?${params}`);
-      audioRef.current = audio;
-      
-      await new Promise<void>((resolve, reject) => {
-        audio.oncanplay = () => setLoading(false);
-        audio.onended = () => {
-            setSpeaking(false);
-            audioRef.current = null;
-            resolve();
-        };
-        audio.onerror = (e) => reject(e);
-        audio.play().catch(reject);
-      });
-      
-    } catch (error) {
-       console.warn("TTS fallback", error);
-       if (window.speechSynthesis) {
-         window.speechSynthesis.cancel();
-         const u = new SpeechSynthesisUtterance(textToSpeak);
-         u.onend = () => setSpeaking(false);
-         setLoading(false);
-         window.speechSynthesis.speak(u);
-       } else {
+    if (script) {
+         // Centralized Service
+         playScenarioAudio(userProfile, script, {
+            text: textToDisplay,
+            sentenceId: sentence.id,
+            onStart: () => setSpeaking(true),
+            onEnd: () => {
+                setSpeaking(false);
+                setLoading(false);
+            },
+            onError: (err) => {
+                console.error(err);
+                setSpeaking(false);
+                setLoading(false);
+            }
+         });
+    } else {
+        // Fallback for Preview (No Script Object)
+       try {
+           const params = new URLSearchParams({ text: cleanText(textToDisplay), voice: "en-US-AriaNeural" });
+           const audio = new Audio(`/api/tts?${params}`);
+           audioRef.current = audio;
+           
+           audio.oncanplay = () => setLoading(false);
+           audio.onended = () => {
+               setSpeaking(false);
+               audioRef.current = null;
+           };
+           audio.play().catch(e => console.error(e));
+       } catch (e) {
+           console.error("Preview TTS failed", e);
            setSpeaking(false);
            setLoading(false);
        }
-    } finally {
-        setLoading(false);
-        if (audioRef.current === null) setSpeaking(false);
     }
-  }, [heard, index, onHeard, setLoading, setSpeaking, textToDisplay]);
+  }, [heard, index, onHeard, textToDisplay, userProfile, script, sentence.id]);
 
   // --- Auto-Play ---
   const hasAutoPlayedRef = useRef(false);

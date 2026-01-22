@@ -74,7 +74,22 @@ export default function OnboardingModal() {
                 // Ensure defaults for stats if they don't exist
                 totalScenariosCreated: 0, 
                 totalPractices: 0,
-                totalRemixesInspired: 0
+                totalRemixesInspired: 0,
+                // Phase 1: Freemium Init
+                subscription: {
+                    tier: "free",
+                    status: "active",
+                    credits: {
+                        dailyLimit: 3,
+                        usage: 0,
+                        lastRefill: Date.now()
+                    },
+                    features: {
+                        premiumTTS: false,
+                        advancedAnalytics: false,
+                        unlimitedRemix: false
+                    }
+                }
             }, { merge: true });
 
             setIsVisible(false);

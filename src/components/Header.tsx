@@ -6,6 +6,7 @@ import { useState } from "react";
 import Image from "next/image";
 
 import StreakDisplay from "./StreakDisplay";
+import DailyCreditCounter from "@/components/subscription/DailyCreditCounter";
 
 export default function Header() {
   const { user, logout } = useAuth();
@@ -29,6 +30,7 @@ export default function Header() {
         {user ? (
             <>
                 {/* Streak Icon */}
+                <DailyCreditCounter />
                 <StreakDisplay />
 
                 <div className="relative">

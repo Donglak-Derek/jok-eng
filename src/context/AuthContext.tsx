@@ -12,14 +12,18 @@ import { auth } from "@/lib/firebase";
 
 interface AuthContextType {
   user: User | null;
+  userProfile: any | null; // Typed as any to avoid circular deps for now
   loading: boolean;
+  refreshProfile: () => Promise<void>;
   signInWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
+  userProfile: null,
   loading: true,
+  refreshProfile: async () => {},
   signInWithGoogle: async () => {},
   logout: async () => {},
 });
@@ -28,18 +32,47 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const [userProfile, setUserProfile] = useState<any | null>(null);
+
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log("Auth state changed - User:", user);
-        console.log("Auth state changed - Photo URL:", user.photoURL);
-      }
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
+      if (user) {
+         try {
+            // Fetch Profile
+            const { doc, getDoc } = await import("firebase/firestore");
+            const { db } = await import("@/lib/firebase");
+            const ref = doc(db, "users", user.uid);
+            const snap = await getDoc(ref);
+            if (snap.exists()) {
+                setUserProfile(snap.data());
+            }
+         } catch (e) {
+            console.error("Error fetching profile", e);
+         }
+      } else {
+        setUserProfile(null);
+      }
       setLoading(false);
     });
 
     return () => unsubscribe();
   }, []);
+
+  const refreshProfile = async () => {
+    if (!user) return;
+    try {
+        const { doc, getDoc } = await import("firebase/firestore");
+        const { db } = await import("@/lib/firebase");
+        const ref = doc(db, "users", user.uid);
+        const snap = await getDoc(ref);
+        if (snap.exists()) {
+            setUserProfile(snap.data());
+        }
+    } catch (e) {
+        console.error("Refreh profile failed", e);
+    }
+  };
 
   const signInWithGoogle = async () => {
     try {
@@ -47,9 +80,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         provider.addScope('https://www.googleapis.com/auth/userinfo.profile');
         provider.addScope('https://www.googleapis.com/auth/userinfo.email');
 
-        const result = await signInWithPopup(auth, provider);
-        console.log("User signed in:", result.user);
-        console.log("Photo URL:", result.user.photoURL);
+        await signInWithPopup(auth, provider);
+        // State will update in useEffect
     } catch (error) {
         console.error("Error signing in with Google", error);
         throw error;
@@ -59,6 +91,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = async () => {
     try {
         await signOut(auth);
+        setUserProfile(null);
     } catch (error) {
         console.error("Error signing out", error);
         throw error;
@@ -66,7 +99,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, signInWithGoogle, logout }}>
+    <AuthContext.Provider value={{ user, userProfile, loading, refreshProfile, signInWithGoogle, logout }}>
       {children}
     </AuthContext.Provider>
   );
