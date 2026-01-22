@@ -4,6 +4,10 @@ import { motion } from "framer-motion";
 import type { Script } from "@/types";
 import ScenarioCard from "@/components/ScenarioCard";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useAuth } from "@/context/AuthContext";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 type Props = {
   scripts: Script[];
@@ -14,10 +18,49 @@ type Props = {
   // onLike and likedSet removed from props as they are handled internally
 };
 
-
-
 export default function ScenarioList({ scripts, onDelete, onTogglePublic, onRemix }: Props) {
   const router = useRouter();
+  const { user } = useAuth();
+  const [localScripts, setLocalScripts] = useState<Script[]>(scripts);
+
+  // Smart Sort: Prioritize least practiced scenarios
+  useEffect(() => {
+    if (!user) {
+        setLocalScripts(scripts);
+        return;
+    }
+
+    const fetchProgressAndSort = async () => {
+        try {
+            // Fetch user's progress for ALL scenarios (optimized: one collection fetch)
+            const progressRef = collection(db, "users", user.uid, "progress");
+            const snapshot = await getDocs(progressRef);
+            
+            const progressMap: Record<string, number> = {};
+            snapshot.docs.forEach(doc => {
+                progressMap[doc.id] = doc.data().repeats || 0;
+            });
+
+            // Sort logic: 
+            // 1. Least practiced first (0 repeats -> 1 repeat -> ...)
+            // 2. Stable sort otherwise (preserve original order or ID based)
+            const sorted = [...scripts].sort((a, b) => {
+                const repeatsA = progressMap[a.id] || 0;
+                const repeatsB = progressMap[b.id] || 0;
+                return repeatsA - repeatsB;
+            });
+
+            setLocalScripts(sorted);
+        } catch (e) {
+            console.error("Smart sort failed", e);
+            // Fallback to default order
+            setLocalScripts(scripts);
+        }
+    };
+
+    fetchProgressAndSort();
+  }, [user, scripts]);
+
 
   const handleRemix = (script: Script) => {
       if (onRemix) {
@@ -30,11 +73,11 @@ export default function ScenarioList({ scripts, onDelete, onTogglePublic, onRemi
   };
 
   // Check if we have sections
-  const hasSections = scripts.some(s => s.section);
+  const hasSections = localScripts.some(s => s.section);
 
   if (hasSections) {
     // Dynamically derive sections from scripts
-    const dynamicSections = Array.from(new Set(scripts.map(s => s.section || "Other Scenarios"))).filter(Boolean);
+    const dynamicSections = Array.from(new Set(localScripts.map(s => s.section || "Other Scenarios"))).filter(Boolean);
     
     // Define explicit order if known, else append others
     const explicitOrder = [
@@ -48,7 +91,7 @@ export default function ScenarioList({ scripts, onDelete, onTogglePublic, onRemi
     ];
 
     // If there are scripts without a section, add "Other Scenarios" at the end
-    const hasUnsectioned = scripts.some(s => !s.section);
+    const hasUnsectioned = localScripts.some(s => !s.section);
     if (hasUnsectioned && !sectionOrder.includes("Other Scenarios")) {
         sectionOrder.push("Other Scenarios");
     }
@@ -85,8 +128,8 @@ export default function ScenarioList({ scripts, onDelete, onTogglePublic, onRemi
       <div className="flex flex-col gap-12 mt-6">
         {sectionOrder.map(sectionKey => {
           const sectionScripts = sectionKey === "Other Scenarios" 
-             ? scripts.filter(s => !s.section)
-             : scripts.filter(s => s.section === sectionKey);
+             ? localScripts.filter(s => !s.section)
+             : localScripts.filter(s => s.section === sectionKey);
           
           if (sectionScripts.length === 0) return null;
 
@@ -126,7 +169,7 @@ export default function ScenarioList({ scripts, onDelete, onTogglePublic, onRemi
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 md:gap-6 mt-4 md:mt-6">
-      {scripts.map((script, index) => (
+      {localScripts.map((script, index) => (
         <motion.div
            key={script.id}
            initial={{ opacity: 0, y: 20 }}

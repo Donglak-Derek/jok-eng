@@ -8,6 +8,9 @@ import { Play, Trophy, Star } from "lucide-react";
 import type { Script } from "@/types";
 import { Button } from "@/components/Button";
 import { useDailyProgress } from "@/hooks/useDailyProgress";
+import { useAuth } from "@/context/AuthContext";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 type CategoryHeroProps = {
   categoryName: string;
@@ -60,16 +63,54 @@ export default function CategoryHero({
   const theme = THEME_MAP[colorName] || THEME_MAP.blue;
   const scriptIds = useMemo(() => scripts.map(s => s.id), [scripts]);
   const { completedIds } = useDailyProgress(scriptIds);
+  const { user } = useAuth();
   const [mounted, setMounted] = useState(false);
+  const [progressMap, setProgressMap] = useState<Record<string, number>>({});
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Determine "Up Next"
+  // Fetch Global Progress for Smart Sort
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchProgress = async () => {
+        try {
+            const progressRef = collection(db, "users", user.uid, "progress");
+            const snapshot = await getDocs(progressRef);
+            
+            const map: Record<string, number> = {};
+            snapshot.docs.forEach(doc => {
+                map[doc.id] = doc.data().repeats || 0;
+            });
+            setProgressMap(map);
+        } catch (e) {
+            console.error("Hero smart sort failed", e);
+        }
+    };
+    fetchProgress();
+  }, [user]);
+
+  // Determine "Up Next" - Logic:
+  // 1. Filter out scenarios completed TODAY (completedIds)
+  // 2. Sort remaining by GLOBAL repeats (Ascending)
+  // 3. Pick the top one
   const nextUpScript = useMemo(() => {
-    return scripts.find(s => !completedIds.has(s.id)) || scripts[0];
-  }, [scripts, completedIds]);
+    // Candidates: Not completed today
+    const candidates = scripts.filter(s => !completedIds.has(s.id));
+    
+    // If all completed today, maybe show the one with least TOTAL repeats? 
+    // Or just null (Card hidden). Logic below hides card if isAllComplete.
+    // If not all complete, sorting candidates:
+    if (candidates.length === 0) return null;
+
+    return candidates.sort((a, b) => {
+        const repeatsA = progressMap[a.id] || 0;
+        const repeatsB = progressMap[b.id] || 0;
+        return repeatsA - repeatsB;
+    })[0];
+  }, [scripts, completedIds, progressMap]);
 
   const progressPercentage = Math.round((completedIds.size / scripts.length) * 100) || 0;
   const isAllComplete = completedIds.size === scripts.length && scripts.length > 0;

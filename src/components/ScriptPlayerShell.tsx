@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, RotateCcw, FileText, PlayCircle, PauseCircle, Eye, EyeOff, ArrowLeft } from "lucide-react";
+import { ChevronLeft, ChevronRight, RotateCcw, FileText, PlayCircle, PauseCircle, Eye, EyeOff, ArrowLeft, Volume2, VolumeX } from "lucide-react";
 import { Button } from "@/components/Button";
 
 type Props = {
@@ -75,7 +75,7 @@ export default function ScriptPlayerShell({
                  {/* GLOBAL CONTROLS (Hoisted from Cards) */}
                  <div className="flex items-center gap-2">
                     
-                    {/* 1. Auto-Play Toggle */}
+                    {/* 1. Auto-Play (Sound) Toggle */}
                     {onToggleAutoPlay && (
                         <button
                           onClick={onToggleAutoPlay}
@@ -86,10 +86,10 @@ export default function ScriptPlayerShell({
                                   : 'bg-secondary text-muted-foreground hover:bg-secondary/80'
                               }
                           `}
-                          title="Toggle Auto-Play"
+                          title="Toggle Auto-Play Sound"
                         >
-                           {isAutoPlayEnabled ? <PauseCircle className="w-4 h-4" /> : <PlayCircle className="w-4 h-4" />}
-                           <span className="hidden sm:inline">Auto-Play</span>
+                           {isAutoPlayEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+                           <span className="hidden sm:inline">Sound</span>
                         </button>
                     )}
 
