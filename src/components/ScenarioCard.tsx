@@ -87,7 +87,8 @@ export default function ScenarioCard({
                             {/* Context Badges (Vibe/Job) */}
                             {(isUserScript && (
                                 (script as UserScript).authorOccupation || 
-                                (script as UserScript).authorAgeGroup
+                                (script as UserScript).authorAgeGroup ||
+                                (script as UserScript).authorCountry
                             )) && (
                                 <div className="flex flex-wrap gap-1.5 mt-3">
                                     {(script as UserScript).authorOccupation && (
@@ -97,7 +98,7 @@ export default function ScenarioCard({
                                     )}
                                      {(script as UserScript).authorAgeGroup && (
                                         <span className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-medium bg-amber-50 text-amber-700 border border-amber-100">
-                                            🎂 {(script as UserScript).authorAgeGroup}
+                                            ⚡ {(script as UserScript).authorAgeGroup}
                                         </span>
                                     )}
                                      {(script as UserScript).authorCountry && (
@@ -162,7 +163,7 @@ export default function ScenarioCard({
                                         >
                                             <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300 pointer-events-none" />
                                             <Sparkles className="w-3.5 h-3.5 fill-white/20 animate-pulse" />
-                                            <span className="text-xs font-bold tracking-wide uppercase">Customize</span>
+                                            <span className="text-xs font-bold tracking-wide uppercase">Remix</span>
                                         </button>
                                      )}
                                      {onSmartRemix && (

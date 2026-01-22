@@ -8,7 +8,8 @@ import DesktopNavigation from "@/components/DesktopNavigation";
 import CommunityScenariosSection from "@/components/CommunityScenariosSection";
 import FloatingCreateButton from "@/components/FloatingCreateButton";
 import MyScenariosSection from "@/components/MyScenariosSection";
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
 import DailyChallengeCard from "@/components/DailyChallengeCard";
@@ -20,9 +21,18 @@ import RemixShowcase from "@/components/RemixShowcase";
 
 type Tab = "home" | "my_scenarios";
 
-export default function Home() {
+function HomeContent() {
   const { user, loading } = useAuth();
-  const [activeTab, setActiveTab] = useState<Tab>("home");
+  const searchParams = useSearchParams();
+  const initialTab = (searchParams.get("tab") as Tab) || "home";
+  const [activeTab, setActiveTab] = useState<Tab>(initialTab);
+
+  useEffect(() => {
+    const tab = searchParams.get("tab") as Tab;
+    if (tab === "home" || tab === "my_scenarios") {
+        setActiveTab(tab);
+    }
+  }, [searchParams]);
 
   if (loading) return null;
 
@@ -161,6 +171,14 @@ export default function Home() {
       )}
     </div>
   );
+}
+
+export default function Home() {
+    return (
+        <Suspense fallback={null}>
+            <HomeContent />
+        </Suspense>
+    );
 }
 
 

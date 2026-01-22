@@ -97,14 +97,20 @@ export async function POST(request: NextRequest) {
         }
     );
     const response = await result.response;
-    let text = response.text();
+    const text = response.text();
 
     // Clean up markdown if present
-    text = text.replace(/```json/g, "").replace(/```/g, "").trim();
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+        throw new Error("No JSON found in response");
+    }
     
-    console.log("AI Raw Response:", text); // Debug log
+    // Use the extracted JSON string
+    const jsonString = jsonMatch[0];
+    
+    console.log("AI Raw Response (Cleaned):", jsonString); 
 
-    const data = JSON.parse(text);
+    const data = JSON.parse(jsonString);
 
     const script: Script = {
         id: uuidv4(),

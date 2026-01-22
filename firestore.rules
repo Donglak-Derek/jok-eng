@@ -5,8 +5,15 @@ service cloud.firestore {
     // 1. User Root Profile (For Stats like totalScenariosCreated)
     match /users/{userId} {
       allow read: if request.auth != null; 
-      // SECURE: Only the specific Admin UID can write to 'jok-eng-official'
-      allow write: if request.auth != null && (request.auth.uid == userId || (userId == "jok-eng-official" && request.auth.uid == "Hx4sxBjGaLST6c3MRWtrKn60c702"));
+      // SECURE: Allow Owner (or Admin) to create/delete
+      allow create, delete: if request.auth != null && (request.auth.uid == userId || (userId == "jok-eng-official" && request.auth.uid == "Hx4sxBjGaLST6c3MRWtrKn60c702"));
+      
+      // Allow Update by Owner OR Remix Stats by others
+      allow update: if request.auth != null && (
+          request.auth.uid == userId || 
+          (userId == "jok-eng-official" && request.auth.uid == "Hx4sxBjGaLST6c3MRWtrKn60c702") ||
+          (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['totalRemixesInspired']))
+      );
 
       // 1.1 User Progress (Private to user)
       match /progress/{progressId} {

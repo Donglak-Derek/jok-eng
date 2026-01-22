@@ -188,18 +188,37 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
   const [remixAuthorId, setRemixAuthorId] = useState<string | null>(null);
 
   // REMIX & ADAPT LOGIC
+  // REMIX & ADAPT LOGIC
   useEffect(() => {
       const mode = searchParams.get('mode');
-      const adaptTo = searchParams.get('adaptTo'); // e.g. "Chef" OR "20s in London"
-      const adaptType = searchParams.get('adaptType'); // "job" or "vibe"
+      const adaptTo = searchParams.get('adaptTo'); 
+      const adaptType = searchParams.get('adaptType');
       
       if (mode === 'remix') {
           const storedScript = localStorage.getItem('remixSource');
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          let script: any = null;
+
+          // 1. Try LocalStorage
           if (storedScript) {
-              const script = JSON.parse(storedScript) as Script | UserScript;
+             try {
+                script = JSON.parse(storedScript);
+             } catch (e) { console.error("Parse error", e); }
+          }
+          
+          // 2. Fallback: Query Params (for legacy or direct links)
+          if (!script) {
+             const rTitle = searchParams.get('remixTitle');
+             const rContext = searchParams.get('remixContext');
+             if (rTitle) {
+                 script = { title: rTitle, context: rContext || "" };
+             }
+          }
+
+          if (script) {
               // Capture source lineage
-              if ('id' in script) setRemixSourceId(script.id);
-              if ('userId' in script) setRemixAuthorId((script as UserScript).userId);
+              if (script.id) setRemixSourceId(script.id);
+              if (script.userId) setRemixAuthorId(script.userId);
 
               let newInputs = {
                   context: "",
@@ -208,14 +227,16 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
                   plot: ""
               };
 
-              if ('originalPrompt' in script && script.originalPrompt) {
-                  newInputs = { ...(script as UserScript).originalPrompt };
+              if (script.originalPrompt) {
+                  // Perfect Case: We have the original recipe
+                  newInputs = { ...script.originalPrompt };
               } else {
+                  // Fallback Case: Reverse engineer from metadata
                   newInputs = {
-                      context: script.context || script.title,
+                      context: script.context || script.cleanedEnglish || script.title,
                       myRole: "Me",
                       otherRole: "Them",
-                      plot: `Re-enact the scenario "${script.title}" but adapted to my style.`
+                      plot: `Re-enact the scenario "${script.title}". Capture the same vibe but make it fresh.`
                   };
               }
 
@@ -224,22 +245,17 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
                    newInputs.context = `(Adapting: ${script.title})`;
                    
                    if (adaptType === 'job') {
-                       // PROFESSIONAL: Change the SETTING and JARGON
                        newInputs.myRole = adaptTo; 
                        newInputs.otherRole = "Colleague / Client"; 
                        newInputs.plot = `[ORIGINAL PLOT]: ${newInputs.plot}\n\n[INSTRUCTION]: REWRITE this exact scenario to take place in a ${adaptTo} workplace context. Keep the same conflict/lesson, but change the jargon and setting to match this profession.`;
                    } 
                    else if (adaptType === 'vibe') {
-                       // SOCIAL: Change the IDIOMS and CULTURE (Keep roles similar)
-                       // adaptTo string is now just "20s" or "Teens"
-                       newInputs.plot = `[ORIGINAL PLOT]: ${newInputs.plot}\n\n[INSTRUCTION]: REWRITE this scenario for a person who is ${adaptTo}. Keep the exact same situation and meaning, but change the SLANG, IDIOMS, and CULTURAL REFERENCES to match this specific age group. Do NOT change the topic, just the 'voice'.`;
+                       newInputs.plot = `[ORIGINAL PLOT]: ${newInputs.plot}\n\n[INSTRUCTION]: REWRITE this scenario for a person who is ${adaptTo}. Keep the exact same situation and meaning, but change the SLANG, IDIOMS, and CULTURAL REFERENCES to match this specific age group.`;
                    }
               }
               // ---------------------------------
 
               setInputs(newInputs);
-              // Do not remove immediately to avoid React Strict Mode double-fire clearing it before use
-              // localStorage.removeItem('remixSource'); 
           }
       }
   }, [searchParams]);
@@ -268,6 +284,7 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
              authorPhotoURL: currentUser.photoURL || undefined,
              authorOccupation: profile?.occupation, // Save occupation
              authorAgeGroup: profile?.ageGroup, // Save age group
+             authorCountry: profile?.motherLanguage, // Save Origin
              originalPrompt: originalInputs,
              isPublic: true, // Default to public as per "Community" goal
              remixCount: 0,
@@ -305,7 +322,7 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
           console.error("Auto-save failed", e);
           return null;
       }
-  }, [remixSourceId, remixAuthorId]);
+  }, []);
 
   // Wrap in useCallback to satisfy linter
   const handleGenerate = useCallback(async () => {
@@ -356,7 +373,7 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
         alert(`Error: ${err.message || "Unknown error"}`);
         setStep("input");
     }
-  }, [inputs, tone, format, user, userProfile, router, autoSaveScript]);
+  }, [inputs, tone, format, user, userProfile, router, autoSaveScript, remixSourceId, remixAuthorId]);
 
 
 
@@ -420,6 +437,7 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
              authorPhotoURL: user.photoURL || undefined,
              authorOccupation: userProfile?.occupation,
              authorAgeGroup: userProfile?.ageGroup,
+             authorCountry: userProfile?.motherLanguage, // Save Origin
              originalPrompt: inputs,
              isPublic: true,
              remixCount: 0,
@@ -456,7 +474,7 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
             console.error("Failed to update user stats:", statErr);
          }
 
-         router.push("/");
+         router.push("/?tab=my_scenarios");
          
      } catch (error) {
          console.error("Error saving scenario:", error);

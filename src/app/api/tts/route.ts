@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Communicate } from "edge-tts-universal";
+
 import * as googleTTS from "google-tts-api";
 
 const GOOGLE_API_KEY = process.env.GOOGLE_TTS_API_KEY;

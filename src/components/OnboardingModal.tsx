@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { UserProfile, GENERATION_GROUPS, JOB_CATEGORIES, CULTURE_OPTIONS } from "@/types";
 import { motion, AnimatePresence } from "framer-motion";
@@ -102,7 +102,7 @@ export default function OnboardingModal() {
                         <div className="text-4xl mb-3">👋</div>
                         <h2 className="text-3xl font-black mb-2">Welcome to Jok-eng!</h2>
                         <p className="text-muted-foreground">
-                            Let's customize the AI to match your vibe.
+                            Let&apos;s customize the AI to match your vibe.
                         </p>
                     </div>
 
@@ -133,7 +133,7 @@ export default function OnboardingModal() {
                              </label>
                              <select 
                                 value={formData.ageGroup || ""} 
-                                onChange={e => setFormData({...formData, ageGroup: e.target.value as any})}
+                                onChange={e => setFormData({...formData, ageGroup: e.target.value as any}) /* eslint-disable-line @typescript-eslint/no-explicit-any */}
                                 className="w-full bg-secondary/50 rounded-xl px-4 py-4 font-bold text-lg focus:ring-2 ring-primary/20 outline-none appearance-none"
                             >
                                 <option value="">Select Generation...</option>

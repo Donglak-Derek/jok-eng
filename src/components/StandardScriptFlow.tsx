@@ -192,7 +192,12 @@ export default function StandardScriptFlow({ script }: Props) {
   };
 
   const handleBackToMenu = async () => {
-      router.push(`/category/${script.categorySlug}`);
+      // If it's a custom script (UserScript) or has no category (e.g. generated), go to Library
+      if ('userId' in script || !script.categorySlug) {
+          router.push('/?tab=my_scenarios');
+      } else {
+          router.push(`/category/${script.categorySlug}`);
+      }
   };
 
   // Keyboard Shortcuts (Same as before)

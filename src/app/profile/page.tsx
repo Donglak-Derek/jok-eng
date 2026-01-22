@@ -247,11 +247,22 @@ function EditProfileModal({ user, onClose, initialData }: { user: any, onClose: 
     const handleSave = async () => {
         setSaving(true);
         try {
+            // 1. Update Firestore Profile
             const userRef = doc(db, "users", user.uid);
             await updateDoc(userRef, {
                 ...formData,
-                displayName: formData.displayName // Ensure display name is synced
+                displayName: formData.displayName 
             });
+
+            // 2. Update Auth Profile (Critical for UI)
+            if (user && formData.displayName && formData.displayName !== user.displayName) {
+                // Dynamic import to avoid SSR issues if any, or just standard import
+                const { updateProfile } = await import("firebase/auth");
+                await updateProfile(user, {
+                    displayName: formData.displayName
+                });
+            }
+
             window.location.reload(); 
         } catch (e) {
             console.error("Failed to update profile", e);
@@ -309,7 +320,7 @@ function EditProfileModal({ user, onClose, initialData }: { user: any, onClose: 
                             <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Generation</label>
                             <select 
                                 value={formData.ageGroup || ""} 
-                                onChange={e => setFormData({...formData, ageGroup: e.target.value as any})}
+                                onChange={e => setFormData({...formData, ageGroup: e.target.value as any}) /* eslint-disable-line @typescript-eslint/no-explicit-any */}
                                 className="w-full bg-secondary/50 rounded-xl px-4 py-3 font-medium focus:ring-2 ring-primary/20 outline-none appearance-none"
                             >
                                 <option value="">Select...</option>

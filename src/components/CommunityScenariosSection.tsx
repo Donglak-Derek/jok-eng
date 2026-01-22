@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { collectionGroup, query, where, orderBy, limit, getDocs, getDoc, updateDoc, doc, increment } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { UserScript, UserProfile, Script } from "@/types";
@@ -41,11 +41,10 @@ export default function CommunityScenariosSection() {
     const script = allScenarios.find(s => s.id === scriptId);
     
     if (!script) return;
-    const params = new URLSearchParams();
-    params.set("remixTitle", script.title);
-    const contextToUse = script.context || script.cleanedEnglish || "";
-    params.set("remixContext", contextToUse);
-    router.push(`/create-scenario?${params.toString()}`);
+
+    // Use LocalStorage method for reliable pre-filling (matches CreateScenarioForm logic)
+    localStorage.setItem('remixSource', JSON.stringify(script));
+    router.push('/create-scenario?mode=remix');
   };
 
   const handleShare = async (id: string) => {
@@ -89,26 +88,7 @@ export default function CommunityScenariosSection() {
     fetchScenarios();
   }, [activeFilter]);
 
-  // Client-Side Filter & Sort & MIX
-  const getDisplayScenarios = () => {
-      // 1. Filter Custom Scenarios
-      const filteredCustom = scenarios.filter(s => filterScript(s, activeFilter));
-      
-      // 2. Filter Original Scenarios
-      const filteredOriginal = originalScripts.filter(s => filterScript({ ...s, authorName: "Jok-Eng Official" } as UserScript, activeFilter));
-
-      // 3. MIX THEM (Interleave: 1 Custom, 1 Original...)
-      const mixed: (UserScript | Script)[] = [];
-      const maxLength = Math.max(filteredCustom.length, filteredOriginal.length);
-      
-      for (let i = 0; i < maxLength; i++) {
-        if (i < filteredCustom.length) mixed.push(filteredCustom[i]);
-        if (i < filteredOriginal.length) mixed.push({ ...filteredOriginal[i], authorName: "Jok-Eng Team" });
-      }
-      
-      return mixed;
-  };
-
+  // Client-Side Filter Logic
   const filterScript = (s: UserScript, filter: string) => {
       if (filter === "Trending") return true;
       if (s.tone && s.tone.toLowerCase() === filter.toLowerCase()) return true;
@@ -127,8 +107,28 @@ export default function CommunityScenariosSection() {
       return true;
   };
 
-  const allFiltered = getDisplayScenarios();
-  const visibleScenarios = allFiltered.slice(0, visibleCount);
+  // Client-Side Sort & MIX
+  const displayScenarios = useMemo(() => {
+      // 1. Filter Custom Scenarios
+      const filteredCustom = scenarios.filter(s => filterScript(s, activeFilter));
+      
+      // 2. Filter Original Scenarios
+      const filteredOriginal = originalScripts.filter(s => filterScript({ ...s, authorName: "Jok-Eng Official" } as UserScript, activeFilter))
+          .map(s => ({ ...s, authorName: "Jok-Eng Team" } as UserScript));
+
+      // 3. Combine
+      const combined = [...filteredCustom, ...filteredOriginal];
+      
+      // 4. Shuffle (Deterministic based on ID to avoid jitter, or simple seeded)
+      // For now, we use a simple shuffle but since it's in useMemo it won't re-run unless dependencies change.
+      // activeFilter or scenarios change -> re-shuffle.
+      return combined.sort(() => Math.random() - 0.5); 
+  }, [scenarios, activeFilter]);
+
+
+
+
+  const visibleScenarios = displayScenarios.slice(0, visibleCount);
 
   const handleSmartRemix = async (scriptId: string, e: React.MouseEvent) => {
     e.preventDefault();
@@ -152,7 +152,7 @@ export default function CommunityScenariosSection() {
     if (adaptType === "generic") return;
 
     // Find in visible list which now has both
-    const script = allFiltered.find(s => s.id === scriptId);
+    const script = displayScenarios.find(s => s.id === scriptId);
     if (!script) return;
 
     localStorage.setItem('remixSource', JSON.stringify(script));
@@ -238,7 +238,7 @@ export default function CommunityScenariosSection() {
             </div>
             
             {/* Load More Button */}
-            {visibleCount < allFiltered.length && (
+            {visibleCount < displayScenarios.length && (
                 <div className="flex justify-center mt-12">
                     <button
                         onClick={() => setVisibleCount(prev => prev + 12)}

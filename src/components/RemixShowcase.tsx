@@ -2,9 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Button } from "@/components/Button";
-import Link from "next/link";
-import { ArrowRight, Wand2, RefreshCcw } from "lucide-react";
+
 
 const TABS = [
   { id: "career", label: "Career 💼", color: "from-blue-500 to-indigo-500" },
