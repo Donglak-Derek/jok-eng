@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import type { Script } from "@/types";
 import ScenarioCard from "@/components/ScenarioCard";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { collection, getDocs } from "firebase/firestore";
@@ -59,7 +59,32 @@ export default function ScenarioList({ scripts, onDelete, onTogglePublic, onRemi
     };
 
     fetchProgressAndSort();
+    fetchProgressAndSort();
   }, [user, scripts]);
+
+  // Handle "Just Created" Highlight
+  const searchParams = useSearchParams();
+  const newlyCreatedId = searchParams?.get('newlyCreated');
+
+  // Re-sort localScripts to put the newly created one FIRST
+  useEffect(() => {
+     if (newlyCreatedId && localScripts.length > 0) {
+         setLocalScripts(prev => {
+             const createdIndex = prev.findIndex(s => s.id === newlyCreatedId);
+             if (createdIndex > -1) {
+                 const newItem = prev[createdIndex];
+                 const others = prev.filter(s => s.id !== newlyCreatedId);
+                 return [newItem, ...others];
+             }
+             return prev;
+         });
+
+         // Optional: Clean up URL after a delay
+         setTimeout(() => {
+             router.replace('/?tab=my_scenarios', { scroll: false });
+         }, 5000);
+     }
+  }, [newlyCreatedId, router]); // Intentionally omitting localScripts to avoid loops, effectively runs once when ID appears
 
 
   const handleRemix = (script: Script) => {
@@ -182,6 +207,7 @@ export default function ScenarioList({ scripts, onDelete, onTogglePublic, onRemi
             onDelete={onDelete}
             onTogglePublic={onTogglePublic}
             onRemix={() => handleRemix(script)}
+            isNew={script.id === newlyCreatedId}
           />
         </motion.div>
       ))}

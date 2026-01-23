@@ -375,7 +375,8 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
         if (scriptId) {
             // Deduct Credit on successful save
             await incrementUsage();
-            router.push(`/script/${scriptId}`);
+            // 🟢 UX FIX: Redirect to list instead of player to allow processing time
+            router.push(`/?tab=my_scenarios&newlyCreated=${scriptId}`);
         } else {
             // Fallback if save fails (shouldn't happen often)
             setGeneratedScript(data.script);
@@ -488,7 +489,7 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
             console.error("Failed to update user stats:", statErr);
          }
 
-         router.push("/?tab=my_scenarios");
+         router.push(`/?tab=my_scenarios&newlyCreated=${newScriptRef.id}`);
          
      } catch (error) {
          console.error("Error saving scenario:", error);

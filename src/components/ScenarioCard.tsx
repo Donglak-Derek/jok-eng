@@ -17,6 +17,7 @@ type Props = {
   onRemix?: (id: string, e: React.MouseEvent) => void;
   onSmartRemix?: (id: string, e: React.MouseEvent) => void;
   onShare?: (id: string, e: React.MouseEvent) => void;
+  isNew?: boolean;
 };
 
 export default function ScenarioCard({ 
@@ -25,6 +26,7 @@ export default function ScenarioCard({
     onTogglePublic, 
     onRemix,
     onSmartRemix, 
+    isNew
 }: Props) {
 
   const isUserScript = 'userId' in script;
@@ -49,7 +51,13 @@ export default function ScenarioCard({
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.2 }}
-        className="group h-full flex flex-col bg-white rounded-xl border border-border/40 overflow-hidden transition-all duration-300 hover:border-border/80 hover:shadow-sm"
+        className={`
+            group h-full flex flex-col bg-white rounded-xl border overflow-hidden transition-all duration-300 hover:shadow-sm
+            ${isNew 
+                ? "border-primary/50 ring-2 ring-primary/20 ring-offset-2 shadow-md" 
+                : "border-border/40 hover:border-border/80"
+            }
+        `}
       >
         <Link href={href} className="flex-1 flex flex-col min-w-0">
                       {/* Cover Image */}
