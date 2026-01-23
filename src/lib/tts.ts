@@ -168,12 +168,71 @@ function playAudioFromUrl(url: string, onStart: () => void, onEnd: () => void, o
     audio.play();
 }
 
+// Global reference to prevent Safari GC bug
+let activeUtterance: SpeechSynthesisUtterance | null = null;
+
 function speakNative(text: string, onStart: () => void, onEnd: () => void) {
-    if (!window.speechSynthesis) return;
-    
+    if (!window.speechSynthesis) {
+        onEnd();
+        return;
+    }
+
+    // Cancel any ongoing speech
+    window.speechSynthesis.cancel();
+
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.onstart = onStart;
-    utterance.onend = onEnd;
-    utterance.lang = "en-US";
+    activeUtterance = utterance; // Pin to global to prevent GC
+
+    // Voice Selection Strategy
+    const voices = window.speechSynthesis.getVoices();
+    // 1. Prefer "Google US English" (Chrome/Android)
+    // 2. Prefer "Samantha" (high quality macOS)
+    // 3. Fallback to any "en-US"
+    const preferredVoice = voices.find(v => v.name === "Google US English") 
+        || voices.find(v => v.name === "Samantha")
+        || voices.find(v => v.lang === "en-US");
+
+    if (preferredVoice) {
+        utterance.voice = preferredVoice;
+    }
+    
+    utterance.rate = 0.9; // Slightly slower for clarity
+    utterance.pitch = 1;
+
+    // Safety Timeout: If browser hangs (common in Safari), force finish after expected duration + buffer
+    // rough estimate: 150 words/min = 2.5 words/sec. 
+    const wordCount = text.split(' ').length;
+    const estimatedDuration = (wordCount / 2.5) * 1000;
+    const safetyTimeout = setTimeout(() => {
+        if (activeUtterance === utterance) {
+             console.warn("TTS Timed out - forcing end");
+             onEnd();
+             activeUtterance = null;
+        }
+    }, estimatedDuration + 3000); // 3s buffer
+
+    utterance.onstart = () => {
+        onStart();
+    };
+
+    utterance.onend = () => {
+        clearTimeout(safetyTimeout);
+        if (activeUtterance === utterance) {
+            onEnd();
+            activeUtterance = null;
+        }
+    };
+
+    utterance.onerror = (e) => {
+        clearTimeout(safetyTimeout);
+        console.error("Native TTS Error", e);
+        // "interrupted" or "canceled" are fine, don't alert
+        if (e.error !== 'interrupted' && e.error !== 'canceled') {
+             // Try to finish anyway so ui doesn't hang
+             onEnd();
+        }
+        activeUtterance = null;
+    };
+
     window.speechSynthesis.speak(utterance);
 }
