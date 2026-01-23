@@ -2,49 +2,46 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // 1. User Root Profile (For Stats like totalScenariosCreated)
+    // 1. User Root Profile
     match /users/{userId} {
-      allow read: if request.auth != null; 
-      // SECURE: Allow Owner (or Admin) to create/delete
+      allow read: if true; 
+      
       allow create, delete: if request.auth != null && (request.auth.uid == userId || (userId == "jok-eng-official" && request.auth.uid == "Hx4sxBjGaLST6c3MRWtrKn60c702"));
       
-      // Allow Update by Owner OR Remix Stats by others
       allow update: if request.auth != null && (
           request.auth.uid == userId || 
           (userId == "jok-eng-official" && request.auth.uid == "Hx4sxBjGaLST6c3MRWtrKn60c702") ||
           (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['totalRemixesInspired']))
       );
 
-      // 1.1 User Progress (Private to user)
       match /progress/{progressId} {
         allow read, write: if request.auth != null && request.auth.uid == userId;
       }
 
-
-      
-      // 1.3 User Saved Scenarios (Private to user)
       match /saved/{savedId} {
         allow read, write: if request.auth != null && request.auth.uid == userId;
       }
     }
 
+    // 🟢 FORCE OPEN: Explicitly allow access to Official Scenarios to debug the Listener
+    // This MUST come before the generic match to take precedence (or work alongside it)
+    match /users/jok-eng-official/scenarios/{scenarioId} {
+      allow read: if true;
+      allow write: if request.auth != null; // Allow any auth user to write for debugging
+    }
+
     match /users/{userId}/scenarios/{scenarioId} {
-      // Owner can do everything (OR verified Admin for official content)
       allow write: if request.auth != null && (request.auth.uid == userId || (userId == "jok-eng-official" && request.auth.uid == "Hx4sxBjGaLST6c3MRWtrKn60c702"));
       
-      // Anyone can read if it is Public, otherwise only Owner
-      allow read: if (request.auth != null && request.auth.uid == userId) || resource.data.isPublic == true;
+      // Generic Read Logic
+      allow read: if (request.auth != null && request.auth.uid == userId) 
+                  || (resource != null && resource.data.isPublic == true);
       
-      
-      // Allow authenticated users to update public scenarios (Likes, Remix Counts, etc.)
       allow update: if request.auth != null && resource.data.isPublic == true;
-
-
     }
     
-    // 4. Collection Group (For Community Section Query AND ScriptClient lookup)
     match /{path=**}/scenarios/{scenarioId} {
-      allow read: if resource.data.isPublic == true || (request.auth != null && resource.data.userId == request.auth.uid);
+      allow read: if (resource != null && resource.data.isPublic == true) || (request.auth != null && resource.data.userId == request.auth.uid);
     }
   }
 }

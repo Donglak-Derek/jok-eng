@@ -203,7 +203,7 @@ export default function ClozeCard({
                     scale: isRevealed ? [1, 1.05, 1] : 1,
                     backgroundColor: isRevealed ? "#fef9c3" : "#f1f5f9",
                     borderColor: isRevealed ? "#fde047" : "#cbd5e1",
-                    color: isRevealed ? "#0f172a" : "transparent"
+                    color: isRevealed ? "#0f172a" : "rgba(15, 23, 42, 0)"
                 }}
               >
                 {content}

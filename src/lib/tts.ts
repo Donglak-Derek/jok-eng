@@ -35,45 +35,43 @@ export async function playScenarioAudio(
         onError: (err: string) => void;
     }
 ) {
-    const textToPlay = options.text || scenario.cleanedEnglish;
+    let textToPlay = options.text || scenario.cleanedEnglish;
     if (!textToPlay) {
         options.onError("No text to play.");
         return;
     }
+    
+    // Remove brackets [ ] used for cloze/keywords to prevent TTS pauses
+    textToPlay = textToPlay.replace(/[\[\]]/g, "");
 
     // Determine Cache Key & URL
     let cachedUrl = scenario.audioUrl;
     if (options.sentenceId && scenario.sentences) {
         const sentence = scenario.sentences.find(s => s.id === options.sentenceId);
-        if (sentence) cachedUrl = sentence.audioUrl;
+        if (sentence) {
+             cachedUrl = sentence.audioUrl;
+        }
     }
+
 
     // STRATEGY 1: CHECK CACHE (Profit)
     if (cachedUrl) {
-        console.log("🎧 Playing cached audio (Free!)");
         playAudioFromUrl(cachedUrl, options.onStart, options.onEnd, options.onError);
         return;
     }
 
     // STRATEGY 2: CHECK LIMITS
-    if (!dbUser) {
-         // Fallback to Native logic if not signed in? Or error?
-         // Let's assume generic error for now, or assume native.
-        options.onError("Please sign in to listen.");
-        return;
-    }
-    
-    // Free Tier = Native
-    const isPro = dbUser.subscription?.tier === 'pro' || (dbUser as any).role === 'admin';
+    // STRATEGY 2: CHECK LIMITS
+    // If not signed in, default to Free/Native
+    const isPro = dbUser?.subscription?.tier === 'pro' || (dbUser as any)?.role === 'admin';
     
     if (!isPro) {
-        console.log("🗣️ User is Free: Using Native TTS");
         speakNative(textToPlay, options.onStart, options.onEnd);
         return;
     }
 
     // Pro Tier: Generate & Cache
-    console.log("☁️ Premium User: Generating & Caching Audio...");
+    // Pro Tier: Generate & Cache
     options.onStart(); 
 
     try {
@@ -103,20 +101,52 @@ export async function playScenarioAudio(
         uploadAudioToStorage(cacheId, audioBlob).then(async (downloadUrl) => {
             console.log("💾 Audio Cached:", downloadUrl);
             
-            const ownerId = (scenario as any).userId;
-            const isAdmin = (dbUser as any).role === 'admin';
-            
-            // Only owner or admin can update Firestore
-            if (ownerId !== dbUser.uid && !isAdmin) return;
+            if (!dbUser) return; // Guests cannot update Firestore
 
-            const scriptRef = doc(db, `users/${dbUser.uid}/scenarios`, scenario.id); 
+            const ownerId = (scenario as any).userId;
+            // 🟢 FIX: Explicitly allow the known Admin UID
+            const isAdmin = (dbUser as any).role === 'admin' || dbUser.uid === "Hx4sxBjGaLST6c3MRWtrKn60c702";
             
+            // PATH STRATEGY:
+            // 1. User Scripts -> Write to Author's Profile
+            // 2. Standard Scripts (No userId) -> Write to "jok-eng-official" Profile (Admins Only)
+            
+            let targetUserId;
+            if (ownerId) {
+                if (ownerId !== dbUser.uid && !isAdmin) return;
+                targetUserId = ownerId;
+            } else {
+                 if (!isAdmin) return;
+                 targetUserId = "jok-eng-official"; // Official System Account
+            }
+
+            const scriptRef = doc(db, `users/${targetUserId}/scenarios`, scenario.id); 
+
             if (options.sentenceId && scenario.sentences) {
                  // Update specific sentence in array
                  const newSentences = scenario.sentences.map(s => 
                     s.id === options.sentenceId ? { ...s, audioUrl: downloadUrl } : s
                  );
-                 await updateDoc(scriptRef, { sentences: newSentences });
+                 
+                 // Standard/System Scenario: We might need to Create the doc first if it's the first time
+                 if (!ownerId) {
+                     await updateDoc(scriptRef, { sentences: newSentences }).catch(async (e) => {
+                        if (e.code === 'not-found') {
+                            const { setDoc } = await import("firebase/firestore");
+                            await setDoc(scriptRef, { 
+                                id: scenario.id,
+                                sentences: newSentences,
+                                isPublic: true,
+                                userId: targetUserId
+                            });
+                        } else {
+                            console.error("Cache update failed", e);
+                        }
+                    });
+                 } else {
+                     await updateDoc(scriptRef, { sentences: newSentences });
+                 }
+
             } else {
                  // Update main audio
                  await updateDoc(scriptRef, { audioUrl: downloadUrl });

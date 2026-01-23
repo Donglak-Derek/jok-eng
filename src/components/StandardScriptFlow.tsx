@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Confetti from "@/components/Confetti";
 import { Button } from "@/components/Button";
 import { useAuth } from "@/context/AuthContext";
-import { updateDoc } from "firebase/firestore";
+import { updateDoc, onSnapshot, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useDailyProgress } from "@/hooks/useDailyProgress";
 import { calculateNewStreak } from "@/lib/gamification";
@@ -28,12 +28,40 @@ type Props = {
 export default function StandardScriptFlow({ script }: Props) {
   const router = useRouter();
   const { user } = useAuth();
+  
+  // Real-time Script Sync (Fix for TTS Caching)
+  const [localScript, setLocalScript] = useState<Script>(script);
+
+  useEffect(() => {
+      // If it's a user script (or we can construct path), listen for changes
+      
+      let scriptRef;
+
+      if ('userId' in script) {
+          // User Script
+          scriptRef = doc(db, `users/${(script as UserScript).userId}/scenarios`, script.id);
+      } else {
+          // Standard Script -> Look at Official System Account
+          scriptRef = doc(db, `users/jok-eng-official/scenarios`, script.id);
+      }
+
+      const unsubscribe = onSnapshot(scriptRef, (docSnap: any) => {
+          if (docSnap.exists()) {
+              // Merge updates (like new audioUrls) into local state
+              setLocalScript(prev => ({ ...prev, ...docSnap.data() }));
+          }
+      });
+      return () => unsubscribe();
+  }, [script.id, user, script]);
+
+  // Use localScript instead of prop script for rendering
+  const activeScript = localScript || script;
+  const sentences = activeScript.sentences || [];
+
   // ... (auth/progress hooks unchanged)
   const { markComplete } = useDailyProgress();
   const { getRepeats } = useProgress(); 
   
-  // Script structure logic
-  const sentences = script.sentences || [];
   const sentencesCount = sentences.length;
   // ... (indices logic unchanged)
   const hasCulturalInsight = !!script.culturalInsights;
@@ -324,7 +352,8 @@ export default function StandardScriptFlow({ script }: Props) {
                 sentence={currentSentence} 
                 index={currentIndex}
                 heard={heardSet.has(currentIndex)}
-                script={script} // Pass script for caching
+                script={activeScript} // Pass activeScript for caching
+                // ClozeCard specific props
                 // ClozeCard specific props
                 mode={mode} 
                 isGlobalRevealed={isGlobalRevealed}
