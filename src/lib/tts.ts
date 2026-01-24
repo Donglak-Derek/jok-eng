@@ -136,6 +136,26 @@ export async function playScenarioAudio(
 
             const scriptRef = doc(db, `users/${targetUserId}/scenarios`, scenario.id); 
 
+            // HELPER: Safe Update or Create
+            const safeUpdate = async (data: any) => {
+                try {
+                    await updateDoc(scriptRef, data);
+                } catch (e: any) {
+                    if (e.code === 'not-found') {
+                        // Lazily create the document from the local scenario data
+                        const { setDoc } = await import("firebase/firestore");
+                        await setDoc(scriptRef, {
+                            ...scenario, // Hydrate from local state
+                            ...data,     // Apply new audio
+                            userId: targetUserId,
+                            updatedAt: Date.now()
+                        }, { merge: true });
+                    } else {
+                        throw e;
+                    }
+                }
+            };
+
             if (options.sentenceId) {
                  // Check if it's a Sentence or a DecoderItem
                  const isDecoder = scenario.decoderItems && scenario.decoderItems.some(d => d.id === options.sentenceId);
@@ -146,7 +166,7 @@ export async function playScenarioAudio(
                      const newItems = scenario.decoderItems.map(d => 
                         d.id === options.sentenceId ? { ...d, audioUrl: downloadUrl } : d
                      );
-                     await updateDoc(scriptRef, { decoderItems: newItems });
+                     await safeUpdate({ decoderItems: newItems });
 
                  } else if (isSegment && scenario.segments) {
                      // Update segment
@@ -154,7 +174,7 @@ export async function playScenarioAudio(
                      if (!isNaN(idx) && scenario.segments[idx]) {
                          const newSegments = [...scenario.segments];
                          newSegments[idx] = { ...newSegments[idx], audioUrl: downloadUrl };
-                         await updateDoc(scriptRef, { segments: newSegments }).catch(err => console.error(err));
+                         await safeUpdate({ segments: newSegments });
                      }
 
                  } else if (scenario.sentences) {
@@ -162,12 +182,12 @@ export async function playScenarioAudio(
                      const newSentences = scenario.sentences.map(s => 
                         s.id === options.sentenceId ? { ...s, audioUrl: downloadUrl } : s
                      );
-                     await updateDoc(scriptRef, { sentences: newSentences });
+                     await safeUpdate({ sentences: newSentences });
                  }
 
             } else {
                  // Update main audio
-                 await updateDoc(scriptRef, { audioUrl: downloadUrl });
+                 await safeUpdate({ audioUrl: downloadUrl });
             }
         });
 

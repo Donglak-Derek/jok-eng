@@ -16,6 +16,7 @@ interface AuthContextType {
   loading: boolean;
   refreshProfile: () => Promise<void>;
   signInWithGoogle: () => Promise<void>;
+  signInWithEmailOnly: (e: string, p: string) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -25,6 +26,7 @@ const AuthContext = createContext<AuthContextType>({
   loading: true,
   refreshProfile: async () => {},
   signInWithGoogle: async () => {},
+  signInWithEmailOnly: async () => {},
   logout: async () => {},
 });
 
@@ -88,6 +90,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const signInWithEmailOnly = async (e: string, p: string) => {
+    const { signInWithEmailAndPassword } = await import("firebase/auth");
+    try {
+        await signInWithEmailAndPassword(auth, e, p);
+    } catch (error) {
+        console.error("Error signing in with Email", error);
+        throw error;
+    }
+  };
+
   const logout = async () => {
     try {
         await signOut(auth);
@@ -99,7 +111,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, userProfile, loading, refreshProfile, signInWithGoogle, logout }}>
+    <AuthContext.Provider value={{ user, userProfile, loading, refreshProfile, signInWithGoogle, signInWithEmailOnly, logout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/Button";
 import InteractiveGridBackground from "@/components/Effects/InteractiveGrid";
 import { motion } from "framer-motion";
@@ -17,6 +18,19 @@ export default function LandingHero() {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="space-y-4"
         >
+            {/* Brand Mark */}
+            <div className="flex justify-center mb-6">
+                <div className="relative w-24 h-24 md:w-32 md:h-32 animate-in fade-in zoom-in duration-1000">
+                     <Image 
+                        src="/logo-v2.png" 
+                        alt="Jok-Eng Crown" 
+                        fill
+                        className="object-contain drop-shadow-2xl"
+                        priority
+                     />
+                </div>
+            </div>
+
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary/50 backdrop-blur-sm border border-border/50 text-sm font-medium text-muted-foreground mb-4">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
