@@ -64,6 +64,12 @@ export const theBillStandoff: Script = {
       options: ["Paying immediately", "Fake checking your pockets", "Hitting your wallet", "Stealing a wallet"],
       correctIndex: 1,
       explanation: "It's a performative gesture to show you are willing to pay, waiting to see if the other person offers."
+    },
+    {
+      question: "What does 'going Dutch' mean?",
+      options: ["Eating Dutch food", "Splitting the bill evenly", "Running away", "Dancing on the table"],
+      correctIndex: 1,
+      explanation: "'Going Dutch' is the idiomatic expression for each person paying their own share of the expense."
     }
   ]
 };

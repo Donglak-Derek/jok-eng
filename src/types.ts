@@ -66,6 +66,7 @@ export type Script = {
   culturalInsights?: {
     title: string;
     content: string;
+    vocabulary?: { word: string; definition: string; }[];
   };
   quizItems?: {
     id?: string;

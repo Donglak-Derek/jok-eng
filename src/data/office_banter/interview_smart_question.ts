@@ -36,6 +36,17 @@ export const interviewSmartQuestion: Script = {
       ],
       correctIndex: 2,
       explanation: "Acknowledging that 'perfect slides' aren't 'real life' shows maturity."
+    },
+    {
+      question: "What is the hidden goal of this banter?",
+      options: [
+        "To waste time.",
+        "To build trust so checking for bugs feels collaborative.",
+        "To get a promotion.",
+        "To confuse the PM."
+      ],
+      correctIndex: 1,
+      explanation: "Humor lowers defenses. By joking about bugs, you signal that you are on the same team, not hiding mistakes."
     }
   ],
 

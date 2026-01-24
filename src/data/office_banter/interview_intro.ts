@@ -38,7 +38,9 @@ export const interviewIntro: Script = {
       id: "intro-1a",
       en: "The Past (Your Background)", // Fallback title
       keywords: [
-        { word: "Foundation", definition: "Start with your title" }
+        { word: "Foundation", definition: "Start with your title" },
+        { word: "marketing manager", definition: "A leader of marketing strategy and team" },
+        { word: "digital growth", definition: "Increasing online presence and revenue" }
       ],
       scenario: "Step 1: The Past (Start Strong)",
       badResponse: {
@@ -54,7 +56,8 @@ export const interviewIntro: Script = {
       id: "intro-1b",
       en: "The Present (Your Achievement)",
       keywords: [
-        { word: "Impact", definition: "Prove it with numbers" }
+        { word: "Impact", definition: "Prove it with numbers" },
+        { word: "doubled our traffic", definition: "Increased visitor count by 2x" }
       ],
       scenario: "Step 2: The Present (Prove It)",
       badResponse: {
@@ -70,7 +73,8 @@ export const interviewIntro: Script = {
       id: "intro-1c",
       en: "The Future (The Pivot)",
       keywords: [
-        { word: "Pivot", definition: "Connect it to this job" }
+        { word: "Pivot", definition: "Connect it to this job" },
+        { word: "larger team", definition: "A bigger group of colleagues or clearer structure" }
       ],
       scenario: "Step 3: The Future (Connect It)",
       badResponse: {
@@ -87,7 +91,9 @@ export const interviewIntro: Script = {
       en: "Highlighting Achievements",
       keywords: [
         { word: "Impact", definition: "A marked effect or influence" },
-        { word: "Metric", definition: "A standard of measurement" }
+        { word: "Metric", definition: "A standard of measurement" },
+        { word: "client communication", definition: "Talking and managing relationships with customers" },
+        { word: "response times", definition: "How fast you reply to inquiries" }
       ],
       scenario: "Describing your current role",
       badResponse: {
@@ -104,7 +110,9 @@ export const interviewIntro: Script = {
       en: "The 'Why Us?' Transition",
       keywords: [
         { word: "Pivot", definition: "To change direction securely" },
-        { word: "Align", definition: "To give support to" }
+        { word: "Align", definition: "To give support to" },
+        { word: "commitment to innovation", definition: "Dedication to new ideas and improvement" },
+        { word: "alignment", definition: "A good match or fit" }
       ],
       scenario: "Ending your introduction",
       badResponse: {
@@ -121,7 +129,9 @@ export const interviewIntro: Script = {
       en: "Handling Gaps",
       keywords: [
         { word: "Sabbatical", definition: "A period of leave for rest/study" },
-        { word: "Upskill", definition: "To learn new skills" }
+        { word: "Upskill", definition: "To learn new skills" },
+        { word: "purposeful break", definition: "Intentional time off for a reason" },
+        { word: "refreshed my perspective", definition: "Gave me a new way of thinking" }
       ],
       scenario: "Explaining a gap year",
       badResponse: {

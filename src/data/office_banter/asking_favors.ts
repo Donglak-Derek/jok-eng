@@ -34,6 +34,17 @@ export const askingFavors: Script = {
       ],
       correctIndex: 1,
       explanation: "It focuses on *their* failure. Better to say 'I'm blocked on X' (focusing on the workflow) or 'When do you think X might be ready?' (focusing on the schedule)."
+    },
+    {
+      question: "What is a 'Heavy Lift'?",
+      options: [
+        "Moving furniture.",
+        "A favor that requires significant effort or time.",
+        "A really important meeting.",
+        "A promotion."
+      ],
+      correctIndex: 1,
+      explanation: "Acknowledging that a task is a 'heavy lift' shows you appreciate the magnitude of the favor."
     }
   ],
 
@@ -44,7 +55,8 @@ export const askingFavors: Script = {
       en: "The 'Temperature Check'",
       keywords: [
         { word: "Bandwidth", definition: "Mental capacity or time available" },
-        { word: "Heads-down", definition: "Concentrating hard on work" }
+        { word: "Heads-down", definition: "Concentrating hard on work" },
+        { word: "gentle interruption", definition: "Polite way to stop someone" }
       ],
       scenario: "Interrupting someone busy",
       badResponse: {
@@ -61,7 +73,8 @@ export const askingFavors: Script = {
       en: "The 'Blocked' Request",
       keywords: [
         { word: "Blocker", definition: "Something preventing progress" },
-        { word: "Urgency", definition: "Importance requiring swift action" }
+        { word: "Urgency", definition: "Importance requiring swift action" },
+        { word: "blocked", definition: "Stuck/unable to proceed" }
       ],
       scenario: "Chasing a delay",
       badResponse: {
@@ -78,7 +91,8 @@ export const askingFavors: Script = {
       en: "Asking for 'Brain Power'",
       keywords: [
         { word: "Perspective", definition: "A particular way of regarding something" },
-        { word: "Sounding board", definition: "A person to test ideas on" }
+        { word: "Sounding board", definition: "A person to test ideas on" },
+        { word: "pick your brain", definition: "Ask for your advice/thoughts" }
       ],
       scenario: "Asking for advice",
       badResponse: {
@@ -95,7 +109,9 @@ export const askingFavors: Script = {
       en: "The 'Big Ask'",
       keywords: [
         { word: "Capital", definition: "Social credit or goodwill" },
-        { word: "Reciprocity", definition: "Exchanging things for mutual benefit" }
+        { word: "Reciprocity", definition: "Exchanging things for mutual benefit" },
+        { word: "heavy lift", definition: "A difficult or large task" },
+        { word: "owe you one", definition: "I am in your debt" }
       ],
       scenario: "Asking for a huge favor",
       badResponse: {
@@ -112,7 +128,8 @@ export const askingFavors: Script = {
       en: "The Graceful 'No'",
       keywords: [
         { word: "Boundaries", definition: "Limits of responsibility" },
-        { word: "Gracious", definition: "Courteous and kind" }
+        { word: "Gracious", definition: "Courteous and kind" },
+        { word: "full plate", definition: "Very busy / lots of work" }
       ],
       scenario: "Accepting a Rejection",
       badResponse: {

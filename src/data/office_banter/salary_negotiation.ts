@@ -55,7 +55,8 @@ export const salaryNegotiation: Script = {
       en: "The 'Anchor'",
       keywords: [
         { word: "Market rate", definition: "Average pay for this role" },
-        { word: "Value", definition: "Why you are worth it" }
+        { word: "Value", definition: "Why you are worth it" },
+        { word: "$95k and $105k", definition: "A concrete salary range based on data" }
       ],
       scenario: "Setting the Stage",
       badResponse: {
@@ -72,7 +73,8 @@ export const salaryNegotiation: Script = {
       en: "The Counter",
       keywords: [
         { word: "Flexibility", definition: "Willingness to compromise" },
-        { word: "Total comp", definition: "Salary + Equity + Bonus + Benefits" }
+        { word: "Total comp", definition: "Salary + Equity + Bonus + Benefits" },
+        { word: "total compensation", definition: "The full package (Base + Bonus + Equity)" }
       ],
       scenario: "They offer less than you wanted",
       badResponse: {
@@ -89,7 +91,9 @@ export const salaryNegotiation: Script = {
       en: "The Raise Request",
       keywords: [
         { word: "Accomplishment", definition: "Successful achievement" },
-        { word: "Adjustment", definition: "A formal change in pay" }
+        { word: "Adjustment", definition: "A formal change in pay" },
+        { word: "20% increase", definition: "A significant growth in metric" },
+        { word: "salary adjustment", definition: "Formal term for a raise" }
       ],
       scenario: "Asking for a Raise",
       badResponse: {
@@ -106,7 +110,8 @@ export const salaryNegotiation: Script = {
       en: "The Silence Tactic",
       keywords: [
         { word: "Pause", definition: "A temporary stop" },
-        { word: "Compel", definition: "Force someone to speak" }
+        { word: "Compel", definition: "Force someone to speak" },
+        { word: "Silence", definition: "Quiet pause to create pressure" }
       ],
       scenario: "They make an offer. You want more.",
       badResponse: {

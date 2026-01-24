@@ -10,7 +10,12 @@ export const ikeaLeadership: Script = {
   // Engagement
   culturalInsights: {
     title: "Swedish Leadership Style",
-    content: "The IKEA leadership style reflects Swedish culture: flat hierarchy, consensus decision-making, and 'Jantelagen' (The Law of Jante), which discourages individual bragging. Leaders are expected to be humble coaches ('Servant Leadership') rather than authoritarian bosses."
+    content: "The IKEA leadership style reflects Swedish culture: flat hierarchy, consensus decision-making, and 'Jantelagen' (The Law of Jante), which discourages individual bragging. Leaders are expected to be humble coaches ('Servant Leadership') rather than authoritarian bosses.",
+    vocabulary: [
+      { word: "Flat Hierarchy", definition: "Organization with few levels of middle management" },
+      { word: "Consensus", definition: "General agreement among a group" },
+      { word: "Jantelagen", definition: "Cultural code: 'You are not better than anyone else'" }
+    ]
   },
   quizItems: [
     {
@@ -54,7 +59,9 @@ export const ikeaLeadership: Script = {
       en: "Value: Togetherness",
       keywords: [
         { word: "Guidance", definition: "Advice aimed at resolving a problem" },
-        { word: "Collaboration", definition: "Working together" }
+        { word: "Collaboration", definition: "Working together" },
+        { word: "together", definition: "As a unified group" },
+        { word: "collective intelligence", definition: "The combined brainpower of the team" }
       ],
       scenario: "During a crisis (The Power of 'We')",
       badResponse: {
@@ -71,7 +78,9 @@ export const ikeaLeadership: Script = {
       en: "Value: Lead by Example",
       keywords: [
         { word: "Integrity", definition: "Honesty and moral principles" },
-        { word: "Modeling", definition: "Showing others how to act" }
+        { word: "Modeling", definition: "Showing others how to act" },
+        { word: "rolled up my sleeves", definition: "Got ready to work hard personally" },
+        { word: "no task is too small", definition: "Humble attitude to do any work" }
       ],
       scenario: "The store floor is messy",
       badResponse: {
@@ -88,7 +97,9 @@ export const ikeaLeadership: Script = {
       en: "Value: Cost-consciousness",
       keywords: [
         { word: "Efficiency", definition: "Max productivity, min waste" },
-        { word: "Optimization", definition: "Making the best use of resources" }
+        { word: "Optimization", definition: "Making the best use of resources" },
+        { word: "smartly", definition: "Intelligently and efficiently" },
+        { word: "spending luxury money", definition: "Using budget on unnecessary expensive items" }
       ],
       scenario: "Planning an event on a low budget",
       badResponse: {
@@ -105,7 +116,9 @@ export const ikeaLeadership: Script = {
       en: "Value: Give and Take Responsibility",
       keywords: [
         { word: "Empowerment", definition: "Authority given to someone" },
-        { word: "Trust", definition: "Firm belief in reliability" }
+        { word: "Trust", definition: "Firm belief in reliability" },
+        { word: "ownership", definition: "Full responsibility for the outcome" },
+        { word: "trusted them", definition: "Had confidence in their ability" }
       ],
       scenario: "Developing a junior employee",
       badResponse: {
@@ -122,7 +135,9 @@ export const ikeaLeadership: Script = {
       en: "Value: Renew and Improve",
       keywords: [
         { word: "Innovation", definition: "A new method or idea" },
-        { word: "Stagnation", definition: "Lack of growth" }
+        { word: "Stagnation", definition: "Lack of growth" },
+        { word: "challenged the status quo", definition: "Questioned the current way of doing things" },
+        { word: "better", definition: "Improved or more effective" }
       ],
       scenario: "A process is 10 years old",
       badResponse: {
@@ -139,7 +154,9 @@ export const ikeaLeadership: Script = {
       en: "Value: Simplicity",
       keywords: [
         { word: "Bureaucracy", definition: "Overly complicated procedure" },
-        { word: "Directness", definition: "Being plain and straightforward" }
+        { word: "Directness", definition: "Being plain and straightforward" },
+        { word: "boiled it down", definition: "Simplified to the essential parts" },
+        { word: "straightforward", definition: "Direct and easy to understand" }
       ],
       scenario: "Communicating a new strategy",
       badResponse: {

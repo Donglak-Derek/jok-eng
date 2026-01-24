@@ -322,6 +322,7 @@ export default function StandardScriptFlow({ script }: Props) {
           <CulturalNoteCard 
              title={script.culturalInsights.title}
              content={script.culturalInsights.content}
+             vocabulary={script.culturalInsights.vocabulary}
              onNext={handleNext}
           />
       );

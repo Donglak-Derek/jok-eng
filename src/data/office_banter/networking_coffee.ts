@@ -54,7 +54,9 @@ export const networkingCoffee: Script = {
       en: "The 'Reach Out'",
       keywords: [
         { word: "Admire", definition: "Regard with respect" },
-        { word: "Insight", definition: "A deep understanding" }
+        { word: "Insight", definition: "A deep understanding" },
+        { word: "admired", definition: "Respected highly" },
+        { word: "insights", definition: "Deep understandings or advice" }
       ],
       scenario: "Asking a senior leader for a chat",
       badResponse: {
@@ -71,7 +73,9 @@ export const networkingCoffee: Script = {
       en: "The 'Ice Breaker'",
       keywords: [
         { word: "Topic", definition: "Subject of conversation" },
-        { word: "Commonality", definition: "Sharing features" }
+        { word: "Commonality", definition: "Sharing features" },
+        { word: "wrapped up", definition: "Finished or completed" },
+        { word: "finish line", definition: "The end of a project" }
       ],
       scenario: "Start of the call",
       badResponse: {
@@ -88,7 +92,8 @@ export const networkingCoffee: Script = {
       en: "The 'Ask' (Mentorship)",
       keywords: [
         { word: "Guidance", definition: "Advice aimed at resolving a problem" },
-        { word: "Trajectory", definition: "Path of your career" }
+        { word: "Trajectory", definition: "Path of your career" },
+        { word: "bounce ideas", definition: "Discuss thoughts to get feedback" }
       ],
       scenario: "You want them to mentor you",
       badResponse: {
@@ -105,7 +110,9 @@ export const networkingCoffee: Script = {
       en: "The 'Close'",
       keywords: [
         { word: "Value", definition: "Importance or usefulness" },
-        { word: "Reciprocate", definition: "Respond in kind" }
+        { word: "Reciprocate", definition: "Respond in kind" },
+        { word: "valuable", definition: "Of great use or worth" },
+        { word: "support", definition: "Help or assistance" }
       ],
       scenario: "Ending the chat",
       badResponse: {

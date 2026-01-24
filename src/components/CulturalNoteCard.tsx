@@ -6,10 +6,11 @@ import { Globe, ArrowRight } from "lucide-react";
 type Props = {
   title: string;
   content: string;
+  vocabulary?: { word: string; definition: string; }[];
   onNext: () => void;
 };
 
-export default function CulturalNoteCard({ title, content, onNext }: Props) {
+export default function CulturalNoteCard({ title, content, vocabulary, onNext }: Props) {
   return (
     <div 
       className="w-full max-w-md mx-auto flex flex-col justify-center px-4 py-4 min-h-[50vh] cursor-pointer"
@@ -48,9 +49,24 @@ export default function CulturalNoteCard({ title, content, onNext }: Props) {
         </div>
 
         <div className="p-6 flex-1 flex flex-col items-center overflow-y-auto">
-            <p className="text-base text-slate-600 leading-relaxed text-center font-medium">
+            <p className="text-base text-slate-600 leading-relaxed text-center font-medium mb-6">
                 {content}
             </p>
+
+            {vocabulary && vocabulary.length > 0 && (
+                <div className="w-full bg-indigo-50/50 rounded-xl p-4 border border-indigo-100">
+                    <h3 className="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-3 text-center">
+                        Key Vocabulary
+                    </h3>
+                    <ul className="space-y-2">
+                        {vocabulary.map((item, idx) => (
+                            <li key={idx} className="text-sm text-slate-700">
+                                <span className="font-bold text-indigo-900">{item.word}</span>: <span className="opacity-90">{item.definition}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
         </div>
 
         <div className="p-4 bg-slate-50 border-t border-slate-100 shrink-0">
