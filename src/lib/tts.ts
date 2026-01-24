@@ -34,6 +34,7 @@ export async function playScenarioAudio(
         onStart: () => void;
         onEnd: () => void;
         onError: (err: string) => void;
+        onAudioGenerated?: (url: string) => void;
     }
 ) {
     let textToPlay = options.text || scenario.cleanedEnglish;
@@ -115,24 +116,22 @@ export async function playScenarioAudio(
         
         uploadAudioToStorage(cacheId, audioBlob).then(async (downloadUrl) => {
             console.log("💾 Audio Cached:", downloadUrl);
+            options.onAudioGenerated?.(downloadUrl);
             
             if (!dbUser) return; // Guests cannot update Firestore
 
             const ownerId = (scenario as any).userId;
-            // 🟢 FIX: Explicitly allow the known Admin UID
-            const isAdmin = (dbUser as any).role === 'admin' || dbUser.uid === "Hx4sxBjGaLST6c3MRWtrKn60c702";
-            
-            // PATH STRATEGY:
-            // 1. User Scripts -> Write to Author's Profile
-            // 2. Standard Scripts (No userId) -> Write to "jok-eng-official" Profile (Admins Only)
+
+            // COMMUNITY CACHE STRATEGY:
+            // 1. If script has an owner (User-created), write to their profile.
+            // 2. If it's official, write to "jok-eng-official".
+            // 3. ANY Pro/Admin user can trigger this write.
             
             let targetUserId;
             if (ownerId) {
-                if (ownerId !== dbUser.uid && !isAdmin) return;
                 targetUserId = ownerId;
             } else {
-                 if (!isAdmin) return;
-                 targetUserId = "jok-eng-official"; // Official System Account
+                 targetUserId = "jok-eng-official";
             }
 
             const scriptRef = doc(db, `users/${targetUserId}/scenarios`, scenario.id); 
@@ -147,17 +146,7 @@ export async function playScenarioAudio(
                      const newItems = scenario.decoderItems.map(d => 
                         d.id === options.sentenceId ? { ...d, audioUrl: downloadUrl } : d
                      );
-                     
-                     if (!ownerId) {
-                         // Similar fallback creation logic if needed
-                         await updateDoc(scriptRef, { decoderItems: newItems }).catch(async (e) => {
-                             if (e.code === 'not-found') {
-                                // Create doc logic
-                             }
-                         });
-                     } else {
-                         await updateDoc(scriptRef, { decoderItems: newItems });
-                     }
+                     await updateDoc(scriptRef, { decoderItems: newItems });
 
                  } else if (isSegment && scenario.segments) {
                      // Update segment
@@ -165,7 +154,6 @@ export async function playScenarioAudio(
                      if (!isNaN(idx) && scenario.segments[idx]) {
                          const newSegments = [...scenario.segments];
                          newSegments[idx] = { ...newSegments[idx], audioUrl: downloadUrl };
-                         
                          await updateDoc(scriptRef, { segments: newSegments }).catch(err => console.error(err));
                      }
 
@@ -174,22 +162,7 @@ export async function playScenarioAudio(
                      const newSentences = scenario.sentences.map(s => 
                         s.id === options.sentenceId ? { ...s, audioUrl: downloadUrl } : s
                      );
-                     
-                     if (!ownerId) {
-                         await updateDoc(scriptRef, { sentences: newSentences }).catch(async (e) => {
-                            if (e.code === 'not-found') {
-                                const { setDoc } = await import("firebase/firestore");
-                                await setDoc(scriptRef, { 
-                                    id: scenario.id,
-                                    sentences: newSentences,
-                                    isPublic: true,
-                                    userId: targetUserId
-                                });
-                            }
-                        });
-                     } else {
-                         await updateDoc(scriptRef, { sentences: newSentences });
-                     }
+                     await updateDoc(scriptRef, { sentences: newSentences });
                  }
 
             } else {

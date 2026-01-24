@@ -23,6 +23,7 @@
     "p-retry": "^7.1.1",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
+    "react-hot-toast": "^2.6.0",
     "stripe": "^20.2.0",
     "utf-8-validate": "^6.0.5",
     "uuid": "^13.0.0"

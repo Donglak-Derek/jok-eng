@@ -17,14 +17,40 @@ import { ArrowRight, Volume2, Lightbulb } from "lucide-react";
 import StoryFullView from "./StoryFullView";
 import { playScenarioAudio } from "@/lib/tts";
 
+import { toast } from "react-hot-toast";
+import { onSnapshot } from "firebase/firestore";
+
 type Props = {
   script: Script;
 };
 
 export default function StoryFlow({ script }: Props) {
   const router = useRouter();
-  const segments = useMemo(() => script.segments || [], [script.segments]);
-  const hasQuiz = !!script.quizItems && script.quizItems.length > 0;
+  
+  // Real-time Script Sync (Community Cache)
+  const [localScript, setLocalScript] = useState<Script>(script);
+  
+  const segments = useMemo(() => localScript.segments || [], [localScript.segments]);
+  const hasQuiz = !!localScript.quizItems && localScript.quizItems.length > 0;
+  
+  // Sync Logic
+  useEffect(() => {
+       let scriptRef;
+       if ('userId' in script) {
+           scriptRef = doc(db, `users/${(script as UserScript).userId}/scenarios`, script.id);
+       } else {
+           scriptRef = doc(db, `users/jok-eng-official/scenarios`, script.id);
+       }
+ 
+       const unsubscribe = onSnapshot(scriptRef, (docSnap: any) => {
+           if (docSnap.exists()) {
+               setLocalScript(prev => ({ ...prev, ...docSnap.data() }));
+           }
+       });
+       return () => unsubscribe();
+   }, [script.id, script]);
+
+  
   const segmentsCount = segments.length;
   const quizIndex = hasQuiz ? segmentsCount : -1;
   const totalSteps = segmentsCount + (hasQuiz ? 1 : 0);
@@ -107,7 +133,7 @@ export default function StoryFlow({ script }: Props) {
     // Use the convention seg_{index} for caching
     const segmentId = `seg_${currentStep}`;
 
-    playScenarioAudio(userProfile, script, { // user here should be UserProfile? check hook
+    playScenarioAudio(userProfile, localScript, { 
         text: textToSpeak,
         sentenceId: segmentId,
         onStart: () => {
@@ -122,10 +148,28 @@ export default function StoryFlow({ script }: Props) {
             console.error(err);
             setSpeaking(false);
             setLoading(false);
+        },
+        onAudioGenerated: (url) => {
+            // Update local state instantly
+             setLocalScript(prev => {
+                 if (!prev.segments) return prev;
+                 const idx = parseInt(segmentId.split("_")[1]);
+                 const newSegments = [...prev.segments];
+                 if (newSegments[idx]) {
+                     newSegments[idx] = { ...newSegments[idx], audioUrl: url };
+                 }
+                 return { ...prev, segments: newSegments };
+             });
+             
+             // Gamification Toast
+             toast.success("💎 You just sponsored this audio for the community!", {
+                duration: 4000,
+                position: "bottom-center"
+            });
         }
     });
 
-  }, [segments, currentStep, speaking, loading, user, script]);
+  }, [segments, currentStep, speaking, loading, user, localScript, userProfile]);
   
   // Logic to get current segment safely
   const currentSegment = currentStep < segmentsCount ? segments[currentStep] : segments[segmentsCount - 1];
@@ -265,7 +309,10 @@ export default function StoryFlow({ script }: Props) {
         imageUrl={script.imageUrl}
         currentStep={currentStep}
         totalSteps={totalSteps}
-        hasFinished={isCompletion || !showControls} // Hide footer controls if completion or quiz
+        hasFinished={isCompletion || !showControls} 
+        
+        // Gamification
+        audioStatus={currentSegment?.audioUrl ? 'premium' : 'robot'}
         
         // Navigation
         onNext={handleNext}

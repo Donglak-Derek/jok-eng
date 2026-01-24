@@ -10,13 +10,14 @@ import ScriptPlayerShell from "@/components/ScriptPlayerShell";
 import DecoderFullView from "@/components/DecoderFullView";
 import QuizCard from "@/components/QuizCard";
 import { useAuth } from "@/context/AuthContext";
-import { updateDoc, doc, increment, serverTimestamp, setDoc } from "firebase/firestore";
+import { updateDoc, doc, increment, serverTimestamp, setDoc, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { playScenarioAudio } from "@/lib/tts";
 import { useDailyProgress } from "@/hooks/useDailyProgress";
 import { useProgress } from "@/context/ProgressContext";
 
 import { Volume2, AlertTriangle, ShieldCheck, PartyPopper } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 type Props = {
   script: Script;
@@ -28,13 +29,15 @@ function SignalCard({
   onHeard, 
   isAutoPlayEnabled,
   isGlobalRevealed,
-  script
+  script,
+  onAudioGenerated 
 }: { 
   item: DecoderItem, 
   onHeard: () => void,
   isAutoPlayEnabled: boolean,
   isGlobalRevealed: boolean,
-  script: Script
+  script: Script,
+  onAudioGenerated: (sentenceId: string, url: string) => void
 }) {
     const [isRevealed, setIsRevealed] = useState(false);
     const [speaking, setSpeaking] = useState(false);
@@ -102,6 +105,9 @@ function SignalCard({
     const handlePlay = useCallback(async () => {
         if (speaking) return;
         
+        // Mark as played so auto-play logic doesn't fire if this was manual
+        hasAutoPlayedRef.current = true;
+        
         onHeard();
         setSpeaking(true);
 
@@ -116,22 +122,23 @@ function SignalCard({
             onError: (err) => {
                 console.error(err);
                 setSpeaking(false);
-            }
+            },
+            onAudioGenerated: (url) => onAudioGenerated(item.id, url)
         });
-    }, [item, speaking, onHeard, userProfile, script]);
+    }, [item, speaking, onHeard, userProfile, script, onAudioGenerated]);
 
     // Internal Auto-Play Logic
     useEffect(() => {
-        if (isAutoPlayEnabled) {
+        if (isAutoPlayEnabled && !hasAutoPlayedRef.current) {
             const timer = setTimeout(() => {
-                if (!hasAutoPlayedRef.current) {
+                if (!hasAutoPlayedRef.current && !speaking) {
                     hasAutoPlayedRef.current = true;
                     handlePlay();
                 }
             }, 600); // Slight delay for animation
             return () => clearTimeout(timer);
         }
-    }, [isAutoPlayEnabled, item.id, handlePlay]); // Re-run if item changes
+    }, [isAutoPlayEnabled, item.id, handlePlay, speaking]); // Added speaking check
 
     // Cleanup logic handled by playScenarioAudio (it creates its own audio element), 
     // but if we want to stop it on unmount we can't easily access the internal audio object unless playScenarioAudio returns it.
@@ -250,7 +257,20 @@ function SignalCard({
 
 export default function SignalDecoder({ script }: Props) {
   const router = useRouter();
-  const items = useMemo(() => script.decoderItems || [], [script.decoderItems]);
+  
+  // Hooks
+  const { user } = useAuth();
+  const { markComplete } = useDailyProgress();
+  const { getRepeats } = useProgress();
+  const databaseRepeats = getRepeats(script.id); 
+
+  // Real-time Script Sync (Fix for TTS Caching)
+  const [localScript, setLocalScript] = useState<Script>(script);
+  
+  // Use localScript items if available
+  const items = useMemo(() => localScript.decoderItems || [], [localScript.decoderItems]);
+  
+  // Derived
   const hasQuiz = !!script.quizItems && script.quizItems.length > 0;
   const itemsCount = items.length;
   
@@ -263,11 +283,37 @@ export default function SignalDecoder({ script }: Props) {
   const [viewMode, setViewMode] = useState<"flow" | "full">("flow");
   const hasSavedRef = useState(false);
 
-  // Hooks
-  const { user } = useAuth();
-  const { markComplete } = useDailyProgress();
-  const { getRepeats } = useProgress();
-  const databaseRepeats = getRepeats(script.id); 
+  useEffect(() => {
+      let scriptRef;
+      if ('userId' in script) {
+          scriptRef = doc(db, `users/${(script as UserScript).userId}/scenarios`, script.id);
+      } else {
+          scriptRef = doc(db, `users/jok-eng-official/scenarios`, script.id);
+      }
+
+      const unsubscribe = onSnapshot(scriptRef, (docSnap: any) => {
+          if (docSnap.exists()) {
+              setLocalScript(prev => ({ ...prev, ...docSnap.data() }));
+          }
+      });
+      return () => unsubscribe();
+  }, [script.id, script]);
+
+  // Handler for local cache update (if user is Pro but not Admin/Owner)
+  const handleAudioGenerated = useCallback((sentenceId: string, url: string) => {
+      setLocalScript(prev => {
+          if (!prev.decoderItems) return prev;
+          const newItems = prev.decoderItems.map(item => 
+              item.id === sentenceId ? { ...item, audioUrl: url } : item
+          );
+          return { ...prev, decoderItems: newItems };
+      });
+      // Gamification: Reward the sponsor!
+      toast.success("💎 You just sponsored this audio for the community!", {
+          duration: 4000,
+          position: "bottom-center"
+      });
+  }, []); 
 
   const isOwner = user && 'userId' in script && (script as UserScript).userId === user.uid;
   const isCompletion = currentStep >= totalSteps;
@@ -418,11 +464,15 @@ export default function SignalDecoder({ script }: Props) {
                   onHeard={() => {}} 
                   isAutoPlayEnabled={isAutoPlayEnabled}
                   isGlobalRevealed={isGlobalRevealed}
-                  script={script}
+                  script={localScript}
+                  onAudioGenerated={handleAudioGenerated}
               />
           </motion.div>
       );
   }
+
+  const currentItem = items[currentStep];
+  const audioStatus = currentItem?.audioUrl ? 'premium' : 'robot';
 
   return (
     <ScriptPlayerShell
@@ -433,7 +483,9 @@ export default function SignalDecoder({ script }: Props) {
         totalSteps={totalSteps}
         hasFinished={isCompletion || currentStep === quizIndex}
 
-        // Controls
+        // Gamification
+        audioStatus={audioStatus}
+
         // Controls
         isAutoPlayEnabled={isAutoPlayEnabled}
         onToggleAutoPlay={toggleAutoPlay}

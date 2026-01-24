@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, RotateCcw, FileText, Eye, EyeOff, ArrowLeft, Volume2, VolumeX } from "lucide-react";
+import { ChevronLeft, ChevronRight, RotateCcw, FileText, Eye, EyeOff, ArrowLeft, Volume2, VolumeX, Share2 } from "lucide-react";
 import { Button } from "@/components/Button";
 
 type Props = {
@@ -14,6 +14,9 @@ type Props = {
   currentStep: number;
   totalSteps: number;
   hasFinished: boolean;
+
+  // Gamification Props
+  audioStatus?: 'premium' | 'robot';
 
   // Control Props
   isAutoPlayEnabled?: boolean;
@@ -50,7 +53,8 @@ export default function ScriptPlayerShell({
   onPrev,
   onRestart,
   onViewFull,
-  children
+  children,
+  ...props // Capture audioStatus etc
 }: Props) {
 
   return (
@@ -73,60 +77,94 @@ export default function ScriptPlayerShell({
                  </div>
 
                  {/* GLOBAL CONTROLS (Hoisted from Cards) */}
-                 <div className="flex items-center gap-2">
-                    
-                    {/* 1. Auto-Play (Sound) Toggle */}
-                    {onToggleAutoPlay && (
-                        <button
-                          onClick={onToggleAutoPlay}
-                          className={`
-                              p-2 rounded-full transition-colors flex items-center gap-2 text-xs font-bold px-3 py-1.5
-                              ${isAutoPlayEnabled 
-                                  ? 'bg-teal-50 text-teal-700 ring-1 ring-teal-200' 
-                                  : 'bg-secondary text-muted-foreground hover:bg-secondary/80'
-                              }
-                          `}
-                          title="Toggle Auto-Play Sound"
-                        >
-                           {isAutoPlayEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
-                           <span className="hidden sm:inline">Sound</span>
-                        </button>
-                    )}
-
-                    {/* 2. Study Mode / Visibility Toggle (Eye) */}
-                    {/* User requested to use Eye icon for this feature, replacing the overlapping Book/Brain icon. */}
-                    {onToggleMode && mode && (
-                        <button
-                            onClick={onToggleMode}
+                 <div className="flex items-center gap-1.5 md:gap-2">
+                     
+                     {/* 0. Audio Status Badge (Gamification) */}
+                     {(props.audioStatus === 'premium' || props.audioStatus === 'robot') && (
+                         <div 
                             className={`
-                                p-2 rounded-full transition-colors
-                                ${mode === 'standard' 
-                                    ? 'text-muted-foreground hover:bg-secondary hover:text-foreground'
-                                    : 'bg-indigo-50 text-indigo-700 ring-1 ring-indigo-200' 
+                                flex items-center gap-1.5 px-2 py-1.5 rounded-full text-xs font-bold border select-none
+                                ${props.audioStatus === 'premium' 
+                                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200' 
+                                    : 'bg-amber-50 text-amber-700 border-amber-200'
                                 }
                             `}
-                            title={mode === 'standard' ? "Switch to Study Mode (Hidden)" : "Switch to Review Mode (Visible)"}
-                        >
-                            {/* 
-                                Logic:
-                                - Standard (Visible) -> Show EyeOff (Click to Hide/Study)
-                                - Cloze (Hidden) -> Show Eye (Click to Reveal/Review)
-                            */}
-                            {mode === 'standard' ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                        </button>
-                    )}
-
-                    {/* 3. Full View Toggle */}
-                     {onViewFull && (
-                        <button 
-                          onClick={onViewFull}
-                          className="p-2 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-full transition-colors"
-                          title="View Full Content"
-                        >
-                            <FileText className="w-6 h-6" />
-                        </button>
+                            title={props.audioStatus === 'premium' ? "Community Sponsored Audio" : "Robot Voice (Needs Sponsor)"}
+                         >
+                             <span>{props.audioStatus === 'premium' ? "💎" : "🤖"}</span>
+                             <span className="hidden sm:inline">
+                                 {props.audioStatus === 'premium' ? "Premium" : "Robot"}
+                             </span>
+                         </div>
                      )}
-                 </div>
+
+                     {/* 1. Auto-Play (Sound) Toggle */}
+                     {onToggleAutoPlay && (
+                         <button
+                           onClick={onToggleAutoPlay}
+                           className={`
+                               p-2 rounded-full transition-colors flex items-center gap-2 text-xs font-bold px-3 py-1.5
+                               ${isAutoPlayEnabled 
+                                   ? 'bg-teal-50 text-teal-700 ring-1 ring-teal-200' 
+                                   : 'bg-secondary text-muted-foreground hover:bg-secondary/80'
+                               }
+                           `}
+                           title="Toggle Auto-Play Sound"
+                         >
+                            {isAutoPlayEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+                            <span className="hidden sm:inline">Sound</span>
+                         </button>
+                     )}
+
+                     {/* 2. Study Mode / Visibility Toggle (Eye) */}
+                     {onToggleMode && mode && (
+                         <button
+                             onClick={onToggleMode}
+                             className={`
+                                 p-2 rounded-full transition-colors
+                                 ${mode === 'standard' 
+                                     ? 'text-muted-foreground hover:bg-secondary hover:text-foreground'
+                                     : 'bg-indigo-50 text-indigo-700 ring-1 ring-indigo-200' 
+                                 }
+                             `}
+                             title={mode === 'standard' ? "Switch to Study Mode (Hidden)" : "Switch to Review Mode (Visible)"}
+                         >
+                             {mode === 'standard' ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                         </button>
+                     )}
+
+                     {/* 3. Full View Toggle */}
+                      {onViewFull && (
+                         <button 
+                           onClick={onViewFull}
+                           className="p-2 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-full transition-colors"
+                           title="View Full Content"
+                         >
+                             <FileText className="w-5 h-5" />
+                         </button>
+                      )}
+
+                      {/* 4. Share Button (Viral Loop) */}
+                      <button
+                          onClick={() => {
+                              const shareData = {
+                                  title: `Jok-Eng: ${title}`,
+                                  text: "Can a Pro member verify this script for me? 🥺",
+                                  url: window.location.href
+                              };
+                              if (navigator.share) {
+                                  navigator.share(shareData).catch(console.error);
+                              } else {
+                                  navigator.clipboard.writeText(window.location.href);
+                                  alert("Link copied! Share it with a Pro member.");
+                              }
+                          }}
+                          className="p-2 text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-full transition-colors"
+                          title="Share to get Sponsored!"
+                      >
+                          <Share2 className="w-5 h-5" />
+                      </button>
+                  </div>
             </div>
 
             {/* Optional Scenario Image (Desktop only) */}
