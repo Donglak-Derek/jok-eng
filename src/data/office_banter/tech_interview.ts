@@ -60,6 +60,7 @@ export const techInterview: Script = {
       id: "s3",
       en: "When planning, I say, 'Let's give the bug a [cool codename] so we don't fear it.'",
       keywords: [
+        { word: "cool codename", definition: "Hidden: fun name" },
         { word: "codename", definition: "secret name for a project" },
         { word: "fear", definition: "be anxiety-ridden" },
       ],
@@ -68,6 +69,8 @@ export const techInterview: Script = {
       id: "s4",
       en: "It sounds [playful], but we still estimate [honestly].",
       keywords: [
+        { word: "playful", definition: "Hidden: lighthearted" },
+        { word: "honestly", definition: "Hidden: truthful estimation" },
         { word: "estimate", definition: "calculate effort" },
         { word: "playful", definition: "fun and lighthearted" },
       ],
@@ -76,6 +79,7 @@ export const techInterview: Script = {
       id: "s5",
       en: "If a PM asks for more scope, I reply, 'Sure, do we unlock a [new team] when we beat this level?'",
       keywords: [
+        { word: "new team", definition: "Hidden: game reward metaphor" },
         { word: "scope", definition: "amount of work/features" },
         { word: "level", definition: "stage in a game" },
       ],
@@ -84,6 +88,7 @@ export const techInterview: Script = {
       id: "s6",
       en: "They laugh and [clarify priorities].",
       keywords: [
+        { word: "clarify priorities", definition: "Hidden: understand what matters" },
         { word: "clarify", definition: "make clear" },
         { word: "priorities", definition: "most important tasks" },
       ],
@@ -92,6 +97,7 @@ export const techInterview: Script = {
       id: "s7",
       en: "During retro, I say, 'Let's [roast bugs], not teammates.'",
       keywords: [
+        { word: "roast bugs", definition: "Hidden: criticize code, not people" },
         { word: "retro", definition: "retrospective meeting" },
         { word: "roast", definition: "criticize humorously" },
       ],
@@ -108,6 +114,8 @@ export const techInterview: Script = {
       id: "s9",
       en: "Small jokes make meetings feel like [humans talking], not [tickets shouting].",
       keywords: [
+        { word: "humans talking", definition: "Hidden: authentic conversation" },
+        { word: "tickets shouting", definition: "Hidden: robotic conflict" },
         { word: "ticket", definition: "task in Jira" },
         { word: "shouting", definition: "aggressive communication" },
       ],

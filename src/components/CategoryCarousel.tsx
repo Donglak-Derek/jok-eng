@@ -61,6 +61,7 @@ function CategoryCard({ c }: { c: Category }) {
                     src={c.image}
                     alt={c.name}
                     fill
+                    sizes="(max-width: 768px) 280px, 25vw"
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 

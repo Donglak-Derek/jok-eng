@@ -156,33 +156,7 @@ export default function ProfilePage() {
                 </div>
              </div>
 
-             {/* DEV TOOLS (Only visible in dev or specific users if needed, but for now open for testing) */}
-             <div className="container max-w-4xl mx-auto px-6 mt-4 relative z-50 flex justify-end">
-                 <button
-                    onClick={async () => {
-                        if (!user) return;
-                        if (!confirm("Toggle Subscription Tier for testing?")) return;
-                        
-                        try {
-                            const newTier = userProfile?.subscription?.tier === 'pro' ? 'free' : 'pro';
-                            await updateDoc(doc(db, "users", user.uid), {
-                                "subscription.tier": newTier,
-                                "subscription.status": newTier === 'pro' ? 'active' : 'inactive',
-                                "subscription.credits.dailyLimit": newTier === 'pro' ? 15 : 3, // Update limit immediately
-                                "role": newTier === 'pro' ? 'admin' : 'user' // Grant Admin for testing cache writes
-                            });
-                            alert(`You are now ${newTier.toUpperCase()}! Reloading...`);
-                            window.location.reload();
-                        } catch (e) {
-                            console.error(e);
-                            alert("Error updating subscription");
-                        }
-                    }}
-                    className="text-[10px] font-mono bg-black/80 text-green-400 px-2 py-1 rounded border border-green-900 opacity-50 hover:opacity-100 transition-opacity"
-                 >
-                    [DEV] Toggle Pro: {userProfile?.subscription?.tier === 'pro' ? 'ON' : 'OFF'}
-                 </button>
-             </div>
+
 
              {/* Stats Grid */}
              <div className="container max-w-4xl mx-auto px-4 -mt-4 relative z-20">

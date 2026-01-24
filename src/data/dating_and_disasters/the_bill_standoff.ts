@@ -20,7 +20,7 @@ export const theBillStandoff: Script = {
     {
       id: "s2",
       en: "There was a long, awkward [silence].",
-      keywords: [],
+      keywords: [{ word: "silence", definition: "Hidden: awkward pause" }],
     },
     {
       id: "s3",

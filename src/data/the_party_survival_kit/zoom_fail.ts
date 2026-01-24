@@ -25,6 +25,7 @@ export const zoomFail: Script = {
       id: "s2",
       en: "I shouted, '[Get out of here, you monster!]' at the top of my lungs.",
       keywords: [
+        { word: "Get out of here, you monster!", definition: "Hidden: extreme overreaction" },
         { word: "monster", definition: "Hidden: scary creature" },
       ],
     },
@@ -32,6 +33,7 @@ export const zoomFail: Script = {
       id: "s3",
       en: "Then I saw the CEO pause and ask, '[Is there a problem, Dave?]' associated with me.",
       keywords: [
+        { word: "Is there a problem, Dave?", definition: "Hidden: calm but scary authority" },
         { word: "Is there a problem", definition: "Hidden: asking about issue" },
       ],
     },

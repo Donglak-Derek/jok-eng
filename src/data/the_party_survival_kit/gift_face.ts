@@ -32,6 +32,7 @@ export const giftFace: Script = {
       id: "s3",
       en: "I had to instantly perfect my ['Gift Face'].",
       keywords: [
+        { word: "'Gift Face'", definition: "Hidden: fake smile" },
         { word: "Gift Face", definition: "Hidden: fake smile" },
       ],
     },

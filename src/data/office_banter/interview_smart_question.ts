@@ -60,6 +60,7 @@ export const interviewSmartQuestion: Script = {
       id: "s3",
       en: "They laugh because I’m [not defensive].",
       keywords: [
+        { word: "not defensive", definition: "Hidden: accepting feedback" },
         { word: "defensive", definition: "protecting oneself from criticism" },
         { word: "camaraderie", definition: "friendship and trust" },
       ],
@@ -68,6 +69,7 @@ export const interviewSmartQuestion: Script = {
       id: "s4",
       en: "Then I ask, 'What’s one bug we can [leave unfixed] to tell stories about later?'",
       keywords: [
+        { word: "leave unfixed", definition: "Hidden: allow small flaws" },
         { word: "unfixed", definition: "not repaired" },
         { word: "legacy", definition: "long-lasting impact" },
       ],
@@ -92,6 +94,8 @@ export const interviewSmartQuestion: Script = {
       id: "s7",
       en: "Now we’re joking [together], not fighting about [blame].",
       keywords: [
+        { word: "together", definition: "Hidden: shared experience" },
+        { word: "blame", definition: "Hidden: finding fault" },
         { word: "blame", definition: "responsibility for a fault" },
         { word: "us vs them", definition: "divisive mindset" },
       ],
