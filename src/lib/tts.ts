@@ -30,6 +30,7 @@ export async function playScenarioAudio(
     options: {
         text?: string;
         sentenceId?: string; // If playing a specific sentence
+        voice?: string;
         onStart: () => void;
         onEnd: () => void;
         onError: (err: string) => void;
@@ -46,10 +47,26 @@ export async function playScenarioAudio(
 
     // Determine Cache Key & URL
     let cachedUrl = scenario.audioUrl;
-    if (options.sentenceId && scenario.sentences) {
-        const sentence = scenario.sentences.find(s => s.id === options.sentenceId);
-        if (sentence) {
-             cachedUrl = sentence.audioUrl;
+    if (options.sentenceId) {
+        if (scenario.sentences) {
+            const sentence = scenario.sentences.find(s => s.id === options.sentenceId);
+            if (sentence) cachedUrl = sentence.audioUrl;
+        } 
+        if (!cachedUrl && scenario.decoderItems) {
+             const decoderItem = scenario.decoderItems.find(d => d.id === options.sentenceId);
+             if (decoderItem) cachedUrl = decoderItem.audioUrl;
+        }
+        // Support for Story Segments (using index as ID usually, or maybe we passed a virtual ID)
+        if (!cachedUrl && scenario.segments) {
+             // For segments, we might pass "seg_0", "seg_1" etc.
+             // Or we just assume the ID passed matches the convention if we enforce it.
+             // But segments in types don't have an ID field!
+             // So we must rely on index.
+             // Hack: we will assume sentenceId is "seg_{index}" for segments
+             if (options.sentenceId.startsWith("seg_")) {
+                 const idx = parseInt(options.sentenceId.split("_")[1]);
+                 if (scenario.segments[idx]) cachedUrl = scenario.segments[idx].audioUrl;
+             }
         }
     }
 
@@ -61,7 +78,6 @@ export async function playScenarioAudio(
     }
 
     // STRATEGY 2: CHECK LIMITS
-    // STRATEGY 2: CHECK LIMITS
     // If not signed in, default to Free/Native
     const isPro = dbUser?.subscription?.tier === 'pro' || (dbUser as any)?.role === 'admin';
     
@@ -71,12 +87,11 @@ export async function playScenarioAudio(
     }
 
     // Pro Tier: Generate & Cache
-    // Pro Tier: Generate & Cache
     options.onStart(); 
 
     try {
         // 1. Call API
-        const voice = "en-US-Neural2-F"; 
+        const voice = options.voice || "en-US-Neural2-F"; // Allow override
         const apiUrl = `/api/tts?text=${encodeURIComponent(textToPlay)}&voice=${voice}`;
         
         const response = await fetch(apiUrl);
@@ -122,29 +137,59 @@ export async function playScenarioAudio(
 
             const scriptRef = doc(db, `users/${targetUserId}/scenarios`, scenario.id); 
 
-            if (options.sentenceId && scenario.sentences) {
-                 // Update specific sentence in array
-                 const newSentences = scenario.sentences.map(s => 
-                    s.id === options.sentenceId ? { ...s, audioUrl: downloadUrl } : s
-                 );
-                 
-                 // Standard/System Scenario: We might need to Create the doc first if it's the first time
-                 if (!ownerId) {
-                     await updateDoc(scriptRef, { sentences: newSentences }).catch(async (e) => {
-                        if (e.code === 'not-found') {
-                            const { setDoc } = await import("firebase/firestore");
-                            await setDoc(scriptRef, { 
-                                id: scenario.id,
-                                sentences: newSentences,
-                                isPublic: true,
-                                userId: targetUserId
-                            });
-                        } else {
-                            console.error("Cache update failed", e);
-                        }
-                    });
-                 } else {
-                     await updateDoc(scriptRef, { sentences: newSentences });
+            if (options.sentenceId) {
+                 // Check if it's a Sentence or a DecoderItem
+                 const isDecoder = scenario.decoderItems && scenario.decoderItems.some(d => d.id === options.sentenceId);
+                 const isSegment = options.sentenceId.startsWith("seg_"); // Check heuristic
+
+                 if (isDecoder && scenario.decoderItems) {
+                     // Update decoder item
+                     const newItems = scenario.decoderItems.map(d => 
+                        d.id === options.sentenceId ? { ...d, audioUrl: downloadUrl } : d
+                     );
+                     
+                     if (!ownerId) {
+                         // Similar fallback creation logic if needed
+                         await updateDoc(scriptRef, { decoderItems: newItems }).catch(async (e) => {
+                             if (e.code === 'not-found') {
+                                // Create doc logic
+                             }
+                         });
+                     } else {
+                         await updateDoc(scriptRef, { decoderItems: newItems });
+                     }
+
+                 } else if (isSegment && scenario.segments) {
+                     // Update segment
+                     const idx = parseInt(options.sentenceId.split("_")[1]);
+                     if (!isNaN(idx) && scenario.segments[idx]) {
+                         const newSegments = [...scenario.segments];
+                         newSegments[idx] = { ...newSegments[idx], audioUrl: downloadUrl };
+                         
+                         await updateDoc(scriptRef, { segments: newSegments }).catch(err => console.error(err));
+                     }
+
+                 } else if (scenario.sentences) {
+                     // Update sentence
+                     const newSentences = scenario.sentences.map(s => 
+                        s.id === options.sentenceId ? { ...s, audioUrl: downloadUrl } : s
+                     );
+                     
+                     if (!ownerId) {
+                         await updateDoc(scriptRef, { sentences: newSentences }).catch(async (e) => {
+                            if (e.code === 'not-found') {
+                                const { setDoc } = await import("firebase/firestore");
+                                await setDoc(scriptRef, { 
+                                    id: scenario.id,
+                                    sentences: newSentences,
+                                    isPublic: true,
+                                    userId: targetUserId
+                                });
+                            }
+                        });
+                     } else {
+                         await updateDoc(scriptRef, { sentences: newSentences });
+                     }
                  }
 
             } else {

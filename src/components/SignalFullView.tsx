@@ -3,7 +3,9 @@
 import { Script } from "@/types";
 import { Button } from "@/components/Button";
 import { ChevronLeft, Volume2, Play } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { playScenarioAudio } from "@/lib/tts";
+import { useAuth } from "@/context/AuthContext";
 
 type Props = {
   script: Script;
@@ -11,37 +13,36 @@ type Props = {
 };
 
 export default function SignalFullView({ script, onBack }: Props) {
+  // Need auth for centralized TTS
+  const { userProfile } = useAuth(); 
   const [speakingIndex, setSpeakingIndex] = useState<number | null>(null);
+  
+  // Cleanup
+  useEffect(() => {
+      return () => {
+          if (window.speechSynthesis) window.speechSynthesis.cancel();
+      };
+  }, []);
 
   const speak = async (text: string, index: number) => {
-    if (typeof window === "undefined") return;
     if (speakingIndex !== null) return;
-
     setSpeakingIndex(index);
+    
+    // Safety check
+    if (!script.decoderItems || !script.decoderItems[index]) return;
 
-    try {
-      const params = new URLSearchParams({
+    const itemId = script.decoderItems[index].id;
+
+    playScenarioAudio(userProfile, script, {
         text: text,
-        voice: "en-US-AriaNeural",
-      });
-
-      const audio = new Audio(`/api/tts?${params}`);
-      
-      await new Promise<void>((resolve, reject) => {
-        audio.onended = () => resolve();
-        audio.onerror = (e) => reject(e);
-        audio.play().catch(reject);
-      });
-    } catch {
-       const u = new SpeechSynthesisUtterance(text);
-       u.lang = "en-US";
-       u.onend = () => setSpeakingIndex(null);
-       window.speechSynthesis.speak(u);
-       return;
-    } finally {
-        // Handled in onend for fallback
-    }
-    setSpeakingIndex(null);
+        sentenceId: itemId,
+        onStart: () => setSpeakingIndex(index),
+        onEnd: () => setSpeakingIndex(null),
+        onError: (e) => {
+            console.error(e);
+            setSpeakingIndex(null);
+        }
+    });
   };
 
   const getDangerColor = (level: string) => {

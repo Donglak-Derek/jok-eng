@@ -4,6 +4,8 @@ import { Script } from "@/types";
 import { Button } from "@/components/Button";
 import { ChevronLeft, Volume2, Play, AlertTriangle, ShieldCheck } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
+import { playScenarioAudio } from "@/lib/tts";
+import { useAuth } from "@/context/AuthContext";
 
 type Props = {
   script: Script;
@@ -11,51 +13,34 @@ type Props = {
 };
 
 export default function DecoderFullView({ script, onBack }: Props) {
+  // Need auth for centralized TTS
+  const { userProfile } = useAuth(); 
   const [speakingIndex, setSpeakingIndex] = useState<number | null>(null);
   const items = script.decoderItems || [];
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-
-  // Cleanup audio on unmount
+  
+  // Cleanup audio on unmount (handled mostly by centralized lib now for native, but safe to keep)
   useEffect(() => {
       return () => {
-          if (audioRef.current) {
-              audioRef.current.pause();
-              audioRef.current = null;
-          }
           if (window.speechSynthesis) window.speechSynthesis.cancel();
       };
   }, []);
 
   const speak = async (text: string, index: number) => {
-    if (typeof window === "undefined") return;
     if (speakingIndex !== null) return;
-
     setSpeakingIndex(index);
 
-    try {
-      const params = new URLSearchParams({
-        text: text,
-        voice: "en-US-AriaNeural",
-      });
+    const itemId = items[index].id;
 
-      const audio = new Audio(`/api/tts?${params}`);
-      audioRef.current = audio;
-      
-      await new Promise<void>((resolve, reject) => {
-        audio.onended = () => resolve();
-        audio.onerror = (e) => reject(e);
-        audio.play().catch(reject);
-      });
-    } catch {
-       const u = new SpeechSynthesisUtterance(text);
-       u.lang = "en-US";
-       u.onend = () => setSpeakingIndex(null);
-       window.speechSynthesis.speak(u);
-       return;
-    } finally {
-        // Handled in onend for fallback, but for audio api we reset after await
-    }
-    setSpeakingIndex(null);
+    playScenarioAudio(userProfile, script, {
+        text: text,
+        sentenceId: itemId,
+        onStart: () => setSpeakingIndex(index),
+        onEnd: () => setSpeakingIndex(null),
+        onError: (e) => {
+            console.error(e);
+            setSpeakingIndex(null);
+        }
+    });
   };
 
   return (

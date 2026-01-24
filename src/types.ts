@@ -35,6 +35,7 @@ export type DecoderItem = {
     textB: string;
     contextNote?: string;
   };
+  audioUrl?: string;
 };
 
 export type Script = {
@@ -58,6 +59,7 @@ export type Script = {
     text: string;
     keywords?: Keyword[];
     note: string;
+    audioUrl?: string;
   }[];
   decoderItems?: DecoderItem[];
   // Phase 1: New Engagement Fields

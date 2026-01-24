@@ -3,7 +3,9 @@
 import { Script } from "@/types";
 import { Button } from "@/components/Button";
 import { ChevronLeft, Volume2, Play } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { playScenarioAudio } from "@/lib/tts";
+import { useAuth } from "@/context/AuthContext";
 
 type Props = {
   script: Script;
@@ -11,40 +13,33 @@ type Props = {
 };
 
 export default function StoryFullView({ script, onBack }: Props) {
+  // Need auth for centralized TTS
+  const { userProfile } = useAuth(); 
   const [speakingIndex, setSpeakingIndex] = useState<number | null>(null);
+  
+  // Cleanup
+  useEffect(() => {
+      return () => {
+          if (window.speechSynthesis) window.speechSynthesis.cancel();
+      };
+  }, []);
 
   const speak = async (text: string, index: number) => {
-    if (typeof window === "undefined") return;
-    if (speakingIndex !== null) return; // Prevent overlapping
-
+    if (speakingIndex !== null) return;
     setSpeakingIndex(index);
 
-    try {
-      const params = new URLSearchParams({
-        text: text,
-        voice: "en-US-AriaNeural",
-      });
+    const segmentId = `seg_${index}`; // Matching StoryFlow convention
 
-      const audio = new Audio(`/api/tts?${params}`);
-      
-      await new Promise<void>((resolve, reject) => {
-        audio.onended = () => resolve();
-        audio.onerror = (e) => reject(e);
-        audio.play().catch(reject);
-      });
-    } catch {
-       // Fallback
-       const u = new SpeechSynthesisUtterance(text);
-       u.lang = "en-US";
-       u.onend = () => setSpeakingIndex(null);
-       window.speechSynthesis.speak(u);
-       return; // Return early so finally doesn't run immediately for fallback
-    } finally {
-        // Only reset if not fallback (fallback resets in onend)
-        // Actually, the try/catch flow means we need careful reset.
-        // For simplicity with hybrid approach:
-    }
-    setSpeakingIndex(null);
+    playScenarioAudio(userProfile, script, {
+        text: text,
+        sentenceId: segmentId,
+        onStart: () => setSpeakingIndex(index),
+        onEnd: () => setSpeakingIndex(null),
+        onError: (e) => {
+            console.error(e);
+            setSpeakingIndex(null);
+        }
+    });
   };
 
   return (

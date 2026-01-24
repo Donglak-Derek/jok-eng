@@ -12,6 +12,7 @@ import QuizCard from "@/components/QuizCard";
 import { useAuth } from "@/context/AuthContext";
 import { updateDoc, doc, increment, serverTimestamp, setDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import { playScenarioAudio } from "@/lib/tts";
 import { useDailyProgress } from "@/hooks/useDailyProgress";
 import { useProgress } from "@/context/ProgressContext";
 
@@ -26,12 +27,14 @@ function SignalCard({
   item, 
   onHeard, 
   isAutoPlayEnabled,
-  isGlobalRevealed
+  isGlobalRevealed,
+  script
 }: { 
   item: DecoderItem, 
   onHeard: () => void,
   isAutoPlayEnabled: boolean,
-  isGlobalRevealed: boolean
+  isGlobalRevealed: boolean,
+  script: Script
 }) {
     const [isRevealed, setIsRevealed] = useState(false);
     const [speaking, setSpeaking] = useState(false);
@@ -89,59 +92,54 @@ function SignalCard({
         if (isGlobalRevealed) setIsRevealed(true);
     }, [isGlobalRevealed]);
 
+    // Need userProfile for playScenarioAudio
+    const { userProfile } = useAuth();
+    
+    // We need the script object for TTS context
+    // SignalCard is defined inside SignalDecoder file but outside the component? 
+    // No, it's defined outside. We need to pass script as a prop to SignalCard.
+
     const handlePlay = useCallback(async () => {
         if (speaking) return;
         
         onHeard();
         setSpeaking(true);
 
-        const textToSpeak = item.phrase; // Speak the signal
+        const textToSpeak = item.phrase; 
         
-        try {
-            const params = new URLSearchParams({
-                text: textToSpeak,
-                voice: "en-US-AriaNeural", 
-            });
-            const audio = new Audio(`/api/tts?${params}`);
-            audioRef.current = audio;
-            
-            await new Promise<void>((resolve) => {
-                audio.onended = () => resolve();
-                audio.play();
-            });
-        } catch (e) {
-            console.error(e);
-            // Fallback
-            const u = new SpeechSynthesisUtterance(textToSpeak);
-            u.onend = () => setSpeaking(false);
-            window.speechSynthesis.speak(u);
-            return; 
-        } finally {
-            setSpeaking(false);
-        }
-    }, [item.phrase, speaking, onHeard]);
+        // Use Centralized TTS
+        playScenarioAudio(userProfile, script, { // Need script prop!
+            text: textToSpeak,
+            sentenceId: item.id,
+            onStart: () => setSpeaking(true),
+            onEnd: () => setSpeaking(false),
+            onError: (err) => {
+                console.error(err);
+                setSpeaking(false);
+            }
+        });
+    }, [item, speaking, onHeard, userProfile, script]);
 
-    // Auto-Play
+    // Internal Auto-Play Logic
     useEffect(() => {
-        if (isAutoPlayEnabled && !hasAutoPlayedRef.current) {
-            const t = setTimeout(() => {
-                handlePlay();
-                hasAutoPlayedRef.current = true;
-            }, 500);
-            return () => clearTimeout(t);
+        if (isAutoPlayEnabled) {
+            const timer = setTimeout(() => {
+                if (!hasAutoPlayedRef.current) {
+                    hasAutoPlayedRef.current = true;
+                    handlePlay();
+                }
+            }, 600); // Slight delay for animation
+            return () => clearTimeout(timer);
         }
-    }, [isAutoPlayEnabled, handlePlay]); 
+    }, [isAutoPlayEnabled, item.id, handlePlay]); // Re-run if item changes
 
-    // Cleanup
+    // Cleanup logic handled by playScenarioAudio (it creates its own audio element), 
+    // but if we want to stop it on unmount we can't easily access the internal audio object unless playScenarioAudio returns it.
+    // However, playScenarioAudio is fire-and-forget for now. 
+    // Native TTS cleanup:
     useEffect(() => {
         return () => {
-            if (audioRef.current) {
-                audioRef.current.pause();
-                audioRef.current = null;
-            }
-            if (window.speechSynthesis) {
-                window.speechSynthesis.cancel();
-            }
+            if (window.speechSynthesis) window.speechSynthesis.cancel();
         };
     }, []);
 
@@ -158,54 +156,62 @@ function SignalCard({
                  </div>
                  
                  {/* REVEALED DEFINITIONS */}
-                 <div className="min-h-[24px] flex flex-col items-center justify-center w-full mt-2">
-                    {anyWordRevealed && keywords.length > 0 ? (
-                        <div className="flex flex-wrap justify-center gap-2 animate-in fade-in slide-in-from-bottom-2 duration-300">
-                             {keywords.map((k) => {
-                                 const isWordActive = isGlobalRevealed || localRevealedWords.has(k.word);
-                                 if (!isWordActive) return null;
-                                 
-                                 return (
-                                     <span key={k.word} className="text-sm px-3 py-2 bg-indigo-100 text-indigo-900 rounded-lg border border-indigo-200 shadow-sm text-left whitespace-normal break-words max-w-full leading-snug h-auto">
-                                         <span className="font-bold">{k.word}</span>: {k.definition}
-                                     </span>
-                                 );
-                             })}
-                        </div>
-                    ) : (
-                        <div className="text-xs text-muted-foreground italic h-[24px] flex items-center">
-                           {!isGlobalRevealed && "Tap hidden words to limit-break"}
-                        </div>
-                    )}
-                 </div>
+                     {/* REVEALED DEFINITIONS */}
+                  <div className="min-h-[24px] flex flex-col items-center justify-center w-full mt-2">
+                     {anyWordRevealed && keywords.length > 0 ? (
+                         <div className="flex flex-wrap justify-center gap-2 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                              {keywords.map((k) => {
+                                  const isWordActive = isGlobalRevealed || localRevealedWords.has(k.word);
+                                  if (!isWordActive) return null;
+                                  
+                                  return (
+                                      <span key={k.word} className="text-sm px-3 py-2 bg-indigo-100 text-indigo-900 rounded-lg border border-indigo-200 shadow-sm text-left whitespace-normal break-words max-w-full leading-snug h-auto">
+                                          <span className="font-bold">{k.word}</span>: {k.definition}
+                                      </span>
+                                  );
+                              })}
+                         </div>
+                     ) : (
+                         <div className="text-xs text-muted-foreground italic h-[24px] flex items-center">
+                            {!isGlobalRevealed && "Tap hidden words to limit-break"}
+                         </div>
+                     )}
+                  </div>
 
-                 <Button
-                    onClick={handlePlay}
-                    variant="ghost"
-                    size="sm"
-                    className={`mt-2 ${speaking ? "text-primary animate-pulse" : "text-muted-foreground"}`}
-                    leftIcon={<Volume2 className="w-4 h-4" />}
-                 >
-                    {speaking ? "Playing..." : "Listen"}
-                 </Button>
+                  <Button
+                     onClick={handlePlay}
+                     variant="secondary" // Changed from ghost to secondary for visibility
+                     size="md" // Standard size
+                     className={`mt-4 w-full md:w-auto ${speaking ? "animate-pulse" : ""}`}
+                     leftIcon={<Volume2 className="w-5 h-5" />}
+                  >
+                     {speaking ? "Playing Audio..." : "Listen to Signal"}
+                  </Button>
              </div>
 
              {/* THE DECODE (Bottom - Revealed) */}
              <div className="flex-1 p-8 md:p-10 flex flex-col items-center justify-center relative bg-white">
-                 <AnimatePresence>
+                 <AnimatePresence mode="wait">
                      {!isRevealed && !isGlobalRevealed ? (
-                         <motion.button
-                             initial={{ opacity: 0, scale: 0.9 }}
+                         <motion.div
+                             initial={{ opacity: 0, scale: 0.95 }}
                              animate={{ opacity: 1, scale: 1 }}
                              exit={{ opacity: 0, scale: 0.95 }}
-                             onClick={() => setIsRevealed(true)}
-                             className="group flex flex-col items-center gap-3 p-6 rounded-2xl hover:bg-secondary/50 transition-colors cursor-pointer"
+                             className="flex flex-col items-center gap-6"
                          >
-                             <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
-                                 🕵️‍♂️
-                             </div>
-                             <span className="font-bold text-muted-foreground group-hover:text-foreground">Tap to Decode</span>
-                         </motion.button>
+                             <p className="text-3xl md:text-4xl font-bold text-center bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent">
+                                 What does it imply?
+                             </p>
+                             <Button
+                                 onClick={() => setIsRevealed(true)}
+                                 variant="primary"
+                                 size="xl"
+                                 className="rounded-full px-12 py-8 text-xl font-bold shadow-xl shadow-indigo-500/20 hover:scale-105 transition-all"
+                                 rightIcon={<span className="text-2xl ml-2">🕵️‍♂️</span>}
+                             >
+                                 Decode Meaning
+                             </Button>
+                         </motion.div>
                      ) : (
                          <motion.div
                              initial={{ opacity: 0, y: 10 }}
@@ -412,6 +418,7 @@ export default function SignalDecoder({ script }: Props) {
                   onHeard={() => {}} 
                   isAutoPlayEnabled={isAutoPlayEnabled}
                   isGlobalRevealed={isGlobalRevealed}
+                  script={script}
               />
           </motion.div>
       );

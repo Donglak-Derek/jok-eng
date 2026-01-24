@@ -156,35 +156,39 @@ export default function ScriptPlayerShell({
       {/* --- FOOTER (Navigation) --- */}
       {!hasFinished && (
         <div className="flex-none bg-white border-t border-border z-10 pb-safe">
-            <div className="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div className="max-w-3xl mx-auto px-4 py-3 md:px-6 md:py-4 flex items-center justify-between gap-4">
                 
-                {/* Restart */}
+                {/* Restart (Subtle, Left) */}
                 <Button 
                     variant="ghost"
                     onClick={onRestart}
-                    className="text-muted-foreground hover:text-foreground text-sm"
-                    leftIcon={<RotateCcw className="w-4 h-4" />}
+                    size="md"
+                    className="text-muted-foreground hover:text-foreground shrink-0 w-12 h-12 rounded-full p-0"
+                    title="Restart from beginning"
                 >
-                    Restart
+                    <RotateCcw className="w-5 h-5" />
                 </Button>
                 
-                {/* Prev / Next */}
-                <div className="flex items-center gap-3">
+                {/* Navigation Group (Right) */}
+                <div className="flex items-center gap-3 flex-1 justify-end max-w-sm ml-auto">
+                    
+                    {/* Prev (Secondary) */}
                     <Button
                         variant="ghost"
                         onClick={onPrev}
                         disabled={!onPrev || currentStep === 0}
-                        className={!onPrev || currentStep === 0 ? "invisible" : "text-base font-medium"}
-                        leftIcon={<ArrowLeft className="w-4 h-4" />}
+                        className={`shrink-0 px-4 transition-opacity ${(!onPrev || currentStep === 0) ? "opacity-0 pointer-events-none" : "opacity-100"}`}
                     >
                         Prev
                     </Button>
 
+                    {/* Next (Primary, Dominant) */}
                     <Button
                         variant="primary"
                         onClick={onNext}
-                        className="px-6 shadow-md hover:shadow-lg transition-all"
-                        rightIcon={<ChevronRight className="w-4 h-4" />}
+                        size="lg"
+                        className="flex-1 shadow-lg shadow-indigo-200 hover:shadow-xl transition-all active:scale-[0.98] text-base font-bold min-w-[120px]"
+                        rightIcon={<ChevronRight className="w-5 h-5 ml-1" />}
                     >
                         Next
                     </Button>

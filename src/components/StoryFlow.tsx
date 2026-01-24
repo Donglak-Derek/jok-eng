@@ -15,6 +15,7 @@ import ScriptPlayerShell from "@/components/ScriptPlayerShell";
 
 import { ArrowRight, Volume2, Lightbulb } from "lucide-react";
 import StoryFullView from "./StoryFullView";
+import { playScenarioAudio } from "@/lib/tts";
 
 type Props = {
   script: Script;
@@ -54,7 +55,7 @@ export default function StoryFlow({ script }: Props) {
   };
 
   // Auth context
-  const { user } = useAuth();
+  const { user, userProfile } = useAuth();
   const isOwner = user && 'userId' in script && (script as UserScript).userId === user.uid;
 
   const handleFinishTraining = async () => {
@@ -92,7 +93,7 @@ export default function StoryFlow({ script }: Props) {
     setCurrentStep(0);
   };
   
-  // TTS Logic (Adapted from SentenceCard)
+  // TTS Logic (Centralized)
   const speak = useCallback(async () => {
     if (typeof window === "undefined") return;
     if (speaking || loading) return; 
@@ -102,46 +103,29 @@ export default function StoryFlow({ script }: Props) {
 
     // Speak the main text of the current segment
     const textToSpeak = segments[currentStep].text;
-    setLoading(true);
+    
+    // Use the convention seg_{index} for caching
+    const segmentId = `seg_${currentStep}`;
 
-    try {
-      const params = new URLSearchParams({
+    playScenarioAudio(userProfile, script, { // user here should be UserProfile? check hook
         text: textToSpeak,
-        voice: "en-US-AriaNeural", 
-      });
-      
-      const audio = new Audio(`/api/tts?${params}`);
-      
-      await new Promise<void>((resolve, reject) => {
-        audio.oncanplay = () => {
-             setLoading(false);
-             setSpeaking(true);
-        };
-        audio.onended = () => resolve();
-        audio.onerror = (e) => reject(e);
-        
-        const playPromise = audio.play();
-        if (playPromise !== undefined) {
-          playPromise.catch(reject);
+        sentenceId: segmentId,
+        onStart: () => {
+            setLoading(false);
+            setSpeaking(true);
+        },
+        onEnd: () => {
+            setSpeaking(false);
+            setLoading(false);
+        },
+        onError: (err) => {
+            console.error(err);
+            setSpeaking(false);
+            setLoading(false);
         }
-      });
-      
-    } catch (error) {
-       console.warn("High-quality TTS failed, falling back:", error);
-       await new Promise<void>((resolve) => {
-         setLoading(false);
-         setSpeaking(true);
-         const u = new SpeechSynthesisUtterance(textToSpeak);
-         u.lang = "en-US";
-         u.onend = () => resolve();
-         u.onerror = () => resolve(); 
-         window.speechSynthesis.speak(u);
-       });
-    } finally {
-      setSpeaking(false);
-      setLoading(false);
-    }
-  }, [segments, currentStep, speaking, loading]);
+    });
+
+  }, [segments, currentStep, speaking, loading, user, script]);
   
   // Logic to get current segment safely
   const currentSegment = currentStep < segmentsCount ? segments[currentStep] : segments[segmentsCount - 1];
