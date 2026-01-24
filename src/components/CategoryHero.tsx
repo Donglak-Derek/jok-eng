@@ -199,6 +199,7 @@ export default function CategoryHero({
                                 src={nextUpScript.imageUrl} 
                                 alt={nextUpScript.title}
                                 fill
+                                sizes="(max-width: 768px) 96px, 96px"
                                 className="object-cover"
                              />
                         </div>

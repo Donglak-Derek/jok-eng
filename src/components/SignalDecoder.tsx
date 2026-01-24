@@ -166,7 +166,7 @@ function SignalCard({
                                  if (!isWordActive) return null;
                                  
                                  return (
-                                     <span key={k.word} className="text-sm px-3 py-1 bg-indigo-100 text-indigo-900 rounded-full border border-indigo-200 shadow-sm">
+                                     <span key={k.word} className="text-sm px-3 py-2 bg-indigo-100 text-indigo-900 rounded-lg border border-indigo-200 shadow-sm text-left whitespace-normal break-words max-w-full leading-snug h-auto">
                                          <span className="font-bold">{k.word}</span>: {k.definition}
                                      </span>
                                  );

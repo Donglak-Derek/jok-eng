@@ -249,7 +249,7 @@ export default function ClozeCard({
                 {keywords.map((k) => (
                   <span
                     key={k.word}
-                    className="text-sm px-4 py-2 bg-secondary text-secondary-foreground rounded-xl border border-border text-left leading-snug max-w-full"
+                    className="text-sm px-4 py-2 bg-secondary text-secondary-foreground rounded-lg border border-border text-left leading-snug max-w-full whitespace-normal break-words h-auto"
                   >
                     <span className="font-semibold">{k.word}</span>
                     <span className="text-muted-foreground ml-1 opacity-70">
