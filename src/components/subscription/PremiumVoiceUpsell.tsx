@@ -5,11 +5,11 @@ import { useState } from "react";
 import UpgradeModal from "@/components/subscription/UpgradeModal";
 import { Sparkles } from "lucide-react";
 
-export default function PremiumVoiceUpsell() {
+export default function PremiumVoiceUpsell({ show = true }: { show?: boolean }) {
     const { isPro } = useSubscription();
     const [showUpgrade, setShowUpgrade] = useState(false);
 
-    if (isPro) return null;
+    if (isPro || !show) return null;
 
     return (
         <>

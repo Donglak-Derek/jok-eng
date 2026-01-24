@@ -43,6 +43,7 @@ export const theThirdWheel: Script = {
       keywords: [{ word: "goldfish", definition: "a fish (classic fake excuse)" }],
     },
     {
+      id: "s7",
       en: "They didn't even [notice] I left.",
       keywords: [{ word: "notice", definition: "Hidden: realize I was gone" }],
     },

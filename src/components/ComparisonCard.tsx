@@ -359,7 +359,7 @@ export default function ComparisonCard({
                   >
                       {speaking ? <AudioVisualizer /> : <span className="flex items-center gap-2"><Volume2 className="w-5 h-5" /> Listen Again</span>}
                   </Button>
-                  <PremiumVoiceUpsell />
+                  <PremiumVoiceUpsell show={!script?.audioUrl && !sentence.audioUrl} />
              </motion.div>
           )}
 

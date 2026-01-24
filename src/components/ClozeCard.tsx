@@ -274,7 +274,7 @@ export default function ClozeCard({
       >
           {speaking ? <AudioVisualizer /> : <span className="flex items-center gap-2"><AudioLines className="w-5 h-5" /> Play Audio</span>}
       </Button>
-      <PremiumVoiceUpsell />
+      <PremiumVoiceUpsell show={!script?.audioUrl && !sentence.audioUrl} />
     </div>
   );
 }
