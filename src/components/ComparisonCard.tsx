@@ -224,6 +224,8 @@ export default function ComparisonCard({
   return (
     <div className="bg-white rounded-xl border border-border overflow-hidden shadow-sm transition-all hover:shadow-md flex flex-col h-full relative">
       
+
+
       {/* 1. SCENARIO / CONTEXT */}
       <motion.div 
         className={`p-6 md:p-8 pb-6 text-center border-b border-border/40 bg-slate-50/50 transition-all duration-500

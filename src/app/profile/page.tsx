@@ -8,7 +8,8 @@ import { db } from "@/lib/firebase";
 import { UserStats, UserProfile, GENERATION_GROUPS, JOB_CATEGORIES, CULTURE_OPTIONS } from "@/types";
 import { motion } from "framer-motion";
 import { X, Loader2 } from "lucide-react";
-
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { updateProfile } from "firebase/auth";
 
 // Rank Logic Helpers
 const getRank = (scenariosCreated: number) => {
@@ -20,61 +21,65 @@ const getRank = (scenariosCreated: number) => {
 };
 
 export default function ProfilePage() {
-    const { user, loading: authLoading } = useAuth();
+    const { user, refreshProfile, loading: authLoading } = useAuth(); // Added refreshProfile
     const router = useRouter();
     const [stats, setStats] = useState<UserStats | null>(null);
     const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
     const [loading, setLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
+    const [uploadingPhoto, setUploadingPhoto] = useState(false);
 
-    useEffect(() => {
-        if (authLoading) return;
-        if (!user) {
-            router.push("/login");
+    // ... useEffect ...
+
+    const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files || !e.target.files[0] || !user) return;
+        
+        const file = e.target.files[0];
+        // Validate file size/type if needed (e.g. < 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            alert("File size must be less than 5MB");
             return;
         }
 
-        const fetchData = async () => {
-            try {
-                // Fetch Stats
-                const statsRef = doc(db, "users", user.uid);
-                const statsSnap = await getDoc(statsRef);
-                
-                if (statsSnap.exists()) {
-                    setStats(statsSnap.data() as UserStats);
-                    setUserProfile(statsSnap.data() as unknown as UserProfile);
-                } else {
-                    setStats({
-                        userId: user.uid,
-                        totalScenariosCreated: 0,
-                        totalPractices: 0,
-                        totalRemixesInspired: 0,
-                        currentStreak: 0,
-                        longestStreak: 0
-                    });
-                }
-            } catch (err) {
-                console.error("Error fetching data:", err);
-            } finally {
-                setLoading(false);
-            }
-        };
+        setUploadingPhoto(true);
 
-        fetchData();
-    }, [user, authLoading, router]);
+        try {
+            const storage = getStorage();
+            const fileExt = file.name.split('.').pop();
+            const fileName = `profile_${user.uid}_${Date.now()}.${fileExt}`;
+            const storageRef = ref(storage, `profile_photos/${user.uid}/${fileName}`);
+
+            // 1. Upload to Firebase Storage
+            await uploadBytes(storageRef, file);
+            const photoURL = await getDownloadURL(storageRef);
+
+            // 2. Update Firebase Auth Profile
+            await updateProfile(user, { photoURL });
+
+            // 3. Update Firestore User Document
+            const userRef = doc(db, "users", user.uid);
+            await updateDoc(userRef, { photoURL });
+
+            // 4. Refresh Auth Context to update Header immediately
+            await refreshProfile();
+            
+            // Force local re-render if needed, but context update might handle it
+            // window.location.reload(); // Optional, or rely on state
+        } catch (error) {
+            console.error("Error uploading photo:", error);
+            alert("Failed to upload photo. Please try again.");
+        } finally {
+            setUploadingPhoto(false);
+        }
+    };
 
     if (authLoading || loading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
-            </div>
-        );
+        // ... loading return
     }
 
     if (!user) return null;
 
     const rank = getRank(stats?.totalScenariosCreated || 0);
-
 
     return (
         <div className="min-h-screen bg-background text-foreground pb-20">
@@ -84,6 +89,7 @@ export default function ProfilePage() {
                 <div className="container max-w-4xl mx-auto px-6 relative z-10 text-center">
                     
                      {/* Back Button */}
+                     {/* ... (keep existing back button) ... */}
                      <div className="absolute top-0 left-4 md:left-0 z-50">
                         <button 
                             onClick={() => router.push("/")}
@@ -94,18 +100,41 @@ export default function ProfilePage() {
                         </button>
                      </div>
 
-                    <motion.div 
-                        initial={{ scale: 0.5, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        className="w-24 h-24 md:w-32 md:h-32 mx-auto rounded-full border-4 border-background shadow-xl overflow-hidden mb-4"
-                    >
-                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img 
-                            src={user.photoURL || `https://ui-avatars.com/api/?name=${user.displayName}&background=random`} 
-                            alt={user.displayName || "User"}
-                            className="w-full h-full object-cover"
-                        />
-                    </motion.div>
+                    <div className="relative w-24 h-24 md:w-32 md:h-32 mx-auto mb-4 group">
+                        <motion.div 
+                            initial={{ scale: 0.5, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            className="w-full h-full rounded-full border-4 border-background shadow-xl overflow-hidden relative"
+                        >
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img 
+                                src={user.photoURL || `https://ui-avatars.com/api/?name=${user.displayName}&background=random`} 
+                                alt={user.displayName || "User"}
+                                className="w-full h-full object-cover"
+                            />
+                            
+                            {/* Upload Overlay */}
+                            <label className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity z-10">
+                                <input 
+                                    type="file" 
+                                    className="hidden" 
+                                    accept="image/*"
+                                    onChange={handlePhotoUpload}
+                                    disabled={uploadingPhoto}
+                                />
+                                {uploadingPhoto ? (
+                                    <Loader2 className="w-8 h-8 text-white animate-spin" />
+                                ) : (
+                                    <span className="text-white text-xs font-bold uppercase tracking-wider">Change</span>
+                                )}
+                            </label>
+                        </motion.div>
+                        
+                        {/* Camera Icon Badge */}
+                        <div className="absolute bottom-0 right-0 p-1.5 bg-primary text-primary-foreground rounded-full shadow-md z-20 pointer-events-none group-hover:scale-110 transition-transform">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+                        </div>
+                    </div>
                     
                     <motion.h1 
                         initial={{ y: 20, opacity: 0 }}

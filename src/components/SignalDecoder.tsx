@@ -8,6 +8,7 @@ import Confetti from "@/components/Confetti";
 import { Button } from "@/components/Button";
 import ScriptPlayerShell from "@/components/ScriptPlayerShell";
 import DecoderFullView from "@/components/DecoderFullView";
+import CulturalNoteCard from "@/components/CulturalNoteCard";
 import QuizCard from "@/components/QuizCard";
 import { useAuth } from "@/context/AuthContext";
 import { updateDoc, doc, increment, serverTimestamp, setDoc, onSnapshot } from "firebase/firestore";
@@ -41,7 +42,6 @@ function SignalCard({
 }) {
     const [isRevealed, setIsRevealed] = useState(false);
     const [speaking, setSpeaking] = useState(false);
-    const audioRef = useRef<HTMLAudioElement | null>(null);
     const hasAutoPlayedRef = useRef(false);
     const [localRevealedWords, setLocalRevealedWords] = useState<Set<string>>(new Set());
 
@@ -97,10 +97,6 @@ function SignalCard({
 
     // Need userProfile for playScenarioAudio
     const { userProfile } = useAuth();
-    
-    // We need the script object for TTS context
-    // SignalCard is defined inside SignalDecoder file but outside the component? 
-    // No, it's defined outside. We need to pass script as a prop to SignalCard.
 
     const handlePlay = useCallback(async () => {
         if (speaking) return;
@@ -114,7 +110,7 @@ function SignalCard({
         const textToSpeak = item.phrase; 
         
         // Use Centralized TTS
-        playScenarioAudio(userProfile, script, { // Need script prop!
+        playScenarioAudio(userProfile, script, { 
             text: textToSpeak,
             sentenceId: item.id,
             onStart: () => setSpeaking(true),
@@ -138,12 +134,9 @@ function SignalCard({
             }, 600); // Slight delay for animation
             return () => clearTimeout(timer);
         }
-    }, [isAutoPlayEnabled, item.id, handlePlay, speaking]); // Added speaking check
+    }, [isAutoPlayEnabled, item.id, handlePlay, speaking]); 
 
-    // Cleanup logic handled by playScenarioAudio (it creates its own audio element), 
-    // but if we want to stop it on unmount we can't easily access the internal audio object unless playScenarioAudio returns it.
-    // However, playScenarioAudio is fire-and-forget for now. 
-    // Native TTS cleanup:
+    // Native TTS cleanup
     useEffect(() => {
         return () => {
             if (window.speechSynthesis) window.speechSynthesis.cancel();
@@ -163,7 +156,6 @@ function SignalCard({
                  </div>
                  
                  {/* REVEALED DEFINITIONS */}
-                     {/* REVEALED DEFINITIONS */}
                   <div className="min-h-[24px] flex flex-col items-center justify-center w-full mt-2">
                      {anyWordRevealed && keywords.length > 0 ? (
                          <div className="flex flex-wrap justify-center gap-2 animate-in fade-in slide-in-from-bottom-2 duration-300">
@@ -180,15 +172,15 @@ function SignalCard({
                          </div>
                      ) : (
                          <div className="text-xs text-muted-foreground italic h-[24px] flex items-center">
-                            {!isGlobalRevealed && "Tap hidden words to limit-break"}
+                            {!isGlobalRevealed && keywords.length > 0 && "Tap hidden words to limit-break"}
                          </div>
                      )}
                   </div>
 
                   <Button
                      onClick={handlePlay}
-                     variant="secondary" // Changed from ghost to secondary for visibility
-                     size="md" // Standard size
+                     variant="secondary" 
+                     size="md" 
                      className={`mt-4 w-full md:w-auto ${speaking ? "animate-pulse" : ""}`}
                      leftIcon={<Volume2 className="w-5 h-5" />}
                   >
@@ -263,19 +255,22 @@ export default function SignalDecoder({ script }: Props) {
   const { markComplete } = useDailyProgress();
   const { getRepeats } = useProgress();
   const databaseRepeats = getRepeats(script.id); 
-
-  // Real-time Script Sync (Fix for TTS Caching)
+  
+  // Real-time Script Sync
   const [localScript, setLocalScript] = useState<Script>(script);
   
-  // Use localScript items if available
+  // Use localScript items
   const items = useMemo(() => localScript.decoderItems || [], [localScript.decoderItems]);
   
   // Derived
+  const hasCulturalInsight = !!script.culturalInsights || (!!script.summaryPoints && script.summaryPoints.length > 0);
   const hasQuiz = !!script.quizItems && script.quizItems.length > 0;
+  
   const itemsCount = items.length;
   
-  const quizIndex = hasQuiz ? itemsCount : -1;
-  const totalSteps = itemsCount + (hasQuiz ? 1 : 0);
+  const culturalInsightIndex = hasCulturalInsight ? itemsCount : -1;
+  const quizIndex = hasQuiz ? (itemsCount + (hasCulturalInsight ? 1 : 0)) : -1;
+  const totalSteps = itemsCount + (hasCulturalInsight ? 1 : 0) + (hasQuiz ? 1 : 0);
   
   const [currentStep, setCurrentStep] = useState(0);
   const [isAutoPlayEnabled, setIsAutoPlayEnabled] = useState(true);
@@ -299,7 +294,7 @@ export default function SignalDecoder({ script }: Props) {
       return () => unsubscribe();
   }, [script.id, script]);
 
-  // Handler for local cache update (if user is Pro but not Admin/Owner)
+  // Handler for local cache update
   const handleAudioGenerated = useCallback((sentenceId: string, url: string) => {
       setLocalScript(prev => {
           if (!prev.decoderItems) return prev;
@@ -308,7 +303,7 @@ export default function SignalDecoder({ script }: Props) {
           );
           return { ...prev, decoderItems: newItems };
       });
-      // Gamification: Reward the sponsor!
+      // Gamification
       toast.success("💎 You just sponsored this audio for the community!", {
           duration: 4000,
           position: "bottom-center"
@@ -319,7 +314,6 @@ export default function SignalDecoder({ script }: Props) {
   const isCompletion = currentStep >= totalSteps;
 
   const saveProgress = async () => {
-      // If already saved this session, skip
       if (hasSavedRef[0]) return;
       hasSavedRef[1](true);
 
@@ -351,11 +345,9 @@ export default function SignalDecoder({ script }: Props) {
          const current = parseInt(localStorage.getItem(key) || "0");
          localStorage.setItem(key, String(current + 1));
       }
-      // Save Daily Progress
       markComplete(script.id);
   };
 
-  // Auto-save on completion
   useEffect(() => {
     if (isCompletion) {
       saveProgress();
@@ -367,7 +359,6 @@ export default function SignalDecoder({ script }: Props) {
   const handleNext = () => {
     if (currentStep < totalSteps) {
       setCurrentStep((prev) => prev + 1);
-      // Reset reveal state logic handled by component key
     }
   };
 
@@ -397,9 +388,7 @@ export default function SignalDecoder({ script }: Props) {
       const currentReps = databaseRepeats; 
       let encouragement = "Good start!";
       if (currentReps >= 3) encouragement = "Muscle memory building...";
-      if (currentReps >= 5) encouragement = "You're mastering this!";
-      if (currentReps >= 10) encouragement = "Unstoppable!";
-
+      
       content = (
           <motion.div
              key="completion"
@@ -408,11 +397,9 @@ export default function SignalDecoder({ script }: Props) {
              className="w-full py-10 md:py-16 text-center flex flex-col items-center"
            >
               <Confetti />
-              
               <div className="w-24 h-24 bg-gradient-to-br from-indigo-200 to-indigo-400 rounded-full flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(99,102,241,0.4)] animate-in zoom-in-50 duration-500">
                  <PartyPopper className="w-12 h-12 text-white drop-shadow-md" />
               </div>
-              
               <h2 className="text-3xl md:text-4xl font-bold mb-2 tracking-tight">Decoding Complete!</h2>
               <p className="text-muted-foreground text-lg mb-8">{encouragement}</p>
               
@@ -424,22 +411,27 @@ export default function SignalDecoder({ script }: Props) {
               </div>
               
               <div className="flex flex-col w-full max-w-xs gap-3">
-                    <Button 
-                        onClick={handlePracticeAgain} 
-                        className="w-full h-14 text-lg font-bold rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-[1.02]"
-                        variant="primary"
-                    >
+                    <Button onClick={handlePracticeAgain} className="w-full h-14 text-lg font-bold rounded-full shadow-lg" variant="primary">
                         Practice Again (Rep {currentReps + 1})
                     </Button>
-                    <Button 
-                         variant="ghost" 
-                         onClick={() => router.push(`/category/${script.categorySlug}`)}
-                         className="w-full h-12 text-muted-foreground hover:text-foreground"
-                    >
+                    <Button variant="ghost" onClick={() => router.push(`/category/${script.categorySlug}`)} className="w-full h-12 text-muted-foreground">
                          Back to Menu
                     </Button>
                </div>
            </motion.div>
+      );
+  } else if (currentStep === culturalInsightIndex && (script.culturalInsights || script.summaryPoints)) {
+      const title = script.culturalInsights?.title || "Key Takeaways";
+      const noteContent = script.culturalInsights?.content || (script.summaryPoints ? script.summaryPoints.map(p => `• ${p}`).join("\n\n") : "");
+      const vocabulary = script.culturalInsights?.vocabulary || [];
+
+      content = (
+          <CulturalNoteCard 
+             title={title}
+             content={noteContent}
+             vocabulary={vocabulary}
+             onNext={handleNext}
+          />
       );
   } else if (currentStep === quizIndex && script.quizItems) {
       content = (
@@ -471,8 +463,11 @@ export default function SignalDecoder({ script }: Props) {
       );
   }
 
-  const currentItem = items[currentStep];
-  const audioStatus = currentItem?.audioUrl ? 'premium' : 'robot';
+  // Determine current audio status for the player shell
+  // If we are on a step that is a SignalCard, check that item.
+  // Otherwise, undefined (hides badge)
+  const currentItemForStatus = (currentStep < itemsCount) ? items[currentStep] : undefined;
+  const audioStatus = currentItemForStatus?.audioUrl ? 'premium' : (currentItemForStatus ? 'robot' : undefined);
 
   return (
     <ScriptPlayerShell
@@ -481,24 +476,18 @@ export default function SignalDecoder({ script }: Props) {
         imageUrl={script.imageUrl}
         currentStep={currentStep}
         totalSteps={totalSteps}
-        hasFinished={isCompletion || currentStep === quizIndex}
-
-        // Gamification
+        hasFinished={isCompletion || currentStep === quizIndex} // Hide controls on Quiz/Completion
         audioStatus={audioStatus}
-
-        // Controls
+        
         isAutoPlayEnabled={isAutoPlayEnabled}
         onToggleAutoPlay={toggleAutoPlay}
         
-        // Map Global Reveal to Mode (Cloze = Hidden, Standard = Revealed)
         mode={isGlobalRevealed ? "standard" : "cloze"}
         onToggleMode={toggleGlobalReveal}
         
-        // Navigation
         onNext={handleNext}
         onPrev={handlePrev}
         onRestart={handlePracticeAgain}
-        // Full View
         onViewFull={() => setViewMode("full")}
         onBackToMenu={() => router.push(`/category/${script.categorySlug}`)}
     >

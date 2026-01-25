@@ -219,9 +219,11 @@ export default function ClozeCard({
   return (
     <div className="bg-white rounded-lg border border-border p-8 md:p-12 flex flex-col gap-8 shadow-sm transition-all hover:shadow-md text-center h-full">
       
-      {/* Scenario / Context (if any) */}
+
+
+      {/* Scenario / Context (if any) - Shifted down or kept as is */}
       {sentence.scenario && (
-          <div className="text-sm md:text-base font-medium text-muted-foreground uppercase tracking-wider mb-2">
+          <div className="text-xs font-semibold text-primary/80 uppercase tracking-widest mb-2">
               {sentence.scenario}
           </div>
       )}

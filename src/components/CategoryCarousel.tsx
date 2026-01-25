@@ -20,7 +20,7 @@ export default function CategoryCarousel() {
       {/* Wrapper to contain the bleed so it doesn't push page width */}
       {/* 1. MOBILE: Carousel Container (md:hidden) */}
       {/* Breakout: Force 100vw width relative to viewport, centered, to avoid parent width pollution */}
-// 1. MOBILE: Carousel Container
+
       {/* ... */}
       <div className="md:hidden relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-x-hidden bg-background">
           <div 

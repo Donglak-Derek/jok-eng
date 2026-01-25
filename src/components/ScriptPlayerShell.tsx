@@ -1,7 +1,9 @@
 "use client";
 
+import AudioStatusBadge from "@/components/AudioStatusBadge";
+
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, RotateCcw, FileText, Eye, EyeOff, ArrowLeft, Volume2, VolumeX, Share2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, RotateCcw, FileText, Eye, EyeOff, ArrowLeft, Volume2, VolumeX, Share2, Bot, Gem } from "lucide-react";
 import { Button } from "@/components/Button";
 
 type Props = {
@@ -61,111 +63,99 @@ export default function ScriptPlayerShell({
     <div className="fixed inset-0 z-[100] flex flex-col bg-background text-foreground overflow-hidden">
       
       {/* --- HEADER --- */}
+      {/* --- HEADER --- */}
+      {/* --- HEADER --- */}
       <header className="flex-none w-full bg-white/80 backdrop-blur-md border-b border-border z-10">
-         <div className="max-w-3xl mx-auto px-4 py-3 md:px-6 md:py-4 flex flex-col gap-4">
-             <div className="flex items-center gap-4">
-                 {/* Back Button */}
-                 <Link href={`/category/${categorySlug}`} className="text-muted-foreground hover:text-foreground transition-colors">
+         <div className="max-w-3xl mx-auto px-4 py-4 md:px-6 md:py-5">
+             <div className="flex items-center justify-between w-full">
+                 {/* 1. Back Button (Bracket Style) */}
+                 <Link 
+                    href={`/category/${categorySlug}`} 
+                    className="p-2 -ml-2 text-muted-foreground hover:text-foreground transition-colors"
+                    title="Back"
+                >
                      <ChevronLeft className="w-6 h-6" />
                  </Link>
 
-                 {/* Title */}
-                 <div className="flex-1 min-w-0">
-                     <h1 className="text-xl md:text-2xl font-bold tracking-tight truncate">
-                       {title}
-                     </h1>
-                 </div>
+                 {/* 2. Audio Badge (Line Icon) */}
+                 {props.audioStatus && (
+                    <div 
+                       className="flex items-center justify-center select-none text-muted-foreground"
+                       title={props.audioStatus === 'premium' ? "High Quality Audio" : "Robot Voice"}
+                    >
+                        {props.audioStatus === 'premium' ? <Gem className="w-6 h-6 stroke-[1.5]" /> : <Bot className="w-6 h-6 stroke-[1.5]" />}
+                    </div>
+                 )}
 
-                 {/* GLOBAL CONTROLS (Hoisted from Cards) */}
-                 <div className="flex items-center gap-1.5 md:gap-2">
-                     
-                     {/* 0. Audio Status Badge (Gamification) */}
-                     {(props.audioStatus === 'premium' || props.audioStatus === 'robot') && (
-                         <div 
-                            className={`
-                                flex items-center gap-1.5 px-2 py-1.5 rounded-full text-xs font-bold border select-none
-                                ${props.audioStatus === 'premium' 
-                                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200' 
-                                    : 'bg-amber-50 text-amber-700 border-amber-200'
-                                }
-                            `}
-                            title={props.audioStatus === 'premium' ? "Community Sponsored Audio" : "Robot Voice (Needs Sponsor)"}
-                         >
-                             <span>{props.audioStatus === 'premium' ? "💎" : "🤖"}</span>
-                             <span className="hidden sm:inline">
-                                 {props.audioStatus === 'premium' ? "Premium" : "Robot"}
-                             </span>
-                         </div>
-                     )}
+                 {/* 3. Sound Toggle (Line Icon) */}
+                 {onToggleAutoPlay && (
+                     <button
+                       onClick={onToggleAutoPlay}
+                       className={`
+                           transition-colors
+                           ${isAutoPlayEnabled 
+                               ? 'text-foreground' 
+                               : 'text-muted-foreground hover:text-foreground'
+                           }
+                       `}
+                       title={isAutoPlayEnabled ? "Sound On" : "Sound Off"}
+                     >
+                        {isAutoPlayEnabled ? <Volume2 className="w-6 h-6 stroke-[1.5]" /> : <VolumeX className="w-6 h-6 stroke-[1.5]" />}
+                     </button>
+                 )}
 
-                     {/* 1. Auto-Play (Sound) Toggle */}
-                     {onToggleAutoPlay && (
-                         <button
-                           onClick={onToggleAutoPlay}
-                           className={`
-                               p-2 rounded-full transition-colors flex items-center gap-2 text-xs font-bold px-3 py-1.5
-                               ${isAutoPlayEnabled 
-                                   ? 'bg-teal-50 text-teal-700 ring-1 ring-teal-200' 
-                                   : 'bg-secondary text-muted-foreground hover:bg-secondary/80'
-                               }
-                           `}
-                           title="Toggle Auto-Play Sound"
-                         >
-                            {isAutoPlayEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
-                            <span className="hidden sm:inline">Sound</span>
-                         </button>
-                     )}
+                 {/* 4. Study Toggle (Line Icon) */}
+                 {onToggleMode && mode && (
+                     <button
+                         onClick={onToggleMode}
+                         className={`
+                             transition-colors
+                             ${mode === 'cloze' 
+                                 ? 'text-foreground'
+                                 : 'text-muted-foreground hover:text-foreground'
+                             }
+                         `}
+                         title={mode === 'standard' ? "Switch to Study Mode" : "Review Mode"}
+                     >
+                         {mode === 'standard' ? <EyeOff className="w-6 h-6 stroke-[1.5]" /> : <Eye className="w-6 h-6 stroke-[1.5]" />}
+                     </button>
+                 )}
 
-                     {/* 2. Study Mode / Visibility Toggle (Eye) */}
-                     {onToggleMode && mode && (
-                         <button
-                             onClick={onToggleMode}
-                             className={`
-                                 p-2 rounded-full transition-colors
-                                 ${mode === 'standard' 
-                                     ? 'text-muted-foreground hover:bg-secondary hover:text-foreground'
-                                     : 'bg-indigo-50 text-indigo-700 ring-1 ring-indigo-200' 
-                                 }
-                             `}
-                             title={mode === 'standard' ? "Switch to Study Mode (Hidden)" : "Switch to Review Mode (Visible)"}
-                         >
-                             {mode === 'standard' ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                         </button>
-                     )}
+                 {/* 5. Doc (Line Icon) */}
+                  {onViewFull && (
+                     <button 
+                       onClick={onViewFull}
+                       className="text-muted-foreground hover:text-foreground transition-colors"
+                       title="Read Full Script"
+                     >
+                         <FileText className="w-6 h-6 stroke-[1.5]" />
+                     </button>
+                  )}
 
-                     {/* 3. Full View Toggle */}
-                      {onViewFull && (
-                         <button 
-                           onClick={onViewFull}
-                           className="p-2 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-full transition-colors"
-                           title="View Full Content"
-                         >
-                             <FileText className="w-5 h-5" />
-                         </button>
-                      )}
-
-                      {/* 4. Share Button (Viral Loop) */}
-                      <button
-                          onClick={() => {
-                              const shareData = {
-                                  title: `Jok-Eng: ${title}`,
-                                  text: "Can a Pro member verify this script for me? 🥺",
-                                  url: window.location.href
-                              };
-                              if (navigator.share) {
-                                  navigator.share(shareData).catch(console.error);
-                              } else {
-                                  navigator.clipboard.writeText(window.location.href);
-                                  alert("Link copied! Share it with a Pro member.");
-                              }
-                          }}
-                          className="p-2 text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-full transition-colors"
-                          title="Share to get Sponsored!"
-                      >
-                          <Share2 className="w-5 h-5" />
-                      </button>
-                  </div>
+                  {/* 6. Share (Line Icon) */}
+                  <button
+                      onClick={() => {
+                          const shareData = {
+                              title: `Jok-Eng: ${title}`,
+                              text: "Practice this scenario with me on Jok-Eng! 🎙️",
+                              url: window.location.href
+                          };
+                          if (navigator.share) {
+                              navigator.share(shareData).catch(console.error);
+                          } else {
+                              navigator.clipboard.writeText(window.location.href);
+                              alert("Link copied!");
+                          }
+                      }}
+                      className="text-muted-foreground hover:text-foreground transition-colors p-2 -mr-2"
+                      title="Share"
+                  >
+                      <Share2 className="w-6 h-6 stroke-[1.5]" />
+                  </button>
             </div>
+            
+            {/* Hidden Title for Accessibility/SEO only (if needed), or just removed visually */}
+            <h1 className="sr-only">{title}</h1>
 
             {/* Optional Scenario Image (Desktop only) */}
             {imageUrl && (

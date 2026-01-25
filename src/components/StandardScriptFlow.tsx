@@ -20,6 +20,7 @@ import StandardFullView from "./StandardFullView";
 import CulturalNoteCard from "@/components/CulturalNoteCard";
 import QuizCard from "@/components/QuizCard";
 import { useProgress } from "@/context/ProgressContext";
+import { getScriptAudioStatus } from "@/lib/utils";
 
 type Props = { 
   script: Script;
@@ -372,6 +373,9 @@ export default function StandardScriptFlow({ script }: Props) {
       );
   }
 
+  const currentSentence = currentIndex < sentences.length ? sentences[currentIndex] : undefined;
+  const audioStatus = currentSentence?.audioUrl ? 'premium' : (currentSentence ? 'robot' : undefined);
+
   // --- RENDER SHELL ---
   return (
     <ScriptPlayerShell
@@ -381,6 +385,7 @@ export default function StandardScriptFlow({ script }: Props) {
         currentStep={currentIndex}
         totalSteps={totalSteps}
         hasFinished={isCompletion || currentIndex === culturalInsightIndex || currentIndex === quizIndex}
+        audioStatus={audioStatus}
         
         // Controls
         isAutoPlayEnabled={isAutoPlayEnabled}

@@ -8,6 +8,8 @@ import { motion } from "framer-motion";
 import React from "react";
 import { Lock, Trash2, Repeat, Shuffle, Sparkles } from "lucide-react";
 import { GenerativeCover } from "./GenerativeCover";
+import AudioStatusBadge from "./AudioStatusBadge";
+import { getScriptAudioStatus } from "@/lib/utils";
 
 type Props = {
   script: Script;
@@ -22,13 +24,16 @@ type Props = {
 
 export default function ScenarioCard({ 
     script, 
+    index,
     onDelete, 
     onTogglePublic, 
     onRemix,
     onSmartRemix, 
+    onShare,
     isNew
 }: Props) {
 
+  // ... (existing logic)
   const isUserScript = 'userId' in script;
   const isPublic = isUserScript && (script as UserScript).isPublic;
   const authorName = isUserScript ? (script as UserScript).authorName : undefined;
@@ -38,26 +43,18 @@ export default function ScenarioCard({
   const contextRepeats = getRepeats(script.id);
   const repeats = contextRepeats > 0 ? contextRepeats : ('repeats' in script ? (script as { repeats: number }).repeats : 0);
 
+  const audioStatus = getScriptAudioStatus(script);
+
   const [mounted, setMounted] = React.useState(false);
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
+  // ... useEffect
 
   const href = isUserScript ? `/scenario/${script.id}` : `/script/${script.id}`;
 
   return (
     <div className="h-full block">
       <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.2 }}
-        className={`
-            group h-full flex flex-col bg-white rounded-xl border overflow-hidden transition-all duration-300 hover:shadow-sm
-            ${isNew 
-                ? "border-primary/50 ring-2 ring-primary/20 ring-offset-2 shadow-md" 
-                : "border-border/40 hover:border-border/80"
-            }
-        `}
+        // ... (motion props)
+        className={`...`}
       >
         <Link href={href} className="flex-1 flex flex-col min-w-0">
                       {/* Cover Image */}
@@ -73,6 +70,13 @@ export default function ScenarioCard({
                               <GenerativeCover title={script.title} category={script.categoryName || "Custom"} />
                           )}
                            
+                           {/* Floating Badge: Audio Status - Only show for User/Remixed scripts, keep official clean */}
+                           {isUserScript && (
+                               <div className="absolute top-2 left-2 z-10">
+                                   <AudioStatusBadge status={audioStatus} className="shadow-black/20 shadow-lg backdrop-blur-md bg-white/90" />
+                               </div>
+                           )}
+
                            {/* Floating Badge: Repeats */}
                            {mounted && repeats > 0 && (
                                 <div className="absolute top-2 right-2 flex items-center gap-1 text-[10px] font-bold text-white bg-black/40 backdrop-blur-md px-2 py-1 rounded-full">
