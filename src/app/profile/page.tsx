@@ -278,10 +278,18 @@ function EditProfileModal({ user, onClose, initialData }: { user: any, onClose: 
     const handleSave = async () => {
         setSaving(true);
         try {
+            // 0. Clean undefined values (Firestore rejects undefined)
+            const cleanData = Object.entries(formData).reduce((acc, [key, value]) => {
+                if (value !== undefined) {
+                    acc[key] = value;
+                }
+                return acc;
+            }, {} as any);
+
             // 1. Update Firestore Profile
             const userRef = doc(db, "users", user.uid);
             await updateDoc(userRef, {
-                ...formData,
+                ...cleanData,
                 displayName: formData.displayName 
             });
 
