@@ -16,12 +16,13 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 w-full px-4 md:px-6 py-3 bg-white/80 backdrop-blur-md border-b border-border flex items-center justify-between md:justify-between">
       <div className="flex-1 flex justify-start">
-        <Link href="/" className="group flex items-center gap-2.5">
+        <Link href="/" className="group flex items-center gap-0">
             <div className="relative w-8 h-8 md:w-9 md:h-9">
                  <Image 
                     src="/logo-v2.png" 
                     alt="Jok-Eng Logo" 
                     fill
+                    sizes="(max-width: 768px) 32px, 36px"
                     className="object-contain drop-shadow-sm transition-transform group-hover:scale-105 duration-300"
                     priority
                  />

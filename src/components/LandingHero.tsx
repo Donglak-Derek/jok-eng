@@ -25,6 +25,7 @@ export default function LandingHero() {
                         src="/logo-v2.png" 
                         alt="Jok-Eng Crown" 
                         fill
+                        sizes="(max-width: 768px) 96px, 128px"
                         className="object-contain drop-shadow-2xl"
                         priority
                      />

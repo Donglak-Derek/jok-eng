@@ -22,6 +22,8 @@ export default function InteractiveGridBackground() {
     const mouseRef = useRef({ x: 0, y: 0 });
     const isHoveringRef = useRef(false);
     
+    const containerRectRef = useRef<DOMRect | null>(null);
+    
     // Config
     const PARTICLE_COUNT = 50; // Slightly fewer for text readability
     const MIN_SIZE = 16;
@@ -52,10 +54,13 @@ export default function InteractiveGridBackground() {
         let particles: Particle[] = [];
         let width = 0;
         let height = 0;
+        let debounceTimer: NodeJS.Timeout;
 
         const initPoints = () => {
+            if (!container) return;
             width = container.offsetWidth;
             height = container.offsetHeight;
+            containerRectRef.current = container.getBoundingClientRect(); // Cache rect on resize
             
             // Handle high DPI
             const dpr = window.devicePixelRatio || 1;
@@ -89,11 +94,6 @@ export default function InteractiveGridBackground() {
 
         const animate = () => {
             if (!ctx || !canvas) return;
-            // logic: ctx is scaled by dpr. So 0,0 to width,height (logical) covers the whole canvas.
-            // canvas.width is physical (width * dpr).
-            // improperly using canvas.width here with a scaled context would try to clear a HUGE area, which usually works but is wrong.
-            // However, if logic was mismatched elsewhere, it might fail.
-            // Let's rely on container dimensions from the closure, but strictly we should use the calculated values.
             
             // Fix: Clear the logical area
             ctx.clearRect(0, 0, width, height);
@@ -143,15 +143,18 @@ export default function InteractiveGridBackground() {
             animationFrameId = requestAnimationFrame(animate);
         };
 
-        // Resize Observer for robust resizing
+        // Resize Observer for robust resizing with debounce
         const resizeObserver = new ResizeObserver(() => {
-            initPoints();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                initPoints();
+            }, 200);
         });
         resizeObserver.observe(container);
 
         const handleMouseMove = (e: MouseEvent) => {
-            if (!container) return;
-            const rect = container.getBoundingClientRect();
+            if (!containerRectRef.current) return;
+            const rect = containerRectRef.current;
             mouseRef.current = {
                 x: e.clientX - rect.left,
                 y: e.clientY - rect.top

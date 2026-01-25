@@ -20,9 +20,10 @@ export default function CategoryCarousel() {
       {/* Wrapper to contain the bleed so it doesn't push page width */}
       {/* 1. MOBILE: Carousel Container (md:hidden) */}
       {/* Breakout: Force 100vw width relative to viewport, centered, to avoid parent width pollution */}
+// 1. MOBILE: Carousel Container
+      {/* ... */}
       <div className="md:hidden relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-x-hidden bg-background">
           <div 
-            // ref={scrollContainerRef}
             className="flex gap-4 overflow-x-auto pb-8 pt-2 snap-x snap-mandatory hide-scrollbar"
             style={{ 
                 scrollbarWidth: 'none', 
@@ -31,8 +32,8 @@ export default function CategoryCarousel() {
                 WebkitMaskImage: 'linear-gradient(to right, transparent, black 5%, black 95%, transparent)'
             }}
           >
-            {categories.map((c) => (
-                <CategoryCard key={c.slug} c={c} />
+            {categories.map((c, i) => (
+                <CategoryCard key={c.slug} c={c} index={i} />
             ))}
             <div className="w-4 shrink-0" />
           </div>
@@ -40,8 +41,8 @@ export default function CategoryCarousel() {
 
       {/* 2. DESKTOP: Grid Container (hidden md:grid) */}
       <div className="hidden md:grid grid-cols-4 gap-6">
-         {categories.map((c) => (
-             <CategoryCard key={c.slug} c={c} />
+         {categories.map((c, i) => (
+             <CategoryCard key={c.slug} c={c} index={i} />
         ))}
       </div>
     </section>
@@ -49,7 +50,7 @@ export default function CategoryCarousel() {
 }
 
 // Sub-component for Cleaner Code
-function CategoryCard({ c }: { c: Category }) {
+function CategoryCard({ c, index }: { c: Category; index: number }) {
     const scriptCount = scripts.filter((s) => s.categorySlug === c.slug).length;
     return (
         <Link
@@ -63,6 +64,7 @@ function CategoryCard({ c }: { c: Category }) {
                     fill
                     sizes="(max-width: 768px) 280px, 25vw"
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    priority={index === 0}
                 />
                 
                 {/* 
