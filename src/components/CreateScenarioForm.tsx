@@ -16,7 +16,7 @@ import { Button } from "@/components/Button";
 // import { GenerativeCover } from "./GenerativeCover";
 import CulturalNoteCard from "./CulturalNoteCard";
 import QuizCard from "./QuizCard";
-import { Eye, EyeOff, Shuffle } from "lucide-react";
+import { Eye, EyeOff, Shuffle, ChevronDown } from "lucide-react";
 
 interface CreateScenarioFormProps {
   initialValues?: {
@@ -175,6 +175,7 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
   const [lengthOption, setLengthOption] = useState("Bite-sized");
   const [surpriseTheme, setSurpriseTheme] = useState("Random");
   const [isSuggesting, setIsSuggesting] = useState(false);
+  const [showSettings, setShowSettings] = useState(false); // Toggle for settings
 
   const [isStudyMode, setIsStudyMode] = useState(false); // New Study Mode State
   const [focusedField, setFocusedField] = useState<string | null>(null); // Track active field for chips
@@ -600,290 +601,284 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
                     transition={{ duration: 0.3, ease: "easeOut" }}
                     className="flex flex-col gap-6"
                 >
-                    {/* Vibrant Header Container */}
-                    <div className="relative overflow-hidden rounded-3xl p-[1px] bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 shadow-2xl">
-                         <div className="bg-background rounded-[23px] p-6 md:p-8 relative overflow-hidden">
-                            {/* Decorative Background Blobs */}
-                            <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/10 rounded-full blur-[80px] -mr-16 -mt-16 pointer-events-none" />
-                            <div className="absolute bottom-0 left-0 w-48 h-48 bg-pink-500/10 rounded-full blur-[60px] -ml-12 -mb-12 pointer-events-none" />
+                    {/* --- MAD LIBS LAYOUT CONTAINER --- */}
+                    <div className="flex flex-col gap-8 py-4">
+                        
+                        {/* Title Section */}
+                        <div className="space-y-2">
+                            <h1 className="text-4xl font-black tracking-tight text-foreground bg-clip-text text-transparent bg-gradient-to-r from-pink-600 to-purple-600">
+                                Director&apos;s Chair
+                            </h1>
+                            <p className="text-muted-foreground text-lg font-medium">
+                                Complete the sentence to start practicing.
+                            </p>
+                        </div>
 
-                            <div className="relative z-10 flex flex-col gap-6">
-                                
-                                {/* Header & Surprise Button */}
-                                <div className="flex flex-col gap-4">
-                                    <div className="flex items-start justify-between">
-                                        <div>
-                                            <h1 className="text-2xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-pink-600 to-purple-600">
-                                                Director&apos;s Chair
-                                            </h1>
-                                            <p className="text-muted-foreground text-sm font-medium mt-1">
-                                                Craft your perfect practice scenario.
-                                            </p>
-                                        </div>
-                                    </div>
-                                    
-                                    {/* Quick Inspiration Pills */}
-                                    <div className="space-y-3">
-                                         <div className="flex items-center justify-between">
-                                            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70">
-                                                Quick Inspiration
-                                            </label>
-                                            <span className="text-[10px] font-medium text-pink-500 animate-pulse">
-                                                ✨ Tap to Auto-fill
-                                            </span>
-                                         </div>
-                                        <div className="flex flex-wrap gap-2">
-                                            {[
-                                                { id: "Random", label: "Surprise Me", icon: "🎲", },
-                                                { id: "Workplace", label: "Workplace", icon: "💼" },
-                                                { id: "Romance", label: "Dating", icon: "💘" },
-                                                { id: "Social Life", label: "Social", icon: "🥂" },
-                                                { id: "Travel", label: "Travel", icon: "✈️" },
-                                                { id: "Conflict", label: "Conflict", icon: "🔥" },
-                                            ].map((card) => (
-                                                <button
-                                                    key={card.id}
-                                                    onClick={() => {
-                                                        setSurpriseTheme(card.id);
-                                                        handleSurpriseMe(card.id); 
-                                                    }}
-                                                    disabled={isSuggesting}
-                                                    className={`
-                                                        px-4 py-2 rounded-full text-sm font-bold transition-all duration-200 border whitespace-nowrap flex items-center gap-2
-                                                        ${surpriseTheme === card.id 
-                                                            ? "bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white border-transparent shadow-lg shadow-purple-500/20 scale-105" 
-                                                            : "bg-white/80 text-muted-foreground border-purple-100 hover:bg-purple-50 hover:text-purple-700 hover:border-purple-200"
-                                                        }
-                                                        ${isSuggesting ? "opacity-50" : ""}
-                                                    `}
-                                                >
-                                                    <span>{card.icon}</span>
-                                                    <span>{card.label}</span>
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="h-px w-full bg-border/50" />
-
-                                {/* Inputs */}
-                                <div className="space-y-6">
-                                    
-                                    {/* 0. Preferences (Difficulty & Length) */}
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                         {/* Difficulty */}
-                                        <div className="space-y-3">
-                                            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70">
-                                                Difficulty
-                                            </label>
-                                            <div className="flex flex-wrap gap-2">
-                                                {DIFFICULTY_LEVELS.map(level => (
-                                                    <button
-                                                        key={level}
-                                                        onClick={() => setDifficulty(level)}
-                                                        className={`
-                                                            px-3 py-1.5 rounded-full text-xs font-bold transition-all duration-200 border
-                                                            ${difficulty === level 
-                                                                ? "bg-slate-800 text-white border-slate-800 shadow-md scale-105" 
-                                                                : "bg-secondary/50 text-muted-foreground border-transparent hover:bg-secondary hover:text-foreground hover:scale-105"
-                                                            }
-                                                        `}
+                        {/* The Sentence Builder */}
+                        <div className="space-y-8 text-2xl md:text-3xl font-medium leading-relaxed text-foreground/80 select-none">
+                            
+                            {/* 1. Context Input */}
+                            <div className="relative block">
+                                <span className="mr-2">I want to practice</span>
+                                <div className="relative inline-block w-full md:w-auto min-w-[300px]">
+                                    <input
+                                        type="text"
+                                        placeholder="asking for a raise..."
+                                        className="w-full border-b-2 border-muted-foreground/20 bg-transparent py-1 text-foreground placeholder:text-muted-foreground/30 focus:border-purple-500 focus:outline-none transition-all"
+                                        value={inputs.context}
+                                        onChange={(e) => setInputs({ ...inputs, context: e.target.value })}
+                                        onFocus={() => setFocusedField("context")}
+                                    />
+                                    {/* Chips */}
+                                    <AnimatePresence>
+                                        {focusedField === "context" && (
+                                            <motion.div 
+                                                initial={{ opacity: 0, y: 10, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                                className="absolute top-full left-0 z-20 mt-4 flex flex-wrap gap-2 p-4 w-[120%] -ml-[10%] bg-background/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl ring-1 ring-black/5"
+                                            >
+                                                <div className="w-full flex justify-between items-center mb-1 px-1">
+                                                     <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground/50">Suggestions</span>
+                                                     <button 
+                                                        onClick={() => setFocusedField(null)} 
+                                                        className="text-xs text-muted-foreground hover:text-foreground"
                                                     >
-                                                        {level}
+                                                        Close
+                                                    </button>
+                                                </div>
+                                                {LOCAL_SCENARIOS["Workplace"].concat(LOCAL_SCENARIOS["Romance"], LOCAL_SCENARIOS["Social Life"]).slice(0, 6).map((s, i) => (
+                                                    <button
+                                                        key={i}
+                                                        onClick={() => {
+                                                            setInputs(prev => ({ ...prev, context: s.context }));
+                                                            setFocusedField("myRole"); // Auto-advance
+                                                        }}
+                                                        className="text-sm font-semibold px-4 py-2 bg-secondary/40 hover:bg-purple-500 hover:text-white rounded-xl transition-all text-left"
+                                                    >
+                                                        {s.context}
                                                     </button>
                                                 ))}
-                                            </div>
-                                        </div>
-                                        
-                                        {/* Length */}
-                                        <div className="space-y-3">
-                                            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70">
-                                                Length
-                                            </label>
-                                             <div className="flex flex-wrap gap-2">
-                                                {LENGTH_OPTIONS.map(opt => (
-                                                    <button
-                                                        key={opt}
-                                                        onClick={() => setLengthOption(opt)}
-                                                        className={`
-                                                            px-3 py-1.5 rounded-full text-xs font-bold transition-all duration-200 border
-                                                            ${lengthOption === opt 
-                                                                ? "bg-slate-800 text-white border-slate-800 shadow-md scale-105" 
-                                                                : "bg-secondary/50 text-muted-foreground border-transparent hover:bg-secondary hover:text-foreground hover:scale-105"
-                                                            }
-                                                        `}
-                                                    >
-                                                        {opt}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    </div>
-                                
-                                    {/* 1. Details Grid (Who) */}
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                         <div className="space-y-2 group relative">
-                                            <div className="flex justify-between items-center">
-                                                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70 group-focus-within:text-purple-500 transition-colors">
-                                                    Who are you?
-                                                </label>
                                                 <button 
                                                     onClick={() => {
-                                                        const random = ROLES[Math.floor(Math.random() * ROLES.length)].my;
-                                                        setInputs(prev => ({ ...prev, myRole: random }));
+                                                        const random = CONTEXTS[Math.floor(Math.random() * CONTEXTS.length)];
+                                                        setInputs(prev => ({ ...prev, context: random }));
                                                     }}
-                                                    className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-muted-foreground/60 hover:text-purple-600 bg-secondary/30 hover:bg-purple-50 px-2 py-1 rounded-md transition-all"
-                                                    title="Get a random role"
+                                                    className="text-sm font-bold px-4 py-2 bg-purple-100 text-purple-600 rounded-xl flex items-center gap-2 hover:scale-105 transition-transform"
                                                 >
-                                                    <Shuffle className="w-3 h-3" />
-                                                    Shuffle
+                                                    <Shuffle className="w-4 h-4" /> Surprise Me
                                                 </button>
-                                            </div>
-                                            <input 
-                                                type="text" 
-                                                placeholder="e.g. Employee"
-                                                className="w-full bg-secondary/30 hover:bg-secondary/50 focus:bg-background border border-transparent focus:border-purple-500/50 rounded-xl px-4 py-3 text-base font-semibold placeholder:text-muted-foreground/40 outline-none transition-all shadow-sm focus:shadow-purple-500/20"
-                                                value={inputs.myRole}
-                                                onChange={(e) => setInputs({...inputs, myRole: e.target.value})}
-                                            />
-                                        </div>
-                                        <div className="space-y-2 group relative">
-                                            <div className="flex justify-between items-center">
-                                                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70 group-focus-within:text-purple-500 transition-colors">
-                                                    Who are they?
-                                                </label>
-                                                 <button 
-                                                    onClick={() => {
-                                                        const random = ROLES[Math.floor(Math.random() * ROLES.length)].other;
-                                                        setInputs(prev => ({ ...prev, otherRole: random }));
-                                                    }}
-                                                    className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-muted-foreground/60 hover:text-purple-600 bg-secondary/30 hover:bg-purple-50 px-2 py-1 rounded-md transition-all"
-                                                    title="Get a random role"
-                                                >
-                                                    <Shuffle className="w-3 h-3" /> 
-                                                    Shuffle
-                                                </button>
-                                            </div>
-                                            <input 
-                                                type="text" 
-                                                placeholder="e.g. Boss"
-                                                className="w-full bg-secondary/30 hover:bg-secondary/50 focus:bg-background border border-transparent focus:border-purple-500/50 rounded-xl px-4 py-3 text-base font-semibold placeholder:text-muted-foreground/40 outline-none transition-all shadow-sm focus:shadow-purple-500/20"
-                                                value={inputs.otherRole}
-                                                onChange={(e) => setInputs({...inputs, otherRole: e.target.value})}
-                                            />
-                                        </div>
-                                    </div>
-
-                                    {/* 2. Context (Where) */}
-                                    <div className="space-y-2 group relative">
-                                        <div className="flex items-center justify-between">
-                                            <label className="text-sm font-bold uppercase tracking-wider text-muted-foreground group-focus-within:text-pink-600 transition-colors">
-                                                What&rsquo;s happening?
-                                            </label>
-                                             <button 
-                                                onClick={() => {
-                                                    const random = CONTEXTS[Math.floor(Math.random() * CONTEXTS.length)];
-                                                    setInputs(prev => ({ ...prev, context: random }));
-                                                }}
-                                                className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-muted-foreground/60 hover:text-pink-600 bg-secondary/30 hover:bg-pink-50 px-2 py-1 rounded-md transition-all"
-                                                title="Get a random situation"
-                                            >
-                                                <Shuffle className="w-3 h-3" />
-                                                Shuffle
-                                            </button>
-                                        </div>
-                                        <textarea 
-                                            placeholder="e.g. Asking for a raise..."
-                                            className="w-full bg-secondary/30 hover:bg-secondary/50 focus:bg-background border border-transparent focus:border-pink-500/50 rounded-xl px-4 py-3 text-base md:text-lg font-medium placeholder:text-muted-foreground/40 outline-none transition-all resize-none leading-relaxed min-h-[5rem] shadow-sm focus:shadow-pink-500/20"
-                                            value={inputs.context}
-                                            onChange={(e) => setInputs({...inputs, context: e.target.value})}
-                                            autoFocus
-                                            rows={2}
-                                        />
-                                    </div>
-
-                                    {/* 3. Plot Twist (What) */}
-                                    <div className="space-y-2 group relative">
-                                        <div className="flex justify-between items-center">
-                                            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70 group-focus-within:text-indigo-500 transition-colors">
-                                                The Plot Twist
-                                            </label>
-                                             <button 
-                                                onClick={() => {
-                                                    const random = PLOTS[Math.floor(Math.random() * PLOTS.length)];
-                                                    setInputs(prev => ({ ...prev, plot: random }));
-                                                }}
-                                                className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-muted-foreground/60 hover:text-indigo-600 bg-secondary/30 hover:bg-indigo-50 px-2 py-1 rounded-md transition-all"
-                                                title="Get a random plot twist"
-                                            >
-                                                <Shuffle className="w-3 h-3" />
-                                                Shuffle
-                                            </button>
-                                        </div>
-                                        <textarea 
-                                            placeholder="e.g. I need to explain why I deserve it..."
-                                            className="w-full bg-secondary/30 hover:bg-secondary/50 focus:bg-background border border-transparent focus:border-indigo-500/50 rounded-xl px-4 py-3 text-base font-medium placeholder:text-muted-foreground/40 outline-none transition-all h-24 resize-none leading-relaxed shadow-sm focus:shadow-indigo-500/20"
-                                            value={inputs.plot}
-                                            onChange={(e) => setInputs({...inputs, plot: e.target.value})}
-                                        />
-                                    </div>
-
-                                    {/* 4. Tone (How) */}
-                                    <div className="space-y-2">
-                                         <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70">
-                                            Vibe Check
-                                        </label>
-                                        <div className="flex flex-wrap gap-2">
-                                            {TONES.map(t => (
-                                                <button
-                                                    key={t}
-                                                    onClick={() => setTone(t)}
-                                                    className={`
-                                                        px-4 py-2 rounded-full text-sm font-bold transition-all duration-200 border
-                                                        ${tone === t 
-                                                            ? "bg-gradient-to-r from-pink-500 to-purple-500 text-white border-transparent shadow-lg shadow-purple-500/30 scale-105" 
-                                                            : "bg-secondary/50 text-muted-foreground border-transparent hover:bg-secondary hover:text-foreground hover:scale-105"
-                                                        }
-                                                    `}
-                                                >
-                                                    {t}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </div>
-
-                                    {/* 5. Format (Meta) */}
-                                    <div className="space-y-3">
-                                         <div className="flex flex-col gap-1.5">
-                                            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70">
-                                                Training Style
-                                            </label>
-                                            <p className="text-xs text-muted-foreground font-medium min-h-[1.5rem] h-auto transition-all opacity-80 leading-relaxed pr-2">
-                                                {FORMAT_DESCRIPTIONS[format]}
-                                            </p>
-                                         </div>
-                                        <div className="flex flex-wrap gap-2">
-                                            {FORMATS.map(f => (
-                                                <button
-                                                    key={f}
-                                                    onClick={() => setFormat(f)}
-                                                    className={`
-                                                        px-4 py-2 rounded-full text-sm font-bold transition-all duration-200 border
-                                                        ${format === f 
-                                                            ? "bg-foreground text-background border-foreground shadow-md scale-105" 
-                                                            : "bg-secondary/50 text-muted-foreground border-transparent hover:bg-secondary hover:text-foreground hover:scale-105"
-                                                        }
-                                                    `}
-                                                >
-                                                    {f}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </div>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
                                 </div>
                             </div>
-                         </div>
+
+                            {/* 2. Roles Input */}
+                            <div className="block md:flex flex-wrap gap-x-3 items-baseline">
+                                <span className="mr-2">as a</span>
+                                <div className="relative inline-block min-w-[200px] flex-1">
+                                    <input
+                                        type="text"
+                                        placeholder="Employee"
+                                        className="w-full border-b-2 border-muted-foreground/20 bg-transparent py-1 text-center text-foreground placeholder:text-muted-foreground/30 focus:border-pink-500 focus:outline-none transition-all"
+                                        value={inputs.myRole}
+                                        onChange={(e) => setInputs({ ...inputs, myRole: e.target.value })}
+                                        onFocus={() => setFocusedField("myRole")}
+                                    />
+                                    <AnimatePresence>
+                                        {focusedField === "myRole" && (
+                                            <motion.div 
+                                                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}
+                                                className="absolute top-full left-0 z-20 mt-4 flex flex-wrap gap-2 p-4 min-w-[250px] bg-background/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl ring-1 ring-black/5"
+                                            >
+                                                {ROLES.slice(0, 8).map((r, i) => (
+                                                    <button key={i} onClick={() => setInputs(prev => ({ ...prev, myRole: r.my }))} className="text-sm font-semibold px-3 py-1.5 bg-secondary/40 hover:bg-pink-500 hover:text-white rounded-lg transition-colors">
+                                                        {r.my}
+                                                    </button>
+                                                ))}
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </div>
+                                <span className="mx-2">talking to</span>
+                                <div className="relative inline-block min-w-[200px] flex-1">
+                                    <input
+                                        type="text"
+                                        placeholder="Boss"
+                                        className="w-full border-b-2 border-muted-foreground/20 bg-transparent py-1 text-center text-foreground placeholder:text-muted-foreground/30 focus:border-blue-500 focus:outline-none transition-all"
+                                        value={inputs.otherRole}
+                                        onChange={(e) => setInputs({ ...inputs, otherRole: e.target.value })}
+                                        onFocus={() => setFocusedField("otherRole")}
+                                    />
+                                     <AnimatePresence>
+                                        {focusedField === "otherRole" && (
+                                            <motion.div 
+                                                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}
+                                                className="absolute top-full left-0 z-20 mt-4 flex flex-wrap gap-2 p-4 min-w-[250px] bg-background/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl ring-1 ring-black/5"
+                                            >
+                                                {ROLES.slice(0, 8).map((r, i) => (
+                                                    <button key={i} onClick={() => setInputs(prev => ({ ...prev, otherRole: r.other }))} className="text-sm font-semibold px-3 py-1.5 bg-secondary/40 hover:bg-blue-500 hover:text-white rounded-lg transition-colors">
+                                                        {r.other}
+                                                    </button>
+                                                ))}
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </div>
+                            </div>
+                            
+                            {/* 3. Plot Input */}
+                            <div className="relative pt-8 group">
+                                <div className="flex justify-between items-end mb-4">
+                                    <span className="text-sm font-bold uppercase tracking-widest text-indigo-500/80">The Complication (Plot)</span>
+                                    <button 
+                                        onClick={() => {
+                                            const random = PLOTS[Math.floor(Math.random() * PLOTS.length)];
+                                            setInputs(prev => ({ ...prev, plot: random }));
+                                        }}
+                                        className="text-xs font-bold px-3 py-1.5 bg-secondary/50 hover:bg-indigo-500 hover:text-white rounded-full flex items-center gap-1 transition-all"
+                                    >
+                                        <Shuffle className="w-3 h-3" /> Magic Twist
+                                    </button>
+                                </div>
+                                <textarea
+                                    placeholder="But I am late and forgot my wallet..."
+                                    className="w-full bg-secondary/30 hover:bg-secondary/50 focus:bg-background border-2 border-transparent focus:border-indigo-500/50 rounded-2xl p-6 text-xl md:text-2xl font-medium placeholder:text-muted-foreground/30 outline-none transition-all resize-none shadow-sm min-h-[140px]"
+                                    value={inputs.plot}
+                                    onChange={(e) => setInputs({ ...inputs, plot: e.target.value })}
+                                    onFocus={() => setFocusedField("plot")}
+                                />
+                            </div>
+                        </div>
+
+                        {/* PROD SETTINGS GRID (Collapsible) */}
+                        <div className="mt-8 border-t border-border/40 pt-4">
+                             <button 
+                                onClick={() => setShowSettings(!showSettings)}
+                                className="w-full flex items-center justify-between text-left group py-2"
+                            >
+                                <span className="text-sm font-bold uppercase tracking-widest text-muted-foreground group-hover:text-foreground transition-colors">
+                                    🎬 Production Settings
+                                </span>
+                                <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform duration-300 ${showSettings ? "rotate-180" : ""}`} />
+                            </button>
+                            
+                            <AnimatePresence>
+                                {showSettings && (
+                                    <motion.div
+                                        initial={{ height: 0, opacity: 0 }}
+                                        animate={{ height: "auto", opacity: 1 }}
+                                        exit={{ height: 0, opacity: 0 }}
+                                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                                        className="overflow-hidden"
+                                    >
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8 pt-6 pb-2">
+                                
+                                {/* 1. Vibe Check (Tone) */}
+                                <div className="space-y-3">
+                                    <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70">
+                                        Vibe Check
+                                    </label>
+                                    <div className="flex flex-wrap gap-2">
+                                        {TONES.map(t => (
+                                            <button
+                                                key={t}
+                                                onClick={() => setTone(t)}
+                                                className={`
+                                                    px-3 py-1.5 rounded-full text-xs font-bold transition-all duration-200 border
+                                                    ${tone === t 
+                                                        ? "bg-foreground text-background border-foreground shadow-sm scale-105" 
+                                                        : "bg-secondary/50 text-muted-foreground border-transparent hover:bg-secondary hover:text-foreground hover:scale-105"
+                                                    }
+                                                `}
+                                            >
+                                                {t}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* 2. Training Style (Format) */}
+                                <div className="space-y-3">
+                                    <div className="flex justify-between items-baseline">
+                                        <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70">
+                                            Training Style
+                                        </label>
+                                        <span className="text-[10px] font-medium text-muted-foreground/60 truncate max-w-[120px]">
+                                            {FORMAT_DESCRIPTIONS[format].split(":")[0]}
+                                        </span>
+                                    </div>
+                                    <div className="flex flex-wrap gap-2">
+                                        {FORMATS.map(f => (
+                                            <button
+                                                key={f}
+                                                onClick={() => setFormat(f)}
+                                                className={`
+                                                    px-3 py-1.5 rounded-full text-xs font-bold transition-all duration-200 border
+                                                    ${format === f 
+                                                        ? "bg-foreground text-background border-foreground shadow-sm scale-105" 
+                                                        : "bg-secondary/50 text-muted-foreground border-transparent hover:bg-secondary hover:text-foreground hover:scale-105"
+                                                    }
+                                                `}
+                                            >
+                                                {f}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* 3. Difficulty */}
+                                <div className="space-y-3">
+                                    <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70">
+                                        Difficulty
+                                    </label>
+                                    <div className="flex flex-wrap gap-2">
+                                        {DIFFICULTY_LEVELS.map(level => (
+                                            <button
+                                                key={level}
+                                                onClick={() => setDifficulty(level)}
+                                                className={`
+                                                    px-3 py-1.5 rounded-full text-xs font-bold transition-all duration-200 border
+                                                    ${difficulty === level 
+                                                        ? "bg-foreground text-background border-foreground shadow-sm scale-105" 
+                                                        : "bg-background text-muted-foreground border-transparent hover:border-border hover:text-foreground"
+                                                    }
+                                                `}
+                                            >
+                                                {level}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* 4. Length */}
+                                <div className="space-y-3">
+                                    <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70">
+                                        Length
+                                    </label>
+                                    <div className="flex flex-wrap gap-2">
+                                        {LENGTH_OPTIONS.map(opt => (
+                                            <button
+                                                key={opt}
+                                                onClick={() => setLengthOption(opt)}
+                                                className={`
+                                                    px-3 py-1.5 rounded-full text-xs font-bold transition-all duration-200 border
+                                                    ${lengthOption === opt 
+                                                        ? "bg-foreground text-background border-foreground shadow-sm scale-105" 
+                                                        : "bg-background text-muted-foreground border-transparent hover:border-border hover:text-foreground"
+                                                    }
+                                                `}
+                                            >
+                                                {opt}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                            </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
                     </div>
 
                     <div className="pt-6">
