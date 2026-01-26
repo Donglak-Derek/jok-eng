@@ -50,7 +50,8 @@ export type Script = {
   // New fields for story_flow and decoder
   type?: "script" | "story_flow" | "decoder";
   mode?: "standard" | "cloze"; // New mode for StoryTeller
-  difficulty?: "Mild 🌶️" | "Medium 🌶️🌶️" | "Spicy 🌶️🌶️🌶️";
+  difficulty?: string; // e.g. "Beginner", "Normal", "Native" or "Spicy 🌶️"
+  length?: string; // e.g. "Bite-sized", "Deep Dive"
   context?: string;
   tone?: string; // e.g. "Spicy", "Funny"
   format?: string; // e.g. "Social Dojo"

@@ -113,9 +113,28 @@ export default function ScenarioCard({
                                             ⚡ {(script as UserScript).authorAgeGroup}
                                         </span>
                                     )}
-                                     {(script as UserScript).authorCountry && (
+                                    {(script as UserScript).authorCountry && (
                                         <span className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">
                                             🌍 {(script as UserScript).authorCountry}
+                                        </span>
+                                    )}
+                                    
+                                    {/* Difficulty Badge */}
+                                    {script.difficulty && (
+                                        <span className={`inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-medium border
+                                            ${script.difficulty === "Beginner" || script.difficulty.includes("Mild") ? "bg-green-50 text-green-700 border-green-100" : ""}
+                                            ${script.difficulty === "Normal" || script.difficulty.includes("Medium") ? "bg-blue-50 text-blue-700 border-blue-100" : ""}
+                                            ${script.difficulty === "Native" || script.difficulty.includes("Spicy") ? "bg-rose-50 text-rose-700 border-rose-100" : ""}
+                                            ${!["Beginner","Normal","Native"].some(d => script.difficulty?.includes(d)) && !script.difficulty.includes("Mild") && !script.difficulty.includes("Medium") && !script.difficulty.includes("Spicy") ? "bg-slate-50 text-slate-700 border-slate-100" : ""}
+                                        `}>
+                                            🔥 {script.difficulty}
+                                        </span>
+                                    )}
+
+                                    {/* Format Badge (Script Only) */}
+                                    {script.format && (
+                                        <span className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-medium bg-violet-50 text-violet-700 border border-violet-100">
+                                            {script.format === "Social Dojo" ? "🥋" : script.format === "Rapid Fire" ? "⚡" : "📜"} {script.format}
                                         </span>
                                     )}
                                 </div>

@@ -160,13 +160,18 @@ export default function ClozeCard({
   const renderClozeText = () => {
     const parts = textToDisplay.split(/(\[.*?\])/g);
     
+    const isLongText = textToDisplay.length > 80;
+    const dynamicFontSize = isLongText ? "text-xl md:text-2xl" : "text-2xl md:text-4xl";
+
     if (parts.length === 1) {
-        return <span className="text-2xl md:text-4xl font-bold leading-relaxed text-foreground">{cleanText(textToDisplay)}</span>;
+        return <span className={`${dynamicFontSize} font-bold leading-relaxed text-foreground`}>{cleanText(textToDisplay)}</span>;
     }
+
+
 
     return (
       <motion.p 
-        className="text-2xl md:text-4xl font-bold leading-relaxed text-foreground leading-snug"
+        className={`${dynamicFontSize} font-bold leading-relaxed text-foreground leading-snug`}
         variants={containerVariants}
         initial="hidden"
         animate={isEffectiveGlobalReveal ? "visible" : "hidden"}

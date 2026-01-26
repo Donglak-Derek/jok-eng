@@ -13,13 +13,13 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { context, myRole, otherRole, plot, userName, tone, format, userProfile } = body;
+    const { context, myRole, otherRole, plot, userName, tone, format, difficulty, length, userProfile } = body;
 
     const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
 
       const prompt = `
       You are an expert social communication coach creating a "Jok-eng" style roleplay script.
-      The goal is to teach "Socially Calibrated English" - not just correct grammar, but the *right* vibe.
+      The goal is to teach "Socially Calibrated English" - NOT just grammar, but how to win at social games.
 
       CONTEXT: ${context}
       USER NAME: ${userName || "User"}
@@ -28,28 +28,46 @@ export async function POST(request: NextRequest) {
       PLOT SUMMARY: ${plot}
       DESIRED TONE: ${tone || "Polite"}
       TRAINING FORMAT: ${format || "Social Dojo"}
-
-      USER PROFILE (Customize based on this if relevant):
-      - OCCUPATION: ${userProfile?.occupation || "Not specified"} (Use professional metaphors if applicable)
-      - HUMOR STYLE: ${userProfile?.humorStyle || "Not specified"} (Reflect this in the 'Good Response' style)
-      - MOTHER LANGUAGE: ${userProfile?.motherLanguage || "Not specified"} (Highlight specific common mistakes for this language group if relevant)
-      - SUPERPOWER: ${userProfile?.superpower || "Not specified"} (Leverage this strength in the 'Good Response')
-      - KRYPTONITE: ${userProfile?.kryptonite || "Not specified"} (Address this fear directly in the 'Why' explanation)
-
-      FORMAT INSTRUCTIONS:
-      - "Social Dojo": Focus on bad vs good responses to teach NUANCE.
-      - "Classic Script": Focus on flow and longer dialogue. "badResponse" can be just a standard, okay-ish version, while "goodResponse" is the optimized one.
-      - "Rapid Fire": Keep sentences VERY short (5-8 words max). High intensity.
       
+      TARGET DIFFICULTY: ${difficulty || "Normal"} 
+      (Guide: Beginner = Simple A2. Normal = Everyday B2. Native = Idiomatic C2)
+      
+      TARGET LENGTH PER CARD: ${length || "Bite-sized"}
+      (Guide: Bite-sized = Max 1 sentence per turn.)
+
+      USER PROFILE (Customize based on this):
+      - OCCUPATION: ${userProfile?.occupation || "Unknown"} (Use professional metaphors if applicable)
+      - MOTHER LANGUAGE: ${userProfile?.motherLanguage || "Unknown"} (Address specific common pragmatic failures for this group)
+
+      *** CRITICAL INSTRUCTION LAYER ***
+      1. THE "HIGH STAKES" RULE:
+         - Even if the plot is boring (e.g. "Ordering coffee"), you MUST invent a hidden "Urgency" or "Social Risk". 
+         - Example: "Ordering coffee... but you are late for a meeting and forgot your wallet."
+         - Make the situation feel ALIVE, not robotic.
+
+      2. THE "ENEMY" RULE:
+         - The OTHER ROLE should NOT be helpful. They should be slightly difficult, uncharitable, or distracted.
+         - This forces the User to be calibrated to "win" the interaction.
+
+      3. THE "PRAGMATIC FAILURE" RULE (Most Important):
+         - For the User's "badResponse", do NOT just write bad grammar.
+         - The "badResponse" must be grammatically correct but SOCIALLY FATAL.
+         - Examples of Fatal Errors:
+           * Too Direct (Rude): "Give me water."
+           * Too Intimate (Creepy): "You look beautiful today, boss."
+           * Too Robotic (Weird): "I request the liquid consumption."
+           * Too Passive (Weak): "Um... sorry... if it's okay..."
+         - The "goodResponse" must fix this specific social error.
+
       TASK:
-      1. Create a dialogue script.
-      2. STRICT CONSTRAINT: Break dialogue into VERY SHORT chunks. Maximum 1-2 sentences per card. Do NOT create long monologues. Users feel overwhelmed by long text.
-      3. The English MUST be "Real, Modern English" (Use idioms, softeners like 'just', 'actually', generic slang if appropriate). NO textbook robot speak.
-      4. CRITICAL: For the USER'S lines, provide a "badResponse" and a "goodResponse".
-         - badResponse: A grammatically correct but SOCIALLY WRONG way to say it (e.g., too blunt, too formal, robotic, accidental rude).
-         - goodResponse: The socially calibrated, natural way.
-         - why: Explain the SOCIAL difference (e.g., "The bad version sounds like a police report. The good version builds rapport.").
-         - STRICT RULE: Do NOT output "N/A" or "None". If it is the OTHER person's line, return null for badResponse/goodResponse. If it is the USER'S line, you MUST invent a bad version.
+      1. Create a dialogue script. 
+      2. STRICT CONSTRAINT: Follow TARGET LENGTH. Users hate walls of text.
+      3. English must match TARGET DIFFICULTY.
+      4. For the USER'S lines, provide:
+         - badResponse: A PRAGMATICALLY FAILED version (Cringe/Rude/Weak).
+         - goodResponse: The Socially Calibrated version.
+         - why: Explain the SOCIAL COST of the bad response (e.g. "This makes you sound weak/arrogant.").
+         - STRICT RULE: Do NOT output "N/A". You MUST invent a bad version for every user line.
       5. KEYWORDS & CLOZE: You MUST identify 1-2 key vocabulary words (or phrases) per sentence that are crucial for the "vibe".
          - IMPORTANT: In the "en" (or "goodResponse.text"), you MUST wrap these keywords in [square brackets] so the app can hide them.
          - Example: "I would like a [refund] please."
@@ -68,7 +86,7 @@ export async function POST(request: NextRequest) {
         "sentences": [
           {
             "id": "1",
-            "en": "The final GOOD English text for the line (Max 2 sentences)",
+            "en": "The final GOOD English text for the line",
             "keywords": [{"word": "vocab", "definition": "Short definition"}],
             "scenario": "The specific micro-situation (e.g. 'Trying to interrupt politely')",
             "badResponse": {"text": "The awkward/robotic version", "why": "Why it kills the vibe"},
@@ -143,6 +161,8 @@ export async function POST(request: NextRequest) {
         cleanedEnglish: data.cleanedEnglish,
         tone: tone || "Polite", // Persist the requested tone
         format: format || "Social Dojo", // Persist the requested format
+        difficulty: difficulty || "Normal", // Save difficulty
+        length: length || "Bite-sized", // Save length preference
         culturalInsights: data.culturalInsights, // NEW
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         quizItems: data.quizItems?.map((q: any) => ({ ...q, id: uuidv4() })), // NEW: Map with IDs if needed, or simple array

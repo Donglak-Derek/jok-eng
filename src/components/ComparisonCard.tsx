@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import type { Sentence, Script } from "@/types";
 import { Button } from "@/components/Button";
 import { Volume2 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { playScenarioAudio } from "@/lib/tts";
 import { useAuth } from "@/context/AuthContext";
 import PremiumVoiceUpsell from "@/components/subscription/PremiumVoiceUpsell";
@@ -43,6 +43,8 @@ export default function ComparisonCard({
   const [loading, setLoading] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [localRevealed, setLocalRevealed] = useState<Set<string>>(new Set());
+  const [expandedBadWhy, setExpandedBadWhy] = useState(false);
+  const [expandedGoodWhy, setExpandedGoodWhy] = useState(false);
   
   // Progressive Reveal State: 0 (Situation) -> 1 (Trap) -> 2 (Solution)
   const [step, setStep] = useState<0 | 1 | 2>(0);
@@ -273,11 +275,31 @@ export default function ComparisonCard({
                     &quot;{sentence.badResponse.text}&quot;
                 </div>
                 
-                <div className="mt-4 flex gap-3 items-start opacity-90">
-                    <div className="mt-1 text-lg">⚠️</div>
-                    <div className="text-base font-medium text-red-800/80 leading-normal">
-                         <span className="font-bold mr-1">Risk:</span>{sentence.badResponse.why}
-                    </div>
+                <div className="mt-4">
+                     <button
+                        onClick={() => setExpandedBadWhy(!expandedBadWhy)}
+                        className="flex items-center gap-2 text-sm font-bold text-red-800/60 hover:text-red-800 transition-colors uppercase tracking-wide"
+                     >
+                         <span>{expandedBadWhy ? "Hide Analysis" : "Why is this bad?"}</span>
+                         <span className={`transition-transform duration-300 ${expandedBadWhy ? "rotate-180" : ""}`}>▼</span>
+                     </button>
+                     <AnimatePresence>
+                        {expandedBadWhy && (
+                            <motion.div 
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: "auto", opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                className="overflow-hidden"
+                            >
+                                <div className="pt-2 flex gap-3 items-start opacity-90">
+                                    <div className="mt-1 text-lg shrink-0">⚠️</div>
+                                    <div className="text-base font-medium text-red-800/80 leading-relaxed">
+                                        <span className="font-bold mr-1">Risk:</span>{sentence.badResponse.why}
+                                    </div>
+                                </div>
+                            </motion.div>
+                        )}
+                     </AnimatePresence>
                 </div>
             </motion.div>
           )}
@@ -315,11 +337,31 @@ export default function ComparisonCard({
                      {renderClozeText(sentence.goodResponse.text)}
                 </div>
                 
-                <div className="mt-4 flex gap-3 items-start opacity-90">
-                    <div className="mt-1 text-lg">💡</div>
-                    <div className="text-base font-medium text-teal-800/80 leading-normal">
-                        {sentence.goodResponse.why}
-                    </div>
+                <div className="mt-4">
+                     <button
+                        onClick={() => setExpandedGoodWhy(!expandedGoodWhy)}
+                        className="flex items-center gap-2 text-sm font-bold text-teal-800/60 hover:text-teal-800 transition-colors uppercase tracking-wide"
+                     >
+                         <span>{expandedGoodWhy ? "Hide Analysis" : "Why does this work?"}</span>
+                         <span className={`transition-transform duration-300 ${expandedGoodWhy ? "rotate-180" : ""}`}>▼</span>
+                     </button>
+                    <AnimatePresence>
+                        {expandedGoodWhy && (
+                             <motion.div 
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: "auto", opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                className="overflow-hidden"
+                            >
+                                <div className="pt-2 flex gap-3 items-start opacity-90">
+                                    <div className="mt-1 text-lg shrink-0">💡</div>
+                                    <div className="text-base font-medium text-teal-800/80 leading-relaxed">
+                                        {sentence.goodResponse.why}
+                                    </div>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </div>
 
                  {/* KEYWORDS */}

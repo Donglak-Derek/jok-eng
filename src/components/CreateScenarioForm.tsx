@@ -16,7 +16,7 @@ import { Button } from "@/components/Button";
 // import { GenerativeCover } from "./GenerativeCover";
 import CulturalNoteCard from "./CulturalNoteCard";
 import QuizCard from "./QuizCard";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Shuffle } from "lucide-react";
 
 interface CreateScenarioFormProps {
   initialValues?: {
@@ -30,6 +30,11 @@ interface CreateScenarioFormProps {
 // --- Surprise Me Logic ---
 const TONES = ["Polite", "Direct", "Funny", "Flirty", "Spicy", "Professional"];
 const FORMATS = ["Social Dojo", "Classic Script", "Rapid Fire"];
+
+// New Constants
+const DIFFICULTY_LEVELS = ["Beginner", "Normal", "Native"];
+const LENGTH_OPTIONS = ["Bite-sized", "Deep Dive"];
+const SURPRISE_THEMES = ["Random", "Workplace", "Romance", "Travel", "Social Life", "Conflict"];
 
 const FORMAT_DESCRIPTIONS: Record<string, string> = {
   "Social Dojo": "🥋 Focus: Nuance. Compare awkward vs. natural responses.",
@@ -165,7 +170,14 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
   });
   const [tone, setTone] = useState("Polite");
   const [format, setFormat] = useState("Social Dojo"); // New Format State
+  // New State for Difficulty
+  const [difficulty, setDifficulty] = useState("Normal");
+  const [lengthOption, setLengthOption] = useState("Bite-sized");
+  const [surpriseTheme, setSurpriseTheme] = useState("Random");
+  const [isSuggesting, setIsSuggesting] = useState(false);
+
   const [isStudyMode, setIsStudyMode] = useState(false); // New Study Mode State
+  const [focusedField, setFocusedField] = useState<string | null>(null); // Track active field for chips
   
   // User Profile State
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
@@ -349,6 +361,8 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
                 ...inputs,
                 tone,
                 format, // Pass format
+                difficulty, // Pass difficulty
+                length: lengthOption, // Pass length
                 userName: user?.displayName || user?.email?.split('@')[0] || "User",
                 userProfile // Inject profile data
             }),
@@ -504,35 +518,74 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
 
 
 
-    const [placeholder, setPlaceholder] = useState(SCENARIO_PROMPTS[0]);
+// --- 1. Define Local Templates (Zero Cost) ---
+    const LOCAL_SCENARIOS: Record<string, any[]> = {
+        "Workplace": [
+            { context: "Asking my boss for a raise...", myRole: "Employee", otherRole: "Boss", plot: "I need to argue why I deserve more money..." },
+            { context: "Explaining a mistake to a client...", myRole: "Account Manager", otherRole: "Angry Client", plot: "I need to apologize without admitting liability for the server outage..." },
+            { context: "Critiquing a colleague's work...", myRole: "Team Lead", otherRole: "Junior Dev", plot: "Their code works but is messy. I need to guide them without crushing their spirit." },
+            { context: "Quitting my job...", myRole: "Employee", otherRole: "Manager", plot: "I found a better offer but I feel guilty leaving." },
+            { context: "Handling a micromanaging boss...", myRole: "Employee", otherRole: "Boss", plot: "I need to politely ask them to back off and trust me." },
+        ],
+        "Romance": [
+            { context: "Breaking up with a clingy partner...", myRole: "Partner", otherRole: "Clingy Boyfriend/Girlfriend", plot: "I need to be gentle but firm because they are very sensitive..." },
+            { context: "Confessing a secret crush...", myRole: "Friend", otherRole: "Crush", plot: "I've been hiding my feelings for years and can't take it anymore..." },
+            { context: "First date conversation...", myRole: "Me", otherRole: "Date", plot: "The silence is awkward. I need to find common ground fast." },
+            { context: "Defining the relationship...", myRole: "Partner", otherRole: "Partner", plot: "I want to know if we are exclusive, but I don't want to scare them away." },
+            { context: "Discussing moving in together...", myRole: "Partner", otherRole: "Partner", plot: "I'm ready to take the next step, but I don't know if they are." },
+        ],
+        "Social Life": [
+             { context: "Small talk with a stranger in an elevator...", myRole: "Person", otherRole: "Stranger", plot: "The silence is awkward and I want to break the ice..." },
+             { context: "Declining a wedding invitation...", myRole: "Guest", otherRole: "Bride/Groom", plot: "I can't afford to go but don't want to sound cheap." },
+             { context: "Apologizing for forgetting a birthday...", myRole: "Forgetful Friend", otherRole: "Birthday Person", plot: "I completely missed their big 30th bash and need to make it right..." },
+             { context: "Meeting a partner's parents...", myRole: "Partner", otherRole: "Strict Dad", plot: "They disapprove of my job and I need to win them over." },
+             { context: "Networking at a party...", myRole: "Anyone", otherRole: "Important VIP", plot: "I want to introduce myself without seeming desperate." },
+        ],
+        "Travel": [
+             { context: "Checking into a hotel...", myRole: "Guest", otherRole: "Receptionist", plot: "My reservation is missing and I'm exhausted." },
+             { context: "Asking for directions...", myRole: "Lost Tourist", otherRole: "Local", plot: "My phone died and I have no idea where I am." },
+             { context: "Complaining about food...", myRole: "Diner", otherRole: "Waiter", plot: "There is a hair in my soup but I don't want to make a scene." },
+        ],
+        "Conflict": [
+             { context: "Confronting a roommate about dirty dishes...", myRole: "Clean Freak", otherRole: "Messy Roommate", plot: "The sink is full again and we have guests coming over in an hour..." },
+             { context: "Returning a meal at a restaurant...", myRole: "Diner", otherRole: "Waiter", plot: "The food is cold and I want a refund, but I hate confrontation..." },
+             { context: "Negotiating rent with a landlord...", myRole: "Tenant", otherRole: "Landlord", plot: "I can't afford the increase and need to negotiate a smaller hike..." },
+             { context: "Neighbor playing loud music...", myRole: "Tired Neighbor", otherRole: "Party Animal", plot: "It's 2 AM and I have work tomorrow." },
+             { context: "Friend borrowed money and never paid back...", myRole: "Lender", otherRole: "Borrower", plot: "It's been 3 months and I need the money back." },
+        ]
+    };
 
-    useEffect(() => {
-        // Init placeholder
-        setPlaceholder({
-            context: CONTEXTS[0],
-            myRole: ROLES[0].my,
-            otherRole: ROLES[0].other,
-            plot: PLOTS[0]
-        });
-    }, []);
+    const handleSurpriseMe = async (specificTheme?: string) => {
+        setIsSuggesting(true);
+        const themeToUse = specificTheme || surpriseTheme || "Random";
+        if (specificTheme) setSurpriseTheme(specificTheme);
 
-    const handleSurpriseMe = () => {
-        // Combinatorial randomness
-        const randomContext = CONTEXTS[Math.floor(Math.random() * CONTEXTS.length)];
-        const randomRolePair = ROLES[Math.floor(Math.random() * ROLES.length)];
-        const randomPlot = PLOTS[Math.floor(Math.random() * PLOTS.length)];
+        // --- 2. Zero-Cost Logic ---
+        // Simulate "thinking" for 500ms for better UX
+        await new Promise(r => setTimeout(r, 600));
+
+        let templates = [];
+        if (themeToUse === "Random" || !LOCAL_SCENARIOS[themeToUse]) {
+             // Flatten all
+             templates = Object.values(LOCAL_SCENARIOS).flat();
+        } else {
+             templates = LOCAL_SCENARIOS[themeToUse];
+        }
+
+        const randomTemplate = templates[Math.floor(Math.random() * templates.length)];
 
         setInputs({
-            ...inputs, 
-            context: randomContext,
-            myRole: randomRolePair.my,
-            otherRole: randomRolePair.other,
-            plot: randomPlot
+            context: randomTemplate.context,
+            myRole: randomTemplate.myRole,
+            otherRole: randomTemplate.otherRole,
+            plot: randomTemplate.plot
         });
         
-        // Optional: Add a small tone shift for fun
-        const randomTone = TONES[Math.floor(Math.random() * TONES.length)];
+        // Random tone just for flavor
+        const randomTone = TONES[Math.floor(Math.random() * 3)]; // Pick from first 3 safe ones
         setTone(randomTone);
+        
+        setIsSuggesting(false);
     };
 
   return (
@@ -557,51 +610,164 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
                             <div className="relative z-10 flex flex-col gap-6">
                                 
                                 {/* Header & Surprise Button */}
-                                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                                    <div>
-                                        <h1 className="text-2xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-pink-600 to-purple-600">
-                                            Director&apos;s Chair
-                                        </h1>
-                                        <p className="text-muted-foreground text-sm font-medium mt-1">
-                                            Craft your perfect practice scenario.
-                                        </p>
+                                <div className="flex flex-col gap-4">
+                                    <div className="flex items-start justify-between">
+                                        <div>
+                                            <h1 className="text-2xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-pink-600 to-purple-600">
+                                                Director&apos;s Chair
+                                            </h1>
+                                            <p className="text-muted-foreground text-sm font-medium mt-1">
+                                                Craft your perfect practice scenario.
+                                            </p>
+                                        </div>
                                     </div>
-                                    <button
-                                        onClick={handleSurpriseMe}
-                                        className="group relative inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-bold text-sm shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 hover:scale-105 active:scale-95 transition-all w-full sm:w-auto justify-center overflow-hidden"
-                                    >
-                                        <span className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                                        <span className="relative flex items-center gap-2">
-                                            ✨ Surprise Me
-                                        </span>
-                                    </button>
+                                    
+                                    {/* Quick Inspiration Pills */}
+                                    <div className="space-y-3">
+                                         <div className="flex items-center justify-between">
+                                            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70">
+                                                Quick Inspiration
+                                            </label>
+                                            <span className="text-[10px] font-medium text-pink-500 animate-pulse">
+                                                ✨ Tap to Auto-fill
+                                            </span>
+                                         </div>
+                                        <div className="flex flex-wrap gap-2">
+                                            {[
+                                                { id: "Random", label: "Surprise Me", icon: "🎲", },
+                                                { id: "Workplace", label: "Workplace", icon: "💼" },
+                                                { id: "Romance", label: "Dating", icon: "💘" },
+                                                { id: "Social Life", label: "Social", icon: "🥂" },
+                                                { id: "Travel", label: "Travel", icon: "✈️" },
+                                                { id: "Conflict", label: "Conflict", icon: "🔥" },
+                                            ].map((card) => (
+                                                <button
+                                                    key={card.id}
+                                                    onClick={() => {
+                                                        setSurpriseTheme(card.id);
+                                                        handleSurpriseMe(card.id); 
+                                                    }}
+                                                    disabled={isSuggesting}
+                                                    className={`
+                                                        px-4 py-2 rounded-full text-sm font-bold transition-all duration-200 border whitespace-nowrap flex items-center gap-2
+                                                        ${surpriseTheme === card.id 
+                                                            ? "bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white border-transparent shadow-lg shadow-purple-500/20 scale-105" 
+                                                            : "bg-white/80 text-muted-foreground border-purple-100 hover:bg-purple-50 hover:text-purple-700 hover:border-purple-200"
+                                                        }
+                                                        ${isSuggesting ? "opacity-50" : ""}
+                                                    `}
+                                                >
+                                                    <span>{card.icon}</span>
+                                                    <span>{card.label}</span>
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div className="h-px w-full bg-border/50" />
 
                                 {/* Inputs */}
                                 <div className="space-y-6">
+                                    
+                                    {/* 0. Preferences (Difficulty & Length) */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                         {/* Difficulty */}
+                                        <div className="space-y-3">
+                                            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70">
+                                                Difficulty
+                                            </label>
+                                            <div className="flex flex-wrap gap-2">
+                                                {DIFFICULTY_LEVELS.map(level => (
+                                                    <button
+                                                        key={level}
+                                                        onClick={() => setDifficulty(level)}
+                                                        className={`
+                                                            px-3 py-1.5 rounded-full text-xs font-bold transition-all duration-200 border
+                                                            ${difficulty === level 
+                                                                ? "bg-slate-800 text-white border-slate-800 shadow-md scale-105" 
+                                                                : "bg-secondary/50 text-muted-foreground border-transparent hover:bg-secondary hover:text-foreground hover:scale-105"
+                                                            }
+                                                        `}
+                                                    >
+                                                        {level}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        
+                                        {/* Length */}
+                                        <div className="space-y-3">
+                                            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70">
+                                                Length
+                                            </label>
+                                             <div className="flex flex-wrap gap-2">
+                                                {LENGTH_OPTIONS.map(opt => (
+                                                    <button
+                                                        key={opt}
+                                                        onClick={() => setLengthOption(opt)}
+                                                        className={`
+                                                            px-3 py-1.5 rounded-full text-xs font-bold transition-all duration-200 border
+                                                            ${lengthOption === opt 
+                                                                ? "bg-slate-800 text-white border-slate-800 shadow-md scale-105" 
+                                                                : "bg-secondary/50 text-muted-foreground border-transparent hover:bg-secondary hover:text-foreground hover:scale-105"
+                                                            }
+                                                        `}
+                                                    >
+                                                        {opt}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                
                                     {/* 1. Details Grid (Who) */}
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                         <div className="space-y-2 group">
-                                            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70 group-focus-within:text-purple-500 transition-colors">
-                                                Who are you?
-                                            </label>
+                                         <div className="space-y-2 group relative">
+                                            <div className="flex justify-between items-center">
+                                                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70 group-focus-within:text-purple-500 transition-colors">
+                                                    Who are you?
+                                                </label>
+                                                <button 
+                                                    onClick={() => {
+                                                        const random = ROLES[Math.floor(Math.random() * ROLES.length)].my;
+                                                        setInputs(prev => ({ ...prev, myRole: random }));
+                                                    }}
+                                                    className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-muted-foreground/60 hover:text-purple-600 bg-secondary/30 hover:bg-purple-50 px-2 py-1 rounded-md transition-all"
+                                                    title="Get a random role"
+                                                >
+                                                    <Shuffle className="w-3 h-3" />
+                                                    Shuffle
+                                                </button>
+                                            </div>
                                             <input 
                                                 type="text" 
-                                                placeholder={placeholder.myRole}
+                                                placeholder="e.g. Employee"
                                                 className="w-full bg-secondary/30 hover:bg-secondary/50 focus:bg-background border border-transparent focus:border-purple-500/50 rounded-xl px-4 py-3 text-base font-semibold placeholder:text-muted-foreground/40 outline-none transition-all shadow-sm focus:shadow-purple-500/20"
                                                 value={inputs.myRole}
                                                 onChange={(e) => setInputs({...inputs, myRole: e.target.value})}
                                             />
                                         </div>
-                                        <div className="space-y-2 group">
-                                            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70 group-focus-within:text-purple-500 transition-colors">
-                                                Who are they?
-                                            </label>
+                                        <div className="space-y-2 group relative">
+                                            <div className="flex justify-between items-center">
+                                                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70 group-focus-within:text-purple-500 transition-colors">
+                                                    Who are they?
+                                                </label>
+                                                 <button 
+                                                    onClick={() => {
+                                                        const random = ROLES[Math.floor(Math.random() * ROLES.length)].other;
+                                                        setInputs(prev => ({ ...prev, otherRole: random }));
+                                                    }}
+                                                    className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-muted-foreground/60 hover:text-purple-600 bg-secondary/30 hover:bg-purple-50 px-2 py-1 rounded-md transition-all"
+                                                    title="Get a random role"
+                                                >
+                                                    <Shuffle className="w-3 h-3" /> 
+                                                    Shuffle
+                                                </button>
+                                            </div>
                                             <input 
                                                 type="text" 
-                                                placeholder={placeholder.otherRole}
+                                                placeholder="e.g. Boss"
                                                 className="w-full bg-secondary/30 hover:bg-secondary/50 focus:bg-background border border-transparent focus:border-purple-500/50 rounded-xl px-4 py-3 text-base font-semibold placeholder:text-muted-foreground/40 outline-none transition-all shadow-sm focus:shadow-purple-500/20"
                                                 value={inputs.otherRole}
                                                 onChange={(e) => setInputs({...inputs, otherRole: e.target.value})}
@@ -610,14 +776,25 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
                                     </div>
 
                                     {/* 2. Context (Where) */}
-                                    <div className="space-y-2 group">
+                                    <div className="space-y-2 group relative">
                                         <div className="flex items-center justify-between">
                                             <label className="text-sm font-bold uppercase tracking-wider text-muted-foreground group-focus-within:text-pink-600 transition-colors">
                                                 What&rsquo;s happening?
                                             </label>
+                                             <button 
+                                                onClick={() => {
+                                                    const random = CONTEXTS[Math.floor(Math.random() * CONTEXTS.length)];
+                                                    setInputs(prev => ({ ...prev, context: random }));
+                                                }}
+                                                className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-muted-foreground/60 hover:text-pink-600 bg-secondary/30 hover:bg-pink-50 px-2 py-1 rounded-md transition-all"
+                                                title="Get a random situation"
+                                            >
+                                                <Shuffle className="w-3 h-3" />
+                                                Shuffle
+                                            </button>
                                         </div>
                                         <textarea 
-                                            placeholder={placeholder.context}
+                                            placeholder="e.g. Asking for a raise..."
                                             className="w-full bg-secondary/30 hover:bg-secondary/50 focus:bg-background border border-transparent focus:border-pink-500/50 rounded-xl px-4 py-3 text-base md:text-lg font-medium placeholder:text-muted-foreground/40 outline-none transition-all resize-none leading-relaxed min-h-[5rem] shadow-sm focus:shadow-pink-500/20"
                                             value={inputs.context}
                                             onChange={(e) => setInputs({...inputs, context: e.target.value})}
@@ -627,12 +804,25 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
                                     </div>
 
                                     {/* 3. Plot Twist (What) */}
-                                    <div className="space-y-2 group">
-                                        <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70 group-focus-within:text-indigo-500 transition-colors">
-                                            The Plot Twist
-                                        </label>
+                                    <div className="space-y-2 group relative">
+                                        <div className="flex justify-between items-center">
+                                            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70 group-focus-within:text-indigo-500 transition-colors">
+                                                The Plot Twist
+                                            </label>
+                                             <button 
+                                                onClick={() => {
+                                                    const random = PLOTS[Math.floor(Math.random() * PLOTS.length)];
+                                                    setInputs(prev => ({ ...prev, plot: random }));
+                                                }}
+                                                className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-muted-foreground/60 hover:text-indigo-600 bg-secondary/30 hover:bg-indigo-50 px-2 py-1 rounded-md transition-all"
+                                                title="Get a random plot twist"
+                                            >
+                                                <Shuffle className="w-3 h-3" />
+                                                Shuffle
+                                            </button>
+                                        </div>
                                         <textarea 
-                                            placeholder={placeholder.plot}
+                                            placeholder="e.g. I need to explain why I deserve it..."
                                             className="w-full bg-secondary/30 hover:bg-secondary/50 focus:bg-background border border-transparent focus:border-indigo-500/50 rounded-xl px-4 py-3 text-base font-medium placeholder:text-muted-foreground/40 outline-none transition-all h-24 resize-none leading-relaxed shadow-sm focus:shadow-indigo-500/20"
                                             value={inputs.plot}
                                             onChange={(e) => setInputs({...inputs, plot: e.target.value})}
