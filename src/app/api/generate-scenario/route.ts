@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
          - badResponse: A PRAGMATICALLY FAILED version (Cringe/Rude/Weak).
          - goodResponse: The Socially Calibrated version.
          - why: Explain the SOCIAL COST of the bad response (e.g. "This makes you sound weak/arrogant.").
-         - STRICT RULE: Do NOT output "N/A". You MUST invent a bad version for every user line.
+         - STRICT RULE: NEVER output "N/A", "None", or "Skip". If the bad response is hard to imagine, you MUST invent a "Silence/Awkward Pause" or a "Generic Rude/Dismissive" reaction. Every single user line MUST have a valid "badResponse" text.
       5. KEYWORDS & CLOZE: You MUST identify 1-2 key vocabulary words (or phrases) per sentence that are crucial for the "vibe".
          - IMPORTANT: In the "en" (or "goodResponse.text"), you MUST wrap these keywords in [square brackets] so the app can hide them.
          - Example: "I would like a [refund] please."

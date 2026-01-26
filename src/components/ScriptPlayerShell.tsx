@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import AudioStatusBadge from "@/components/AudioStatusBadge";
 
 import Link from "next/link";
@@ -58,6 +59,7 @@ export default function ScriptPlayerShell({
   children,
   ...props // Capture audioStatus etc
 }: Props) {
+  const [isSharing, setIsSharing] = useState(false);
 
   return (
     <div className="fixed inset-0 z-[100] flex flex-col bg-background text-foreground overflow-hidden">
@@ -134,20 +136,33 @@ export default function ScriptPlayerShell({
 
                   {/* 6. Share (Line Icon) */}
                   <button
-                      onClick={() => {
+                      disabled={isSharing}
+                      onClick={async () => {
+                          if (isSharing) return;
+                          
                           const shareData = {
                               title: `Jok-Eng: ${title}`,
                               text: "Practice this scenario with me on Jok-Eng! 🎙️",
                               url: window.location.href
                           };
+                          
                           if (navigator.share) {
-                              navigator.share(shareData).catch(console.error);
+                              try {
+                                  setIsSharing(true);
+                                  await navigator.share(shareData);
+                              } catch (error) {
+                                  if ((error as any).name !== 'AbortError') {
+                                      console.error("Share failed:", error);
+                                  }
+                              } finally {
+                                  setIsSharing(false);
+                              }
                           } else {
                               navigator.clipboard.writeText(window.location.href);
                               alert("Link copied!");
                           }
                       }}
-                      className="text-muted-foreground hover:text-foreground transition-colors p-2 -mr-2"
+                      className={`text-muted-foreground hover:text-foreground transition-colors p-2 -mr-2 ${isSharing ? "opacity-50 cursor-wait" : ""}`}
                       title="Share"
                   >
                       <Share2 className="w-6 h-6 stroke-[1.5]" />

@@ -15,28 +15,37 @@ export function useSubscription() {
              const sub = userProfile.subscription as UserSubscription;
              if (!sub) return;
 
-             const now = Date.now();
-             const ONE_DAY_MS = 24 * 60 * 60 * 1000;
-             const timeSinceLastRefill = now - sub.credits.lastRefill;
+             const now = new Date();
+             const lastRefillDate = new Date(sub.credits.lastRefill);
+             
+             // Logic 1: Calendar Day Reset (Local Time)
+             // Check if "today" is a different calendar day than "last refill"
+             const isNewDay = now.toDateString() !== lastRefillDate.toDateString();
 
-             // If more than 24 hours have passed, reset credits
-             if (timeSinceLastRefill > ONE_DAY_MS) {
-                 console.log("🔄 Subscription: Refilling credits...");
+             // Logic 2: Tier Limit Sync (Fix for Pro Upgrade lag)
+             const expectedLimit = sub.tier === 'pro' ? 15 : 3;
+             const needsLimitUpdate = sub.credits.dailyLimit !== expectedLimit;
+
+             if (isNewDay || needsLimitUpdate) {
+                 console.log(`🔄 Subscription: ${isNewDay ? "New Day Refill" : "Syncing Tier Limit"}...`);
                  try {
                      const userRef = doc(db, 'users', user.uid);
                      
-                     // Determine refresh amount based on tier
-                     const limit = sub.tier === 'pro' ? 15 : 3;
-                     
-                     await updateDoc(userRef, {
-                        "subscription.credits.usage": 0,
-                        "subscription.credits.lastRefill": now,
-                        "subscription.credits.dailyLimit": limit 
-                     });
+                     // If it's a new day, reset usage to 0. 
+                     // If it's just a tier change (same day), keep usage but update limit.
+                     const updates: any = {
+                        "subscription.credits.dailyLimit": expectedLimit
+                     };
 
+                     if (isNewDay) {
+                         updates["subscription.credits.usage"] = 0;
+                         updates["subscription.credits.lastRefill"] = now.getTime();
+                     }
+
+                     await updateDoc(userRef, updates);
                      await refreshProfile(); // Sync local state
                  } catch (e) {
-                     console.error("Failed to refill credits", e);
+                     console.error("Failed to update subscription", e);
                  }
              }
         };
