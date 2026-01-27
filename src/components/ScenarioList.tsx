@@ -5,9 +5,7 @@ import type { Script } from "@/types";
 import ScenarioCard from "@/components/ScenarioCard";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useAuth } from "@/context/AuthContext";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+// Imports removed
 
 type Props = {
   scripts: Script[];
@@ -20,47 +18,12 @@ type Props = {
 
 export default function ScenarioList({ scripts, onDelete, onTogglePublic, onRemix }: Props) {
   const router = useRouter();
-  const { user } = useAuth();
   const [localScripts, setLocalScripts] = useState<Script[]>(scripts);
 
-  // Smart Sort: Prioritize least practiced scenarios
+  // Sync prop changes to state
   useEffect(() => {
-    if (!user) {
-        setLocalScripts(scripts);
-        return;
-    }
-
-    const fetchProgressAndSort = async () => {
-        try {
-            // Fetch user's progress for ALL scenarios (optimized: one collection fetch)
-            const progressRef = collection(db, "users", user.uid, "progress");
-            const snapshot = await getDocs(progressRef);
-            
-            const progressMap: Record<string, number> = {};
-            snapshot.docs.forEach(doc => {
-                progressMap[doc.id] = doc.data().repeats || 0;
-            });
-
-            // Sort logic: 
-            // 1. Least practiced first (0 repeats -> 1 repeat -> ...)
-            // 2. Stable sort otherwise (preserve original order or ID based)
-            const sorted = [...scripts].sort((a, b) => {
-                const repeatsA = progressMap[a.id] || 0;
-                const repeatsB = progressMap[b.id] || 0;
-                return repeatsA - repeatsB;
-            });
-
-            setLocalScripts(sorted);
-        } catch (e) {
-            console.error("Smart sort failed", e);
-            // Fallback to default order
-            setLocalScripts(scripts);
-        }
-    };
-
-    fetchProgressAndSort();
-    fetchProgressAndSort();
-  }, [user, scripts]);
+    setLocalScripts(scripts);
+  }, [scripts]);
 
   // Handle "Just Created" Highlight
   const searchParams = useSearchParams();
