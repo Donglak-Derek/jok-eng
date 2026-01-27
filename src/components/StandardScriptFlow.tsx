@@ -19,8 +19,10 @@ import { PartyPopper } from "lucide-react";
 import StandardFullView from "./StandardFullView";
 import CulturalNoteCard from "@/components/CulturalNoteCard";
 import QuizCard from "@/components/QuizCard";
+import StoryCard from "@/components/StoryCard"; // Import StoryCard
 import { useProgress } from "@/context/ProgressContext";
 import { getScriptAudioStatus } from "@/lib/utils";
+import { useSeries } from "@/hooks/useSeries";
 
 type Props = { 
   script: Script;
@@ -58,6 +60,15 @@ export default function StandardScriptFlow({ script }: Props) {
   // Use localScript instead of prop script for rendering
   const activeScript = localScript || script;
   const sentences = activeScript.sentences || [];
+
+  // Series Logic
+  const { episodes, nextEpisode, prevEpisode } = useSeries(activeScript.seriesId, activeScript.id);
+  const seriesProp = activeScript.seriesId && episodes.length > 0 ? {
+      current: episodes.findIndex(e => e.id === activeScript.id) + 1,
+      total: episodes.length,
+      next: nextEpisode ? { id: nextEpisode.id, title: nextEpisode.title } : undefined,
+      prev: prevEpisode ? { id: prevEpisode.id, title: prevEpisode.title } : undefined
+  } : undefined;
 
   // ... (auth/progress hooks unchanged)
   const { markComplete } = useDailyProgress();
@@ -315,6 +326,17 @@ export default function StandardScriptFlow({ script }: Props) {
                    >
                         Back to Menu
                    </Button>
+                   
+                   {/* Series Next Button */}
+                   {seriesProp?.next && (
+                       <Button
+                           variant="outline"
+                           onClick={() => router.push(`/scenario/${seriesProp.next!.id}`)}
+                           className="w-full h-12 border-indigo-200 text-indigo-700 hover:bg-indigo-50 mt-2"
+                       >
+                           Next Episode: {seriesProp.next.title}
+                       </Button>
+                   )}
               </div>
          </motion.div>
       );
@@ -339,7 +361,12 @@ export default function StandardScriptFlow({ script }: Props) {
       
       // DISPATCHER LOGIC: Choose the right card
       const isComparison = !!(currentSentence.badResponse && currentSentence.goodResponse);
-      const CardComponent = isComparison ? ComparisonCard : ClozeCard;
+      const isStory = !!(currentSentence.section || currentSentence.speaker);
+      
+      const CardComponent = isComparison 
+        ? ComparisonCard 
+        : (isStory ? StoryCard : ClozeCard);
+
 
       content = (
           <motion.div
@@ -401,6 +428,7 @@ export default function StandardScriptFlow({ script }: Props) {
         onRestart={handlePracticeAgain}
         onViewFull={() => setViewMode("full")}
         onBackToMenu={handleBackToMenu}
+        series={seriesProp}
     >
         <AnimatePresence mode="wait">
              {content}

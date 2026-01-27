@@ -18,6 +18,11 @@ export type Sentence = {
     why: string;
   };
   audioUrl?: string; // Cached audio for sentence
+  
+  // New fields for Open Mic & Skit
+  section?: 'hook' | 'twist' | 'punchline';
+  speaker?: 'A' | 'B';
+  mood?: string;
 };
 
 export type DecoderItem = {
@@ -45,6 +50,7 @@ export type Script = {
   categoryName: string;
   section?: string; // Optional grouping for category pages
   cleanedEnglish: string; // Used as summary
+  seriesId?: string; // New: For episodic content
   icon?: string;
   sentences?: Sentence[];
   // New fields for story_flow and decoder

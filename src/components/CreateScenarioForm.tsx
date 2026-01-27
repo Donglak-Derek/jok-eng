@@ -16,7 +16,8 @@ import { Button } from "@/components/Button";
 // import { GenerativeCover } from "./GenerativeCover";
 import CulturalNoteCard from "./CulturalNoteCard";
 import QuizCard from "./QuizCard";
-import { Eye, EyeOff, Shuffle, ChevronDown } from "lucide-react";
+import { Eye, EyeOff, Shuffle, ChevronDown, X } from "lucide-react";
+import { useOnClickOutside } from "@/hooks/useOnClickOutside"; // Import hook
 
 interface CreateScenarioFormProps {
   initialValues?: {
@@ -28,8 +29,9 @@ interface CreateScenarioFormProps {
 }
 
 // --- Surprise Me Logic ---
-const TONES = ["Polite", "Direct", "Funny", "Flirty", "Spicy", "Professional"];
-const FORMATS = ["Social Dojo", "Classic Script", "Rapid Fire"];
+const TONES = ["Polite", "Direct", "Funny", "Flirty", "Romantic", "Drama", "Spicy", "Professional"];
+const FORMATS = ["Social Dojo", "Open Mic", "The Skit"]; // Updated formats
+import { useRef } from "react"; // Added useRef
 
 // New Constants
 const DIFFICULTY_LEVELS = ["Beginner", "Normal", "Native"];
@@ -38,8 +40,8 @@ const SURPRISE_THEMES = ["Random", "Workplace", "Romance", "Travel", "Social Lif
 
 const FORMAT_DESCRIPTIONS: Record<string, string> = {
   "Social Dojo": "🥋 Focus: Nuance. Compare awkward vs. natural responses.",
-  "Classic Script": "📜 Focus: Flow. Longer, realistic dialogue practice.",
-  "Rapid Fire": "⚡ Focus: Speed. Short, fast-paced drills for reflexes."
+  "Open Mic": "🎙️ Focus: Stamina. Tell a 45s story with a Hook, Twist, and Punchline.",
+  "The Skit": "🎬 Focus: Wit. Fast-paced dialogue between two characters."
 };
 
 // --- Combinatorial Surprise Me Logic ---
@@ -179,6 +181,15 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
 
   const [isStudyMode, setIsStudyMode] = useState(false); // New Study Mode State
   const [focusedField, setFocusedField] = useState<string | null>(null); // Track active field for chips
+  
+  // Refs for Click Outside
+  const contextRef = useRef<HTMLDivElement>(null);
+  const myRoleRef = useRef<HTMLDivElement>(null);
+  const otherRoleRef = useRef<HTMLDivElement>(null);
+
+  useOnClickOutside(contextRef, () => { if (focusedField === "context") setFocusedField(null); });
+  useOnClickOutside(myRoleRef, () => { if (focusedField === "myRole") setFocusedField(null); });
+  useOnClickOutside(otherRoleRef, () => { if (focusedField === "otherRole") setFocusedField(null); });
   
   // User Profile State
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
@@ -618,7 +629,7 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
                         <div className="space-y-8 text-2xl md:text-3xl font-medium leading-relaxed text-foreground/80 select-none">
                             
                             {/* 1. Context Input */}
-                            <div className="relative block">
+                            <div className="relative block" ref={contextRef}>
                                 <span className="mr-2">I want to practice</span>
                                 <div className="relative inline-block w-full md:w-auto min-w-[300px]">
                                     <input
@@ -638,11 +649,11 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
                                             >
                                                 <div className="w-full flex justify-between items-center mb-1 px-1">
                                                      <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground/50">Suggestions</span>
-                                                     <button 
+                                                     <button
                                                         onClick={() => setFocusedField(null)} 
-                                                        className="text-xs text-muted-foreground hover:text-foreground"
+                                                        className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1"
                                                     >
-                                                        Close
+                                                        <X className="w-3 h-3" /> Close
                                                     </button>
                                                 </div>
                                                 {LOCAL_SCENARIOS["Workplace"].concat(LOCAL_SCENARIOS["Romance"], LOCAL_SCENARIOS["Social Life"]).slice(0, 6).map((s, i) => (
@@ -675,7 +686,7 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
                             {/* 2. Roles Input */}
                             <div className="block md:flex flex-wrap gap-x-3 items-baseline">
                                 <span className="mr-2">as a</span>
-                                <div className="relative inline-block min-w-[200px] flex-1">
+                                <div className="relative inline-block min-w-[200px] flex-1" ref={myRoleRef}>
                                     <input
                                         type="text"
                                         placeholder="Employee"
@@ -690,6 +701,9 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
                                                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}
                                                 className="absolute top-full left-0 z-20 mt-4 flex flex-wrap gap-2 p-4 min-w-[250px] bg-background/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl ring-1 ring-black/5"
                                             >
+                                                <div className="w-full flex justify-end mb-1">
+                                                     <button onClick={() => setFocusedField(null)} className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1"><X className="w-3 h-3" /> Close</button>
+                                                </div>
                                                 {ROLES.slice(0, 8).map((r, i) => (
                                                     <button key={i} onClick={() => setInputs(prev => ({ ...prev, myRole: r.my }))} className="text-sm font-semibold px-3 py-1.5 bg-secondary/40 hover:bg-pink-500 hover:text-white rounded-lg transition-colors">
                                                         {r.my}
@@ -700,7 +714,7 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
                                     </AnimatePresence>
                                 </div>
                                 <span className="mx-2">talking to</span>
-                                <div className="relative inline-block min-w-[200px] flex-1">
+                                <div className="relative inline-block min-w-[200px] flex-1" ref={otherRoleRef}>
                                     <input
                                         type="text"
                                         placeholder="Boss"
@@ -715,6 +729,9 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
                                                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}
                                                 className="absolute top-full left-0 z-20 mt-4 flex flex-wrap gap-2 p-4 min-w-[250px] bg-background/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl ring-1 ring-black/5"
                                             >
+                                                <div className="w-full flex justify-end mb-1">
+                                                     <button onClick={() => setFocusedField(null)} className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1"><X className="w-3 h-3" /> Close</button>
+                                                </div>
                                                 {ROLES.slice(0, 8).map((r, i) => (
                                                     <button key={i} onClick={() => setInputs(prev => ({ ...prev, otherRole: r.other }))} className="text-sm font-semibold px-3 py-1.5 bg-secondary/40 hover:bg-blue-500 hover:text-white rounded-lg transition-colors">
                                                         {r.other}
@@ -803,10 +820,14 @@ export default function CreateScenarioForm({ initialValues }: CreateScenarioForm
                                         <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70">
                                             Training Style
                                         </label>
-                                        <span className="text-[10px] font-medium text-muted-foreground/60 truncate max-w-[120px]">
-                                            {FORMAT_DESCRIPTIONS[format].split(":")[0]}
-                                        </span>
+                                        {/* Removed redundant top label */}
                                     </div>
+                                    {/* Description (Moved above buttons) */}
+                                    <p className="text-[11px] text-muted-foreground italic pl-1 min-h-[16px]">
+                                        {/* Show full description without 'Focus: X.' prefix if desired, or just show whole string to be safe against 'vs.' splitting */}
+                                        {FORMAT_DESCRIPTIONS[format]} 
+                                    </p>
+                                    
                                     <div className="flex flex-wrap gap-2">
                                         {FORMATS.map(f => (
                                             <button

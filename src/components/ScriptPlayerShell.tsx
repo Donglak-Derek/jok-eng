@@ -39,6 +39,14 @@ type Props = {
   
   // Slots
   children: React.ReactNode;
+  
+  // Series Props
+  series?: {
+    current: number;
+    total: number;
+    next?: { id: string; title: string };
+    prev?: { id: string; title: string };
+  };
 };
 
 export default function ScriptPlayerShell({
@@ -57,6 +65,7 @@ export default function ScriptPlayerShell({
   onRestart,
   onViewFull,
   children,
+  series, // Destructure series
   ...props // Capture audioStatus etc
 }: Props) {
   const [isSharing, setIsSharing] = useState(false);
@@ -176,6 +185,13 @@ export default function ScriptPlayerShell({
             {imageUrl && (
                 <div className="hidden md:block w-12 h-12 absolute left-1/2 -translate-x-1/2 -z-10 opacity-0 pointer-events-none">
                     {/* Placeholder if we want fancy image effects in header later */}
+                </div>
+            )}
+            
+            {/* Series Indicator */}
+            {series && (
+                <div className="absolute top-1 left-1/2 -translate-x-1/2 text-[10px] uppercase font-bold tracking-widest text-muted-foreground/70 bg-secondary/50 px-2 py-0.5 rounded-full backdrop-blur-sm border border-border/50">
+                    Series: Ep {series.current} / {series.total}
                 </div>
             )}
           </div>
