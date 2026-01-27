@@ -209,7 +209,7 @@ export default function ScriptPlayerShell({
                     className="text-muted-foreground hover:text-foreground shrink-0 w-12 h-12 rounded-full p-0"
                     title="Restart from beginning"
                 >
-                    <RotateCcw className="w-5 h-5" />
+                    <RotateCcw className="w-9 h-9" />
                 </Button>
                 
                 {/* Navigation Group (Right) */}
