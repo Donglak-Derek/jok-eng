@@ -8,7 +8,7 @@ const MODES = [
     id: "social-dojo",
     title: "Social Dojo",
     subtitle: "Focus: Nuance",
-    description: "Don't just translate. Learen the calibrated, culturally correct native response.",
+    description: "Don't just translate. Learn the calibrated, culturally correct native response.",
     icon: Award,
     color: "bg-blue-50 text-blue-600 border-blue-200",
     delay: 0
@@ -38,10 +38,10 @@ export default function ModeCards() {
     <section className="py-12 md:py-20 container-minimal px-4">
       <div className="text-center mb-10 space-y-2">
         <h2 className="text-3xl md:text-4xl font-black tracking-tight">
-          Three ways to <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-600 inline-block py-1">play</span>.
+          Three <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-600 inline-block py-1">Training Styles</span>.
         </h2>
-        <p className="text-muted-foreground font-medium">
-          Choose your arena.
+        <p className="text-muted-foreground font-medium text-lg max-w-2xl mx-auto">
+          Every scenario in the app matches one of these games. <br className="hidden md:block" /> Know them to win them.
         </p>
       </div>
 

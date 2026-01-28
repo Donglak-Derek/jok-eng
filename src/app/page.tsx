@@ -19,6 +19,7 @@ import QuickStartInput from "@/components/QuickStartInput";
 import LandingHero from "@/components/LandingHero";
 import RemixShowcase from "@/components/RemixShowcase";
 import ModeCards from "@/components/ModeCards";
+import MemberBenefits from "@/components/MemberBenefits";
 
 type Tab = "home" | "my_scenarios";
 
@@ -154,7 +155,13 @@ function HomeContent() {
                 {/* VISUAL SEPARATOR */}
                 <div className="w-full h-px bg-border/40 my-8" />
 
-                {/* 3. CONTENT PREVIEW (The What) */}
+                {/* 3. SHOWCASE REMIX (Feature Explained First) */}
+                <RemixShowcase />
+                
+                {/* 3.5 MEMBER BENEFITS (Why Sign In) */}
+                <MemberBenefits />
+
+                {/* 4. CONTENT PREVIEW (The What - Last Step) */}
                 <section id="vibe-check" className="container-minimal py-12 md:py-16 bg-secondary/20 rounded-3xl my-8">
                      <div className="mb-8 text-center px-4">
                         <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70 mb-2 block animate-pulse">
@@ -167,9 +174,6 @@ function HomeContent() {
                      </div>
                      <CategoryCarousel />
                 </section>
-
-                {/* 3. SHOWCASE REMIX */}
-                <RemixShowcase />
 
                 {/* 4. COMMUNITY FEED (Preview) */}
                 <section className="container-minimal py-16">

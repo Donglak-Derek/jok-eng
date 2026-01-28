@@ -80,23 +80,23 @@ export default function LandingHero() {
          <motion.div 
             animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-1/4 left-10 hidden lg:block opacity-10 pointer-events-none font-black text-primary"
+            className="absolute top-1/4 left-10 opacity-10 pointer-events-none font-black text-primary"
          >
-            <div className="text-9xl drop-shadow-xl">Aa</div>
+            <div className="text-6xl md:text-9xl drop-shadow-xl">Aa</div>
          </motion.div>
          
          <motion.div 
             animate={{ y: [0, 25, 0], rotate: [0, -5, 0] }}
             transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-            className="absolute bottom-1/4 right-10 hidden lg:block opacity-10 pointer-events-none font-serif text-blue-500"
+            className="absolute bottom-1/4 right-10 opacity-10 pointer-events-none font-serif text-blue-500"
          >
-            <div className="text-[10rem] drop-shadow-xl">?</div>
+            <div className="text-7xl md:text-[10rem] drop-shadow-xl">?</div>
          </motion.div>
          
          <motion.div 
             animate={{ y: [0, -15, 0], rotate: [0, 10, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-            className="absolute bottom-1/3 left-20 hidden lg:block opacity-10 pointer-events-none font-mono text-purple-500"
+            className="absolute bottom-1/3 left-20 hidden md:block opacity-10 pointer-events-none font-mono text-purple-500"
          >
             <div className="text-8xl drop-shadow-xl">Bb</div>
          </motion.div>
@@ -104,7 +104,7 @@ export default function LandingHero() {
          <motion.div 
              animate={{ y: [0, 20, 0], rotate: [0, -10, 0] }}
              transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-             className="absolute top-1/3 right-20 hidden lg:block opacity-10 pointer-events-none font-black text-pink-500"
+             className="absolute top-1/3 right-20 hidden md:block opacity-10 pointer-events-none font-black text-pink-500"
          >
              <div className="text-9xl drop-shadow-xl">Cc</div>
          </motion.div>
@@ -112,9 +112,9 @@ export default function LandingHero() {
         <motion.div 
              animate={{ y: [0, -25, 0] }}
              transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
-             className="absolute top-20 left-1/3 hidden lg:block opacity-5 pointer-events-none font-serif"
+             className="absolute top-20 left-1/3 opacity-5 pointer-events-none font-serif"
          >
-             <div className="text-8xl">Hey</div>
+             <div className="text-5xl md:text-8xl">Hey</div>
          </motion.div>
       </div>
     </section>
