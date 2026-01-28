@@ -18,19 +18,7 @@ export default function LandingHero() {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="space-y-4"
         >
-            {/* Brand Mark (Hero Image) */}
-            <div className="flex justify-center mb-6">
-                <div className="relative w-24 h-24 md:w-36 md:h-36 animate-in fade-in zoom-in duration-1000">
-                     <Image 
-                        src="/logo-v2.png" 
-                        alt="Jok-Eng Crown" 
-                        fill
-                        sizes="(max-width: 768px) 96px, 128px"
-                        className="object-contain drop-shadow-2xl"
-                        priority
-                     />
-                </div>
-            </div>
+            {/* Brand Mark REMOVED per user request */}
 
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary/50 backdrop-blur-sm border border-border/50 text-sm font-medium text-muted-foreground mb-4">
                 <span className="relative flex h-2 w-2">
@@ -41,9 +29,9 @@ export default function LandingHero() {
             </div>
 
             <h1 className="text-5xl xs:text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter text-balance leading-[0.9]">
-                Speak <br className="hidden md:block"/>
+                Don&apos;t just speak. <br className="hidden md:block"/>
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-500 to-blue-600 animate-gradient-x">
-                    Like You Belong.
+                    Get the joke.
                 </span>
             </h1>
         </motion.div>
@@ -52,12 +40,11 @@ export default function LandingHero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-            className="text-lg md:text-xl text-muted-foreground font-medium max-w-2xl mx-auto text-balance leading-relaxed px-4 text-left md:text-center mt-6"
+            className="text-lg md:text-xl text-muted-foreground font-medium max-w-2xl mx-auto text-balance leading-relaxed px-4 text-center mt-6"
         >
-            As an immigrant, the English I learned in school wasn&apos;t the English Americans actually use. 
-            I created this app to bridge that gap—mastering the <strong>nuance, wit, and stamina</strong> of real conversation. 
+            As an immigrant, I’m done with textbook English. I created this to help you master the real thing—jokes, nuance, and all.
             <br/><br/>
-            <span className="text-foreground font-bold">Free to join. Open source your confidence.</span>
+            <span className="text-foreground font-black text-xl md:text-2xl mt-4 block tracking-tight">Free to join. Upgrade your confidence.</span>
         </motion.p>
         
         <motion.div 

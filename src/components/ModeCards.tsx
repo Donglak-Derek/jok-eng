@@ -1,24 +1,24 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Mic, Clapperboard, Award } from "lucide-react";
+import Image from "next/image";
 
 const MODES = [
   {
     id: "social-dojo",
     title: "Social Dojo",
     subtitle: "Focus: Nuance",
-    description: "Don't just translate. Learn the calibrated, culturally correct native response.",
-    icon: Award,
+    description: "Read the room. Don't just translate words—learn the culturally right answer for the moment.",
+    image: "/mode-dojo.png",
     color: "bg-blue-50 text-blue-600 border-blue-200",
     delay: 0
   },
   {
     id: "open-mic",
     title: "Open Mic",
-    subtitle: "Focus: Stamina",
-    description: "Can you hold the floor? Practice telling engaging stories with a beginning, middle, and end.",
-    icon: Mic,
+    subtitle: "Focus: Flow",
+    description: "Keep them listening. Practice telling full, engaging stories from start to finish.",
+    image: "/mode-open-mic.png",
     color: "bg-pink-50 text-pink-600 border-pink-200",
     delay: 0.1
   },
@@ -26,8 +26,8 @@ const MODES = [
     id: "the-skit",
     title: "The Skit",
     subtitle: "Focus: Wit",
-    description: "Real life is fast. Keep up with rapid-fire dialogue and banter.",
-    icon: Clapperboard,
+    description: "Think fast. Real life moves quickly. Learn to handle rapid dialogue and banter.",
+    image: "/mode-skit.png",
     color: "bg-purple-50 text-purple-600 border-purple-200",
     delay: 0.2
   }
@@ -38,10 +38,10 @@ export default function ModeCards() {
     <section className="py-12 md:py-20 container-minimal px-4">
       <div className="text-center mb-10 space-y-2">
         <h2 className="text-3xl md:text-4xl font-black tracking-tight">
-          Three <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-600 inline-block py-1">Training Styles</span>.
+          Three <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-600 inline-block py-1">Ways to Train</span>.
         </h2>
         <p className="text-muted-foreground font-medium text-lg max-w-2xl mx-auto">
-          Every scenario in the app matches one of these games. <br className="hidden md:block" /> Know them to win them.
+          Every scenario fits one of these styles. <br className="hidden md:block" /> Master them all.
         </p>
       </div>
 
@@ -61,9 +61,14 @@ export default function ModeCards() {
                 hover:scale-[1.02] transition-transform duration-300 shadow-sm
             `}
           >
-            {/* Icon */}
-            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center bg-white shadow-sm ${mode.color.split(" ")[1]} relative`}>
-                <mode.icon className="w-7 h-7 stroke-[2.5]" />
+            {/* Image */}
+            <div className={`w-full aspect-[4/3] rounded-2xl overflow-hidden relative shadow-sm ${mode.color.split(" ")[1]} bg-secondary/10`}>
+                <Image 
+                    src={mode.image} 
+                    alt={mode.title}
+                    fill
+                    className="object-cover hover:scale-105 transition-transform duration-500"
+                />
             </div>
 
             <div>

@@ -13,61 +13,61 @@ const TABS = [
 const EXAMPLES = {
   career: {
     original: {
-      category: "Professional",
-      title: "The Project Update",
+      category: "The Textbook 📚",
+      title: "The Situation",
       lines: [
-        "I'm done with the first part.",
-        "It took longer than expected.",
-        "I need more time for the rest."
+        "I am very busy right now.",
+        "I cannot do that.",
+        "Maybe another time."
       ]
     },
     remixed: {
-      category: "Chef Edition 👨‍🍳",
-      title: "Kitchen Status",
+      category: "Corporate (The Boss) 👔",
+      title: "Professional",
       lines: [
-        "Mise-en-place is complete, Chef.",
-        "The prep ran into the weeds.",
-        "I need 5 minutes on the proteins!"
+        "I'm at capacity currently.",
+        "That's not actionable for me.",
+        "Let's circle back on this."
       ]
     }
   },
   culture: {
     original: {
-      category: "Direct (Western)",
-      title: "Declining an Invitation",
+      category: "The Textbook 📚",
+      title: "The Situation",
       lines: [
-        "No, I can't come to your party.",
-        "I have too much work to do.",
-        "Maybe next time."
+        "I am very busy right now.",
+        "I cannot do that.",
+        "Maybe another time."
       ]
     },
     remixed: {
-      category: "Korean Manner 🙇",
-      title: "Polite Refusal",
+      category: "Polite (The Elder) 🙇",
+      title: "Indirect Refusal",
       lines: [
-        "I would love to go, but...",
-        "Arguments with my schedule are difficult.",
-        "Please have fun without me this time!"
+        "I'd love to, but...",
+        "My schedule is a bit difficult.",
+        "Please ask me again later!"
       ]
     }
   },
   vibe: {
     original: {
-      category: "Standard English",
-      title: "That's Amazing",
+      category: "The Textbook 📚",
+      title: "The Situation",
       lines: [
-        "This food is very delicious.",
-        "You are extremely talented.",
-        "I am having a great time."
+        "I am very busy right now.",
+        "I cannot do that.",
+        "Maybe another time."
       ]
     },
     remixed: {
-      category: "Gen Z Vibe ✨",
-      title: "The Glaze",
+      category: "Casual (The Friend) 🧢",
+      title: "Street Smart",
       lines: [
-        "This hits different, no cap.",
-        "You're actually the goat.",
-        "The vibes are immaculate."
+        "I'm swamped.",
+        "No shot I can do that.",
+        "Catch you later?"
       ]
     }
   }
@@ -81,24 +81,24 @@ export default function RemixShowcase() {
       <div className="container px-4 mx-auto max-w-4xl">
         <div className="text-center mb-12 space-y-6">
           <h2 className="text-4xl md:text-5xl font-black tracking-tight">
-            One Scenario. <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">Infinite Contexts.</span>
+            One Scenario. <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">Any Style.</span>
           </h2>
           
            {/* Simple How-To - Moved Up */}
            <div className="flex flex-wrap justify-center gap-3 md:gap-6 text-xs md:text-sm font-bold text-muted-foreground uppercase tracking-widest bg-secondary/30 inline-flex flex-wrap px-6 py-3 rounded-full border border-border/50 backdrop-blur-sm">
               <div className="flex items-center gap-2">
                 <span className="w-5 h-5 rounded-full bg-foreground text-background flex items-center justify-center text-[10px] font-bold">1</span> 
-                Pick Topic
+                Pick a Topic
               </div>
               <div className="text-border/50">→</div>
               <div className="flex items-center gap-2">
                  <span className="w-5 h-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-[10px] font-bold">2</span>
-                 Remix It
+                 Hit Remix
               </div>
               <div className="text-border/50">→</div>
               <div className="flex items-center gap-2">
                  <span className="w-5 h-5 rounded-full bg-foreground text-background flex items-center justify-center text-[10px] font-bold">3</span>
-                 Go Viral
+                 See the Magic
               </div>
           </div>
 
@@ -133,8 +133,8 @@ export default function RemixShowcase() {
           ))}
         </div>
 
-        {/* Single Dynamic Card */}
-        <div className="relative max-w-lg mx-auto">
+        {/* Single Dynamic Card (Expanded for Before/After) */}
+        <div className="relative max-w-4xl mx-auto">
              <AnimatePresence mode="wait">
                 <motion.div 
                     key={activeTab}
@@ -144,62 +144,65 @@ export default function RemixShowcase() {
                     transition={{ duration: 0.3 }}
                     className="relative"
                 >
-                    <div className="bg-gradient-to-br from-indigo-950 via-slate-900 to-black text-white rounded-[2rem] p-8 md:p-10 shadow-2xl relative overflow-hidden border border-white/10 ring-1 ring-white/5">
+                    <div className="bg-gradient-to-br from-indigo-950 via-slate-900 to-black text-white rounded-[2rem] p-6 md:p-10 shadow-2xl relative overflow-hidden border border-white/10 ring-1 ring-white/5">
                         
                         {/* Dynamic Background Glow */}
                         <div className={`absolute top-0 right-0 w-96 h-96 bg-gradient-to-b ${TABS.find(t => t.id === activeTab)?.color} opacity-25 blur-[100px] rounded-full -mr-20 -mt-20`} />
                         
-                        {/* Header */}
-                        <div className="flex justify-between items-start mb-8 relative z-10">
-                            <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center text-2xl shadow-inner border border-white/10">
-                                    {activeTab === "career" && "💼"}
-                                    {activeTab === "culture" && "🇰🇷"}
-                                    {activeTab === "vibe" && "✨"}
-                                </div>
-                                <div>
-                                    <div className="text-xs font-bold uppercase tracking-widest text-white/50 mb-1">Context Applied</div>
-                                    <div className="font-bold text-xl md:text-2xl text-white tracking-tight">
-                                        {EXAMPLES[activeTab as keyof typeof EXAMPLES].remixed.category}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 relative z-10">
+                            {/* LEFT COLUMN: BEFORE */}
+                            <div className="space-y-6 opacity-60">
+                                <div className="flex items-center gap-3 mb-4 border-b border-white/10 pb-4">
+                                    <div className="text-xs font-bold uppercase tracking-widest text-white/50">Before</div>
+                                    <div className="font-bold text-lg text-white/80">
+                                        {EXAMPLES[activeTab as keyof typeof EXAMPLES].original.category}
                                     </div>
                                 </div>
+
+                                <div className="space-y-4 font-serif italic text-white/70">
+                                    {EXAMPLES[activeTab as keyof typeof EXAMPLES].original.lines.map((line, i) => (
+                                        <p key={i} className="text-base md:text-lg leading-relaxed">{line}</p>
+                                    ))}
+                                </div>
                             </div>
-                            <div className="bg-white/10 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold border border-white/10 text-white/80">
-                                AI Remix
+
+                            {/* RIGHT COLUMN: AFTER (highlighted) */}
+                            <div className="space-y-6">
+                                <div className="flex items-center gap-3 mb-4 border-b border-white/20 pb-4">
+                                    <div className="text-xs font-bold uppercase tracking-widest text-primary">After</div>
+                                    <div className="font-bold text-lg md:text-2xl text-white tracking-tight flex items-center gap-2">
+                                         {EXAMPLES[activeTab as keyof typeof EXAMPLES].remixed.category}
+                                    </div>
+                                    <div className="ml-auto bg-white/10 px-2 py-0.5 rounded text-[10px] font-bold">AI Remix</div>
+                                </div>
+
+                                <div className="space-y-4">
+                                     {EXAMPLES[activeTab as keyof typeof EXAMPLES].remixed.lines.map((line, i) => (
+                                        <motion.div 
+                                            key={i} 
+                                            initial={{ opacity: 0, x: 10 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            transition={{ delay: 0.2 + (i * 0.1) }}
+                                            className="flex gap-3 group"
+                                        >
+                                            <div className="w-4 text-right font-mono text-xs opacity-30 pt-1.5 group-hover:text-primary transition-colors">0{i+1}</div>
+                                            <div className="flex-1">
+                                                <p className="text-lg md:text-xl font-bold text-indigo-50 leading-relaxed selection:bg-primary/30">
+                                                    {line}
+                                                </p>
+                                            </div>
+                                        </motion.div>
+                                    ))}
+                                </div>
                             </div>
                         </div>
 
-                        {/* Content */}
-                        <div className="space-y-6 relative z-10">
-                             {EXAMPLES[activeTab as keyof typeof EXAMPLES].remixed.lines.map((line, i) => (
-                                <motion.div 
-                                    key={i} 
-                                    initial={{ opacity: 0, x: -10 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: i * 0.1 }}
-                                    className="flex gap-4 group"
-                                >
-                                    <div className="w-6 text-right font-mono text-sm opacity-30 pt-1 group-hover:text-primary transition-colors">0{i+1}</div>
-                                    <div className="flex-1">
-                                        <p className="text-lg md:text-xl font-medium text-indigo-50 leading-relaxed selection:bg-primary/30">
-                                            {line}
-                                        </p>
-                                    </div>
-                                </motion.div>
-                            ))}
-                        </div>
-
-                         {/* Footer / Original Context */}
-                         <div className="mt-8 pt-6 border-t border-white/5 flex items-center gap-2 text-xs text-white/40">
-                            <span>Original Sceario:</span>
-                            <span className="text-white/60 font-semibold">{EXAMPLES[activeTab as keyof typeof EXAMPLES].original.title}</span>
-                         </div>
                     </div>
                 </motion.div>
             </AnimatePresence>
             
             {/* Background Decoration */}
-            <div className="absolute inset-0 bg-gradient-to-r from-primary to-purple-600 blur-[60px] opacity-10 -z-10 rounded-full transform scale-110" />
+            <div className="absolute inset-0 bg-gradient-to-r from-primary to-purple-600 blur-[80px] opacity-10 -z-10 rounded-full transform scale-110" />
         </div>
 
       </div>
