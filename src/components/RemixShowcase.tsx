@@ -81,10 +81,10 @@ export default function RemixShowcase() {
       <div className="container px-4 mx-auto max-w-5xl">
         <div className="text-center mb-16 space-y-4">
           <h2 className="text-4xl md:text-5xl font-black tracking-tight">
-            The <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">Smart Remix Engine</span>
+            One Scenario. <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">Infinite Contexts.</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Real life happens in context. Adapt any scenario to fit your <strong className="text-foreground">Job</strong>, your <strong className="text-foreground">Culture</strong>, and your <strong className="text-foreground">Vibe</strong>.
+            Don&apos;t sound like a textbook. Instantly adapt any practice script to match your <strong className="text-foreground">Job</strong>, your <strong className="text-foreground">Culture</strong>, or your <strong className="text-foreground">Gen-Z Vibe</strong>.
           </p>
         </div>
       
@@ -114,7 +114,7 @@ export default function RemixShowcase() {
         </div>
 
         {/* Comparison Cards */}
-        <div className="grid md:grid-cols-2 gap-8 items-center">
+        <div className="grid md:grid-cols-[1fr_auto_1fr] gap-4 items-center">
             {/* Original Card */}
             <div className="bg-card border border-border/50 rounded-3xl p-8 shadow-sm scale-95 opacity-80 hover:opacity-100 transition-opacity">
                 <div className="flex items-center gap-3 mb-6">
@@ -133,6 +133,15 @@ export default function RemixShowcase() {
                             <span>{line}</span>
                         </div>
                     ))}
+                </div>
+            </div>
+
+            {/* Arrow Indicator (Mobile: Down, Desktop: Right) */}
+            <div className="flex justify-center -my-4 md:my-0 relative z-10">
+                <div className="bg-background border border-border p-3 rounded-full shadow-lg">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-muted-foreground md:rotate-[-90deg]">
+                        <path d="M12 5V19M12 19L5 12M12 19L19 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
                 </div>
             </div>
 

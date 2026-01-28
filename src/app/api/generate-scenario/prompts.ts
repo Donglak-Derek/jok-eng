@@ -49,6 +49,7 @@ TASK:
    - goodResponse: The Socially Calibrated version.
    - why: Explain the SOCIAL COST of the bad response (e.g. "This makes you sound weak/arrogant.").
    - STRICT RULE: NEVER output "N/A", "None", or "Skip". If the bad response is hard to imagine, you MUST invent a "Silence/Awkward Pause" or a "Generic Rude/Dismissive" reaction. Every single user line MUST have a valid "badResponse" text.
+   - GLOBAL RULE: This applies to ALL fields (cultural insights, definitions, etc). Never use "N/A". Invent a specific detail if missing.
 5. KEYWORDS & CLOZE: You MUST identify 1-2 key vocabulary words (or phrases) per sentence that are crucial for the "vibe".
    - IMPORTANT: In the "en" (or "goodResponse.text"), you MUST wrap these keywords in [square brackets] so the app can hide them.
    - Example: "I would like a [refund] please."
@@ -108,6 +109,8 @@ The total length should be **8-12 sentences** (cards), divided into a 3-part str
    - Example output: "I decided to [pivot] my strategy."
 2. QUIZ: Generate **3** multiple-choice quiz items testing comprehension or social nuance.
 3. TITLE: A simple, descriptive title (e.g. "The Elevator Pitch", "Morning Routine"). Do NOT use abstract or poetic titles.
+4. NO "N/A" ALLOWED: Never output "N/A", "None", or "Unknown". If a field is not applicable, you must INVENT a plausible value.
+   - For keywords, always provide a definition.
 
 *** OUTPUT FORMAT ***
 Return ONLY a raw JSON object (no markdown). 
@@ -167,6 +170,9 @@ DESIRED TONE: {tone} (If "Funny", write a Sitcom. If "Professional", write a Bus
    - Example: "Did you [see] that?"
 2. QUIZ: Generate **3** multiple-choice quiz items testing comprehension or social nuance.
 3. TITLE: A simple, descriptive title (e.g. "The Meeting", "First Date"). Do NOT use abstract or poetic titles.
+4. NO "N/A" ALLOWED: Never output "N/A", "None", or "Unknown". If a field is not applicable, you must INVENT a plausible value or leave it as an empty string "" if absolutely proper (but prefer invention).
+   - "seriesId": Leave as "" if not provided.
+   - "keywords": Must always have a definition. If unsure, define it in context.
 
 *** OUTPUT FORMAT ***
 Return ONLY a raw JSON object (no markdown):
