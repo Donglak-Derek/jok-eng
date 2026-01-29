@@ -32,7 +32,8 @@ export default function CommunityScenariosSection() {
     e.preventDefault();
     e.stopPropagation();
     if (!user) { 
-        router.push("/login");
+        // Force login for guests trying to remix
+        router.push("/login?redirect=/create-scenario");
         return; 
     }
     
