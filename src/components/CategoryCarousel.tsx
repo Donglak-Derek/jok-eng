@@ -75,7 +75,7 @@ function CategoryCard({ c, index, variant, disableLinks }: { c: Category; index:
                      </div>
 
                      <div className="flex items-center justify-between mt-auto pt-6 border-t border-border/30">
-                         <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                         <span className="text-sm font-black uppercase tracking-wider text-primary">
                              {scriptCount} Scenarios
                          </span>
                          {!disableLinks && (
@@ -109,7 +109,7 @@ function CategoryCard({ c, index, variant, disableLinks }: { c: Category; index:
                             <p className="text-white/90 text-sm line-clamp-2 mb-3 font-medium drop-shadow-sm">
                             {c.description}
                             </p>
-                            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-md text-[10px] font-bold uppercase tracking-wider border border-white/10 shadow-sm">
+                            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/95 text-black text-xs font-extrabold uppercase tracking-wider shadow-lg">
                             <span>{scriptCount} Scenarios</span>
                             </div>
                     </div>

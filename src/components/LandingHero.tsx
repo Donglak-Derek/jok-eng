@@ -4,7 +4,6 @@
 import { Button } from "@/components/Button";
 import LiveGradientBackground from "@/components/Effects/LiveGradientBackground";
 import { motion } from "framer-motion";
-import { Sparkles, MessageCircle, Zap, Brain, Quote } from "lucide-react";
 
 interface LandingHeroProps {
     onStartDemo: () => void;
@@ -15,12 +14,12 @@ export default function LandingHero({ onStartDemo }: LandingHeroProps) {
     <section className="relative w-full min-h-[90vh] flex flex-col items-center justify-center overflow-hidden pt-20 pb-12 md:pt-32 md:pb-20 bg-background">
       <LiveGradientBackground />
       
-      {/* Floating Background Icons - The "Live" Element */}
-      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-         {[Sparkles, MessageCircle, Zap, Brain, Quote].map((Icon, i) => (
+      {/* Floating Background Letters - The "Live" Element */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none">
+         {['A', 'b', 'C', 'd', 'E', 'f', 'G', 'h'].map((char, i) => (
              <motion.div
                 key={i}
-                className="absolute text-primary/10"
+                className="absolute text-primary/40 font-black font-serif opacity-0"
                 initial={{ 
                     x: Math.random() * 100 - 50, 
                     y: Math.random() * 100 + 100,
@@ -28,23 +27,24 @@ export default function LandingHero({ onStartDemo }: LandingHeroProps) {
                     scale: 0.5
                 }}
                 animate={{ 
-                    y: [0, -100, 0],
-                    x: [0, (i % 2 === 0 ? 50 : -50), 0],
-                    opacity: [0, 0.4, 0],
-                    rotate: [0, 45, -45, 0]
+                    y: [0, -200, 0],
+                    x: [0, (i % 2 === 0 ? 100 : -100), 0],
+                    opacity: [0, 1, 0],
+                    rotate: [0, 20, -20, 0]
                 }}
                 transition={{ 
-                    duration: 15 + Math.random() * 10, 
+                    duration: 20 + Math.random() * 10, 
                     repeat: Infinity, 
-                    ease: "linear",
+                    ease: "easeInOut",
                     delay: i * 2 
                 }}
                 style={{
-                    left: `${(i + 1) * 18}%`,
-                    top: `${50 + (i * 10)}%`,
+                    left: `${(i + 1) * 12}%`,
+                    top: `${40 + (i * 10)}%`,
+                    fontSize: `${4 + i}rem`, // Dynamic size: 4rem quite big
                 }}
              >
-                 <Icon className={`w-${12 + i*4} h-${12 + i*4}`} />
+                 {char}
              </motion.div>
          ))}
       </div>
@@ -61,7 +61,7 @@ export default function LandingHero({ onStartDemo }: LandingHeroProps) {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                 </span>
-                Jok-Eng.com &bull; Executive Presence
+                Jok-Eng.com &bull; Speak Like a Leader
             </div>
 
             <h1 className="text-5xl xs:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter text-balance leading-[1.05] text-foreground">
@@ -82,7 +82,7 @@ export default function LandingHero({ onStartDemo }: LandingHeroProps) {
             transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className="text-lg md:text-2xl text-muted-foreground font-light max-w-3xl mx-auto text-balance leading-relaxed px-4"
         >
-            The frustration of being a smart professional who sounds like a beginner because of a language barrier.
+            You are an <strong className="font-bold">expert</strong> in your job. But in English, you feel like a <strong className="font-bold">beginner</strong>. We help you <strong className="font-bold">sound like yourself</strong> again.
         </motion.p>
         
         <motion.div 

@@ -16,7 +16,6 @@ import StreakWidget from "@/components/StreakWidget";
 
 import QuickStartInput from "@/components/QuickStartInput";
 import LandingHero from "@/components/LandingHero";
-import LandingPainPoints from "@/components/LandingPainPoints";
 import LandingSolution from "@/components/LandingSolution";
 import LandingHowItWorks from "@/components/LandingHowItWorks";
 import LandingTrust from "@/components/LandingTrust";
@@ -158,8 +157,8 @@ function HomeContent() {
                 {/* 1. HERO - Hook */}
                 <LandingHero onStartDemo={() => setIsDemoMode(true)} />
 
-                {/* 2. PAIN POINTS - The Villain */}
-                <LandingPainPoints />
+                {/* 2. PAIN POINTS / TRUST - The "Designed For" Interactive Explorer */}
+                <LandingTrust />
 
                 {/* 3. SOLUTION - The Guide */}
                 <LandingSolution />
@@ -196,7 +195,6 @@ function HomeContent() {
                 </div>
 
                 {/* 6. TRUST & FOOTER */}
-                <LandingTrust />
                 
                 {/* 7. REAL FOOTER */}
                 <Footer />

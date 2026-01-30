@@ -1,27 +1,27 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ScanSearch, Key, TrendingUp } from "lucide-react";
+import { ScanSearch, Sparkles, TrendingUp } from "lucide-react";
 
 export default function LandingHowItWorks() {
     const steps = [
         {
             icon: ScanSearch,
             step: "01",
-            title: "Audit Your Presence",
-            desc: "Assess your communication sliders. Are you too quiet? Too polite? We identify your specific cultural gaps."
+            title: "Find Your Situation",
+            desc: "Stop studying generic grammar. Search our library for the exact moment that stresses you out—like 'Disagreeing with a Boss' or 'Pub Talk'."
         },
         {
-            icon: Key,
+            icon: Sparkles,
             step: "02",
-            title: "Decode the Code",
-            desc: "Access the Jok-Eng manual of banter, sarcasm, and professional cues. Learn the unwritten rules of the boardroom."
+            title: "Remix with AI",
+            desc: "One size doesn't fit all. Hit Remix to let AI rewrite the script for your specific context. Make it funny, serious, or urgent instantly."
         },
         {
             icon: TrendingUp,
             step: "03",
             title: "Lead with Impact",
-            desc: "Apply your new skills in high-stakes meetings. Move from being a technical contributor to a true executive leader."
+            desc: "Practice until it feels natural. Walk into your next meeting with the 'Secret Code' already downloaded into your brain."
         }
     ];
 

@@ -9,31 +9,31 @@ export default function LiveGradientBackground() {
       <motion.div
         animate={{
           scale: [1, 1.1, 1],
-          opacity: [0.3, 0.5, 0.3],
+          opacity: [0.4, 0.6, 0.4],
           rotate: [0, 5, 0],
         }}
         transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] rounded-full bg-primary/10 blur-[100px]"
+        className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] rounded-full bg-primary/20 blur-[100px]"
       />
       
       <motion.div
         animate={{
           scale: [1, 1.2, 1],
-          opacity: [0.2, 0.4, 0.2],
+          opacity: [0.3, 0.5, 0.3],
           x: [0, 50, 0],
         }}
         transition={{ duration: 20, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        className="absolute top-[20%] right-[10%] w-[50%] h-[50%] rounded-full bg-purple-500/10 blur-[120px]"
+        className="absolute top-[20%] right-[10%] w-[50%] h-[50%] rounded-full bg-purple-500/20 blur-[120px]"
       />
 
        <motion.div
         animate={{
           scale: [1, 1.3, 1],
-          opacity: [0.2, 0.3, 0.2],
+          opacity: [0.3, 0.5, 0.3],
            y: [0, -50, 0],
         }}
         transition={{ duration: 18, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        className="absolute -bottom-[20%] left-[20%] w-[70%] h-[70%] rounded-full bg-blue-500/10 blur-[130px]"
+        className="absolute -bottom-[20%] left-[20%] w-[70%] h-[70%] rounded-full bg-blue-500/20 blur-[130px]"
       />
 
       {/* Subtle Grid Overlay with organic pulse */}

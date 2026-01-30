@@ -21,26 +21,27 @@ export default function LandingSolution() {
                         <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-6 leading-tight">
                             The <span className="text-primary">Secret Code</span> manual for immigrants who want to be themselves.
                         </h2>
-                        <p className="text-xl text-muted-foreground mb-8 text-balance">
-                           We don't change who you are; we bring out the best and most authentic parts of your leadership. It's not your English; it's that no one ever taught you how to lead in English.
+                        <p className="text-xl text-muted-foreground mb-8 text-balance leading-relaxed">
+                           We don't change who you are; we bring out the <strong className="font-bold">best</strong> and most <strong className="font-bold">authentic</strong> parts of your leadership. It's not your English; it's that no one ever taught you <strong className="font-bold">how to lead</strong> in English.
                         </p>
 
                         <div className="space-y-6">
                             {[
                                 {
                                     icon: Sliders,
-                                    title: "The Soundboard Framework",
-                                    desc: "Adjust your vocal pace, assertiveness, and warmth for any scenario—from negotiation to networking."
+                                    title: "Voice Control",
+                                    desc: <span>Adjust your <strong className="font-bold">speed</strong> and <strong className="font-bold">tone</strong>. Sound warm or serious instantly.</span>,
+                                    badge: "Working on it"
                                 },
                                 {
                                     icon: BrainCircuit,
-                                    title: "Cultural Intelligence (CQ)",
-                                    desc: "Decode the 'vibes' and context. Understand why the joke is funny before you even hear it."
+                                    title: "Culture Guide",
+                                    desc: <span>Understanding the <strong className="font-bold">vibes</strong>. Know why a joke is funny before you laugh.</span>
                                 },
                                 {
                                     icon: Globe,
-                                    title: "Authentic Executive Presence",
-                                    desc: "Stop trying to sound 'native'. Start sounding powerful. Turn your accent into your signature."
+                                    title: "Your True Style",
+                                    desc: <span>Don't sound like a robot. Sound like <strong className="font-bold">YOU</strong>, but stronger.</span>
                                 }
                             ].map((item, i) => (
                                 <div key={i} className="flex gap-4">
@@ -48,7 +49,14 @@ export default function LandingSolution() {
                                         <item.icon className="w-5 h-5 text-primary" />
                                     </div>
                                     <div>
-                                        <h4 className="text-lg font-bold">{item.title}</h4>
+                                        <div className="flex items-center gap-2">
+                                            <h4 className="text-lg font-bold">{item.title}</h4>
+                                            {item.badge && (
+                                                <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-600 border border-yellow-500/20">
+                                                    {item.badge}
+                                                </span>
+                                            )}
+                                        </div>
                                         <p className="text-muted-foreground">{item.desc}</p>
                                     </div>
                                 </div>
@@ -56,6 +64,7 @@ export default function LandingSolution() {
                         </div>
                     </motion.div>
 
+                     {/* Visual/Image Side - Abstract Representation of "The Code" */}
                      {/* Visual/Image Side - Abstract Representation of "The Code" */}
                      <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
@@ -66,42 +75,52 @@ export default function LandingSolution() {
                      >
                         <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 via-indigo-500/10 to-transparent rounded-full blur-[100px]" />
                         
-                        {/* The "Decoder" Visual */}
+                        {/* The "Decoder" Visual -> Good/Bad Comparison */}
                         <div className="relative z-10 w-full max-w-sm">
-                            {/* 1. The Confusion (Noise) */}
-                            <div className="space-y-4 mb-4 opacity-30 mx-auto w-[90%] scale-95 blur-[2px]">
-                                 <div className="h-3 w-3/4 bg-foreground/20 rounded-full" />
-                                 <div className="h-3 w-full bg-foreground/20 rounded-full" />
-                                 <div className="h-3 w-5/6 bg-foreground/20 rounded-full" />
-                            </div>
-
-                            {/* 2. The Clarity (Signal) - The "Secret Code" */}
                             <motion.div 
                                 initial={{ y: 20, opacity: 0 }}
                                 whileInView={{ y: 0, opacity: 1 }}
-                                transition={{ delay: 0.5, duration: 0.8 }}
-                                className="bg-background/80 backdrop-blur-xl border border-primary/40 p-6 rounded-2xl shadow-2xl relative overflow-hidden"
+                                transition={{ delay: 0.4, duration: 0.8 }}
+                                className="bg-background/80 backdrop-blur-xl border border-border/50 p-6 rounded-2xl shadow-2xl relative overflow-hidden"
                             >
                                 <div className="absolute top-0 left-0 w-1 h-full bg-primary" />
                                 
-                                <div className="flex items-center gap-3 mb-3">
+                                <div className="flex items-center gap-3 mb-6">
                                     <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
                                     <span className="text-xs font-mono text-primary uppercase tracking-widest">Decoded</span>
                                 </div>
-                                <h3 className="text-xl font-bold leading-relaxed">
-                                    "It's not about being <span className="text-primary decoration-wavy underline decoration-primary/30">polite</span>.<br/> It's about being <span className="text-foreground bg-primary/20 px-1 rounded">understood</span>."
-                                </h3>
-                                <div className="mt-4 flex gap-2">
-                                    <span className="text-[10px] px-2 py-1 rounded bg-secondary text-secondary-foreground font-mono">Tone: Assertive</span>
-                                    <span className="text-[10px] px-2 py-1 rounded bg-secondary text-secondary-foreground font-mono">Context: High</span>
+
+                                <div className="space-y-4">
+                                    {/* BAD EXAMPLE */}
+                                    <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 flex gap-3 items-center opacity-60 grayscale-[0.5]">
+                                        <div className="w-6 h-6 rounded-full bg-red-500/20 flex items-center justify-center flex-shrink-0">
+                                            <span className="text-xs font-bold text-red-500">✕</span>
+                                        </div>
+                                        <div>
+                                            <div className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Beginner</div>
+                                            <p className="font-medium text-foreground line-through decoration-red-500/50">"I don't know."</p>
+                                        </div>
+                                    </div>
+
+                                    {/* ARROW */}
+                                    <div className="flex justify-center -my-2 opacity-50 relative z-10">
+                                        <div className="p-1 rounded-full bg-background border border-border">
+                                            <span className="text-xs text-muted-foreground">vs</span>
+                                        </div>
+                                    </div>
+
+                                    {/* GOOD EXAMPLE */}
+                                    <div className="p-4 rounded-lg bg-primary/10 border border-primary/20 flex gap-4 items-center shadow-lg scale-105 origin-center">
+                                         <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 animate-pulse">
+                                            <CheckCircle2 className="w-5 h-5 text-primary" />
+                                        </div>
+                                        <div>
+                                            <div className="text-xs text-primary font-bold uppercase tracking-wider mb-1">Professional (Leader)</div>
+                                            <p className="font-bold text-lg text-foreground">"Let me look into that."</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </motion.div>
-
-                            {/* 3. More Noise */}
-                            <div className="space-y-4 mt-4 opacity-30 mx-auto w-[90%] scale-95 blur-[2px]">
-                                 <div className="h-3 w-5/6 bg-foreground/20 rounded-full" />
-                                 <div className="h-3 w-2/3 bg-foreground/20 rounded-full" />
-                            </div>
                         </div>
                      </motion.div>
 
