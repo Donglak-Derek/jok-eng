@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { Home, Library, PlusCircle, LogOut, User } from "lucide-react";
+import StreakDisplay from "./StreakDisplay";
+import DailyCreditCounter from "./subscription/DailyCreditCounter";
 // import { usePathname } from "next/navigation";
 
 type Tab = "home" | "my_scenarios";
@@ -59,6 +61,14 @@ export default function DesktopNavigation({ activeTab, onTabChange }: Props) {
                     Create Script
                 </Link>
             </nav>
+
+            {/* Sidebar Stats */}
+            <div className="px-4 pb-4">
+                 <div className="flex items-center gap-2">
+                    <DailyCreditCounter className="bg-white/5 border-white/10 text-white hover:bg-white/10" />
+                    <StreakDisplay className="bg-white/5 border-white/10 text-white" />
+                 </div>
+            </div>
 
             {/* User Footer */}
             <div className="mt-auto border-t border-white/10 pt-6 space-y-4">

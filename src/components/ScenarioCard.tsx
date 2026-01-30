@@ -6,7 +6,7 @@ import { useProgress } from "@/context/ProgressContext";
 import type { Script, UserScript } from "@/types";
 import { motion } from "framer-motion";
 import React from "react";
-import { Lock, Trash2, Repeat, Shuffle, Sparkles } from "lucide-react";
+import { Lock, Trash2, Repeat, Shuffle, Sparkles, Bookmark } from "lucide-react";
 import { GenerativeCover } from "./GenerativeCover";
 import AudioStatusBadge from "./AudioStatusBadge";
 import { getScriptAudioStatus } from "@/lib/utils";
@@ -19,6 +19,8 @@ type Props = {
   onRemix?: (id: string, e: React.MouseEvent) => void;
   onSmartRemix?: (id: string, e: React.MouseEvent) => void;
   onShare?: (id: string, e: React.MouseEvent) => void;
+  onToggleSave?: (id: string, e: React.MouseEvent) => void;
+  isSaved?: boolean;
   isNew?: boolean;
 };
 
@@ -30,6 +32,8 @@ export default function ScenarioCard({
     onRemix,
     onSmartRemix, 
     onShare,
+    onToggleSave,
+    isSaved,
     isNew
 }: Props) {
 
@@ -197,7 +201,7 @@ export default function ScenarioCard({
                                             <span className="text-xs font-bold tracking-wide uppercase">Remix</span>
                                         </button>
                                      )}
-                                     {onSmartRemix && (
+                                    {onSmartRemix && (
                                          <button
                                              onClick={(e) => { e.preventDefault(); e.stopPropagation(); onSmartRemix(script.id, e); }}
                                              className="
@@ -208,6 +212,23 @@ export default function ScenarioCard({
                                              title="Adapt for my job (Smart Remix)"
                                          >
                                              <Sparkles className="w-4 h-4 fill-amber-500/10" />
+                                         </button>
+                                     )}
+                                     
+                                     {/* Save Button */}
+                                     {onToggleSave && (
+                                         <button
+                                             onClick={(e) => { e.preventDefault(); e.stopPropagation(); onToggleSave(script.id, e); }}
+                                             className={`
+                                                 ml-2 p-2 rounded-full transition-all active:scale-90
+                                                 ${isSaved 
+                                                     ? "text-primary bg-primary/10 hover:bg-primary/20" 
+                                                     : "text-muted-foreground/60 hover:text-primary hover:bg-secondary"
+                                                 }
+                                             `}
+                                             title={isSaved ? "Unsave" : "Save for later"}
+                                         >
+                                             <Bookmark className={`w-4 h-4 ${isSaved ? "fill-primary" : ""}`} />
                                          </button>
                                      )}
                             </div>

@@ -1,7 +1,6 @@
 "use client";
 
-// import Image from "next/image";
-// import { categories, scripts } from "@/data";
+
 import Header from "@/components/Header";
 import CategoryCarousel from "@/components/CategoryCarousel";
 import DesktopNavigation from "@/components/DesktopNavigation";
@@ -21,7 +20,7 @@ import LandingPainPoints from "@/components/LandingPainPoints";
 import LandingSolution from "@/components/LandingSolution";
 import LandingHowItWorks from "@/components/LandingHowItWorks";
 import LandingTrust from "@/components/LandingTrust";
-import DemoBanner from "@/components/DemoBanner"; // New Import
+import DemoBanner from "@/components/DemoBanner";
 import { Button } from "@/components/Button";
 import Footer from "@/components/Footer";
 
@@ -68,13 +67,14 @@ function HomeContent() {
                 <div className="container-minimal pt-4 md:pt-8 pb-8 flex flex-col gap-8 md:gap-10 max-w-7xl mx-auto px-4 md:px-12">
                    
                     {/* Desktop Header / Greeting - could go here, or just inline inputs */}
+                    
+                    <StreakWidget />
+                    {isDemoMode && <DemoBanner />}
+
                     {/* Quick Start Input - Prominent HERO */}
                     <div className="max-w-3xl mx-auto w-full md:mt-4 relative z-20">
                         <QuickStartInput />
                     </div>
-
-                    <StreakWidget />
-                    {isDemoMode && <DemoBanner />}
 
                     {/* MOBILE ONLY: Tabs (Segmented Control) - Pushed down, subtle */}
                     <div className="md:hidden flex justify-center sticky top-0 z-10 py-0 bg-background/80 backdrop-blur-lg -mx-4 px-4 border-b border-border/50">

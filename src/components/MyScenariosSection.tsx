@@ -20,7 +20,7 @@ import { useSaved } from "@/hooks/useSaved";
     const { user, loading } = useAuth();
     const router = useRouter();
     const [scenarios, setScenarios] = useState<UserScript[]>([]);
-    const { savedScenarios } = useSaved(); // Use the hook
+    const { savedScenarios, savedSet, toggleSave } = useSaved(); // Use the hook
     const [activeTab, setActiveTab] = useState<'created' | 'saved'>('created');
 
     useEffect(() => {
@@ -97,6 +97,13 @@ import { useSaved } from "@/hooks/useSaved";
         router.push('/create-scenario?mode=remix');
     };
 
+    const handleToggleSave = (scriptId: string, e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const script = displayScenarios.find(s => s.id === scriptId);
+        if (script) toggleSave(script);
+    };
+
     if (loading) return null;
 
     if (!user) {
@@ -117,9 +124,9 @@ import { useSaved } from "@/hooks/useSaved";
                      className="px-8 py-6 text-lg rounded-full"
                      variant="primary"
                      size="lg"
-                 >
+                  >
                      Get Started
-                 </Button>
+                  </Button>
             </section>
         );
     }
@@ -160,7 +167,7 @@ import { useSaved } from "@/hooks/useSaved";
                     </div>
                     <div>
                        <h3 className="text-lg font-semibold text-foreground">
-                           {activeTab === 'created' ? 'No scenarios yet' : 'No saved scenarios'}
+                           {activeTab === 'created' ? 'No Scenarios yet' : 'No saved scenarios'}
                        </h3>
                        <p className="max-w-xs mx-auto">
                            {activeTab === 'created' ? 'Create your first custom script to start practicing.' : 'Save scenarios from the community to practice later.'}
@@ -193,7 +200,8 @@ import { useSaved } from "@/hooks/useSaved";
 
                                 onDelete={activeTab === 'created' ? handleDelete : undefined}
                                 onRemix={handleRemix}
-                                // Users can unsave by going to the card detail.
+                                onToggleSave={handleToggleSave}
+                                isSaved={savedSet.has(script.id)}
                             />
                         </motion.div>
                     ))}

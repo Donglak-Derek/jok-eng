@@ -1,9 +1,12 @@
+"use client";
+
 import { useEffect, useState, useMemo } from "react";
 import { collectionGroup, query, where, orderBy, limit, getDocs, getDoc, updateDoc, doc, increment } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { UserScript, UserProfile, Script } from "@/types";
 import ScenarioCard from "./ScenarioCard";
 import { motion } from "framer-motion";
+import { useSaved } from "@/hooks/useSaved";
 import { useAuth } from "@/context/AuthContext";
 import { scripts as originalScripts } from "@/data";
 import { useRouter } from "next/navigation";
@@ -17,6 +20,7 @@ export default function CommunityScenariosSection() {
   const [visibleCount, setVisibleCount] = useState(12); // P1: Pagination Limit
   const { user } = useAuth();
   const router = useRouter();
+  const { savedSet, toggleSave } = useSaved();
 
   const FILTERS = ["Trending", "Professional", "Spicy", "Funny"];
 
@@ -56,6 +60,13 @@ export default function CommunityScenariosSection() {
          if (!script) return;
          await updateDoc(doc(db, "users", script.userId, "scenarios", id), { shares: increment(1) });
      } catch (err) { console.error("Error incrementing share:", err); }
+  };
+
+  const handleToggleSave = (scriptId: string, e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const script = displayScenarios.find(s => s.id === scriptId);
+      if (script) toggleSave(script);
   };
 
   // Fetch Logic based on Active Filter
@@ -233,6 +244,8 @@ export default function CommunityScenariosSection() {
                             onRemix={handleRemix}
                             onSmartRemix={canSmartRemix(script) ? handleSmartRemix : undefined}
                             onShare={handleShare}
+                            onToggleSave={handleToggleSave}
+                            isSaved={savedSet.has(script.id)}
                         />
                     </motion.div>
                 ))}

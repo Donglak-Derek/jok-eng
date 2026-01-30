@@ -5,13 +5,14 @@ import { Zap } from "lucide-react";
 import { useState } from "react";
 import UpgradeModal from "@/components/subscription/UpgradeModal";
 
-export default function DailyCreditCounter() {
+// ... inside return
+export default function DailyCreditCounter({ className }: { className?: string }) {
     const { credits, isPro } = useSubscription();
     const [showUpgrade, setShowUpgrade] = useState(false);
 
     if (isPro) {
         return (
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-yellow-500/30 bg-yellow-500/10 text-yellow-500 font-bold text-xs select-none">
+            <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-yellow-500/30 bg-yellow-500/10 text-yellow-500 font-bold text-xs select-none ${className}`}>
                 <Zap className="w-3.5 h-3.5 fill-yellow-500" />
                 <span>PRO</span>
             </div>
@@ -26,7 +27,7 @@ export default function DailyCreditCounter() {
                     flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-bold transition-all
                     ${credits.remaining === 0 
                         ? "bg-red-50 border-red-200 text-red-600 animate-pulse" 
-                        : "bg-secondary/50 border-border text-muted-foreground hover:bg-secondary hover:text-foreground"
+                        : (className || "bg-secondary/50 border-border text-muted-foreground hover:bg-secondary hover:text-foreground")
                     }
                 `}
             >
