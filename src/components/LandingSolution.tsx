@@ -62,36 +62,47 @@ export default function LandingSolution() {
                          whileInView={{ opacity: 1, scale: 1 }}
                          viewport={{ once: true }}
                          transition={{ delay: 0.2 }}
-                         className="relative"
+                         className="relative h-full min-h-[400px] flex items-center justify-center"
                      >
-                        <div className="aspect-square relative rounded-3xl overflow-hidden bg-gradient-to-br from-gray-900 to-black border border-border/20 shadow-2xl">
-                             {/* Abstract UI Mockup */}
-                             <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20" />
-                             <div className="absolute inset-8 border border-white/10 rounded-2xl bg-white/5 backdrop-blur-sm p-6 flex flex-col justify-between">
-                                 <div className="space-y-4">
-                                     <div className="h-2 w-1/3 bg-white/20 rounded-full" />
-                                     <div className="space-y-2">
-                                         <div className="h-2 w-full bg-white/10 rounded-full" />
-                                         <div className="h-2 w-3/4 bg-white/10 rounded-full" />
-                                     </div>
-                                 </div>
-                                 
-                                 <div className="p-4 rounded-xl bg-primary/20 border border-primary/30">
-                                     <div className="text-sm font-mono text-primary mb-2">Analyzing Tone...</div>
-                                     <div className="flex justify-between items-center text-xs text-white/70">
-                                         <span>Aggressive</span>
-                                         <div className="w-32 h-1 bg-white/10 rounded-full overflow-hidden">
-                                             <div className="h-full w-2/3 bg-primary" />
-                                         </div>
-                                         <span>Assertive</span>
-                                     </div>
-                                 </div>
-                             </div>
-                        </div>
+                        <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 via-indigo-500/10 to-transparent rounded-full blur-[100px]" />
                         
-                        {/* Decorative Elements */}
-                        <div className="absolute -top-10 -right-10 w-32 h-32 bg-secondary rounded-full blur-3xl opacity-20" />
-                        <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-primary rounded-full blur-3xl opacity-20" />
+                        {/* The "Decoder" Visual */}
+                        <div className="relative z-10 w-full max-w-sm">
+                            {/* 1. The Confusion (Noise) */}
+                            <div className="space-y-4 mb-4 opacity-30 mx-auto w-[90%] scale-95 blur-[2px]">
+                                 <div className="h-3 w-3/4 bg-foreground/20 rounded-full" />
+                                 <div className="h-3 w-full bg-foreground/20 rounded-full" />
+                                 <div className="h-3 w-5/6 bg-foreground/20 rounded-full" />
+                            </div>
+
+                            {/* 2. The Clarity (Signal) - The "Secret Code" */}
+                            <motion.div 
+                                initial={{ y: 20, opacity: 0 }}
+                                whileInView={{ y: 0, opacity: 1 }}
+                                transition={{ delay: 0.5, duration: 0.8 }}
+                                className="bg-background/80 backdrop-blur-xl border border-primary/40 p-6 rounded-2xl shadow-2xl relative overflow-hidden"
+                            >
+                                <div className="absolute top-0 left-0 w-1 h-full bg-primary" />
+                                
+                                <div className="flex items-center gap-3 mb-3">
+                                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                                    <span className="text-xs font-mono text-primary uppercase tracking-widest">Decoded</span>
+                                </div>
+                                <h3 className="text-xl font-bold leading-relaxed">
+                                    "It's not about being <span className="text-primary decoration-wavy underline decoration-primary/30">polite</span>.<br/> It's about being <span className="text-foreground bg-primary/20 px-1 rounded">understood</span>."
+                                </h3>
+                                <div className="mt-4 flex gap-2">
+                                    <span className="text-[10px] px-2 py-1 rounded bg-secondary text-secondary-foreground font-mono">Tone: Assertive</span>
+                                    <span className="text-[10px] px-2 py-1 rounded bg-secondary text-secondary-foreground font-mono">Context: High</span>
+                                </div>
+                            </motion.div>
+
+                            {/* 3. More Noise */}
+                            <div className="space-y-4 mt-4 opacity-30 mx-auto w-[90%] scale-95 blur-[2px]">
+                                 <div className="h-3 w-5/6 bg-foreground/20 rounded-full" />
+                                 <div className="h-3 w-2/3 bg-foreground/20 rounded-full" />
+                            </div>
+                        </div>
                      </motion.div>
 
                 </div>

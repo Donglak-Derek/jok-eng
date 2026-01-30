@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { AuthProvider } from "@/context/AuthContext";
 import { ProgressProvider } from "@/context/ProgressContext";
 import OnboardingModal from "@/components/OnboardingModal";
-import Footer from "@/components/Footer";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
@@ -38,7 +37,6 @@ export default function RootLayout({
           <ProgressProvider>
             {children}
             <OnboardingModal />
-            <Footer />
           </ProgressProvider>
         </AuthProvider>
       </body>

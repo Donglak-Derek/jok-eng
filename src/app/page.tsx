@@ -22,6 +22,8 @@ import LandingSolution from "@/components/LandingSolution";
 import LandingHowItWorks from "@/components/LandingHowItWorks";
 import LandingTrust from "@/components/LandingTrust";
 import DemoBanner from "@/components/DemoBanner"; // New Import
+import { Button } from "@/components/Button";
+import Footer from "@/components/Footer";
 
 type Tab = "home" | "my_scenarios";
 
@@ -48,13 +50,6 @@ function HomeContent() {
       {/* LOGGED IN VIEW: Dashboard Mode (OR Guest Demo) */}
       {user || isDemoMode ? (
         <div className="flex min-h-screen bg-background relative flex-col md:flex-row">
-            {/* Demo Banner - Top Full Width */}
-            {isDemoMode && (
-                <div className="md:absolute top-0 left-0 right-0 z-50">
-                    <DemoBanner />
-                </div>
-            )}
-
             {/* FAB (Mobile Only) */}
             <FloatingCreateButton />
 
@@ -79,6 +74,7 @@ function HomeContent() {
                     </div>
 
                     <StreakWidget />
+                    {isDemoMode && <DemoBanner />}
 
                     {/* MOBILE ONLY: Tabs (Segmented Control) - Pushed down, subtle */}
                     <div className="md:hidden flex justify-center sticky top-0 z-10 py-0 bg-background/80 backdrop-blur-lg -mx-4 px-4 border-b border-border/50">
@@ -188,9 +184,22 @@ function HomeContent() {
                         <CategoryCarousel variant="minimal" disableLinks={true} />
                      </div>
                 </section>
+                
+                {/* EXTRA CTA BUTTON */}
+                <div className="flex justify-center pb-20 -mt-10 bg-secondary/5">
+                    <Button 
+                        onClick={() => setIsDemoMode(true)}
+                        className="h-auto rounded-full px-10 py-4 text-lg font-bold bg-primary text-primary-foreground hover:bg-primary/90 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl"
+                    >
+                        Try it Now (Free)
+                    </Button>
+                </div>
 
                 {/* 6. TRUST & FOOTER */}
                 <LandingTrust />
+                
+                {/* 7. REAL FOOTER */}
+                <Footer />
            </div>
         </div>
       )}
