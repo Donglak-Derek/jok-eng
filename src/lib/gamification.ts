@@ -61,21 +61,14 @@ export const calculateNewStreak = (
         }
     }
 
-    // Rule 2: 24h - 48h (Grace Period)
-    if (diffHours >= 24 && diffHours < 48) {
-        // "Freeze"
-        // User practiced 1 day ago. They are back now.
-        // Wait, if they are back NOW, they are practicing NOW. 
-        // So this session SHOULD count as saving the streak and incrementing it?
-        // "Instead, keep the streak at its current number, effectively giving them a 'freeze' or 'second chance.'"
-        // This implies we don't increment, but we don't reset. 
-        // But since they ARE practicing right now, shouldn't it eventually increment?
-        // Let's follow instruction: "keep the streak at its current number".
-        // Effectively, they missed a day, so they don't get the +1, but they don't go to 0.
-        return { newStreak: currentStreak, status: "at_risk" };
+    // Rule 2: 24h - 60h (Extended Grace Period)
+    // We allow up to 60 hours (2.5 days) to account for "Missed 1 day" + "Session Time" + "Timezone shifts".
+    // If they come back within this window, they save the streak AND get credit for today (+1).
+    if (diffHours >= 24 && diffHours < 60) {
+        return { newStreak: currentStreak + 1, status: "active" };
     }
 
-    // Rule 3: > 48h (Hard Reset)
+    // Rule 3: > 60h (Hard Reset)
     // Reset to 1 (this session helps start new streak)
     return { newStreak: 1, status: "lost" };
 };
@@ -86,6 +79,6 @@ export const getStreakStatus = (lastPracticeTimestamp: number = 0): StreakStatus
     const diffHours = (Date.now() - lastPracticeTimestamp) / (1000 * 60 * 60);
     
     if (diffHours < 24) return "active";
-    if (diffHours < 48) return "at_risk";
+    if (diffHours < 60) return "at_risk"; // Matches the logic above
     return "lost";
 };
