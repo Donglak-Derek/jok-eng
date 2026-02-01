@@ -5,7 +5,7 @@ import { AlertCircle } from "lucide-react";
 
 export default function DemoBanner() {
   return (
-    <div className="max-w-3xl mx-auto w-full mt-6 bg-gradient-to-r from-indigo-50/80 to-blue-50/80 border border-indigo-100 rounded-3xl p-5 flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm relative overflow-hidden">
+    <div className="max-w-3xl mx-auto w-full mt-0 md:mt-6 bg-gradient-to-r from-indigo-50/80 to-blue-50/80 border border-indigo-100 rounded-none md:rounded-3xl p-5 flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm relative overflow-hidden">
         
         {/* Decorative Background */}
         <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-indigo-500/10 rounded-full blur-2xl" />
@@ -16,8 +16,8 @@ export default function DemoBanner() {
                 <AlertCircle className="w-5 h-5" />
             </div>
             <div className="text-left">
-                <h3 className="font-bold text-indigo-950 text-sm">Guest Mode (Read-Only)</h3>
-                <p className="text-indigo-700/80 text-xs mt-0.5">Your progress won't be saved.</p>
+                <h3 className="font-bold text-indigo-950 text-sm">Guest Access (Free)</h3>
+                <p className="text-indigo-700/80 text-xs mt-0.5">Practice fully for free. Create an account to save.</p>
             </div>
         </div>
 

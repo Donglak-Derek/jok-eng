@@ -57,13 +57,13 @@ function HomeContent() {
             </div>
             
             {/* 2. MAIN CONTENT AREA */}
-            <div className={`flex-1 md:pl-64 flex flex-col min-h-0 overflow-y-auto w-full max-w-[100vw] overflow-x-hidden ${isDemoMode ? 'pt-10 md:pt-12' : ''}`}>
+            <div className={`flex-1 md:pl-64 flex flex-col min-h-0 overflow-y-auto w-full max-w-[100vw] overflow-x-hidden pt-20 md:pt-12`}>
                 {/* Mobile Header (Hidden on Desktop) */}
                 <div className="md:hidden">
                     <Header />
                 </div>
                 
-                <div className="container-minimal pt-4 md:pt-8 pb-8 flex flex-col gap-8 md:gap-10 max-w-7xl mx-auto px-4 md:px-12">
+                <div className="container-minimal pt-0 md:pt-8 pb-8 flex flex-col gap-8 md:gap-10 max-w-7xl mx-auto px-4 md:px-12">
                    
                     {/* Desktop Header / Greeting - could go here, or just inline inputs */}
                     
