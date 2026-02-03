@@ -17,7 +17,7 @@ export default function DemoBanner() {
             </div>
             <div className="text-left">
                 <h3 className="font-bold text-indigo-950 text-sm">Guest Access (Free)</h3>
-                <p className="text-indigo-700/80 text-xs mt-0.5">Practice fully for free. Create an account to save.</p>
+                <p className="text-indigo-700/80 text-xs mt-0.5">Practice fully for free. Create an account to save your progress.</p>
             </div>
         </div>
 

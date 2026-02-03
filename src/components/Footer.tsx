@@ -18,7 +18,7 @@ export default function Footer() {
         {/* Social Links */}
         <div className="flex items-center gap-6">
           <Link 
-            href="#" 
+            href="https://www.tiktok.com/@thebrokenenglishclub" 
             target="_blank" 
             rel="noopener noreferrer"
             className="text-muted-foreground hover:text-black transition-colors p-2 hover:bg-gray-100 rounded-full"
@@ -31,7 +31,7 @@ export default function Footer() {
             <span className="sr-only">TikTok</span>
           </Link>
           <Link 
-            href="#" 
+            href="https://www.instagram.com/thebrokenenglishclub/" 
             target="_blank" 
             rel="noopener noreferrer"
             className="text-muted-foreground hover:text-pink-600 transition-colors p-2 hover:bg-pink-50 rounded-full"
@@ -44,7 +44,7 @@ export default function Footer() {
             <span className="sr-only">Instagram</span>
           </Link>
           <Link 
-            href="#" 
+            href="https://www.linkedin.com/in/hiderek/recent-activity/all/" 
             target="_blank" 
             rel="noopener noreferrer"
             className="text-muted-foreground hover:text-blue-700 transition-colors p-2 hover:bg-blue-50 rounded-full"
@@ -57,7 +57,7 @@ export default function Footer() {
             <span className="sr-only">LinkedIn</span>
           </Link>
           <Link 
-            href="#" 
+            href="https://www.youtube.com/@TheBrokenEnglishClub" 
             target="_blank" 
             rel="noopener noreferrer"
             className="text-muted-foreground hover:text-red-600 transition-colors p-2 hover:bg-red-50 rounded-full"
