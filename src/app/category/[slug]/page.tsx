@@ -7,6 +7,8 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { CATEGORY_DETAILS } from "@/data/categories";
 import Header from "@/components/Header";
+import SNSCallout from "@/components/SNSCallout";
+import Footer from "@/components/Footer";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -43,7 +45,7 @@ export default async function CategoryPage({ params }: Props) {
       <div className="md:hidden">
          <Header />
       </div>
-      <div className="max-w-md md:max-w-3xl lg:max-w-5xl mx-auto px-4 md:px-6 lg:px-8 py-5 md:py-8 flex flex-col gap-5 md:gap-6 w-full">
+      <div className="flex-1 max-w-md md:max-w-3xl lg:max-w-5xl mx-auto px-4 md:px-6 lg:px-8 pt-20 md:pt-24 pb-8 flex flex-col gap-5 md:gap-6 w-full">
         <div className="mb-6">
           <Link 
             href="/" 
@@ -60,10 +62,12 @@ export default async function CategoryPage({ params }: Props) {
             colorName={colorName}
             description={categoryDetails?.description}
           />
+          <SNSCallout />
         </div>
 
         <ScenarioList scripts={list} />
       </div>
+      <Footer />
     </div>
   );
 }
