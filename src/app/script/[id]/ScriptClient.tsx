@@ -5,14 +5,14 @@ import type { Script } from "@/types";
 import StoryFlow from "@/components/StoryFlow";
 import StandardScriptFlow from "@/components/StandardScriptFlow";
 import SignalDecoder from "@/components/SignalDecoder";
-import { collectionGroup, getDocs, query, where, doc, getDoc } from "firebase/firestore";
+import { collection, collectionGroup, getDocs, query, where, doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 
-type Props = { 
-  script?: Script; // Optional now
-  scriptId?: string; // ID to fetch if script is missing
+type Props = {
+    script?: Script; // Optional now
+    scriptId?: string; // ID to fetch if script is missing
 };
 
 // Main Component
@@ -40,25 +40,38 @@ function ScriptClientInner({ initialScript, scriptId }: { initialScript?: Script
 
                 // 1. If User Logged In -> Check THEIR private collection directly
                 if (user) {
-                   try {
-                       const docRef = doc(db, "users", user.uid, "scenarios", scriptId);
-                       const docSnap = await getDoc(docRef);
-                       if (docSnap.exists()) {
-                           foundScript = docSnap.data() as Script;
-                       }
-                   } catch (e) { console.log("Own fetch failed", e); }
+                    try {
+                        const docRef = doc(db, "users", user.uid, "scenarios", scriptId);
+                        const docSnap = await getDoc(docRef);
+                        if (docSnap.exists()) {
+                            foundScript = docSnap.data() as Script;
+                        }
+                    } catch (e) { console.log("Own fetch failed", e); }
                 }
 
                 // 2. If not found yet -> Check PUBLIC via Collection Group
                 if (!foundScript) {
                     const q = query(
-                        collectionGroup(db, "scenarios"), 
+                        collectionGroup(db, "scenarios"),
                         where("id", "==", scriptId),
                         where("isPublic", "==", true) // Filter required by Rules
                     );
                     const querySnapshot = await getDocs(q);
                     if (!querySnapshot.empty) {
                         foundScript = querySnapshot.docs[0].data() as Script;
+                    }
+                }
+
+                // 3. Fallback: Check video_lessons collection
+                if (!foundScript) {
+                    const q = query(
+                        collection(db, "video_lessons"),
+                        where("script.id", "==", scriptId)
+                    );
+                    const querySnapshot = await getDocs(q);
+                    if (!querySnapshot.empty) {
+                        const data = querySnapshot.docs[0].data() as any;
+                        foundScript = data.script as Script;
                     }
                 }
 
@@ -79,13 +92,13 @@ function ScriptClientInner({ initialScript, scriptId }: { initialScript?: Script
     }, [initialScript, scriptId, user, authLoading]);
 
     if (loading || authLoading) {
-         return (
-          <div className="h-screen flex items-center justify-center">
-              <Loader2 className="w-10 h-10 animate-spin text-primary" />
-          </div>
-      );
+        return (
+            <div className="h-screen flex items-center justify-center">
+                <Loader2 className="w-10 h-10 animate-spin text-primary" />
+            </div>
+        );
     }
-    
+
     if (error || !script) {
         return (
             <div className="h-screen flex flex-col items-center justify-center gap-4 text-center px-4">
@@ -94,7 +107,7 @@ function ScriptClientInner({ initialScript, scriptId }: { initialScript?: Script
             </div>
         );
     }
-  
+
     if (script.type === "story_flow") return <StoryFlow script={script} />;
     if (script.type === "decoder") return <SignalDecoder script={script} />;
     return <StandardScriptFlow script={script} />;

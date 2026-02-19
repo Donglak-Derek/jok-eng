@@ -22,16 +22,16 @@ export default function DesktopNavigation({ activeTab, onTabChange }: Props) {
         <aside className="hidden md:flex w-64 bg-black flex-col h-screen fixed left-0 top-0 z-50 text-neutral-400 p-6">
             {/* Logo Area */}
             <div className="mb-8 px-2">
-                 <Link href="/" className="inline-block">
+                <Link href="/" className="inline-block">
                     <span className="text-2xl font-black tracking-tighter text-white">
                         JOK<span className="text-primary">-ENG</span>
                     </span>
-                 </Link>
+                </Link>
             </div>
 
             {/* Main Nav */}
             <nav className="space-y-2 flex-1">
-                <button 
+                <button
                     onClick={() => onTabChange("home")}
                     className={`
                         w-full flex items-center gap-4 px-4 py-3 rounded-md transition-all font-bold text-sm
@@ -42,7 +42,7 @@ export default function DesktopNavigation({ activeTab, onTabChange }: Props) {
                     Home
                 </button>
 
-                <button 
+                <button
                     onClick={() => onTabChange("my_scenarios")}
                     className={`
                         w-full flex items-center gap-4 px-4 py-3 rounded-md transition-all font-bold text-sm
@@ -53,21 +53,34 @@ export default function DesktopNavigation({ activeTab, onTabChange }: Props) {
                     My Library
                 </button>
 
-                 <Link 
+                <Link
                     href="/create-scenario"
                     className="w-full flex items-center gap-4 px-4 py-3 rounded-md transition-all font-bold text-sm hover:text-white hover:bg-white/5"
                 >
                     <PlusCircle className="w-6 h-6" />
                     Create Script
                 </Link>
+
+                <div className="pt-4 mt-4 border-t border-white/10">
+                    <span className="px-4 text-[10px] font-bold uppercase tracking-widest text-neutral-500 mb-2 block">Alpha Feature</span>
+                    <Link
+                        href="/create-scenario?mode=ai"
+                        className="w-full flex items-center gap-4 px-4 py-3 rounded-md transition-all font-bold text-sm text-primary hover:bg-primary/10"
+                    >
+                        <div className="w-6 h-6 rounded flex items-center justify-center bg-primary/20">
+                            ✨
+                        </div>
+                        Script Refiner
+                    </Link>
+                </div>
             </nav>
 
             {/* Sidebar Stats */}
             <div className="px-4 pb-4">
-                 <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2">
                     <DailyCreditCounter className="bg-white/5 border-white/10 text-white hover:bg-white/10" />
                     <StreakDisplay className="bg-white/5 border-white/10 text-white" />
-                 </div>
+                </div>
             </div>
 
             {/* User Footer */}
@@ -86,8 +99,8 @@ export default function DesktopNavigation({ activeTab, onTabChange }: Props) {
                         <Link href="/profile" className="text-xs hover:underline text-neutral-500">View Profile</Link>
                     </div>
                 </div>
-                
-                <button 
+
+                <button
                     onClick={() => logout()}
                     className="w-full flex items-center gap-3 px-4 py-2 text-xs font-semibold hover:text-white transition-colors"
                 >
