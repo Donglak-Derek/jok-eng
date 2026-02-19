@@ -15,9 +15,10 @@ export default function VideoFeed() {
             try {
                 const latest = await getLatestVideoLessons(3);
                 setLessons(latest);
-            } catch (e: any) {
-                console.error("🔥 VIDEO FEED ERROR:", e.code, e.message);
-                if (e.message?.includes("index")) {
+            } catch (e: unknown) {
+                const err = e as { code?: string; message?: string };
+                console.error("🔥 VIDEO FEED ERROR:", err.code, err.message);
+                if (err.message?.includes("index")) {
                     console.log("👉 Suggestion: Create a Firestore index for 'video_lessons' with 'createdAt' (DESC).");
                 }
             } finally {

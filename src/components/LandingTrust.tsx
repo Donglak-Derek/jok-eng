@@ -2,8 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useCallback } from "react";
-import Link from "next/link";
-import { ShieldCheck, Youtube, Instagram, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const PAIN_POINTS = [
     {
@@ -45,114 +44,113 @@ const PAIN_POINTS = [
 ];
 
 export default function LandingTrust() {
-  const [activeId, setActiveId] = useState(PAIN_POINTS[0].id);
-  const [isPaused, setIsPaused] = useState(false);
-  const activePoint = PAIN_POINTS.find(p => p.id === activeId) || PAIN_POINTS[0];
-  const activeIndex = PAIN_POINTS.findIndex(p => p.id === activeId);
+    const [activeId, setActiveId] = useState(PAIN_POINTS[0].id);
+    const [isPaused, setIsPaused] = useState(false);
+    const activePoint = PAIN_POINTS.find(p => p.id === activeId) || PAIN_POINTS[0];
+    const activeIndex = PAIN_POINTS.findIndex(p => p.id === activeId);
 
-  const handleNext = useCallback(() => {
-      const nextIndex = (activeIndex + 1) % PAIN_POINTS.length;
-      setActiveId(PAIN_POINTS[nextIndex].id);
-  }, [activeIndex]);
+    const handleNext = useCallback(() => {
+        const nextIndex = (activeIndex + 1) % PAIN_POINTS.length;
+        setActiveId(PAIN_POINTS[nextIndex].id);
+    }, [activeIndex]);
 
-  const handlePrev = useCallback(() => {
-      const prevIndex = (activeIndex - 1 + PAIN_POINTS.length) % PAIN_POINTS.length;
-      setActiveId(PAIN_POINTS[prevIndex].id);
-  }, [activeIndex]);
+    const handlePrev = useCallback(() => {
+        const prevIndex = (activeIndex - 1 + PAIN_POINTS.length) % PAIN_POINTS.length;
+        setActiveId(PAIN_POINTS[prevIndex].id);
+    }, [activeIndex]);
 
-  // Auto-play (5s)
-  useEffect(() => {
-      if (isPaused) return;
-      const interval = setInterval(handleNext, 5000);
-      return () => clearInterval(interval);
-  }, [isPaused, handleNext]);
+    // Auto-play (5s)
+    useEffect(() => {
+        if (isPaused) return;
+        const interval = setInterval(handleNext, 5000);
+        return () => clearInterval(interval);
+    }, [isPaused, handleNext]);
 
-  return (
-    <section className="py-20 border-t border-border/40 bg-secondary/5">
-      <div className="container-minimal px-4">
-        
-        {/* 1. Interactive Tags */}
-        <div className="text-center mb-12">
-            <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-8">
-                Designed for everyone who has ever felt...
-            </p>
-            <div className="flex flex-wrap justify-center gap-3">
-                {PAIN_POINTS.map((point) => {
-                    const isActive = activeId === point.id;
-                    return (
-                        <button 
-                            key={point.id}
-                            onClick={() => setActiveId(point.id)}
-                            className={`px-6 py-2 rounded-full border text-sm font-bold transition-all duration-300 ${
-                                isActive 
-                                ? "bg-primary text-primary-foreground border-primary scale-105 shadow-md" 
-                                : "bg-background border-border/60 text-muted-foreground hover:border-primary/50 hover:text-foreground"
-                            }`}
-                        >
-                            {point.label}
-                        </button>
-                    );
-                })}
-            </div>
-        </div>
+    return (
+        <section className="py-20 border-t border-border/40 bg-secondary/5">
+            <div className="container-minimal px-4">
 
-        {/* 2. Dynamic Card - The Story with Carousel Controls */}
-        <div 
-            className="max-w-4xl mx-auto mb-20 min-h-[300px] flex items-center justify-center relative group"
-            onMouseEnter={() => setIsPaused(true)}
-            onMouseLeave={() => setIsPaused(false)}
-        >
-             {/* LEFT ARROW */}
-             <button 
-                onClick={handlePrev}
-                className="hidden md:flex absolute -left-12 lg:-left-16 z-20 w-10 h-10 items-center justify-center rounded-full bg-background border border-border/50 text-muted-foreground hover:scale-110 hover:border-foreground/50 hover:text-foreground transition-all shadow-sm"
-            >
-                <ChevronLeft className="w-6 h-6" />
-             </button>
+                {/* 1. Interactive Tags */}
+                <div className="text-center mb-12">
+                    <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-8">
+                        Designed for everyone who has ever felt...
+                    </p>
+                    <div className="flex flex-wrap justify-center gap-3">
+                        {PAIN_POINTS.map((point) => {
+                            const isActive = activeId === point.id;
+                            return (
+                                <button
+                                    key={point.id}
+                                    onClick={() => setActiveId(point.id)}
+                                    className={`px-6 py-2 rounded-full border text-sm font-bold transition-all duration-300 ${isActive
+                                            ? "bg-primary text-primary-foreground border-primary scale-105 shadow-md"
+                                            : "bg-background border-border/60 text-muted-foreground hover:border-primary/50 hover:text-foreground"
+                                        }`}
+                                >
+                                    {point.label}
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
 
-             {/* RIGHT ARROW */}
-             <button 
-                onClick={handleNext}
-                className="hidden md:flex absolute -right-12 lg:-right-16 z-20 w-10 h-10 items-center justify-center rounded-full bg-background border border-border/50 text-muted-foreground hover:scale-110 hover:border-foreground/50 hover:text-foreground transition-all shadow-sm"
-            >
-                <ChevronRight className="w-6 h-6" />
-             </button>
-
-             <div className="w-full bg-background border border-border/50 rounded-2xl p-8 md:p-12 text-center relative shadow-xl overflow-hidden">
-                <div className="text-6xl text-primary/10 absolute top-4 left-6 font-serif select-none">❝</div>
-                 
-                 <AnimatePresence mode="wait">
-                    <motion.div
-                        key={activePoint.id}
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -20 }}
-                        transition={{ duration: 0.4, ease: "easeOut" }}
-                        className="relative z-10"
+                {/* 2. Dynamic Card - The Story with Carousel Controls */}
+                <div
+                    className="max-w-4xl mx-auto mb-20 min-h-[300px] flex items-center justify-center relative group"
+                    onMouseEnter={() => setIsPaused(true)}
+                    onMouseLeave={() => setIsPaused(false)}
+                >
+                    {/* LEFT ARROW */}
+                    <button
+                        onClick={handlePrev}
+                        className="hidden md:flex absolute -left-12 lg:-left-16 z-20 w-10 h-10 items-center justify-center rounded-full bg-background border border-border/50 text-muted-foreground hover:scale-110 hover:border-foreground/50 hover:text-foreground transition-all shadow-sm"
                     >
-                        <h3 className="text-2xl md:text-3xl lg:text-4xl font-serif leading-tight italic text-foreground mb-6">
-                            "{activePoint.quote}"
-                        </h3>
-                        <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                            {activePoint.story}
-                        </p>
-                    </motion.div>
-                 </AnimatePresence>
+                        <ChevronLeft className="w-6 h-6" />
+                    </button>
 
-                 {/* Mobile Arrows (Bottom controls) */}
-                 <div className="flex md:hidden justify-center gap-4 mt-8 pb-4">
-                     <button onClick={handlePrev} className="p-2 bg-secondary/50 rounded-full"><ChevronLeft className="w-5 h-5"/></button>
-                     <button onClick={handleNext} className="p-2 bg-secondary/50 rounded-full"><ChevronRight className="w-5 h-5"/></button>
-                 </div>
+                    {/* RIGHT ARROW */}
+                    <button
+                        onClick={handleNext}
+                        className="hidden md:flex absolute -right-12 lg:-right-16 z-20 w-10 h-10 items-center justify-center rounded-full bg-background border border-border/50 text-muted-foreground hover:scale-110 hover:border-foreground/50 hover:text-foreground transition-all shadow-sm"
+                    >
+                        <ChevronRight className="w-6 h-6" />
+                    </button>
 
-                 <div className="mt-8 pt-8 border-t border-border/30 flex flex-col items-center animate-in fade-in duration-1000 delay-500">
-                     <div className="font-bold text-lg">Sound familiar?</div>
-                     <div className="text-sm text-muted-foreground mt-1">We built this to fix that.</div>
-                 </div>
-             </div>
-        </div>
+                    <div className="w-full bg-background border border-border/50 rounded-2xl p-8 md:p-12 text-center relative shadow-xl overflow-hidden">
+                        <div className="text-6xl text-primary/10 absolute top-4 left-6 font-serif select-none">❝</div>
 
-      </div>
-    </section>
-  );
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={activePoint.id}
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -20 }}
+                                transition={{ duration: 0.4, ease: "easeOut" }}
+                                className="relative z-10"
+                            >
+                                <h3 className="text-2xl md:text-3xl lg:text-4xl font-serif leading-tight italic text-foreground mb-6">
+                                    &quot;{activePoint.quote}&quot;
+                                </h3>
+                                <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                                    {activePoint.story}
+                                </p>
+                            </motion.div>
+                        </AnimatePresence>
+
+                        {/* Mobile Arrows (Bottom controls) */}
+                        <div className="flex md:hidden justify-center gap-4 mt-8 pb-4">
+                            <button onClick={handlePrev} className="p-2 bg-secondary/50 rounded-full"><ChevronLeft className="w-5 h-5" /></button>
+                            <button onClick={handleNext} className="p-2 bg-secondary/50 rounded-full"><ChevronRight className="w-5 h-5" /></button>
+                        </div>
+
+                        <div className="mt-8 pt-8 border-t border-border/30 flex flex-col items-center animate-in fade-in duration-1000 delay-500">
+                            <div className="font-bold text-lg">Sound familiar?</div>
+                            <div className="text-sm text-muted-foreground mt-1">We built this to fix that.</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    );
 }

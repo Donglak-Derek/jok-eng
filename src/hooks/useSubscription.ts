@@ -6,48 +6,48 @@ import { UserSubscription } from '@/types';
 
 export function useSubscription() {
     const { user, userProfile, refreshProfile } = useAuth();
-    
+
     // Auto-refill logic
     useEffect(() => {
         if (!user || !userProfile?.subscription) return;
 
         const checkRefill = async () => {
-             const sub = userProfile.subscription as UserSubscription;
-             if (!sub) return;
+            const sub = userProfile.subscription as UserSubscription;
+            if (!sub) return;
 
-             const now = new Date();
-             const lastRefillDate = new Date(sub.credits.lastRefill);
-             
-             // Logic 1: Calendar Day Reset (Local Time)
-             // Check if "today" is a different calendar day than "last refill"
-             const isNewDay = now.toDateString() !== lastRefillDate.toDateString();
+            const now = new Date();
+            const lastRefillDate = new Date(sub.credits.lastRefill);
 
-             // Logic 2: Tier Limit Sync (Fix for Pro Upgrade lag)
-             const expectedLimit = sub.tier === 'pro' ? 15 : 3;
-             const needsLimitUpdate = sub.credits.dailyLimit !== expectedLimit;
+            // Logic 1: Calendar Day Reset (Local Time)
+            // Check if "today" is a different calendar day than "last refill"
+            const isNewDay = now.toDateString() !== lastRefillDate.toDateString();
 
-             if (isNewDay || needsLimitUpdate) {
-                 console.log(`🔄 Subscription: ${isNewDay ? "New Day Refill" : "Syncing Tier Limit"}...`);
-                 try {
-                     const userRef = doc(db, 'users', user.uid);
-                     
-                     // If it's a new day, reset usage to 0. 
-                     // If it's just a tier change (same day), keep usage but update limit.
-                     const updates: any = {
+            // Logic 2: Tier Limit Sync (Fix for Pro Upgrade lag)
+            const expectedLimit = sub.tier === 'pro' ? 15 : 3;
+            const needsLimitUpdate = sub.credits.dailyLimit !== expectedLimit;
+
+            if (isNewDay || needsLimitUpdate) {
+                console.log(`🔄 Subscription: ${isNewDay ? "New Day Refill" : "Syncing Tier Limit"}...`);
+                try {
+                    const userRef = doc(db, 'users', user.uid);
+
+                    // If it's a new day, reset usage to 0. 
+                    // If it's just a tier change (same day), keep usage but update limit.
+                    const updates: Record<string, string | number> = {
                         "subscription.credits.dailyLimit": expectedLimit
-                     };
+                    };
 
-                     if (isNewDay) {
-                         updates["subscription.credits.usage"] = 0;
-                         updates["subscription.credits.lastRefill"] = now.getTime();
-                     }
+                    if (isNewDay) {
+                        updates["subscription.credits.usage"] = 0;
+                        updates["subscription.credits.lastRefill"] = now.getTime();
+                    }
 
-                     await updateDoc(userRef, updates);
-                     await refreshProfile(); // Sync local state
-                 } catch (e) {
-                     console.error("Failed to update subscription", e);
-                 }
-             }
+                    await updateDoc(userRef, updates);
+                    await refreshProfile(); // Sync local state
+                } catch (e) {
+                    console.error("Failed to update subscription", e);
+                }
+            }
         };
 
         checkRefill();
@@ -63,7 +63,7 @@ export function useSubscription() {
         if (isPro) return creditsUsed < 15;
         return creditsUsed < 3;
     };
-    
+
     // Only 'Pro' users can generate Premium audio (initially)
     // But actually, we might want to gate *generation* of audio? 
     // Plan says: Pro users get Premium voices. 
@@ -72,7 +72,7 @@ export function useSubscription() {
     // If Free user -> No.
     // If Pro user -> Yes.
     const canUsePremiumTTS = () => {
-        return isPro; 
+        return isPro;
     }
 
     const incrementUsage = async () => {

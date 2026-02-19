@@ -7,7 +7,6 @@ import {
     limit,
     doc,
     getDoc,
-    Timestamp,
     serverTimestamp
 } from "firebase/firestore";
 import { db } from "./firebase";
@@ -19,7 +18,7 @@ export interface VideoLesson {
     title: string;
     transcript?: string;
     script: Script;
-    createdAt: any; // Using any for Firestore serverTimestamp compatibility
+    createdAt: Date | { seconds: number; nanoseconds: number };
 }
 
 const COLLECTION_NAME = "video_lessons";

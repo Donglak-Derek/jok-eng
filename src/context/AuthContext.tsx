@@ -1,18 +1,19 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { 
-  User, 
-  onAuthStateChanged, 
-  signInWithPopup, 
-  GoogleAuthProvider, 
-  signOut 
+import {
+  User,
+  onAuthStateChanged,
+  signInWithPopup,
+  GoogleAuthProvider,
+  signOut
 } from "firebase/auth";
 import { auth } from "@/lib/firebase";
+import { UserProfile } from "@/types";
 
 interface AuthContextType {
   user: User | null;
-  userProfile: any | null; // Typed as any to avoid circular deps for now
+  userProfile: UserProfile | null;
   loading: boolean;
   refreshProfile: () => Promise<void>;
   signInWithGoogle: () => Promise<void>;
@@ -24,34 +25,34 @@ const AuthContext = createContext<AuthContextType>({
   user: null,
   userProfile: null,
   loading: true,
-  refreshProfile: async () => {},
-  signInWithGoogle: async () => {},
-  signInWithEmailOnly: async () => {},
-  logout: async () => {},
+  refreshProfile: async () => { },
+  signInWithGoogle: async () => { },
+  signInWithEmailOnly: async () => { },
+  logout: async () => { },
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const [userProfile, setUserProfile] = useState<any | null>(null);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
       if (user) {
-         try {
-            // Fetch Profile
-            const { doc, getDoc } = await import("firebase/firestore");
-            const { db } = await import("@/lib/firebase");
-            const ref = doc(db, "users", user.uid);
-            const snap = await getDoc(ref);
-            if (snap.exists()) {
-                setUserProfile(snap.data());
-            }
-         } catch (e) {
-            console.error("Error fetching profile", e);
-         }
+        try {
+          // Fetch Profile
+          const { doc, getDoc } = await import("firebase/firestore");
+          const { db } = await import("@/lib/firebase");
+          const ref = doc(db, "users", user.uid);
+          const snap = await getDoc(ref);
+          if (snap.exists()) {
+            setUserProfile(snap.data() as UserProfile);
+          }
+        } catch (e) {
+          console.error("Error fetching profile", e);
+        }
       } else {
         setUserProfile(null);
       }
@@ -64,49 +65,49 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const refreshProfile = async () => {
     if (!user) return;
     try {
-        const { doc, getDoc } = await import("firebase/firestore");
-        const { db } = await import("@/lib/firebase");
-        const ref = doc(db, "users", user.uid);
-        const snap = await getDoc(ref);
-        if (snap.exists()) {
-            setUserProfile(snap.data());
-        }
+      const { doc, getDoc } = await import("firebase/firestore");
+      const { db } = await import("@/lib/firebase");
+      const ref = doc(db, "users", user.uid);
+      const snap = await getDoc(ref);
+      if (snap.exists()) {
+        setUserProfile(snap.data() as UserProfile);
+      }
     } catch (e) {
-        console.error("Refreh profile failed", e);
+      console.error("Refreh profile failed", e);
     }
   };
 
   const signInWithGoogle = async () => {
     try {
-        const provider = new GoogleAuthProvider();
-        provider.addScope('https://www.googleapis.com/auth/userinfo.profile');
-        provider.addScope('https://www.googleapis.com/auth/userinfo.email');
+      const provider = new GoogleAuthProvider();
+      provider.addScope('https://www.googleapis.com/auth/userinfo.profile');
+      provider.addScope('https://www.googleapis.com/auth/userinfo.email');
 
-        await signInWithPopup(auth, provider);
-        // State will update in useEffect
+      await signInWithPopup(auth, provider);
+      // State will update in useEffect
     } catch (error) {
-        console.error("Error signing in with Google", error);
-        throw error;
+      console.error("Error signing in with Google", error);
+      throw error;
     }
   };
 
   const signInWithEmailOnly = async (e: string, p: string) => {
     const { signInWithEmailAndPassword } = await import("firebase/auth");
     try {
-        await signInWithEmailAndPassword(auth, e, p);
+      await signInWithEmailAndPassword(auth, e, p);
     } catch (error) {
-        console.error("Error signing in with Email", error);
-        throw error;
+      console.error("Error signing in with Email", error);
+      throw error;
     }
   };
 
   const logout = async () => {
     try {
-        await signOut(auth);
-        setUserProfile(null);
+      await signOut(auth);
+      setUserProfile(null);
     } catch (error) {
-        console.error("Error signing out", error);
-        throw error;
+      console.error("Error signing out", error);
+      throw error;
     }
   };
 
