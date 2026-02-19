@@ -36,11 +36,17 @@ export default function Header() {
                 </Link>
 
                 <nav className="hidden md:flex items-center gap-6">
+                    <Link href="/videos" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                        Videos
+                    </Link>
+                    <Link href="/blogs" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                        Blogs
+                    </Link>
+                    <Link href="/scenarios" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                        Scenarios
+                    </Link>
                     <Link href="/about" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                         About
-                    </Link>
-                    <Link href="/pricing" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                        Pricing
                     </Link>
                 </nav>
             </div>

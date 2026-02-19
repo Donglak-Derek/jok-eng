@@ -17,6 +17,9 @@ YOUR TASK:
    - 2 characters: A (User) and B (The "Difficult" Native).
    - Each line must be SHORT (max 10 words).
    - Use [square brackets] for 1-2 key vocabulary words per line for the app's Cloze test.
+   - For EACH sentence, provide:
+     - "scenario": A brief sentence explaining the physical/social context of this specific line (e.g., "Line 1: Arriving at the party," "Line 2: Meeting the host").
+     - "keywords": An array of objects for the bracketed words. Each object must have "word" (the bracketed word) and "definition" (Derek's simplified meaning).
    - For User lines (A), provide a "badResponse" (Grammatically correct but socially weird) and a "goodResponse" (Derek's advice).
 
 2. CULTURAL INSIGHT: Extract Derek's "Secret Sauce."
@@ -41,6 +44,10 @@ Return ONLY a raw JSON object matching this structure:
       "id": "1",
       "speaker": "A",
       "en": "The final smooth English with [cloze] words",
+      "scenario": "Context for this specific line",
+      "keywords": [
+        {"word": "cloze", "definition": "The meaning of the word"}
+      ],
       "badResponse": {"text": "Weird/Robotic version", "why": "Why it fails"},
       "goodResponse": {"text": "Derek's smooth version", "why": "Why it wins"}
     }

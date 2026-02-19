@@ -56,7 +56,7 @@ export default function VideoFeed() {
                         transition={{ delay: index * 0.1 }}
                         className="flex flex-col gap-4"
                     >
-                        <div className="relative aspect-[9/16] rounded-[2rem] overflow-hidden bg-secondary/30 border border-border/50 shadow-sm">
+                        <div className="relative aspect-[9/16] rounded-[2rem] overflow-hidden bg-secondary/30 border border-border/50 shadow-sm flex items-center justify-center">
                             <iframe
                                 src={`https://www.youtube.com/embed/${lesson.youtubeId}`}
                                 title={lesson.title}
@@ -64,6 +64,12 @@ export default function VideoFeed() {
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                 allowFullScreen
                             ></iframe>
+                            {/* Overlay message if video fails to load or for unavailable IDs */}
+                            {!lesson.youtubeId && (
+                                <div className="absolute inset-0 flex items-center justify-center bg-black/60 z-10 p-6 text-center">
+                                    <p className="text-white text-sm font-bold">Video ID Missing or Unavailable</p>
+                                </div>
+                            )}
                         </div>
 
                         <Link href={`/script/${lesson.script.id}`} className="group">
