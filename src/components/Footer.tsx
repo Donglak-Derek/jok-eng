@@ -10,7 +10,7 @@ export default function Footer() {
         <div className="text-center md:text-left">
           <h2 className="font-bold text-xl tracking-tight mb-2 text-foreground">jok-eng.com</h2>
           <p className="text-sm text-muted-foreground">
-            Master English through roleplay. <br />
+            Master the unspoken rules. Sound like yourself again. <br />
             © {new Date().getFullYear()} jok-eng.com. All rights reserved.
           </p>
         </div>

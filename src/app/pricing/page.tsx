@@ -15,49 +15,49 @@ export default function PricingPage() {
         {
             name: "Guest",
             price: "Free",
-            description: "Perfect for testing the waters.",
+            description: "Test the waters and see how the other half communicates.",
             icon: <User className="w-6 h-6 text-muted-foreground" />,
             features: [
-                { text: "Browse all categories", included: true },
-                { text: "Limited daily scenarios", included: true },
+                { text: "Browse all public scenarios", included: true },
+                { text: "Read the cultural decoders", included: true },
                 { text: "Standard AI voices", included: true },
-                { text: "Progress tracking", included: false },
-                { text: "Save scenarios", included: false },
-                { text: "Daily challenges", included: false },
+                { text: "Save private scenarios", included: false },
+                { text: "Track your fluency streak", included: false },
+                { text: "Direct AI roleplay", included: false },
             ],
             cta: "Start Exploring",
             action: () => router.push("/"),
             highlight: false
         },
         {
-            name: "Free (Sign In)",
+            name: "Insider (Sign In)",
             price: "Free",
-            description: "For serious learners who want to track growth.",
+            description: "For professionals who want to stop feeling invisible in the room.",
             icon: <Zap className="w-6 h-6 text-primary" />,
             features: [
-                { text: "Browse all categories", included: true },
-                { text: "3 scenarios / day", included: true },
-                { text: "Standard AI voices", included: true },
-                { text: "Full progress tracking", included: true },
-                { text: "Daily streak widget", included: true },
-                { text: "Save last 5 scenarios", included: true },
+                { text: "Access the Daily Survival Kit", included: true },
+                { text: "3 interactive roleplays / day", included: true },
+                { text: "Real-time tone correction", included: true },
+                { text: "Save your custom scenarios", included: true },
+                { text: "Track your daily streak", included: true },
+                { text: "Build your personal dictionary", included: true },
             ],
             cta: user ? "Already Signed In" : "Sign Up Free",
             action: () => router.push("/login"),
             highlight: true
         },
         {
-            name: "Pro",
+            name: "Executive",
             price: "$9/mo",
-            description: "Unlimited power for high-functioning professionals.",
+            description: "Unlimited power for high-functioning leaders who need to sound like themselves.",
             icon: <Star className="w-6 h-6 text-indigo-600" />,
             features: [
-                { text: "15 scenarios / day", included: true },
-                { text: "Premium Neural voices", included: true },
-                { text: "Full progress tracking", included: true },
-                { text: "Unlimited scenario storage", included: true },
-                { text: "Priority support", included: true },
-                { text: "Ad-free experience", included: true },
+                { text: "Unlimited scenario generations", included: true },
+                { text: "Premium neural voices (Vibe matching)", included: true },
+                { text: "Advanced subtext analysis", included: true },
+                { text: "Unlimited private library", included: true },
+                { text: "Priority AI processing speed", included: true },
+                { text: "Complete ad-free experience", included: true },
             ],
             cta: "Upgrade to Pro",
             action: () => router.push("/?upgrade=true"),
@@ -72,9 +72,9 @@ export default function PricingPage() {
             <main className="flex-1 pt-32 pb-20 px-4">
                 <div className="max-w-6xl mx-auto space-y-12">
                     <div className="text-center space-y-4">
-                        <h1 className="text-4xl md:text-6xl font-black tracking-tight">Simple Pricing</h1>
+                        <h1 className="text-4xl md:text-6xl font-black tracking-tight">Invest in Your <span className="text-primary italic">Voice</span>.</h1>
                         <p className="text-xl text-muted-foreground max-w-2xl mx-auto text-balance">
-                            Start for free, upgrade when you&apos;re ready to dominate your next English conversation.
+                            Stop letting language barriers hide your competence. Start for free, upgrade when you&apos;re ready to dominate the conversation.
                         </p>
                     </div>
 

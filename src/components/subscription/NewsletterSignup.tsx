@@ -17,9 +17,9 @@ export default function NewsletterSignup() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                     >
-                        <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">Join the Club</h2>
+                        <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-4 italic">The <span className="px-2 bg-white text-primary rounded-md">Unspoken</span> Rules.</h2>
                         <p className="text-lg md:text-xl opacity-90 font-medium">
-                            Get weekly scenarios, slang updates, and cultural tips delivered straight to your inbox.
+                            Join 10,000+ professionals getting weekly breakdowns of workplace subtext, survival phrases, and cultural calibration.
                         </p>
                     </motion.div>
 

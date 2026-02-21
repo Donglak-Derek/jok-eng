@@ -65,14 +65,14 @@ function HomeContent() {
                                 {!user ? (
                                     <>
                                         <button
-                                            onClick={() => window.location.href = '/login'}
+                                            onClick={() => document.getElementById('scenarios')?.scrollIntoView({ behavior: 'smooth' })}
                                             className="w-full sm:w-auto px-8 py-4 bg-primary text-primary-foreground rounded-full text-lg font-bold hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
                                         >
                                             Start Rehearsing <ArrowRight className="w-5 h-5" />
                                         </button>
                                         <button
                                             onClick={() => document.getElementById('scenarios')?.scrollIntoView({ behavior: 'smooth' })}
-                                            className="w-full sm:w-auto px-8 py-4 bg-secondary border border-border text-foreground rounded-full text-lg font-bold hover:bg-secondary/80 transition-colors"
+                                            className="w-full sm:w-auto px-8 py-4 bg-secondary border border-border text-foreground rounded-full text-lg font-bold hover:bg-secondary/80 transition-colors hidden"
                                         >
                                             Explore Library
                                         </button>
