@@ -4,11 +4,28 @@ import { v4 as uuidv4 } from "uuid";
 import pRetry from "p-retry";
 import { VIDEO_LESSON_PROMPT } from "./prompts";
 import { saveVideoLessonAdmin } from "@/lib/videoLessonsAdmin";
+import { getAdminAuth } from "@/lib/firebase-admin";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
 export async function POST(request: NextRequest) {
     try {
+        const authHeader = request.headers.get("authorization");
+        if (!authHeader?.startsWith("Bearer ")) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+        const token = authHeader.split("Bearer ")[1];
+        let decodedToken;
+        try {
+            decodedToken = await getAdminAuth().verifyIdToken(token);
+            // Only official admin can generate these.
+            if (decodedToken.uid !== "Hx4sxBjGaLST6c3MRWtrKn60c702") {
+                return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+            }
+        } catch (e) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+
         const { youtubeId, title, transcript } = await request.json();
 
         if (!youtubeId || !title || !transcript) {

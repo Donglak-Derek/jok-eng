@@ -18,7 +18,7 @@ export type Sentence = {
     why: string;
   };
   audioUrl?: string; // Cached audio for sentence
-  
+
   // New fields for Open Mic & Skit
   section?: 'hook' | 'twist' | 'punchline';
   speaker?: 'A' | 'B';
@@ -71,7 +71,7 @@ export type Script = {
   decoderItems?: DecoderItem[];
   // Phase 1: New Engagement Fields
   audioUrl?: string; // New: For Audio Caching
-  imageUrl?: string; 
+  imageUrl?: string;
   culturalInsights?: {
     title: string;
     content: string;
@@ -85,6 +85,8 @@ export type Script = {
     explanation: string;
   }[];
   summaryPoints?: string[]; // For Signal Decoder review
+  relatedBlogId?: string; // New: For Content Loop
+  relatedBlogUrl?: string; // New: For Content Loop
 };
 
 export type Category = {
@@ -167,7 +169,7 @@ export const GENERATION_GROUPS = [
   "Gen Z (Zoomer)",
   "Millennial",
   "Gen X",
-  "Boomer", 
+  "Boomer",
   "Silent Gen"
 ] as const;
 

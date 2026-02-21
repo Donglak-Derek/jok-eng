@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { AuthProvider } from "@/context/AuthContext";
 import { ProgressProvider } from "@/context/ProgressContext";
 import OnboardingModal from "@/components/OnboardingModal";
+import { PodcastProvider } from "@/context/PodcastContext";
+import StickyPodcastPlayer from "@/components/content/StickyPodcastPlayer";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
@@ -36,8 +38,11 @@ export default function RootLayout({
       >
         <AuthProvider>
           <ProgressProvider>
-            {children}
-            <OnboardingModal />
+            <PodcastProvider>
+              {children}
+              <OnboardingModal />
+              <StickyPodcastPlayer />
+            </PodcastProvider>
           </ProgressProvider>
         </AuthProvider>
       </body>

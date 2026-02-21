@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import CategoryCarousel from "@/components/CategoryCarousel";
 import CommunityScenariosSection from "@/components/CommunityScenariosSection";
@@ -8,6 +9,8 @@ import Footer from "@/components/Footer";
 import { Search } from "lucide-react";
 
 export default function ScenariosPage() {
+    const [searchQuery, setSearchQuery] = useState("");
+
     return (
         <main className="min-h-screen bg-background">
             <Header />
@@ -56,6 +59,8 @@ export default function ScenariosPage() {
                             <input
                                 type="text"
                                 placeholder="Search situations..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
                                 className="w-full pl-12 pr-4 py-4 rounded-2xl bg-secondary/50 border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
                             />
                         </motion.div>
@@ -75,7 +80,7 @@ export default function ScenariosPage() {
                                 <h2 className="text-2xl font-bold tracking-tight">Community Feed</h2>
                                 <p className="text-muted-foreground">See what others are practicing right now.</p>
                             </div>
-                            <CommunityScenariosSection />
+                            <CommunityScenariosSection searchQuery={searchQuery} />
                         </section>
                     </div>
                 </div>

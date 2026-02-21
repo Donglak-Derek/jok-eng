@@ -1,39 +1,55 @@
-"use client";
-
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
+import Link from "next/link";
+import { db } from "@/lib/firebase";
+import { collection, query, orderBy, limit, getDocs } from "firebase/firestore";
 
-const BLOG_POSTS = [
-    {
-        id: "1",
-        title: "Ordering Coffee like a local",
-        excerpt: "Forget 'I want a coffee'. Here is how to navigate the complex social cues of a busy morning rush.",
-        tag: "Real World",
-        textbook: "I would like a medium coffee with milk, please.",
-        real: "Can I get a venti oat milk latte? To go, thanks!",
-        color: "bg-orange-500/10 text-orange-600",
-    },
-    {
-        id: "2",
-        title: "The Ikea Return Desk struggle",
-        excerpt: "Returning a 'FLURG' without losing your mind. The vocabulary you actually need for customer service.",
-        tag: "Survival",
-        textbook: "I wish to return this item as it is defective.",
-        real: "Hey, this thing's missing a screw. Can I just swap it out or get a refund?",
-        color: "bg-blue-500/10 text-blue-600",
-    },
-    {
-        id: "3",
-        title: "Texas Small Talk survival guide",
-        excerpt: "If someone says 'Howdy', do you have to say it back? A guide to Southern hospitality for non-natives.",
-        tag: "Culture",
-        textbook: "I am fine, thank you. How are you doing today?",
-        real: "Doin' good! How 'bout you? Stayin' cool in this heat?",
-        color: "bg-red-500/10 text-red-600",
-    }
-];
+interface BlogPost {
+    id: string;
+    title: string;
+    excerpt: string;
+    tag: string;
+    textbook: string;
+    real: string;
+    color: string;
+}
 
 export default function BlogFeed() {
+    const [posts, setPosts] = useState<BlogPost[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        async function fetchBlogs() {
+            try {
+                // Fetch latest 3 blogs
+                const q = query(
+                    collection(db, "blogs"),
+                    orderBy("createdAt", "desc"),
+                    limit(3)
+                );
+                const snapshot = await getDocs(q);
+                const fetchedPosts = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                })) as BlogPost[];
+                setPosts(fetchedPosts);
+            } catch (error) {
+                console.error("Error fetching blogs:", error);
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchBlogs();
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center py-20">
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            </div>
+        );
+    }
     return (
         <section className="w-full">
             <div className="flex flex-col gap-4 mb-8">
@@ -42,7 +58,7 @@ export default function BlogFeed() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {BLOG_POSTS.map((post, index) => (
+                {posts.map((post, index) => (
                     <motion.div
                         key={post.id}
                         initial={{ opacity: 0, y: 20 }}
@@ -73,10 +89,13 @@ export default function BlogFeed() {
                                 </div>
                             </div>
 
-                            <button className="flex items-center gap-2 text-sm font-bold text-primary hover:gap-3 transition-all mt-auto group/btn">
+                            <Link
+                                href={`/blogs/${post.id}`}
+                                className="flex items-center gap-2 text-sm font-bold text-primary hover:gap-3 transition-all mt-auto group/btn"
+                            >
                                 Read Full Guide
                                 <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
-                            </button>
+                            </Link>
                         </div>
                     </motion.div>
                 ))}

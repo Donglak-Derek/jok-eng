@@ -1,11 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import VideoFeed from "@/components/content/VideoFeed";
+import PodcastFeed from "@/components/content/PodcastFeed";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
-export default function VideosPage() {
+export default function PodcastsPage() {
     return (
         <main className="min-h-screen bg-background">
             <Header />
@@ -22,7 +22,7 @@ export default function VideosPage() {
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                                 <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
                             </span>
-                            Live Lessons
+                            Audio Lessons
                         </motion.div>
 
                         <motion.h1
@@ -31,7 +31,7 @@ export default function VideosPage() {
                             transition={{ delay: 0.1 }}
                             className="text-4xl md:text-6xl font-black italic tracking-tighter"
                         >
-                            VIDEO <span className="text-primary italic">VAULT</span>
+                            PODCAST <span className="text-primary italic">CORNER</span>
                         </motion.h1>
 
                         <motion.p
@@ -40,11 +40,11 @@ export default function VideosPage() {
                             transition={{ delay: 0.2 }}
                             className="text-muted-foreground text-lg md:text-xl font-medium max-w-2xl"
                         >
-                            Real social shortcuts extracted from Derek&apos;s latest videos. No textbook fluff, just calibrated communication.
+                            Listen to deep dives into social calibration while you commute. NotebookLM extracted wisdom from the Broken English Club.
                         </motion.p>
                     </div>
 
-                    <VideoFeed limit={50} title="" subtitle="" />
+                    <PodcastFeed />
                 </div>
             </section>
 

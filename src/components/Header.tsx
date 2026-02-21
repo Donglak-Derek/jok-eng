@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { useState } from "react";
 import Image from "next/image";
+import { Menu, X } from "lucide-react";
 
 import StreakDisplay from "./StreakDisplay";
 import DailyCreditCounter from "@/components/subscription/DailyCreditCounter";
@@ -11,6 +12,7 @@ import DailyCreditCounter from "@/components/subscription/DailyCreditCounter";
 export default function Header() {
     const { user, logout } = useAuth();
     const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     // streak state removed, handled by StreakDisplay
 
     return (
@@ -44,6 +46,12 @@ export default function Header() {
                     </Link>
                     <Link href="/scenarios" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                         Scenarios
+                    </Link>
+                    <Link href="/podcasts" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                        Podcasts
+                    </Link>
+                    <Link href="/shop" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors font-bold text-primary">
+                        Store
                     </Link>
                     <Link href="/about" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                         About
@@ -97,11 +105,11 @@ export default function Header() {
                                             My Profile
                                         </Link>
                                         <Link
-                                            href="/my-scenarios"
+                                            href="/library"
                                             className="block px-4 py-2 text-sm text-foreground hover:bg-secondary transition-colors"
                                             onClick={() => setDropdownOpen(false)}
                                         >
-                                            My Scenarios
+                                            My Library
                                         </Link>
                                         <button
                                             onClick={() => {
@@ -125,7 +133,39 @@ export default function Header() {
                         Login
                     </Link>
                 )}
+
+                {/* Mobile Menu Toggle */}
+                <button
+                    className="md:hidden p-2 -mr-2 text-foreground focus:outline-none"
+                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                >
+                    {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                </button>
             </div>
+
+            {/* Mobile Navigation Menu */}
+            {mobileMenuOpen && (
+                <div className="md:hidden absolute top-full left-0 w-full bg-background border-b border-border shadow-lg py-4 px-4 flex flex-col gap-4 z-40">
+                    <Link href="/videos" onClick={() => setMobileMenuOpen(false)} className="text-lg font-bold text-foreground hover:text-primary transition-colors">
+                        Videos
+                    </Link>
+                    <Link href="/blogs" onClick={() => setMobileMenuOpen(false)} className="text-lg font-bold text-foreground hover:text-primary transition-colors">
+                        Blogs
+                    </Link>
+                    <Link href="/scenarios" onClick={() => setMobileMenuOpen(false)} className="text-lg font-bold text-foreground hover:text-primary transition-colors">
+                        Scenarios
+                    </Link>
+                    <Link href="/podcasts" onClick={() => setMobileMenuOpen(false)} className="text-lg font-bold text-foreground hover:text-primary transition-colors">
+                        Podcasts
+                    </Link>
+                    <Link href="/shop" onClick={() => setMobileMenuOpen(false)} className="text-lg font-black text-primary hover:text-primary/80 transition-colors">
+                        Store
+                    </Link>
+                    <Link href="/about" onClick={() => setMobileMenuOpen(false)} className="text-lg font-bold text-foreground hover:text-primary transition-colors">
+                        About
+                    </Link>
+                </div>
+            )}
         </header>
     );
 }

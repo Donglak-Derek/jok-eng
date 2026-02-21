@@ -12,7 +12,7 @@ import { scripts as originalScripts } from "@/data";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 
-export default function CommunityScenariosSection() {
+export default function CommunityScenariosSection({ searchQuery }: { searchQuery?: string }) {
     const [scenarios, setScenarios] = useState<UserScript[]>([]);
     const [loading, setLoading] = useState(true);
     const [activeFilter, setActiveFilter] = useState("Trending");
@@ -124,21 +124,28 @@ export default function CommunityScenariosSection() {
 
     // Client-Side Sort & MIX
     const displayScenarios = useMemo(() => {
-        // 1. Filter Custom Scenarios
-        const filteredCustom = scenarios.filter(s => filterScript(s, activeFilter));
-
-        // 2. Filter Original Scenarios
-        const filteredOriginal = originalScripts.filter(s => filterScript({ ...s, authorName: "Jok-Eng Official" } as UserScript, activeFilter))
+        // 1. Filter Original Scenarios (Only display official content)
+        let filteredOriginal = originalScripts.filter(s => filterScript({ ...s, authorName: "Jok-Eng Official" } as UserScript, activeFilter))
             .map(s => ({ ...s, authorName: "Jok-Eng Team" } as UserScript));
 
-        // 3. Combine
-        const combined = [...filteredCustom, ...filteredOriginal];
+        // 2. Apply Search Query if present
+        if (searchQuery) {
+            const query = searchQuery.toLowerCase();
+            const searchFilter = (s: UserScript) => (
+                s.title.toLowerCase().includes(query) ||
+                s.cleanedEnglish.toLowerCase().includes(query) ||
+                (s.categoryName && s.categoryName.toLowerCase().includes(query)) ||
+                (s.tone && s.tone.toLowerCase().includes(query))
+            );
+            filteredOriginal = filteredOriginal.filter(searchFilter);
+        }
 
-        // 4. Shuffle (Deterministic based on ID to avoid jitter, or simple seeded)
-        // For now, we use a simple shuffle but since it's in useMemo it won't re-run unless dependencies change.
-        // activeFilter or scenarios change -> re-shuffle.
+        // 3. Combine (Now just original)
+        const combined = [...filteredOriginal];
+
+        // 4. Shuffle
         return combined.sort(() => Math.random() - 0.5);
-    }, [scenarios, activeFilter]);
+    }, [scenarios, activeFilter, searchQuery]);
 
 
 

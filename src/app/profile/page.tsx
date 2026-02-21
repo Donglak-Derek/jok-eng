@@ -10,6 +10,7 @@ import { motion } from "framer-motion";
 import { X, Loader2 } from "lucide-react";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { updateProfile } from "firebase/auth";
+import SuccessPath from "@/components/SuccessPath";
 
 // Rank Logic Helpers
 const getRank = (scenariosCreated: number) => {
@@ -33,7 +34,7 @@ export default function ProfilePage() {
 
     const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files || !e.target.files[0] || !user) return;
-        
+
         const file = e.target.files[0];
         // Validate file size/type if needed (e.g. < 5MB)
         if (file.size > 5 * 1024 * 1024) {
@@ -62,7 +63,7 @@ export default function ProfilePage() {
 
             // 4. Refresh Auth Context to update Header immediately
             await refreshProfile();
-            
+
             // Force local re-render if needed, but context update might handle it
             // window.location.reload(); // Optional, or rely on state
         } catch (error) {
@@ -83,41 +84,41 @@ export default function ProfilePage() {
 
     return (
         <div className="min-h-screen bg-background text-foreground pb-20">
-             {/* Profile Hero Section */}
-             <div className="relative pt-6 pb-8 overflow-hidden">
+            {/* Profile Hero Section */}
+            <div className="relative pt-6 pb-8 overflow-hidden">
                 <div className="absolute inset-0 bg-secondary/5 z-0" />
                 <div className="container max-w-4xl mx-auto px-6 relative z-10 text-center">
-                    
-                     {/* Back Button */}
-                     {/* ... (keep existing back button) ... */}
-                     <div className="absolute top-0 left-4 md:left-0 z-50">
-                        <button 
+
+                    {/* Back Button */}
+                    {/* ... (keep existing back button) ... */}
+                    <div className="absolute top-0 left-4 md:left-0 z-50">
+                        <button
                             onClick={() => router.push("/")}
                             className="bg-secondary/80 hover:bg-secondary backdrop-blur p-2 rounded-full border border-white/10 transition-all text-foreground/80 hover:text-foreground"
                             title="Back to Home"
                         >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6" /></svg>
                         </button>
-                     </div>
+                    </div>
 
                     <div className="relative w-24 h-24 md:w-32 md:h-32 mx-auto mb-4 group">
-                        <motion.div 
+                        <motion.div
                             initial={{ scale: 0.5, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             className="w-full h-full rounded-full border-4 border-background shadow-xl overflow-hidden relative"
                         >
                             {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img 
-                                src={user.photoURL || `https://ui-avatars.com/api/?name=${user.displayName}&background=random`} 
+                            <img
+                                src={user.photoURL || `https://ui-avatars.com/api/?name=${user.displayName}&background=random`}
                                 alt={user.displayName || "User"}
                                 className="w-full h-full object-cover"
                             />
-                            
+
                             {/* Upload Overlay */}
                             <label className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity z-10">
-                                <input 
-                                    type="file" 
-                                    className="hidden" 
+                                <input
+                                    type="file"
+                                    className="hidden"
                                     accept="image/*"
                                     onChange={handlePhotoUpload}
                                     disabled={uploadingPhoto}
@@ -129,14 +130,14 @@ export default function ProfilePage() {
                                 )}
                             </label>
                         </motion.div>
-                        
+
                         {/* Camera Icon Badge */}
                         <div className="absolute bottom-0 right-0 p-1.5 bg-primary text-primary-foreground rounded-full shadow-md z-20 pointer-events-none group-hover:scale-110 transition-transform">
-                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" /><circle cx="12" cy="13" r="3" /></svg>
                         </div>
                     </div>
-                    
-                    <motion.h1 
+
+                    <motion.h1
                         initial={{ y: 20, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ delay: 0.1 }}
@@ -146,20 +147,20 @@ export default function ProfilePage() {
                     </motion.h1>
 
                     <motion.div
-                       initial={{ opacity: 0 }}
-                       animate={{ opacity: 1 }}
-                       transition={{ delay: 0.15 }}
-                       className="mb-3"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.15 }}
+                        className="mb-3"
                     >
-                        <button 
+                        <button
                             onClick={() => setIsEditing(true)}
                             className="text-xs font-bold text-primary hover:underline hover:text-primary/80 transition-colors"
                         >
                             Edit Profile Invity ✏️
                         </button>
                     </motion.div>
-                    
-                    <motion.div 
+
+                    <motion.div
                         initial={{ y: 20, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ delay: 0.2 }}
@@ -171,76 +172,80 @@ export default function ProfilePage() {
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                         transition={{ delay: 0.25 }}
-                         className="mb-2"
+                        transition={{ delay: 0.25 }}
+                        className="mb-2"
                     >
                         {userProfile?.occupation && (
-                             <span className="text-sm font-medium px-3 py-1 bg-secondary rounded-full text-secondary-foreground">
+                            <span className="text-sm font-medium px-3 py-1 bg-secondary rounded-full text-secondary-foreground">
                                 {userProfile.occupation}
-                             </span>
+                            </span>
                         )}
                     </motion.div>
 
 
                 </div>
-             </div>
+            </div>
 
 
 
-             {/* Stats Grid */}
-             <div className="container max-w-4xl mx-auto px-4 -mt-4 relative z-20">
+            {/* Stats Grid */}
+            <div className="container max-w-4xl mx-auto px-4 -mt-4 relative z-20">
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                    <StatsCard 
-                        icon="🎬" 
-                        label="Scripts Written" 
-                        value={stats?.totalScenariosCreated || 0} 
+                    <StatsCard
+                        icon="🎬"
+                        label="Scripts Written"
+                        value={stats?.totalScenariosCreated || 0}
                         delay={0.4}
                     />
-                    <StatsCard 
-                        icon="🔀" 
-                        label="Remixes Inspired" 
-                        value={stats?.totalRemixesInspired || 0} 
+                    <StatsCard
+                        icon="🔀"
+                        label="Remixes Inspired"
+                        value={stats?.totalRemixesInspired || 0}
                         delay={0.5}
                     />
-                    <StatsCard 
-                        icon="🎭" 
-                        label="Rehearsals Done" 
-                        value={stats?.totalPractices || 0} 
+                    <StatsCard
+                        icon="🎭"
+                        label="Rehearsals Done"
+                        value={stats?.totalPractices || 0}
                         delay={0.6}
                     />
-                    <StatsCard 
-                        icon="🔥" 
-                        label="Current Streak" 
-                        value={stats?.currentStreak || 0} 
+                    <StatsCard
+                        icon="🔥"
+                        label="Current Streak"
+                        value={stats?.currentStreak || 0}
                         delay={0.7}
                     />
-                    <StatsCard 
-                        icon="🏆" 
-                        label="Longest Streak" 
-                        value={stats?.longestStreak || 0} 
+                    <StatsCard
+                        icon="🏆"
+                        label="Longest Streak"
+                        value={stats?.longestStreak || 0}
                         delay={0.8}
                     />
                 </div>
 
 
-             </div>
+            </div>
 
-             {/* Edit Profile Modal */}
-             {isEditing && user && (
-                 <EditProfileModal 
-                    user={user} 
-                    onClose={() => setIsEditing(false)} 
+            <div className="container max-w-4xl mx-auto px-4 mt-12">
+                <SuccessPath totalPractices={stats?.totalPractices || 0} />
+            </div>
+
+            {/* Edit Profile Modal */}
+            {isEditing && user && (
+                <EditProfileModal
+                    user={user}
+                    onClose={() => setIsEditing(false)}
                     // Pass the profile data, fallback to empty object if null
-                    initialData={userProfile || {} as UserProfile} 
-                 />
-             )}
+                    initialData={userProfile || {} as UserProfile}
+                />
+            )}
         </div>
     );
 }
 
 function StatsCard({ icon, label, value, delay }: { icon: string, label: string, value: number, delay: number }) {
     return (
-        <motion.div 
+        <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay }}
@@ -248,7 +253,7 @@ function StatsCard({ icon, label, value, delay }: { icon: string, label: string,
         >
             {/* Subtle Gradient Glow on Hover */}
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-purple-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
-            
+
             <div className="relative z-10">
                 <div className="text-3xl mb-1 filter drop-shadow-sm">{icon}</div>
                 <div className="text-2xl font-black text-foreground mb-0.5 tracking-tight group-hover:scale-105 transition-transform duration-300">
@@ -271,7 +276,7 @@ function EditProfileModal({ user, onClose, initialData }: { user: any, onClose: 
         occupation: initialData?.occupation || "",
         ageGroup: initialData?.ageGroup || undefined, // undefined to match type
         humorStyle: initialData?.humorStyle || "",
-        motherLanguage: initialData?.motherLanguage || "" 
+        motherLanguage: initialData?.motherLanguage || ""
     });
     const [saving, setSaving] = useState(false);
 
@@ -290,7 +295,7 @@ function EditProfileModal({ user, onClose, initialData }: { user: any, onClose: 
             const userRef = doc(db, "users", user.uid);
             await updateDoc(userRef, {
                 ...cleanData,
-                displayName: formData.displayName 
+                displayName: formData.displayName
             });
 
             // 2. Update Auth Profile (Critical for UI)
@@ -302,7 +307,7 @@ function EditProfileModal({ user, onClose, initialData }: { user: any, onClose: 
                 });
             }
 
-            window.location.reload(); 
+            window.location.reload();
         } catch (e) {
             console.error("Failed to update profile", e);
             alert("Failed to save profile.");
@@ -314,7 +319,7 @@ function EditProfileModal({ user, onClose, initialData }: { user: any, onClose: 
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-            <motion.div 
+            <motion.div
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 className="bg-background w-full max-w-md rounded-3xl p-6 md:p-8 shadow-2xl relative animate-in fade-in zoom-in-95 duration-200"
@@ -324,14 +329,14 @@ function EditProfileModal({ user, onClose, initialData }: { user: any, onClose: 
                 </button>
 
                 <h2 className="text-2xl font-black tracking-tight mb-6">Edit Identity</h2>
-                
+
                 <div className="space-y-5">
                     {/* Name */}
                     <div className="space-y-1">
                         <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Display Name</label>
-                        <input 
-                            value={formData.displayName as string} 
-                            onChange={e => setFormData({...formData, displayName: e.target.value})}
+                        <input
+                            value={formData.displayName as string}
+                            onChange={e => setFormData({ ...formData, displayName: e.target.value })}
                             className="w-full bg-secondary/50 rounded-xl px-4 py-3 font-semibold focus:ring-2 ring-primary/20 outline-none transition-all"
                             placeholder="Your Name"
                         />
@@ -340,9 +345,9 @@ function EditProfileModal({ user, onClose, initialData }: { user: any, onClose: 
                     {/* Culture / Origin (NEW) */}
                     <div className="space-y-1">
                         <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Native Language / Origin</label>
-                        <select 
-                            value={formData.motherLanguage || ""} 
-                            onChange={e => setFormData({...formData, motherLanguage: e.target.value})}
+                        <select
+                            value={formData.motherLanguage || ""}
+                            onChange={e => setFormData({ ...formData, motherLanguage: e.target.value })}
                             className="w-full bg-secondary/50 rounded-xl px-4 py-3 font-medium focus:ring-2 ring-emerald-500/20 outline-none appearance-none"
                         >
                             <option value="">Select Origin...</option>
@@ -350,16 +355,16 @@ function EditProfileModal({ user, onClose, initialData }: { user: any, onClose: 
                                 <option key={c} value={c}>{c}</option>
                             ))}
                         </select>
-                         <p className="text-[10px] text-muted-foreground">Used to customize scenarios for your culture.</p>
+                        <p className="text-[10px] text-muted-foreground">Used to customize scenarios for your culture.</p>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                         {/* Generation (Was Age) */}
-                         <div className="space-y-1">
+                        <div className="space-y-1">
                             <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Generation</label>
-                            <select 
-                                value={formData.ageGroup || ""} 
-                                onChange={e => setFormData({...formData, ageGroup: e.target.value as any}) /* eslint-disable-line @typescript-eslint/no-explicit-any */}
+                            <select
+                                value={formData.ageGroup || ""}
+                                onChange={e => setFormData({ ...formData, ageGroup: e.target.value as any }) /* eslint-disable-line @typescript-eslint/no-explicit-any */}
                                 className="w-full bg-secondary/50 rounded-xl px-4 py-3 font-medium focus:ring-2 ring-primary/20 outline-none appearance-none"
                             >
                                 <option value="">Select...</option>
@@ -368,13 +373,13 @@ function EditProfileModal({ user, onClose, initialData }: { user: any, onClose: 
                                 ))}
                             </select>
                         </div>
-                        
-                         {/* Job */}
-                         <div className="space-y-1">
+
+                        {/* Job */}
+                        <div className="space-y-1">
                             <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Occupation</label>
-                            <select 
-                                value={formData.occupation || ""} 
-                                onChange={e => setFormData({...formData, occupation: e.target.value})}
+                            <select
+                                value={formData.occupation || ""}
+                                onChange={e => setFormData({ ...formData, occupation: e.target.value })}
                                 className="w-full bg-secondary/50 rounded-xl px-4 py-3 font-medium focus:ring-2 ring-primary/20 outline-none appearance-none"
                             >
                                 <option value="">Select...</option>
@@ -397,13 +402,13 @@ function EditProfileModal({ user, onClose, initialData }: { user: any, onClose: 
                         </div>
                     </div>
 
-                     {/* Humor Style */}
-                     <div className="space-y-1">
+                    {/* Humor Style */}
+                    <div className="space-y-1">
                         <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Humor Style</label>
-                         <select 
-                                value={formData.humorStyle || ""} 
-                                onChange={e => setFormData({...formData, humorStyle: e.target.value})}
-                                className="w-full bg-secondary/50 rounded-xl px-4 py-3 font-medium focus:ring-2 ring-primary/20 outline-none appearance-none"
+                        <select
+                            value={formData.humorStyle || ""}
+                            onChange={e => setFormData({ ...formData, humorStyle: e.target.value })}
+                            className="w-full bg-secondary/50 rounded-xl px-4 py-3 font-medium focus:ring-2 ring-primary/20 outline-none appearance-none"
                         >
                             <option value="">Select...</option>
                             <option value="Witty">Witty</option>
@@ -417,7 +422,7 @@ function EditProfileModal({ user, onClose, initialData }: { user: any, onClose: 
                 </div>
 
                 <div className="mt-8">
-                    <button 
+                    <button
                         onClick={handleSave}
                         disabled={saving}
                         className="w-full py-4 rounded-xl bg-foreground text-background font-bold text-lg hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2"

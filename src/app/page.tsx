@@ -2,41 +2,29 @@
 
 import Header from "@/components/Header";
 import CategoryCarousel from "@/components/CategoryCarousel";
-import DesktopNavigation from "@/components/DesktopNavigation";
 import CommunityScenariosSection from "@/components/CommunityScenariosSection";
 import FloatingCreateButton from "@/components/FloatingCreateButton";
-import MyScenariosSection from "@/components/MyScenariosSection";
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect, Suspense } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
 import DailyChallengeCard from "@/components/DailyChallengeCard";
 import StreakWidget from "@/components/StreakWidget";
-import QuickStartInput from "@/components/QuickStartInput";
 import DemoBanner from "@/components/DemoBanner";
-import GuestWelcome from "@/components/GuestWelcome";
 import UpgradeModal from "@/components/subscription/UpgradeModal";
 import Footer from "@/components/Footer";
 import VideoFeed from "@/components/content/VideoFeed";
 import BlogFeed from "@/components/content/BlogFeed";
 import NewsletterSignup from "@/components/subscription/NewsletterSignup";
-
-type Tab = "home" | "my_scenarios";
+import { Zap, ArrowRight } from "lucide-react";
 
 function HomeContent() {
     const { user, loading } = useAuth();
     const searchParams = useSearchParams();
-    const initialTab = (searchParams.get("tab") as Tab) || "home";
-    const [activeTab, setActiveTab] = useState<Tab>(initialTab);
     const [isDemoMode, setIsDemoMode] = useState(false);
     const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
 
     useEffect(() => {
-        const tab = searchParams.get("tab") as Tab;
-        if (tab === "home" || tab === "my_scenarios") {
-            setActiveTab(tab);
-        }
-
         if (searchParams.get("upgrade") === "true") {
             setIsUpgradeModalOpen(true);
         }
@@ -45,136 +33,123 @@ function HomeContent() {
     if (loading) return null;
 
     return (
-        <div className="min-h-screen flex flex-col bg-background text-foreground selection:bg-black selection:text-white">
+        <div className="min-h-screen flex flex-col bg-background text-foreground selection:bg-black selection:text-white pb-20 overflow-x-hidden">
+            <Header />
 
-            <div className="flex min-h-screen bg-background relative flex-col md:flex-row">
-                {/* FAB (Mobile Only) */}
-                <FloatingCreateButton />
+            <main className="flex-1 w-full pt-32 pb-20">
+                <div className="max-w-7xl mx-auto px-4 md:px-8 space-y-24 md:space-y-32">
 
-                {/* 1. DESKTOP SIDEBAR (Spotify Style) */}
-                <div>
-                    <DesktopNavigation activeTab={activeTab} onTabChange={setActiveTab} />
-                </div>
+                    {/* User Utility area */}
+                    {user && (
+                        <div className="max-w-3xl">
+                            <StreakWidget />
+                            {isDemoMode && <DemoBanner />}
+                        </div>
+                    )}
 
-                {/* 2. MAIN CONTENT AREA */}
-                <div className={`flex-1 md:pl-64 flex flex-col min-h-0 overflow-y-auto w-full max-w-[100vw] overflow-x-hidden pt-20 md:pt-12`}>
-                    {/* Mobile Header (Hidden on Desktop) */}
-                    <div className="md:hidden">
-                        <Header />
-                    </div>
+                    {/* NEW MAGAZINE HERO */}
+                    <section className="relative w-full rounded-[3rem] bg-gradient-to-br from-primary/10 via-background to-secondary/30 border border-border/50 p-8 pb-12 md:p-16 mb-16 overflow-hidden">
+                        <div className="max-w-4xl relative z-10">
+                            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/20 text-primary text-xs font-bold uppercase tracking-widest mb-8">
+                                <Zap className="w-4 h-4 text-primary" /> The Daily Rehearsal
+                            </span>
+                            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter italic mb-6">
+                                MASTER THE <br className="hidden md:block" />
+                                <span className="text-primary bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-600">UNSPOKEN</span> RULES.
+                            </h1>
+                            <p className="text-xl md:text-2xl text-muted-foreground font-medium max-w-2xl mb-10 leading-relaxed">
+                                Your playbook for social calibration, cultural nuance, and the real-world English they don't teach in textbooks.
+                            </p>
 
-                    <div className="container-minimal pt-0 md:pt-8 pb-8 flex flex-col gap-8 md:gap-10 max-w-7xl mx-auto px-4 md:px-12">
-
-                        {user ? <StreakWidget /> : <GuestWelcome />}
-                        {isDemoMode && <DemoBanner />}
-
-
-                        {/* MOBILE ONLY: Tabs (Segmented Control) - Pushed down, subtle */}
-                        <div className="md:hidden flex justify-center sticky top-0 z-10 py-0 bg-background/80 backdrop-blur-lg -mx-4 px-4 border-b border-border/50">
-                            <div className="inline-flex bg-secondary/50 p-1 rounded-full relative shadow-sm border border-border/50 w-full max-w-[300px]">
-                                {(["home", "my_scenarios"] as const).map((tab) => (
+                            <div className="flex flex-col sm:flex-row items-center gap-4">
+                                {!user ? (
+                                    <>
+                                        <button
+                                            onClick={() => window.location.href = '/login'}
+                                            className="w-full sm:w-auto px-8 py-4 bg-primary text-primary-foreground rounded-full text-lg font-bold hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+                                        >
+                                            Start Rehearsing <ArrowRight className="w-5 h-5" />
+                                        </button>
+                                        <button
+                                            onClick={() => document.getElementById('scenarios')?.scrollIntoView({ behavior: 'smooth' })}
+                                            className="w-full sm:w-auto px-8 py-4 bg-secondary border border-border text-foreground rounded-full text-lg font-bold hover:bg-secondary/80 transition-colors"
+                                        >
+                                            Explore Library
+                                        </button>
+                                    </>
+                                ) : (
                                     <button
-                                        key={tab}
-                                        onClick={() => setActiveTab(tab)}
-                                        className={`
-                                        relative flex-1 px-4 py-1.5 rounded-full text-xs font-bold transition-colors duration-200 z-10 uppercase tracking-wide
-                                        ${activeTab === tab ? "text-foreground" : "text-muted-foreground hover:text-foreground"}
-                                    `}
+                                        onClick={() => document.getElementById('scenarios')?.scrollIntoView({ behavior: 'smooth' })}
+                                        className="w-full sm:w-auto px-8 py-4 bg-primary text-primary-foreground rounded-full text-lg font-bold hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
                                     >
-                                        {activeTab === tab && (
-                                            <motion.div
-                                                layoutId="activeTabMobile"
-                                                className="absolute inset-0 bg-background rounded-full shadow-sm border border-border/10"
-                                                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                                            />
-                                        )}
-                                        <span className="relative z-20">
-                                            {tab === "home" && "Discover"}
-                                            {tab === "my_scenarios" && "Library"}
-                                        </span>
+                                        Jump to Scenarios <ArrowRight className="w-5 h-5" />
                                     </button>
-                                ))}
+                                )}
                             </div>
                         </div>
 
-                        {/* Tab Content */}
-                        <AnimatePresence mode="wait">
-                            <motion.div
-                                key={activeTab}
-                                initial={{ opacity: 0, y: 5 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -5 }}
-                                transition={{ duration: 0.15 }}
-                                className="min-h-[400px]"
-                            >
-                                {activeTab === "home" && (
-                                    <div className="space-y-8 md:space-y-20">
-                                        {/* 1. Youtube Shorts Feed */}
-                                        <VideoFeed />
+                        {/* Decorative Background Elements */}
+                        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/30 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+                        <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-purple-500/20 rounded-full blur-[100px] translate-y-1/2 pointer-events-none" />
+                    </section>
 
-                                        {/* 2. Blog Feed */}
-                                        <BlogFeed />
+                    {/* Editorial Content Hub Layout */}
 
-                                        {/* 3. Daily Challenge */}
-                                        <div>
-                                            <div className="mb-4 md:mb-6">
-                                                <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-1 md:mb-2">Daily Quiz</h2>
-                                                <p className="text-muted-foreground text-base md:text-lg">Test your knowledge from our latest videos.</p>
-                                            </div>
-                                            <DailyChallengeCard />
-                                        </div>
+                    {/* 1. Youtube Shorts Feed */}
+                    <section>
+                        <VideoFeed />
+                    </section>
 
-                                        {/* 4. Pick your vibe */}
-                                        <div>
-                                            <div className="mb-4 md:mb-6">
-                                                <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-1 md:mb-2">All Scenarios</h2>
-                                                <p className="text-muted-foreground text-base md:text-lg">Explore our full library of curated roleplays.</p>
-                                            </div>
-                                            <CategoryCarousel />
-                                        </div>
+                    {/* 2. Blog Feed */}
+                    <section>
+                        <BlogFeed />
+                    </section>
 
-                                        {/* 5. Community Feed */}
-                                        <CommunityScenariosSection />
+                    {/* 3. Daily Challenge */}
+                    <section className="max-w-5xl mx-auto">
+                        <div className="mb-8 md:mb-12 text-center md:text-left flex flex-col md:flex-row md:items-end justify-between gap-4">
+                            <div>
+                                <h2 className="text-3xl md:text-5xl font-black tracking-tighter italic uppercase mb-2">
+                                    The Daily <span className="text-primary">Rehearsal</span>
+                                </h2>
+                                <p className="text-muted-foreground text-lg md:text-xl font-medium">Test your knowledge from our latest videos.</p>
+                            </div>
+                        </div>
+                        <DailyChallengeCard />
+                    </section>
 
-                                        {/* 6. Newsletter Signup */}
-                                        <NewsletterSignup />
-                                    </div>
-                                )}
+                    {/* 4. Pick your vibe */}
+                    <section id="scenarios">
+                        <div className="mb-8 md:mb-12 text-center">
+                            <h2 className="text-4xl md:text-6xl font-black tracking-tighter italic uppercase text-primary mb-4">
+                                <span className="text-foreground">Social</span> Playbook
+                            </h2>
+                            <p className="text-muted-foreground text-lg md:text-xl font-medium max-w-2xl mx-auto">
+                                Explore our full library of curated roleplays. From the boardroom to the bar, we have a scenario for you.
+                            </p>
+                        </div>
+                        <CategoryCarousel />
+                    </section>
 
-                                {activeTab === "my_scenarios" && (
-                                    <div className="md:max-w-5xl md:mx-auto">
-                                        {user ? (
-                                            <MyScenariosSection />
-                                        ) : (
-                                            <div className="flex flex-col items-center justify-center py-20 text-center space-y-6">
-                                                <div className="w-20 h-20 bg-secondary rounded-full flex items-center justify-center">
-                                                    <motion.div
-                                                        animate={{ rotate: [0, 10, -10, 0] }}
-                                                        transition={{ duration: 2, repeat: Infinity }}
-                                                    >
-                                                        🔒
-                                                    </motion.div>
-                                                </div>
-                                                <div>
-                                                    <h3 className="text-2xl font-bold">Personal Library</h3>
-                                                    <p className="text-muted-foreground max-w-sm mx-auto">Sign in to save scenarios and track your progress across devices.</p>
-                                                </div>
-                                                <button
-                                                    onClick={() => window.location.href = "/login"}
-                                                    className="px-8 py-3 bg-primary text-primary-foreground rounded-full font-bold shadow-lg shadow-primary/20"
-                                                >
-                                                    Sign In to Unlock
-                                                </button>
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
-                            </motion.div>
-                        </AnimatePresence>
-                    </div>
-                    <Footer />
+                    {/* 5. Community Feed */}
+                    <section>
+                        <div className="mb-8 md:mb-12">
+                            <h2 className="text-3xl md:text-5xl font-black tracking-tighter italic uppercase mb-2">
+                                Live <span className="text-primary italic">Scenarios</span>
+                            </h2>
+                            <p className="text-muted-foreground text-lg md:text-xl font-medium">See what the community is practicing right now.</p>
+                        </div>
+                        <CommunityScenariosSection />
+                    </section>
+
+                    {/* 6. Newsletter Signup */}
+                    <NewsletterSignup />
+
                 </div>
-            </div>
+            </main>
+
+            <FloatingCreateButton />
+            <Footer />
 
             <UpgradeModal
                 isOpen={isUpgradeModalOpen}
@@ -191,5 +166,3 @@ export default function Home() {
         </Suspense>
     );
 }
-
-
