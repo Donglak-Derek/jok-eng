@@ -1,6 +1,17 @@
 import type { NextConfig } from "next";
+import withPWAInit from "@ducanh2912/next-pwa";
+
+const withPWA = withPWAInit({
+  dest: "public",
+  disable: process.env.NODE_ENV === "development",
+  register: true,
+});
 
 const nextConfig: NextConfig = {
+  // Explicitly allow webpack since next-pwa requires it and Next 16 defaults to strict turbopack
+  webpack: (config) => {
+    return config;
+  },
   images: {
     remotePatterns: [
       {
@@ -13,7 +24,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "www.google.com", 
+        hostname: "www.google.com",
       },
       {
         protocol: "https",
@@ -23,5 +34,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-
-export default nextConfig;
+export default withPWA(nextConfig);

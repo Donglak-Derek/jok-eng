@@ -16,6 +16,15 @@ export const metadata: Metadata = {
   title: "Jok-eng | Speak Like a Leader",
   description: "Master high-functioning professional English. Understand the subtext, sound natural, and speak like a leader with AI-powered scenarios.",
   keywords: ["English learning", "professional English", "leadership communication", "business English", "AI English coach"],
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Jok-Eng",
+  },
+  formatDetection: {
+    telephone: false,
+  },
 };
 
 export const viewport: Viewport = {
@@ -23,6 +32,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
+  themeColor: "#000000",
 };
 
 export default function RootLayout({
