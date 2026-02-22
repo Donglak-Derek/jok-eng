@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import pRetry from "p-retry";
 import { VIDEO_LESSON_PROMPT } from "./prompts";
 import { saveVideoLessonAdmin } from "@/lib/videoLessonsAdmin";
-import { getAdminAuth } from "@/lib/firebase-admin";
+import { getAdminAuth, getAdminDb } from "@/lib/firebase-admin";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
@@ -18,9 +18,9 @@ export async function POST(request: NextRequest) {
         let decodedToken;
         try {
             decodedToken = await getAdminAuth().verifyIdToken(token);
-            // Only official admin can generate these.
-            if (decodedToken.uid !== "Hx4sxBjGaLST6c3MRWtrKn60c702") {
-                return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+            // Only official admin can generate these. Match ADMIN_UID from frontend layout.
+            if (decodedToken.uid !== "pbz1yjIxjRhnAA9N5Fyi4YyNy9R2") {
+                return NextResponse.json({ error: "Forbidden: Admin access required" }, { status: 403 });
             }
         } catch (e) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -52,21 +52,52 @@ export async function POST(request: NextRequest) {
         const jsonString = text.substring(start, end + 1);
         const data = JSON.parse(jsonString);
 
-        // Format into Script type
-        const script = {
-            ...data,
+        // Format into exactScript type
+        const exactScript = {
+            ...data.exactScript,
             id: uuidv4(),
             categorySlug: "video_lesson",
             categoryName: "Video Lessons",
             mode: "cloze",
-            quizItems: data.quizItems?.map((q: any) => ({ ...q, id: uuidv4() })),
-            sentences: data.sentences?.map((s: any) => ({ ...s, id: uuidv4() }))
+            quizItems: data.exactScript.quizItems?.map((q: any) => ({ ...q, id: uuidv4() })) || [],
+            sentences: data.exactScript.sentences?.map((s: any) => ({ ...s, id: uuidv4() })) || []
         };
 
-        // Save to Firestore
-        const lessonId = await saveVideoLessonAdmin(youtubeId, title, script, transcript);
+        // Format into generalScenario type
+        const generalScenario = {
+            ...data.generalScenario,
+            id: uuidv4(),
+            categorySlug: "practice",
+            categoryName: "Real Life Practice",
+            mode: "cloze",
+            quizItems: data.generalScenario.quizItems?.map((q: any) => ({ ...q, id: uuidv4() })) || [],
+            sentences: data.generalScenario.sentences?.map((s: any) => ({ ...s, id: uuidv4() })) || []
+        };
 
-        return NextResponse.json({ success: true, lessonId, script });
+        // Also save both scripts individually to the jok-eng-official account so they show up in the main library
+        const adminDb = getAdminDb();
+        const officialRef = adminDb.collection("users").doc("jok-eng-official").collection("scenarios");
+
+        await officialRef.doc(exactScript.id).set({
+            ...exactScript,
+            userId: "jok-eng-official",
+            authorName: "Jok-Eng Official",
+            createdAt: Date.now(),
+            isPublic: true
+        });
+
+        await officialRef.doc(generalScenario.id).set({
+            ...generalScenario,
+            userId: "jok-eng-official",
+            authorName: "Jok-Eng Official",
+            createdAt: Date.now(),
+            isPublic: true
+        });
+
+        // Save to Video Vault linking document
+        const lessonId = await saveVideoLessonAdmin(youtubeId, title, exactScript, generalScenario, transcript);
+
+        return NextResponse.json({ success: true, lessonId, exactScript, generalScenario });
 
     } catch (error: any) {
         console.error("Generate Lesson Error:", error);

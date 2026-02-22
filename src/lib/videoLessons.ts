@@ -43,10 +43,44 @@ export async function getLatestVideoLessons(maxCount: number = 3) {
     try {
         const q = query(collection(db, COLLECTION_NAME), orderBy("createdAt", "desc"), limit(maxCount));
         const querySnapshot = await getDocs(q);
-        return querySnapshot.docs.map(doc => ({
+
+        const lessons = querySnapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data()
         })) as VideoLesson[];
+
+        // Fetch the full script objects for each lesson
+        for (const lesson of lessons) {
+            // 1. Fetch General Practice Scenario
+            const generalScenarioId = (lesson as any).generalScenarioId;
+            if (generalScenarioId) {
+                try {
+                    const scenarioRef = doc(db, "users", "jok-eng-official", "scenarios", generalScenarioId);
+                    const scenarioSnap = await getDoc(scenarioRef);
+                    if (scenarioSnap.exists()) {
+                        (lesson as any).generalScenario = scenarioSnap.data();
+                    }
+                } catch (err) {
+                    console.error("Failed to fetch general scenario for lesson", lesson.id, err);
+                }
+            }
+
+            // 2. Fetch Exact Dictation Script (V2 architecture)
+            const exactScriptId = (lesson as any).exactScriptId;
+            if (exactScriptId) {
+                try {
+                    const exactRef = doc(db, "users", "jok-eng-official", "scenarios", exactScriptId);
+                    const exactSnap = await getDoc(exactRef);
+                    if (exactSnap.exists()) {
+                        (lesson as any).exactScript = exactSnap.data();
+                    }
+                } catch (err) {
+                    console.error("Failed to fetch exact script for lesson", lesson.id, err);
+                }
+            }
+        }
+
+        return lessons;
     } catch (e) {
         console.error("Error getting documents: ", e);
         return [];
@@ -58,7 +92,27 @@ export async function getVideoLessonById(id: string) {
         const docRef = doc(db, COLLECTION_NAME, id);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-            return { id: docSnap.id, ...docSnap.data() } as VideoLesson;
+            const lesson = { id: docSnap.id, ...docSnap.data() } as VideoLesson;
+
+            // Fetch General Scenario
+            if ((lesson as any).generalScenarioId) {
+                const scenarioRef = doc(db, "users", "jok-eng-official", "scenarios", (lesson as any).generalScenarioId);
+                const scenarioSnap = await getDoc(scenarioRef);
+                if (scenarioSnap.exists()) {
+                    (lesson as any).generalScenario = scenarioSnap.data();
+                }
+            }
+
+            // Fetch Exact Script
+            if ((lesson as any).exactScriptId) {
+                const exactRef = doc(db, "users", "jok-eng-official", "scenarios", (lesson as any).exactScriptId);
+                const exactSnap = await getDoc(exactRef);
+                if (exactSnap.exists()) {
+                    (lesson as any).exactScript = exactSnap.data();
+                }
+            }
+
+            return lesson;
         } else {
             return null;
         }

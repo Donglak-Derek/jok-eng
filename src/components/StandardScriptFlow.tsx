@@ -421,7 +421,6 @@ export default function StandardScriptFlow({ script }: Props) {
     }
 
     const currentSentence = currentIndex < sentences.length ? sentences[currentIndex] : undefined;
-    const audioStatus = currentSentence?.audioUrl ? 'premium' : (currentSentence ? 'robot' : undefined);
 
     // --- RENDER SHELL ---
     return (
@@ -432,7 +431,6 @@ export default function StandardScriptFlow({ script }: Props) {
             currentStep={currentIndex}
             totalSteps={totalSteps}
             hasFinished={isCompletion || currentIndex === culturalInsightIndex || currentIndex === quizIndex}
-            audioStatus={audioStatus}
 
             // Controls
             isAutoPlayEnabled={isAutoPlayEnabled}

@@ -2,7 +2,7 @@ import { getAdminDb } from "./firebase-admin";
 import { Script } from "@/types";
 import { FieldValue } from "firebase-admin/firestore";
 
-export async function saveVideoLessonAdmin(youtubeId: string, title: string, script: Script, transcript?: string) {
+export async function saveVideoLessonAdmin(youtubeId: string, title: string, exactScript: Script, generalScenario: Script, transcript?: string) {
     try {
         const db = getAdminDb();
         const collection = db.collection("video_lessons");
@@ -15,7 +15,9 @@ export async function saveVideoLessonAdmin(youtubeId: string, title: string, scr
             await collection.doc(docId).update({
                 title,
                 transcript,
-                script,
+                exactScriptId: exactScript.id,
+                generalScenarioId: generalScenario.id,
+                script: exactScript, // LEAVING THIS FOR V1 BACKWARD COMPATIBILITY
                 updatedAt: FieldValue.serverTimestamp(),
             });
             return docId;
@@ -25,7 +27,9 @@ export async function saveVideoLessonAdmin(youtubeId: string, title: string, scr
             youtubeId,
             title,
             transcript,
-            script,
+            exactScriptId: exactScript.id,
+            generalScenarioId: generalScenario.id,
+            script: exactScript, // LEAVING THIS FOR V1 BACKWARD COMPATIBILITY
             createdAt: FieldValue.serverTimestamp(),
         });
         return docRef.id;

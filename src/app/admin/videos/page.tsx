@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { collection, query, orderBy, getDocs, deleteDoc, doc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { db, auth } from "@/lib/firebase";
 import { VideoLesson } from "@/lib/videoLessons";
 import { Trash2, ExternalLink, PlayCircle, Loader2, Sparkles, AlertTriangle } from "lucide-react";
 import Link from "next/link";
@@ -129,7 +129,7 @@ export default function AdminVideosPage() {
                                                 <span className="text-neutral-600 text-xs italic">Unlinked</span>
                                             )}
                                         </td>
-                                        <td className="px-6 py-4 text-right">
+                                        <td className="px-6 py-4 text-right flex items-center justify-end gap-2 h-full min-h-[5rem]">
                                             <button
                                                 onClick={() => handleDelete(video.id || "", video.title)}
                                                 disabled={deletingId === video.id}

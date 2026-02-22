@@ -9,14 +9,21 @@ import { Menu, X } from "lucide-react";
 import StreakDisplay from "./StreakDisplay";
 import DailyCreditCounter from "@/components/subscription/DailyCreditCounter";
 
-export default function Header() {
+interface HeaderProps {
+    transparent?: boolean;
+}
+
+export default function Header({ transparent = false }: HeaderProps) {
     const { user, logout } = useAuth();
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    // streak state removed, handled by StreakDisplay
+
+    const headerBg = transparent ? 'bg-gradient-to-b from-black/60 to-transparent border-transparent' : 'bg-white/80 backdrop-blur-md border-b border-border';
+    const textColor = transparent ? 'text-white' : 'text-foreground';
+    const mutedTextColor = transparent ? 'text-white/80 hover:text-white' : 'text-muted-foreground hover:text-foreground';
 
     return (
-        <header className="fixed top-0 z-50 w-full px-4 md:px-6 py-3 bg-white/80 backdrop-blur-md border-b border-border flex items-center justify-between md:justify-between">
+        <header className={`fixed top-0 z-50 w-full px-4 md:px-6 py-3 flex items-center justify-between md:justify-between transition-colors duration-300 ${headerBg}`}>
             <div className="flex-1 flex justify-start items-center gap-8">
                 <Link href="/" className="group flex items-center gap-0">
                     <div className="relative w-8 h-8 md:w-9 md:h-9">
@@ -25,35 +32,35 @@ export default function Header() {
                             alt="Jok-Eng Logo"
                             fill
                             sizes="(max-width: 768px) 32px, 36px"
-                            className="object-contain drop-shadow-sm transition-transform group-hover:scale-105 duration-300"
+                            className={`object-contain drop-shadow-sm transition-transform group-hover:scale-105 duration-300 ${transparent ? 'invert brightness-0' : ''}`}
                             priority
                         />
                     </div>
-                    <h1 className="font-sans font-bold text-xl tracking-tight text-foreground group-hover:opacity-80 transition-opacity">
+                    <h1 className={`font-sans font-bold text-xl tracking-tight group-hover:opacity-80 transition-opacity ${textColor}`}>
                         Jok-eng
                     </h1>
-                    <span className="px-2 py-0.5 text-[10px] uppercase tracking-wider font-bold bg-secondary text-secondary-foreground rounded-full">
+                    <span className={`px-2 py-0.5 text-[10px] uppercase tracking-wider font-bold rounded-full ${transparent ? 'bg-white/20 text-white' : 'bg-secondary text-secondary-foreground'}`}>
                         Beta
                     </span>
                 </Link>
 
                 <nav className="hidden md:flex items-center gap-6">
-                    <Link href="/videos" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                    <Link href="/videos" className={`text-sm font-medium transition-colors ${mutedTextColor}`}>
                         Videos
                     </Link>
-                    <Link href="/blogs" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                    <Link href="/blogs" className={`text-sm font-medium transition-colors ${mutedTextColor}`}>
                         Blogs
                     </Link>
-                    <Link href="/scenarios" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                    <Link href="/scenarios" className={`text-sm font-medium transition-colors ${mutedTextColor}`}>
                         Scenarios
                     </Link>
-                    <Link href="/podcasts" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                    <Link href="/podcasts" className={`text-sm font-medium transition-colors ${mutedTextColor}`}>
                         Podcasts
                     </Link>
-                    <Link href="/shop" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors font-bold text-primary">
+                    <Link href="/shop" className={`text-sm font-medium transition-colors font-bold ${transparent ? 'text-white' : 'text-primary'}`}>
                         Store
                     </Link>
-                    <Link href="/about" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                    <Link href="/about" className={`text-sm font-medium transition-colors ${mutedTextColor}`}>
                         About
                     </Link>
                 </nav>
@@ -92,7 +99,7 @@ export default function Header() {
                             {dropdownOpen && (
                                 <>
                                     <div className="fixed inset-0 z-40 bg-transparent" onClick={() => setDropdownOpen(false)} />
-                                    <div className="absolute right-0 mt-2 w-56 bg-white border border-border rounded-lg shadow-lg py-1 z-50 overflow-hidden">
+                                    <div className="absolute right-0 mt-2 w-56 bg-white border border-border rounded-lg shadow-lg py-1 z-50 overflow-hidden text-black">
                                         <div className="px-4 py-3 border-b border-border bg-secondary/30">
                                             <p className="font-medium text-sm text-foreground truncate">{user.displayName}</p>
                                             <p className="text-xs text-muted-foreground truncate">{user.email}</p>
@@ -128,7 +135,7 @@ export default function Header() {
                 ) : (
                     <Link
                         href="/login"
-                        className="px-4 py-2 rounded-full bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity"
+                        className={`px-4 py-2 rounded-full text-sm font-medium hover:opacity-90 transition-opacity ${transparent ? 'bg-white text-black' : 'bg-primary text-primary-foreground'}`}
                     >
                         Login
                     </Link>
@@ -136,7 +143,7 @@ export default function Header() {
 
                 {/* Mobile Menu Toggle */}
                 <button
-                    className="md:hidden p-2 -mr-2 text-foreground focus:outline-none"
+                    className={`md:hidden p-2 -mr-2 focus:outline-none ${textColor}`}
                     onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 >
                     {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}

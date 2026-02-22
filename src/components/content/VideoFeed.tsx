@@ -105,12 +105,23 @@ export default function VideoFeed({
                             )}
                         </div>
 
-                        <Link href={`/script/${lesson.script.id}`} className="group">
-                            <button className="w-full py-4 rounded-full bg-primary/10 text-primary font-bold text-sm flex items-center justify-center gap-2 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300 shadow-sm border border-primary/20">
-                                <PlayCircle className="w-5 h-5" />
-                                Rehearse these phrases
-                            </button>
-                        </Link>
+                        <div className="flex flex-col gap-2">
+                            <Link href={`/videos?startAt=${lesson.id}&layer=dictation`} className="group w-full">
+                                <button className="w-full py-3.5 rounded-xl bg-primary/10 text-primary font-bold text-sm flex items-center justify-center gap-2 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300 shadow-sm border border-primary/20">
+                                    <PlayCircle className="w-4 h-4" />
+                                    Rehearse this Scene
+                                </button>
+                            </Link>
+
+                            {((lesson as any).generalScenarioId || lesson.script) && (
+                                <Link href={`/videos?startAt=${lesson.id}&layer=practice`} className="group w-full">
+                                    <button className="w-full py-3.5 rounded-xl bg-neutral-100 text-neutral-700 font-bold text-sm flex items-center justify-center gap-2 hover:bg-neutral-800 hover:text-white transition-all duration-300 shadow-sm border border-neutral-200">
+                                        <PlayCircle className="w-4 h-4" />
+                                        Try it in Real Life
+                                    </button>
+                                </Link>
+                            )}
+                        </div>
                     </motion.div>
                 ))}
             </div>

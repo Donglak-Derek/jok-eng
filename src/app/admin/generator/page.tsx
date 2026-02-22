@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Send, CheckCircle, AlertCircle, Loader2, Youtube } from "lucide-react";
+import { Sparkles, Send, CheckCircle, AlertCircle, Loader2, Youtube, ExternalLink } from "lucide-react";
+import { auth } from "@/lib/firebase";
 
 export default function AdminGenerator() {
     const [youtubeId, setYoutubeId] = useState("");
@@ -23,9 +24,13 @@ export default function AdminGenerator() {
         setResult(null);
 
         try {
+            const token = await auth.currentUser?.getIdToken();
             const response = await fetch("/api/generate-lesson", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
                 body: JSON.stringify({ youtubeId, title, transcript })
             });
 
@@ -126,9 +131,9 @@ export default function AdminGenerator() {
                                         <CheckCircle className="w-4 h-4" />
                                         Success! Lesson Live.
                                     </div>
-                                    <h2 className="text-2xl font-black">{result.script.title}</h2>
+                                    <h2 className="text-2xl font-black">{result.exactScript.title}</h2>
                                     <p className="text-neutral-400 text-sm leading-relaxed italic border-l-2 border-primary/30 pl-4">
-                                        {result.script.cleanedEnglish}
+                                        {result.exactScript.cleanedEnglish}
                                     </p>
 
                                     <div className="grid grid-cols-2 gap-4 pt-4">
@@ -137,18 +142,27 @@ export default function AdminGenerator() {
                                             <div className="text-xl font-black">3</div>
                                         </div>
                                         <div className="bg-neutral-800/50 p-4 rounded-2xl">
-                                            <div className="text-[10px] font-bold text-neutral-500 uppercase mb-1">Dialouge Cards</div>
-                                            <div className="text-xl font-black">5</div>
+                                            <div className="text-[10px] font-bold text-neutral-500 uppercase mb-1">Total Lines</div>
+                                            <div className="text-xl font-black">10</div>
                                         </div>
                                     </div>
 
-                                    <button
-                                        onClick={() => window.open(`/script/${result.script.id}`, '_blank')}
-                                        className="w-full bg-neutral-800 hover:bg-neutral-700 font-bold py-3 rounded-xl flex items-center justify-center gap-2 text-sm"
-                                    >
-                                        PREVIEW ROOM
-                                        <Send className="w-4 h-4" />
-                                    </button>
+                                    <div className="flex flex-col gap-3">
+                                        <button
+                                            onClick={() => window.open(`/script/${result.exactScript.id}`, '_blank')}
+                                            className="w-full bg-primary hover:opacity-90 font-bold py-3 rounded-xl flex items-center justify-center gap-2 text-sm text-primary-foreground"
+                                        >
+                                            PREVIEW: EXACT SCRIPT
+                                            <Send className="w-4 h-4" />
+                                        </button>
+                                        <button
+                                            onClick={() => window.open(`/script/${result.generalScenario.id}`, '_blank')}
+                                            className="w-full bg-neutral-800 hover:bg-neutral-700 font-bold py-3 rounded-xl flex items-center justify-center gap-2 text-sm"
+                                        >
+                                            PREVIEW: GENERAL SCENARIO
+                                            <ExternalLink className="w-4 h-4" />
+                                        </button>
+                                    </div>
                                 </motion.div>
                             ) : error ? (
                                 <motion.div

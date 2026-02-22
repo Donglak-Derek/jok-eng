@@ -334,7 +334,6 @@ export default function StoryFlow({ script }: Props) {
       hasFinished={isCompletion || !showControls}
 
       // Gamification
-      audioStatus={currentStep < segmentsCount ? (currentSegment?.audioUrl ? 'premium' : 'robot') : undefined}
 
       // Navigation
       onNext={handleNext}
