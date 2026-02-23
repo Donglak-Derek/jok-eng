@@ -12,6 +12,8 @@ const nextConfig: NextConfig = {
   webpack: (config) => {
     return config;
   },
+  // Ensure we don't crash when running next dev with turbopack enabled by default in Next 16
+  turbopack: {},
   images: {
     remotePatterns: [
       {

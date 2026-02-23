@@ -4,6 +4,7 @@ import { ProgressProvider } from "@/context/ProgressContext";
 import OnboardingModal from "@/components/OnboardingModal";
 import { PodcastProvider } from "@/context/PodcastContext";
 import StickyPodcastPlayer from "@/components/content/StickyPodcastPlayer";
+import InstallPrompt from "@/components/InstallPrompt";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
@@ -51,6 +52,7 @@ export default function RootLayout({
             <PodcastProvider>
               {children}
               <OnboardingModal />
+              <InstallPrompt />
               <StickyPodcastPlayer />
             </PodcastProvider>
           </ProgressProvider>

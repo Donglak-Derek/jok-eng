@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Script } from "@/types";
 import { motion, AnimatePresence } from "framer-motion";
 import ClozeCard from "@/components/ClozeCard";
@@ -15,9 +15,10 @@ interface InlineScenarioProps {
     script: Script;
     isActive: boolean; // From FeedSlide
     onComplete?: () => void;
+    onLockChange?: (locked: boolean) => void;
 }
 
-export default function InlineScenario({ script, isActive, onComplete }: InlineScenarioProps) {
+export default function InlineScenario({ script, isActive, onComplete, onLockChange }: InlineScenarioProps) {
     const sentences = script.sentences || [];
     const hasCulturalInsight = !!script.culturalInsights;
     const hasQuiz = !!script.quizItems && script.quizItems.length > 0;
@@ -32,6 +33,13 @@ export default function InlineScenario({ script, isActive, onComplete }: InlineS
     const [isAutoPlayEnabled, setIsAutoPlayEnabled] = useState(true);
 
     const isCompletion = currentIndex >= totalSteps;
+
+    // Ensure the feed locks/unlocks based on completion status
+    useEffect(() => {
+        if (onLockChange) {
+            onLockChange(!isCompletion);
+        }
+    }, [isCompletion, onLockChange]);
 
     const handleNext = () => {
         if (currentIndex < totalSteps) {
@@ -163,8 +171,8 @@ export default function InlineScenario({ script, isActive, onComplete }: InlineS
                     <button
                         onClick={toggleAutoPlay}
                         className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all border ${isAutoPlayEnabled
-                                ? "bg-amber-500/20 text-amber-500 border-amber-500/30"
-                                : "bg-neutral-800 text-neutral-400 border-neutral-700"
+                            ? "bg-amber-500/20 text-amber-500 border-amber-500/30"
+                            : "bg-neutral-800 text-neutral-400 border-neutral-700"
                             }`}
                         title={isAutoPlayEnabled ? "Auto-play: ON" : "Auto-play: OFF"}
                     >
@@ -196,17 +204,17 @@ export default function InlineScenario({ script, isActive, onComplete }: InlineS
 
             {/* --- FOOTER (Navigation) --- */}
             {!isCompletion && (
-                <div className="flex-none bg-neutral-900 border-t border-neutral-800 z-10 pb-safe w-full">
-                    <div className="max-w-md mx-auto px-4 py-3 flex items-center justify-between gap-4">
+                <div className="flex-none bg-neutral-900 border-t border-neutral-800 z-10 w-full mt-auto">
+                    <div className="max-w-md mx-auto px-4 pt-3 pb-10 md:pb-4 flex items-center justify-between gap-4">
                         {/* Restart (Subtle, Left) */}
                         <Button
                             variant="ghost"
                             onClick={handleRestart}
                             size="md"
-                            className="text-neutral-400 hover:text-white shrink-0 w-12 h-12 rounded-full p-0"
+                            className="text-neutral-400 hover:text-white shrink-0 w-14 h-14 rounded-full p-0"
                             title="Restart from beginning"
                         >
-                            <RotateCcw className="w-6 h-6" />
+                            <RotateCcw className="w-8 h-8" />
                         </Button>
 
                         {/* Navigation Group (Right) */}

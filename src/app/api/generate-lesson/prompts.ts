@@ -25,10 +25,13 @@ This scenario must strictly follow the actual spoken words in the video transcri
 --- SCRIPT 2: REAL-WORLD PRACTICE ---
 This scenario takes the core phrase/lesson from the video and places it in a generalized, real-world setting (e.g., Office, Coffee Shop, Networking Event).
 - Create a 5-sentence dialogue putting the phrase into action in a new context.
-- Use [square brackets] around 1-2 key vocabulary words per line to power the Cloze test.
+- VERY IMPORTANT: Use [square brackets] around 1-2 key vocabulary words inside \`goodResponse.text\` to power the Cloze test. DO NOT place brackets inside \`en\` for this scenario, because the user practices the \`goodResponse\`.
 - Include a "Bad Response" (why it fails) and a "Good Response" (why it sounds native) for every user turn in the dialogue.
 - Provide one "Cultural Insight" explaining the "Why" behind the social logic in this real-world setting.
 - Provide 3 multiple-choice Quiz questions testing the social nuance of this practice scenario.
+
+--- CRITICAL RULE FOR VOCABULARY MATCHING ---
+The \`word\` string inside the \`keywords\` array MUST be the EXACT SAME word that is wrapped in [square brackets]. For Scenario 1, this is inside \`en\`. For Scenario 2, this is inside \`goodResponse.text\`. Do not define a different word than the one you clozed.
 
 OUTPUT FORMAT:
 Return ONLY a raw JSON object matching this structure. No markdown:
@@ -63,11 +66,11 @@ Return ONLY a raw JSON object matching this structure. No markdown:
     "sentences": [
       {
         "speaker": "A",
-        "en": "Normal conversational line with [cloze] brackets",
+        "en": "Normal conversational line without brackets",
         "scenario": "Context string",
         "keywords": [{"word": "cloze", "definition": "meaning"}],
         "badResponse": {"text": "Weird", "why": "Why"},
-        "goodResponse": {"text": "Smooth", "why": "Why"}
+        "goodResponse": {"text": "Smooth native line with [cloze] brackets", "why": "Why"}
       }
     ],
     "quizItems": [

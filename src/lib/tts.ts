@@ -1,4 +1,22 @@
 import { Script, UserProfile } from "@/types";
+import { db } from "./firebase";
+import { doc, getDoc } from "firebase/firestore";
+
+// Local Memory Cache: Maps API Request URLs to Local Browser Blob URLs
+const audioBlobCache = new Map<string, string>();
+
+// Global reference to prevent overlapping audio
+let currentAudio: HTMLAudioElement | null = null;
+
+function stopCurrentAudio() {
+    if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.onended = null;
+        currentAudio.onerror = null;
+        currentAudio.src = "";
+        currentAudio = null;
+    }
+}
 
 interface PlayOptions {
     text: string;
@@ -73,28 +91,56 @@ export async function playScenarioAudio(
     }
 
     // STRATEGY 2: CALL GLOBAL CACHED API
+    stopCurrentAudio();
     options.onStart();
 
     try {
-        // 1. Call API
+        // 1. Check Local In-Memory Cache first
         const voice = options.voice || "en-US-Neural2-F"; // Allow override
         const apiUrl = `/api/tts?text=${encodeURIComponent(textToPlay)}&voice=${voice}`;
 
-        const response = await fetch(apiUrl);
-        if (!response.ok) throw new Error("TTS Generation failed");
+        let targetUrl = apiUrl;
 
-        const audioBlob = await response.blob();
+        if (audioBlobCache.has(apiUrl)) {
+            // HIT: Use the local Memory Blob
+            targetUrl = audioBlobCache.get(apiUrl)!;
+        } else {
+            // MISS: Fetch from Global API Cache
+            const response = await fetch(apiUrl);
+            if (!response.ok) throw new Error("TTS Generation failed");
 
-        // 2. Play immediately
-        const tempUrl = URL.createObjectURL(audioBlob);
-        const audio = new Audio(tempUrl);
+            const audioBlob = await response.blob();
+            targetUrl = URL.createObjectURL(audioBlob);
+
+            // Save to Local Memory Cache for next time
+            audioBlobCache.set(apiUrl, targetUrl);
+        }
+
+        // 2. Play Audio
+        const audio = new Audio(targetUrl);
+        currentAudio = audio;
 
         audio.onended = () => {
             options.onEnd();
-            URL.revokeObjectURL(tempUrl);
+            if (currentAudio === audio) currentAudio = null;
+            // We NO LONGER revoke the object URL here, as the cache retains it for instant replay
         };
-        audio.onerror = () => options.onError("Playback error");
-        audio.play();
+        audio.onerror = () => {
+            options.onError("Playback error");
+            if (currentAudio === audio) currentAudio = null;
+        };
+
+        // Handle Safari autoplay block gracefully
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(e => {
+                if (e.name === 'NotAllowedError') {
+                    console.warn("Autoplay blocked by browser. User interaction required.");
+                } else {
+                    console.error("Audio playback error", e);
+                }
+            });
+        }
 
     } catch (e) {
         console.error("TTS Logic Error", e);
@@ -104,10 +150,19 @@ export async function playScenarioAudio(
 }
 
 function playAudioFromUrl(url: string, onStart: () => void, onEnd: () => void, onError: (msg: string) => void) {
+    stopCurrentAudio();
     const audio = new Audio(url);
+    currentAudio = audio;
+
     audio.onplay = onStart;
-    audio.onended = onEnd;
-    audio.onerror = () => onError("Failed to play audio url");
+    audio.onended = () => {
+        onEnd();
+        if (currentAudio === audio) currentAudio = null;
+    };
+    audio.onerror = () => {
+        onError("Failed to play audio url");
+        if (currentAudio === audio) currentAudio = null;
+    };
     audio.play();
 }
 
@@ -115,6 +170,7 @@ function playAudioFromUrl(url: string, onStart: () => void, onEnd: () => void, o
 let activeUtterance: SpeechSynthesisUtterance | null = null;
 
 function speakNative(text: string, onStart: () => void, onEnd: () => void) {
+    stopCurrentAudio();
     if (!window.speechSynthesis) {
         onEnd();
         return;

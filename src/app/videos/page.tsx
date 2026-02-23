@@ -44,6 +44,29 @@ function VideoFeedUI() {
 
     const [isMuted, setIsMuted] = useState(true);
 
+    // --- Scroll Lock State ---
+    const [lockedSlides, setLockedSlides] = useState<Record<string, boolean>>({});
+    const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+
+    useEffect(() => {
+        if (!emblaApi) return;
+        const onSelect = () => {
+            setCurrentSlideIndex(emblaApi.selectedScrollSnap());
+        };
+        emblaApi.on("select", onSelect);
+        onSelect();
+        return () => { emblaApi.off("select", onSelect); };
+    }, [emblaApi]);
+
+    useEffect(() => {
+        if (!emblaApi || slides.length === 0) return;
+        const activeSlideId = slides[currentSlideIndex]?.id;
+        const isLocked = lockedSlides[activeSlideId] ?? false;
+
+        // Dynamically allow or prevent dragging depending on if the slide wants to lock it.
+        emblaApi.reInit({ watchDrag: !isLocked });
+    }, [currentSlideIndex, lockedSlides, emblaApi, slides]);
+
     const toggleMute = (e: React.MouseEvent) => {
         e.stopPropagation();
         setIsMuted(prev => !prev);
@@ -167,7 +190,7 @@ function VideoFeedUI() {
                                             </div>
 
                                             {/* UI Overlay */}
-                                            <div className="absolute bottom-24 left-0 w-full z-20 pointer-events-none p-6 pb-8 md:pb-12 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+                                            <div className="absolute bottom-0 left-0 w-full z-20 pointer-events-none p-6 pb-6 bg-gradient-to-t from-black/90 via-black/50 to-transparent">
                                                 <div className="max-w-md mx-auto pointer-events-auto space-y-4">
                                                     <div>
                                                         <h2 className="text-2xl font-black text-white line-clamp-2 leading-tight">
@@ -200,21 +223,33 @@ function VideoFeedUI() {
 
                                     {/* SLIDE TYPE: EXACT SCRIPT DICTATION */}
                                     {slide.type === "exactScript" && (
-                                        <div className="w-full max-w-md mx-auto flex-1 bg-neutral-950 pt-20">
+                                        <div className="w-full max-w-md mx-auto flex-1 bg-neutral-950 pt-20 min-h-0">
                                             <InlineScenario
                                                 script={(slide.lesson as any).exactScript || slide.lesson.script} // Fallback to V1 script property
                                                 isActive={isActive}
                                                 onComplete={scrollToNext}
+                                                onLockChange={(isLocked) => {
+                                                    setLockedSlides(prev => {
+                                                        if (prev[slide.id] === isLocked) return prev;
+                                                        return { ...prev, [slide.id]: isLocked };
+                                                    });
+                                                }}
                                             />
                                         </div>
                                     )}
 
                                     {/* SLIDE TYPE: GENERAL PRACTICE */}
                                     {slide.type === "generalScenario" && (
-                                        <div className="w-full max-w-md mx-auto flex-1 bg-neutral-950 pt-20">
+                                        <div className="w-full max-w-md mx-auto flex-1 bg-neutral-950 pt-20 min-h-0">
                                             <InlineScenario
                                                 script={(slide.lesson as any).generalScenario || slide.lesson.script} // Fallback to V1 script property
                                                 isActive={isActive}
+                                                onLockChange={(isLocked) => {
+                                                    setLockedSlides(prev => {
+                                                        if (prev[slide.id] === isLocked) return prev;
+                                                        return { ...prev, [slide.id]: isLocked };
+                                                    });
+                                                }}
                                             />
                                         </div>
                                     )}

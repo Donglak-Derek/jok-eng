@@ -67,10 +67,14 @@ export async function GET(request: NextRequest) {
                 // Google gives Base64 format
                 const audioBuffer = Buffer.from(data.audioContent, 'base64');
 
-                // Asynchronously upload to Firebase Storage to cache it
-                file.save(audioBuffer, {
-                    metadata: { contentType: "audio/mpeg" },
-                }).catch(e => console.error("Failed to cache TTS to storage", e));
+                // Await the upload so the serverless function doesn't terminate the promise
+                try {
+                    await file.save(audioBuffer, {
+                        metadata: { contentType: "audio/mpeg" },
+                    });
+                } catch (e) {
+                    console.error("Failed to cache TTS to storage", e);
+                }
 
                 // Return to client immediately
                 return new NextResponse(audioBuffer, {

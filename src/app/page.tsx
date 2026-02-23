@@ -36,16 +36,18 @@ function HomeContent() {
         <div className="min-h-screen flex flex-col bg-background text-foreground selection:bg-black selection:text-white pb-20 overflow-x-hidden">
             <Header />
 
-            <main className="flex-1 w-full pt-32 pb-20">
-                <div className="max-w-7xl mx-auto px-4 md:px-8 space-y-24 md:space-y-32">
-
-                    {/* User Utility area */}
-                    {user && (
+            <main className="flex-1 w-full pt-24 pb-20">
+                {/* User Utility area */}
+                {user && (
+                    <div className="max-w-7xl mx-auto px-4 md:px-8 mb-6">
                         <div className="max-w-3xl">
                             <StreakWidget />
                             {isDemoMode && <DemoBanner />}
                         </div>
-                    )}
+                    </div>
+                )}
+
+                <div className="max-w-7xl mx-auto px-4 md:px-8 space-y-16 md:space-y-32">
 
                     {/* NEW MAGAZINE HERO */}
                     <section className="relative w-full rounded-[3rem] bg-gradient-to-br from-primary/10 via-background to-secondary/30 border border-border/50 p-8 pb-12 md:p-16 mb-16 overflow-hidden">
