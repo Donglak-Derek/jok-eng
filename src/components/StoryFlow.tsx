@@ -19,6 +19,7 @@ import { playScenarioAudio } from "@/lib/tts";
 
 import { toast } from "react-hot-toast";
 import { onSnapshot } from "firebase/firestore";
+import { getScriptAudioStatus } from "@/lib/utils";
 
 type Props = {
   script: Script;
@@ -158,6 +159,16 @@ export default function StoryFlow({ script }: Props) {
           if (newSegments[idx]) {
             newSegments[idx] = { ...newSegments[idx], audioUrl: url };
           }
+
+          // Background persistence
+          let scriptRef;
+          if ('userId' in script) {
+            scriptRef = doc(db, `users/${(script as UserScript).userId}/scenarios`, script.id);
+          } else {
+            scriptRef = doc(db, `users/jok-eng-official/scenarios`, script.id);
+          }
+          updateDoc(scriptRef, { segments: newSegments }).catch(e => console.error("Failed to persist audio", e));
+
           return { ...prev, segments: newSegments };
         });
 
@@ -332,6 +343,7 @@ export default function StoryFlow({ script }: Props) {
       currentStep={currentStep}
       totalSteps={totalSteps}
       hasFinished={isCompletion || !showControls}
+      audioStatus={getScriptAudioStatus(localScript)}
 
       // Gamification
 

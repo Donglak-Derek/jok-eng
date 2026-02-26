@@ -2,12 +2,14 @@
 
 import Header from "@/components/Header";
 import CategoryCarousel from "@/components/CategoryCarousel";
-import CommunityScenariosSection from "@/components/CommunityScenariosSection";
 import FloatingCreateButton from "@/components/FloatingCreateButton";
-import { useSearchParams } from "next/navigation";
+import ScenarioList from "@/components/ScenarioList";
+import { scripts } from "@/data";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useState, useEffect, Suspense } from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
+import { ADMIN_UID } from "@/lib/constants";
 import DailyChallengeCard from "@/components/DailyChallengeCard";
 import StreakWidget from "@/components/StreakWidget";
 import DemoBanner from "@/components/DemoBanner";
@@ -23,6 +25,7 @@ function HomeContent() {
     const searchParams = useSearchParams();
     const [isDemoMode, setIsDemoMode] = useState(false);
     const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
+    const router = useRouter();
 
     useEffect(() => {
         if (searchParams.get("upgrade") === "true") {
@@ -30,7 +33,13 @@ function HomeContent() {
         }
     }, [searchParams]);
 
-    if (loading) return null;
+    useEffect(() => {
+        if (!loading && (!user || user.uid !== ADMIN_UID)) {
+            router.replace('/scenarios');
+        }
+    }, [user, loading, router]);
+
+    if (loading || (!user || user.uid !== ADMIN_UID)) return null;
 
     return (
         <div className="min-h-screen flex flex-col bg-background text-foreground selection:bg-black selection:text-white pb-20 overflow-x-hidden">
@@ -39,15 +48,15 @@ function HomeContent() {
             <main className="flex-1 w-full pt-24 pb-20">
                 {/* User Utility area */}
                 {user && (
-                    <div className="max-w-7xl mx-auto px-4 md:px-8 mb-6">
-                        <div className="max-w-3xl">
+                    <div className="max-w-2xl mx-auto px-4 md:px-0 mb-6 w-full">
+                        <div className="w-full">
                             <StreakWidget />
                             {isDemoMode && <DemoBanner />}
                         </div>
                     </div>
                 )}
 
-                <div className="max-w-7xl mx-auto px-4 md:px-8 space-y-16 md:space-y-32">
+                <div className="max-w-2xl mx-auto px-4 md:px-0 space-y-16 md:space-y-32 w-full">
 
                     {/* NEW MAGAZINE HERO */}
                     <section className="relative w-full rounded-[3rem] bg-gradient-to-br from-primary/10 via-background to-secondary/30 border border-border/50 p-8 pb-12 md:p-16 mb-16 overflow-hidden">
@@ -133,15 +142,15 @@ function HomeContent() {
                         <CategoryCarousel />
                     </section>
 
-                    {/* 5. Community Feed */}
+                    {/* 5. Story Feed */}
                     <section>
-                        <div className="mb-8 md:mb-12">
+                        <div className="mb-8 md:mb-12 text-center">
                             <h2 className="text-3xl md:text-5xl font-black tracking-tighter italic uppercase mb-2">
-                                Live <span className="text-primary italic">Scenarios</span>
+                                Story <span className="text-primary italic">Feed</span>
                             </h2>
-                            <p className="text-muted-foreground text-lg md:text-xl font-medium">See what the community is practicing right now.</p>
+                            <p className="text-muted-foreground text-lg md:text-xl font-medium">Dive into our curated social playbooks.</p>
                         </div>
-                        <CommunityScenariosSection />
+                        <ScenarioList scripts={scripts.slice(0, 6)} />
                     </section>
 
                     {/* 6. Newsletter Signup */}

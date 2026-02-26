@@ -301,6 +301,16 @@ export default function SignalDecoder({ script }: Props) {
             const newItems = prev.decoderItems.map(item =>
                 item.id === sentenceId ? { ...item, audioUrl: url } : item
             );
+
+            // Background persistence
+            let scriptRef;
+            if ('userId' in script) {
+                scriptRef = doc(db, `users/${(script as any).userId}/scenarios`, script.id);
+            } else {
+                scriptRef = doc(db, `users/jok-eng-official/scenarios`, script.id);
+            }
+            updateDoc(scriptRef, { decoderItems: newItems }).catch(e => console.error("Failed to persist audio", e));
+
             return { ...prev, decoderItems: newItems };
         });
         // Gamification

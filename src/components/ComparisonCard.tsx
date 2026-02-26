@@ -7,6 +7,10 @@ import { Volume2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { playScenarioAudio } from "@/lib/tts";
 import { useAuth } from "@/context/AuthContext";
+import { db } from "@/lib/firebase";
+import { doc, updateDoc } from "firebase/firestore";
+import { toast } from "react-hot-toast";
+import { UserScript } from "@/types";
 
 type Props = {
   sentence: Sentence;
@@ -144,6 +148,28 @@ export default function ComparisonCard({
           console.error(err);
           setSpeaking(false);
           setLoading(false);
+        },
+        onAudioGenerated: (url) => {
+          if (!script) return;
+          const newSentences = [...(script.sentences || [])];
+          const targetIndex = newSentences.findIndex(s => s.id === sentence.id);
+          if (targetIndex !== -1) {
+            newSentences[targetIndex] = { ...newSentences[targetIndex], audioUrl: url };
+
+            let scriptRef;
+            if ('userId' in script) {
+              scriptRef = doc(db, `users/${(script as UserScript).userId}/scenarios`, script.id);
+            } else {
+              scriptRef = doc(db, `users/jok-eng-official/scenarios`, script.id);
+            }
+
+            updateDoc(scriptRef, { sentences: newSentences }).catch(e => console.error(e));
+
+            toast.success("💎 You just sponsored this audio for the community!", {
+              duration: 4000,
+              position: "bottom-center"
+            });
+          }
         }
       });
     } else {

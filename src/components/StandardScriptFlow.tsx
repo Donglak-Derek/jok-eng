@@ -431,6 +431,7 @@ export default function StandardScriptFlow({ script }: Props) {
             currentStep={currentIndex}
             totalSteps={totalSteps}
             hasFinished={isCompletion || currentIndex === culturalInsightIndex || currentIndex === quizIndex}
+            audioStatus={getScriptAudioStatus(activeScript)}
 
             // Controls
             isAutoPlayEnabled={isAutoPlayEnabled}

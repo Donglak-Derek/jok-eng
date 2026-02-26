@@ -1,11 +1,26 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import BlogFeed from "@/components/content/BlogFeed";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { useAuth } from "@/context/AuthContext";
+import { ADMIN_UID } from "@/lib/constants";
 
 export default function BlogsPage() {
+    const { user, loading } = useAuth();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (!loading && (!user || user.uid !== ADMIN_UID)) {
+            router.replace('/scenarios');
+        }
+    }, [user, loading, router]);
+
+    if (loading || (!user || user.uid !== ADMIN_UID)) return null;
+
     return (
         <main className="min-h-screen bg-background">
             <Header />

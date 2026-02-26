@@ -63,18 +63,7 @@ export async function POST(request: NextRequest) {
             sentences: data.exactScript.sentences?.map((s: any) => ({ ...s, id: uuidv4() })) || []
         };
 
-        // Format into generalScenario type
-        const generalScenario = {
-            ...data.generalScenario,
-            id: uuidv4(),
-            categorySlug: "practice",
-            categoryName: "Real Life Practice",
-            mode: "cloze",
-            quizItems: data.generalScenario.quizItems?.map((q: any) => ({ ...q, id: uuidv4() })) || [],
-            sentences: data.generalScenario.sentences?.map((s: any) => ({ ...s, id: uuidv4() })) || []
-        };
-
-        // Also save both scripts individually to the jok-eng-official account so they show up in the main library
+        // Also save the exact script individually to the jok-eng-official account so it shows up in the main library
         const adminDb = getAdminDb();
         const officialRef = adminDb.collection("users").doc("jok-eng-official").collection("scenarios");
 
@@ -86,18 +75,10 @@ export async function POST(request: NextRequest) {
             isPublic: true
         });
 
-        await officialRef.doc(generalScenario.id).set({
-            ...generalScenario,
-            userId: "jok-eng-official",
-            authorName: "Jok-Eng Official",
-            createdAt: Date.now(),
-            isPublic: true
-        });
-
         // Save to Video Vault linking document
-        const lessonId = await saveVideoLessonAdmin(youtubeId, title, exactScript, generalScenario, transcript);
+        const lessonId = await saveVideoLessonAdmin(youtubeId, title, exactScript, transcript);
 
-        return NextResponse.json({ success: true, lessonId, exactScript, generalScenario });
+        return NextResponse.json({ success: true, lessonId, exactScript });
 
     } catch (error: any) {
         console.error("Generate Lesson Error:", error);

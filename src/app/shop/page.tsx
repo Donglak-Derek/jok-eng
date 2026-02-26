@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingBag, Star, Zap, Shield, ArrowRight, Loader2, CheckCircle } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/Button";
+import { useAuth } from "@/context/AuthContext";
+import { ADMIN_UID } from "@/lib/constants";
 
 const PRODUCT_PACKS = [
     {
@@ -44,6 +46,13 @@ const PRODUCT_PACKS = [
 export default function ShopPage() {
     const router = useRouter();
     const [loadingPackId, setLoadingPackId] = useState<string | null>(null);
+    const { user, loading } = useAuth();
+
+    useEffect(() => {
+        if (!loading && (!user || user.uid !== ADMIN_UID)) {
+            router.replace('/scenarios');
+        }
+    }, [user, loading, router]);
 
     const handleCheckout = (packId: string, link: string) => {
         setLoadingPackId(packId);
@@ -53,6 +62,9 @@ export default function ShopPage() {
             setLoadingPackId(null);
         }, 800);
     };
+
+    if (loading || (!user || user.uid !== ADMIN_UID)) return null;
+
     return (
         <main className="min-h-screen bg-background">
             <Header />

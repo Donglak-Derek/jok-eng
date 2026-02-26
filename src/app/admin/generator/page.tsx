@@ -155,13 +155,6 @@ export default function AdminGenerator() {
                                             PREVIEW: EXACT SCRIPT
                                             <Send className="w-4 h-4" />
                                         </button>
-                                        <button
-                                            onClick={() => window.open(`/script/${result.generalScenario.id}`, '_blank')}
-                                            className="w-full bg-neutral-800 hover:bg-neutral-700 font-bold py-3 rounded-xl flex items-center justify-center gap-2 text-sm"
-                                        >
-                                            PREVIEW: GENERAL SCENARIO
-                                            <ExternalLink className="w-4 h-4" />
-                                        </button>
                                     </div>
                                 </motion.div>
                             ) : error ? (

@@ -22,20 +22,19 @@ export async function GET(request: NextRequest) {
         const bucket = getAdminStorage().bucket();
         const file = bucket.file(cacheFilePath);
 
+        const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(cacheFilePath)}?alt=media`;
+
         // 1. CHECK CACHE
         const [exists] = await file.exists();
         if (exists) {
-            console.log(`Cache HIT: ${cacheFilePath} - Streaming from Firebase Storage`);
-            const stream = file.createReadStream();
-            // Convert Node stream to Web Stream for Edge Response
-            const webStream = new ReadableStream({
-                start(controller) {
-                    stream.on('data', (chunk) => controller.enqueue(chunk));
-                    stream.on('end', () => controller.close());
-                    stream.on('error', (err) => controller.error(err));
+            console.log(`Cache HIT: ${cacheFilePath} - Redirecting to Firebase Storage`);
+            // Cache the redirect for 1 year in the browser
+            return NextResponse.redirect(publicUrl, {
+                status: 302,
+                headers: {
+                    "Cache-Control": "public, max-age=31536000, immutable"
                 }
             });
-            return new NextResponse(webStream, { headers: { "Content-Type": "audio/mpeg" } });
         }
 
         console.log(`Cache MISS: ${cacheFilePath} - Generating via Google TTS`);
@@ -76,9 +75,12 @@ export async function GET(request: NextRequest) {
                     console.error("Failed to cache TTS to storage", e);
                 }
 
-                // Return to client immediately
-                return new NextResponse(audioBuffer, {
-                    headers: { "Content-Type": "audio/mpeg" },
+                // Redirect client immediately to the newly saved Firebase URL
+                return NextResponse.redirect(publicUrl, {
+                    status: 302,
+                    headers: {
+                        "Cache-Control": "public, max-age=31536000, immutable"
+                    }
                 });
             }
         }

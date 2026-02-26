@@ -112,15 +112,6 @@ export default function VideoFeed({
                                     Rehearse this Scene
                                 </button>
                             </Link>
-
-                            {((lesson as any).generalScenarioId || lesson.script) && (
-                                <Link href={`/videos?startAt=${lesson.id}&layer=practice`} className="group w-full">
-                                    <button className="w-full py-3.5 rounded-xl bg-neutral-100 text-neutral-700 font-bold text-sm flex items-center justify-center gap-2 hover:bg-neutral-800 hover:text-white transition-all duration-300 shadow-sm border border-neutral-200">
-                                        <PlayCircle className="w-4 h-4" />
-                                        Try it in Real Life
-                                    </button>
-                                </Link>
-                            )}
                         </div>
                     </motion.div>
                 ))}

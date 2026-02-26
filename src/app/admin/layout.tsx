@@ -14,9 +14,7 @@ import {
     ShieldAlert
 } from "lucide-react";
 import { motion } from "framer-motion";
-
-// Update this if the Admin UID ever changes
-const ADMIN_UID = "pbz1yjIxjRhnAA9N5Fyi4YyNy9R2";
+import { ADMIN_UID } from "@/lib/constants";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const { user, loading } = useAuth();

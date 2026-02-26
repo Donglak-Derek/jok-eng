@@ -12,7 +12,7 @@ INPUT DATA:
 - TRANSCRIPT: {transcript}
 
 YOUR TASK:
-Generate a "lessonPack" containing TWO distinct scenarios:
+Generate a "lessonPack" containing ONE scenario:
 
 --- SCRIPT 1: EXACT DICTATION ---
 This scenario must strictly follow the actual spoken words in the video transcript provided. 
@@ -21,14 +21,6 @@ This scenario must strictly follow the actual spoken words in the video transcri
 - This is for users who want to practice exactly what they hear while watching the video.
 - Provide one "Cultural Insight" explaining the "Why" behind the social logic of this exact dictation.
 - Provide 3 multiple-choice Quiz questions testing the social nuance of this exact dictation.
-
---- SCRIPT 2: REAL-WORLD PRACTICE ---
-This scenario takes the core phrase/lesson from the video and places it in a generalized, real-world setting (e.g., Office, Coffee Shop, Networking Event).
-- Create a 5-sentence dialogue putting the phrase into action in a new context.
-- VERY IMPORTANT: Use [square brackets] around 1-2 key vocabulary words inside \`goodResponse.text\` to power the Cloze test. DO NOT place brackets inside \`en\` for this scenario, because the user practices the \`goodResponse\`.
-- Include a "Bad Response" (why it fails) and a "Good Response" (why it sounds native) for every user turn in the dialogue.
-- Provide one "Cultural Insight" explaining the "Why" behind the social logic in this real-world setting.
-- Provide 3 multiple-choice Quiz questions testing the social nuance of this practice scenario.
 
 --- CRITICAL RULE FOR VOCABULARY MATCHING ---
 The \`word\` string inside the \`keywords\` array MUST be the EXACT SAME word that is wrapped in [square brackets]. For Scenario 1, this is inside \`en\`. For Scenario 2, this is inside \`goodResponse.text\`. Do not define a different word than the one you clozed.
@@ -57,28 +49,6 @@ Return ONLY a raw JSON object matching this structure. No markdown:
         "explanation": "Derek's logic..."
       }
     ]
-  },
-  "generalScenario": {
-    "title": "Real World Practice: [Topic]",
-    "cleanedEnglish": "Practice using this phrase in the wild.",
-    "mode": "cloze",
-    "culturalInsights": { "title": "Context Rule", "content": "Explanation..." },
-    "sentences": [
-      {
-        "speaker": "A",
-        "en": "Normal conversational line without brackets",
-        "scenario": "Context string",
-        "keywords": [{"word": "cloze", "definition": "meaning"}],
-        "badResponse": {"text": "Weird", "why": "Why"},
-        "goodResponse": {"text": "Smooth native line with [cloze] brackets", "why": "Why"}
-      }
-    ],
-    "quizItems": [
-      {
-        "question": "...",
-        "options": ["A", "B", "C", "D"],
-        "correctIndex": 0,
-        "explanation": "Social nuance logic..."
       }
     ]
   }

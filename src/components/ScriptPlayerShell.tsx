@@ -17,7 +17,8 @@ type Props = {
     totalSteps: number;
     hasFinished: boolean;
 
-    // Gamification Props (audioStatus removed since TTS is free global cache now)
+    // Gamification Props
+    audioStatus?: 'premium' | 'robot';
 
     // Control Props
     isAutoPlayEnabled?: boolean;
@@ -86,7 +87,18 @@ export default function ScriptPlayerShell({
                             <ChevronLeft className="w-6 h-6" />
                         </Link>
 
-                        {/* 2. Audio Badge (Removed) */}
+                        {/* 2. Audio Badge */}
+                        {props.audioStatus === 'premium' ? (
+                            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-indigo-50 border border-indigo-100 hidden sm:flex">
+                                <Gem className="w-3.5 h-3.5 text-indigo-500" />
+                                <span className="text-[10px] font-bold text-indigo-600 uppercase tracking-widest">Premium Audio</span>
+                            </div>
+                        ) : props.audioStatus === 'robot' ? (
+                            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-neutral-100 border border-neutral-200 hidden sm:flex">
+                                <Bot className="w-3.5 h-3.5 text-neutral-500" />
+                                <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Robot Voice</span>
+                            </div>
+                        ) : null}
 
                         {/* 3. Sound Toggle (Line Icon) */}
                         {onToggleAutoPlay && (

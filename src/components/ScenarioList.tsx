@@ -31,33 +31,33 @@ export default function ScenarioList({ scripts, onDelete, onTogglePublic, onRemi
 
   // Re-sort localScripts to put the newly created one FIRST
   useEffect(() => {
-     if (newlyCreatedId && localScripts.length > 0) {
-         setLocalScripts(prev => {
-             const createdIndex = prev.findIndex(s => s.id === newlyCreatedId);
-             if (createdIndex > -1) {
-                 const newItem = prev[createdIndex];
-                 const others = prev.filter(s => s.id !== newlyCreatedId);
-                 return [newItem, ...others];
-             }
-             return prev;
-         });
+    if (newlyCreatedId && localScripts.length > 0) {
+      setLocalScripts(prev => {
+        const createdIndex = prev.findIndex(s => s.id === newlyCreatedId);
+        if (createdIndex > -1) {
+          const newItem = prev[createdIndex];
+          const others = prev.filter(s => s.id !== newlyCreatedId);
+          return [newItem, ...others];
+        }
+        return prev;
+      });
 
-         // Optional: Clean up URL after a delay
-         setTimeout(() => {
-             router.replace('/?tab=my_scenarios', { scroll: false });
-         }, 5000);
-     }
+      // Optional: Clean up URL after a delay
+      setTimeout(() => {
+        router.replace('/?tab=my_scenarios', { scroll: false });
+      }, 5000);
+    }
   }, [newlyCreatedId, router]); // Intentionally omitting localScripts to avoid loops, effectively runs once when ID appears
 
 
   const handleRemix = (script: Script) => {
-      if (onRemix) {
-          onRemix(script);
-      } else {
-          // Default Remix Behavior (for Standard Scenarios)
-          localStorage.setItem('remixSource', JSON.stringify(script));
-          router.push('/create-scenario?mode=remix');
-      }
+    if (onRemix) {
+      onRemix(script);
+    } else {
+      // Default Remix Behavior (for Standard Scenarios)
+      localStorage.setItem('remixSource', JSON.stringify(script));
+      router.push('/create-scenario?mode=remix');
+    }
   };
 
   // Check if we have sections
@@ -66,22 +66,22 @@ export default function ScenarioList({ scripts, onDelete, onTogglePublic, onRemi
   if (hasSections) {
     // Dynamically derive sections from scripts
     const dynamicSections = Array.from(new Set(localScripts.map(s => s.section || "Other Scenarios"))).filter(Boolean);
-    
+
     // Define explicit order if known, else append others
     const explicitOrder = [
-      "basics", "advanced", "boss_battles", 
+      "basics", "advanced", "boss_battles",
       "The Dating Minefield", "Social Emergencies",
       "signal_decoders", "slang_vocab", "life_work"
     ];
     const sectionOrder = [
-        ...explicitOrder.filter(key => dynamicSections.includes(key)),
-        ...dynamicSections.filter(key => !explicitOrder.includes(key) && key !== "Other Scenarios")
+      ...explicitOrder.filter(key => dynamicSections.includes(key)),
+      ...dynamicSections.filter(key => !explicitOrder.includes(key) && key !== "Other Scenarios")
     ];
 
     // If there are scripts without a section, add "Other Scenarios" at the end
     const hasUnsectioned = localScripts.some(s => !s.section);
     if (hasUnsectioned && !sectionOrder.includes("Other Scenarios")) {
-        sectionOrder.push("Other Scenarios");
+      sectionOrder.push("Other Scenarios");
     }
 
     const sectionTitles: Record<string, string> = {
@@ -115,10 +115,10 @@ export default function ScenarioList({ scripts, onDelete, onTogglePublic, onRemi
     return (
       <div className="flex flex-col gap-12 mt-6">
         {sectionOrder.map(sectionKey => {
-          const sectionScripts = sectionKey === "Other Scenarios" 
-             ? localScripts.filter(s => !s.section)
-             : localScripts.filter(s => s.section === sectionKey);
-          
+          const sectionScripts = sectionKey === "Other Scenarios"
+            ? localScripts.filter(s => !s.section)
+            : localScripts.filter(s => s.section === sectionKey);
+
           if (sectionScripts.length === 0) return null;
 
           const customStyle = sectionStyles[sectionKey] || "";
@@ -130,17 +130,17 @@ export default function ScenarioList({ scripts, onDelete, onTogglePublic, onRemi
               <h2 className={`text-xl md:text-2xl font-bold mb-6 pl-3 border-l-4 ${headerBorderColor} ${headerTextColor}`}>
                 {sectionTitles[sectionKey] || sectionKey}
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 md:gap-6">
+              <div className="grid grid-cols-1 gap-4 md:gap-5">
                 {sectionScripts.map((script, index) => (
                   <motion.div
-                     key={script.id}
-                     initial={{ opacity: 0, y: 20 }}
-                     animate={{ opacity: 1, y: 0 }}
-                     transition={{ delay: index * 0.1, duration: 0.4 }}
+                    key={script.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1, duration: 0.4 }}
                   >
-                    <ScenarioCard 
-                      script={script} 
-                      index={index} 
+                    <ScenarioCard
+                      script={script}
+                      index={index}
                       onDelete={onDelete}
                       onTogglePublic={onTogglePublic}
                       onRemix={() => handleRemix(script)}
@@ -156,17 +156,17 @@ export default function ScenarioList({ scripts, onDelete, onTogglePublic, onRemi
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 md:gap-6 mt-4 md:mt-6">
+    <div className="grid grid-cols-1 gap-4 md:gap-5 mt-4 md:mt-6">
       {localScripts.map((script, index) => (
         <motion.div
-           key={script.id}
-           initial={{ opacity: 0, y: 20 }}
-           animate={{ opacity: 1, y: 0 }}
-           transition={{ delay: index * 0.1, duration: 0.4 }}
+          key={script.id}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: index * 0.1, duration: 0.4 }}
         >
-          <ScenarioCard 
-            script={script} 
-            index={index} 
+          <ScenarioCard
+            script={script}
+            index={index}
             onDelete={onDelete}
             onTogglePublic={onTogglePublic}
             onRemix={() => handleRemix(script)}

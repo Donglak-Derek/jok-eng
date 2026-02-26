@@ -109,11 +109,16 @@ export async function playScenarioAudio(
             const response = await fetch(apiUrl);
             if (!response.ok) throw new Error("TTS Generation failed");
 
-            const audioBlob = await response.blob();
-            targetUrl = URL.createObjectURL(audioBlob);
+            // Using response.url from the 302 redirect (Firebase Storage public URL)
+            targetUrl = response.url;
 
             // Save to Local Memory Cache for next time
             audioBlobCache.set(apiUrl, targetUrl);
+
+            // Gamification/Persistence Callback: Provide the permanent URL back to the frontend
+            if (options.onAudioGenerated && response.redirected) {
+                options.onAudioGenerated(targetUrl);
+            }
         }
 
         // 2. Play Audio

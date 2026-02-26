@@ -21,8 +21,7 @@ function extractYouTubeId(urlOrId: string) {
 
 type SlideData =
     | { type: "video"; id: string; lesson: VideoLesson; index: number }
-    | { type: "exactScript"; id: string; lesson: VideoLesson; index: number }
-    | { type: "generalScenario"; id: string; lesson: VideoLesson; index: number };
+    | { type: "exactScript"; id: string; lesson: VideoLesson; index: number };
 
 function VideoFeedUI() {
     const searchParams = useSearchParams();
@@ -90,11 +89,6 @@ function VideoFeedUI() {
                     if (lesson.script) {
                         flattenedSlides.push({ type: "exactScript", id: `${lesson.id}-exact`, lesson, index: currentIndex++ });
                     }
-
-                    // Slide 3: General Practice (if it exists in new dual-schema)
-                    if ((lesson as any).generalScenarioId || lesson.script) {
-                        flattenedSlides.push({ type: "generalScenario", id: `${lesson.id}-prac`, lesson, index: currentIndex++ });
-                    }
                 });
 
                 setLessons(fetched);
@@ -116,7 +110,6 @@ function VideoFeedUI() {
         const targetSlideIndex = slides.findIndex(slide => {
             if (slide.lesson.id !== startAtId) return false;
             if (startLayer === "dictation" && slide.type === "exactScript") return true;
-            if (startLayer === "practice" && slide.type === "generalScenario") return true;
             if (!startLayer && slide.type === "video") return true;
             return false;
         });
@@ -237,23 +230,6 @@ function VideoFeedUI() {
                                             />
                                         </div>
                                     )}
-
-                                    {/* SLIDE TYPE: GENERAL PRACTICE */}
-                                    {slide.type === "generalScenario" && (
-                                        <div className="w-full max-w-md mx-auto flex-1 bg-neutral-950 pt-20 min-h-0">
-                                            <InlineScenario
-                                                script={(slide.lesson as any).generalScenario || slide.lesson.script} // Fallback to V1 script property
-                                                isActive={isActive}
-                                                onLockChange={(isLocked) => {
-                                                    setLockedSlides(prev => {
-                                                        if (prev[slide.id] === isLocked) return prev;
-                                                        return { ...prev, [slide.id]: isLocked };
-                                                    });
-                                                }}
-                                            />
-                                        </div>
-                                    )}
-
                                 </div>
                             )}
                         </FeedSlide>
