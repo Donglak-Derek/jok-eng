@@ -2,9 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { AuthProvider } from "@/context/AuthContext";
 import { ProgressProvider } from "@/context/ProgressContext";
 import OnboardingModal from "@/components/OnboardingModal";
-import { PodcastProvider } from "@/context/PodcastContext";
-import StickyPodcastPlayer from "@/components/content/StickyPodcastPlayer";
 import InstallPrompt from "@/components/InstallPrompt";
+import BottomNav from "@/components/BottomNav";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
@@ -34,6 +33,7 @@ export const viewport: Viewport = {
   maximumScale: 1,
   userScalable: false,
   themeColor: "#000000",
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -49,12 +49,10 @@ export default function RootLayout({
       >
         <AuthProvider>
           <ProgressProvider>
-            <PodcastProvider>
-              {children}
-              <OnboardingModal />
-              <InstallPrompt />
-              <StickyPodcastPlayer />
-            </PodcastProvider>
+            {children}
+            <OnboardingModal />
+            <InstallPrompt />
+            <BottomNav />
           </ProgressProvider>
         </AuthProvider>
       </body>

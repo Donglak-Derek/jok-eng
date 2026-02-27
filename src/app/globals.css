@@ -38,6 +38,7 @@
     from {
       background-position: 0 0;
     }
+
     to {
       background-position: -200% 0;
     }
@@ -110,13 +111,27 @@
   * {
     @apply border-border;
   }
-  html, body {
+
+  html {
     @apply bg-background text-foreground overflow-x-hidden max-w-[100vw];
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior-y: none;
+  }
+
+  body {
+    @apply min-h-[100dvh];
   }
 }
 
 @layer utilities {
   .container-minimal {
-     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* PWA Specific Display Modes */
+  @media (display-mode: standalone) {
+    .hide-in-pwa {
+      display: none !important;
+    }
   }
 }

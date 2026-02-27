@@ -44,7 +44,7 @@ function CategoryCard({ c, index, variant, disableLinks }: { c: Category; index:
                 <h3 className="font-bold text-base md:text-lg text-foreground truncate group-hover:text-primary transition-colors">
                     {c.name}
                 </h3>
-                <p className="text-xs md:text-sm text-muted-foreground line-clamp-1 mt-0.5">
+                <p className="text-xs md:text-sm text-muted-foreground mt-0.5">
                     {c.description}
                 </p>
                 <span className="inline-block mt-2 text-[10px] md:text-xs font-black uppercase tracking-wider text-primary bg-primary/10 px-2 py-0.5 rounded-full">

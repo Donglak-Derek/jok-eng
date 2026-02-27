@@ -3,19 +3,12 @@
 import { useState, Suspense } from "react";
 import { motion } from "framer-motion";
 import CategoryCarousel from "@/components/CategoryCarousel";
-import ScenarioList from "@/components/ScenarioList";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Search } from "lucide-react";
-import { scripts } from "@/data";
 
 export default function ScenariosPage() {
     const [searchQuery, setSearchQuery] = useState("");
-
-    const filteredScripts = scripts.filter(s =>
-        s.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (s.context || s.cleanedEnglish || "").toLowerCase().includes(searchQuery.toLowerCase())
-    );
 
     return (
         <main className="min-h-screen bg-background">
@@ -79,18 +72,6 @@ export default function ScenariosPage() {
                                 <p className="text-muted-foreground">Pick a category to start your rehearsal.</p>
                             </div>
                             <CategoryCarousel />
-                        </section>
-
-                        <section>
-                            <div className="mb-8">
-                                <h2 className="text-3xl font-black tracking-tighter italic uppercase">
-                                    Story <span className="text-primary italic">Feed</span>
-                                </h2>
-                                <p className="text-muted-foreground text-lg">Browse our complete library of social playbooks.</p>
-                            </div>
-                            <Suspense fallback={<div className="text-muted-foreground animate-pulse">Loading scenarios...</div>}>
-                                <ScenarioList scripts={filteredScripts} />
-                            </Suspense>
                         </section>
                     </div>
                 </div>

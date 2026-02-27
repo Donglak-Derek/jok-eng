@@ -5,6 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useState } from "react";
 import Image from "next/image";
 import { Menu, X } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 import StreakDisplay from "./StreakDisplay";
 import DailyCreditCounter from "@/components/subscription/DailyCreditCounter";
@@ -18,6 +19,10 @@ export default function Header({ transparent = false }: HeaderProps) {
     const { user, logout } = useAuth();
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const pathname = usePathname();
+
+    const isMyPathActive = pathname === "/" || pathname.startsWith("/category");
+    const isDiscoverActive = pathname.startsWith("/videos");
 
     const headerBg = transparent ? 'bg-gradient-to-b from-black/60 to-transparent border-transparent' : 'bg-white/80 backdrop-blur-md border-b border-border';
     const textColor = transparent ? 'text-white' : 'text-foreground';
@@ -38,36 +43,28 @@ export default function Header({ transparent = false }: HeaderProps) {
                                 priority
                             />
                         </div>
-                        <h1 className={`font-sans font-bold text-xl tracking-tight group-hover:opacity-80 transition-opacity ${textColor}`}>
+                        <h1 className={`hidden md:block font-sans font-bold text-xl tracking-tight group-hover:opacity-80 transition-opacity ${textColor}`}>
                             Jok-eng
                         </h1>
-                        <span className={`px-2 py-0.5 text-[10px] uppercase tracking-wider font-bold rounded-full ${transparent ? 'bg-white/20 text-white' : 'bg-secondary text-secondary-foreground'}`}>
+                        <span className={`hidden md:inline-block px-2 py-0.5 text-[10px] uppercase tracking-wider font-bold rounded-full ${transparent ? 'bg-white/20 text-white' : 'bg-secondary text-secondary-foreground'}`}>
                             Beta
                         </span>
                     </Link>
 
-                    <nav className="hidden md:flex items-center gap-6">
-                        <Link href="/videos" className={`text-sm font-medium transition-colors ${mutedTextColor}`}>
-                            Videos
+                    <nav className="flex items-center gap-4 md:gap-6">
+                        <Link
+                            href="/"
+                            className={`text-sm md:text-base font-bold transition-colors ${isMyPathActive ? 'text-primary' : mutedTextColor
+                                }`}
+                        >
+                            My Path
                         </Link>
-                        {user?.uid === ADMIN_UID && (
-                            <>
-                                <Link href="/blogs" className={`text-sm font-medium transition-colors ${mutedTextColor}`}>
-                                    Blogs
-                                </Link>
-                                <Link href="/podcasts" className={`text-sm font-medium transition-colors ${mutedTextColor}`}>
-                                    Podcasts
-                                </Link>
-                                <Link href="/shop" className={`text-sm font-medium transition-colors font-bold ${transparent ? 'text-white' : 'text-primary'}`}>
-                                    Store
-                                </Link>
-                            </>
-                        )}
-                        <Link href="/scenarios" className={`text-sm font-medium transition-colors ${mutedTextColor}`}>
-                            Scenarios
-                        </Link>
-                        <Link href="/about" className={`text-sm font-medium transition-colors ${mutedTextColor}`}>
-                            About
+                        <Link
+                            href="/videos"
+                            className={`text-sm md:text-base font-bold transition-colors ${isDiscoverActive ? 'text-primary' : mutedTextColor
+                                }`}
+                        >
+                            Discover
                         </Link>
                     </nav>
                 </div>
@@ -124,6 +121,21 @@ export default function Header({ transparent = false }: HeaderProps) {
                                             >
                                                 My Library
                                             </Link>
+                                            <Link
+                                                href="/shop"
+                                                className="block px-4 py-2 text-sm text-primary font-bold hover:bg-secondary transition-colors"
+                                                onClick={() => setDropdownOpen(false)}
+                                            >
+                                                Premium Store
+                                            </Link>
+                                            <Link
+                                                href="/about"
+                                                className="block px-4 py-2 text-sm text-foreground hover:bg-secondary transition-colors"
+                                                onClick={() => setDropdownOpen(false)}
+                                            >
+                                                About & Help
+                                            </Link>
+
                                             <button
                                                 onClick={() => {
                                                     logout();
@@ -160,27 +172,14 @@ export default function Header({ transparent = false }: HeaderProps) {
             {/* Mobile Navigation Menu */}
             {mobileMenuOpen && (
                 <div className="md:hidden absolute top-full left-0 w-full bg-background border-b border-border shadow-lg py-4 px-4 flex flex-col gap-4 z-40">
+                    <Link href="/" onClick={() => setMobileMenuOpen(false)} className="text-lg font-bold text-foreground hover:text-primary transition-colors">
+                        My Path
+                    </Link>
                     <Link href="/videos" onClick={() => setMobileMenuOpen(false)} className="text-lg font-bold text-foreground hover:text-primary transition-colors">
-                        Videos
+                        Discover
                     </Link>
-                    {user?.uid === ADMIN_UID && (
-                        <>
-                            <Link href="/blogs" onClick={() => setMobileMenuOpen(false)} className="text-lg font-bold text-foreground hover:text-primary transition-colors">
-                                Blogs
-                            </Link>
-                            <Link href="/podcasts" onClick={() => setMobileMenuOpen(false)} className="text-lg font-bold text-foreground hover:text-primary transition-colors">
-                                Podcasts
-                            </Link>
-                            <Link href="/shop" onClick={() => setMobileMenuOpen(false)} className="text-lg font-black text-primary hover:text-primary/80 transition-colors">
-                                Store
-                            </Link>
-                        </>
-                    )}
-                    <Link href="/scenarios" onClick={() => setMobileMenuOpen(false)} className="text-lg font-bold text-foreground hover:text-primary transition-colors">
-                        Scenarios
-                    </Link>
-                    <Link href="/about" onClick={() => setMobileMenuOpen(false)} className="text-lg font-bold text-foreground hover:text-primary transition-colors">
-                        About
+                    <Link href="/profile" onClick={() => setMobileMenuOpen(false)} className="text-lg font-bold text-foreground hover:text-primary transition-colors">
+                        Profile & Settings
                     </Link>
                 </div>
             )}
