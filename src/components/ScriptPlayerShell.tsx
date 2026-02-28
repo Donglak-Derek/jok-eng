@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, RotateCcw, FileText, Eye, EyeOff, ArrowLeft, Volume2, VolumeX, Share2, Bot, Gem } from "lucide-react";
+import { ChevronLeft, ChevronRight, RotateCcw, FileText, Eye, EyeOff, ArrowLeft, Volume2, VolumeX, Share2, Bot, Diamond } from "lucide-react";
 import { Button } from "@/components/Button";
 
 type Props = {
@@ -89,14 +89,14 @@ export default function ScriptPlayerShell({
 
                         {/* 2. Audio Badge */}
                         {props.audioStatus === 'premium' ? (
-                            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-indigo-50 border border-indigo-100 hidden sm:flex">
-                                <Gem className="w-3.5 h-3.5 text-indigo-500" />
-                                <span className="text-[10px] font-bold text-indigo-600 uppercase tracking-widest">Premium Audio</span>
+                            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-indigo-50 border border-indigo-100">
+                                <Diamond className="w-3.5 h-3.5 text-indigo-500" />
+                                <span className="text-[10px] font-bold text-indigo-600 uppercase tracking-widest hidden md:inline">Premium Audio</span>
                             </div>
                         ) : props.audioStatus === 'robot' ? (
-                            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-neutral-100 border border-neutral-200 hidden sm:flex">
+                            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-neutral-100 border border-neutral-200">
                                 <Bot className="w-3.5 h-3.5 text-neutral-500" />
-                                <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Robot Voice</span>
+                                <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest hidden md:inline">Robot Voice</span>
                             </div>
                         ) : null}
 

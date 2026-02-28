@@ -72,6 +72,7 @@ export type Script = {
   // Phase 1: New Engagement Fields
   audioUrl?: string; // New: For Audio Caching
   imageUrl?: string;
+  videoUrl?: string; // New: For Video Scenarios
   culturalInsights?: {
     title: string;
     content: string;
@@ -152,15 +153,9 @@ export interface UserProfile {
 export interface UserSubscription {
   tier: 'free' | 'pro' | 'admin';
   status: 'active' | 'canceled' | 'expired' | 'past_due';
-  credits: {
-    dailyLimit: number;
-    usage: number; // Renamed from remaining to usage for easier counting
-    lastRefill: number; // Timestamp
-  };
   features: {
     premiumTTS: boolean;
     advancedAnalytics: boolean;
-    unlimitedRemix: boolean;
   };
 }
 

@@ -2,15 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Compass, Film, User } from "lucide-react";
-import { useAuth } from "@/context/AuthContext";
+import { Compass, BookOpen, User } from "lucide-react";
 
 export default function BottomNav() {
     const pathname = usePathname();
-    const { user } = useAuth();
-
-    // Don't show bottom nav if not logged in
-    if (!user) return null;
 
     const navItems = [
         {
@@ -19,9 +14,9 @@ export default function BottomNav() {
             icon: Compass,
         },
         {
-            name: "Discover",
-            href: "/videos",
-            icon: Film,
+            name: "Library",
+            href: "/library",
+            icon: BookOpen,
         },
         {
             name: "Profile",

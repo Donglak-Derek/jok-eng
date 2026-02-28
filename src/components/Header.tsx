@@ -4,11 +4,9 @@ import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { useState } from "react";
 import Image from "next/image";
-import { Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 import StreakDisplay from "./StreakDisplay";
-import DailyCreditCounter from "@/components/subscription/DailyCreditCounter";
 import { ADMIN_UID } from "@/lib/constants";
 
 interface HeaderProps {
@@ -18,11 +16,10 @@ interface HeaderProps {
 export default function Header({ transparent = false }: HeaderProps) {
     const { user, logout } = useAuth();
     const [dropdownOpen, setDropdownOpen] = useState(false);
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const pathname = usePathname();
 
     const isMyPathActive = pathname === "/" || pathname.startsWith("/category");
-    const isDiscoverActive = pathname.startsWith("/videos");
+    const isLibraryActive = pathname === "/library";
 
     const headerBg = transparent ? 'bg-gradient-to-b from-black/60 to-transparent border-transparent' : 'bg-white/80 backdrop-blur-md border-b border-border';
     const textColor = transparent ? 'text-white' : 'text-foreground';
@@ -43,15 +40,15 @@ export default function Header({ transparent = false }: HeaderProps) {
                                 priority
                             />
                         </div>
-                        <h1 className={`hidden md:block font-sans font-bold text-xl tracking-tight group-hover:opacity-80 transition-opacity ${textColor}`}>
+                        <h1 className={`font-sans font-bold text-xl tracking-tight group-hover:opacity-80 transition-opacity ${textColor}`}>
                             Jok-eng
                         </h1>
-                        <span className={`hidden md:inline-block px-2 py-0.5 text-[10px] uppercase tracking-wider font-bold rounded-full ${transparent ? 'bg-white/20 text-white' : 'bg-secondary text-secondary-foreground'}`}>
+                        <span className={`px-2 py-0.5 text-[10px] uppercase tracking-wider font-bold rounded-full ${transparent ? 'bg-white/20 text-white' : 'bg-secondary text-secondary-foreground'}`}>
                             Beta
                         </span>
                     </Link>
 
-                    <nav className="flex items-center gap-4 md:gap-6">
+                    <nav className="items-center gap-4 md:gap-6 hidden md:flex">
                         <Link
                             href="/"
                             className={`text-sm md:text-base font-bold transition-colors ${isMyPathActive ? 'text-primary' : mutedTextColor
@@ -60,11 +57,11 @@ export default function Header({ transparent = false }: HeaderProps) {
                             My Path
                         </Link>
                         <Link
-                            href="/videos"
-                            className={`text-sm md:text-base font-bold transition-colors ${isDiscoverActive ? 'text-primary' : mutedTextColor
+                            href="/library"
+                            className={`text-sm md:text-base font-bold transition-colors ${isLibraryActive ? 'text-primary' : mutedTextColor
                                 }`}
                         >
-                            Discover
+                            Library
                         </Link>
                     </nav>
                 </div>
@@ -73,7 +70,6 @@ export default function Header({ transparent = false }: HeaderProps) {
                     {user ? (
                         <>
                             {/* Streak Icon */}
-                            <DailyCreditCounter />
                             <StreakDisplay />
 
                             <div className="relative">
@@ -158,31 +154,8 @@ export default function Header({ transparent = false }: HeaderProps) {
                             Login
                         </Link>
                     )}
-
-                    {/* Mobile Menu Toggle */}
-                    <button
-                        className={`md:hidden p-2 -mr-2 focus:outline-none ${textColor}`}
-                        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                    >
-                        {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-                    </button>
                 </div>
             </div>
-
-            {/* Mobile Navigation Menu */}
-            {mobileMenuOpen && (
-                <div className="md:hidden absolute top-full left-0 w-full bg-background border-b border-border shadow-lg py-4 px-4 flex flex-col gap-4 z-40">
-                    <Link href="/" onClick={() => setMobileMenuOpen(false)} className="text-lg font-bold text-foreground hover:text-primary transition-colors">
-                        My Path
-                    </Link>
-                    <Link href="/videos" onClick={() => setMobileMenuOpen(false)} className="text-lg font-bold text-foreground hover:text-primary transition-colors">
-                        Discover
-                    </Link>
-                    <Link href="/profile" onClick={() => setMobileMenuOpen(false)} className="text-lg font-bold text-foreground hover:text-primary transition-colors">
-                        Profile & Settings
-                    </Link>
-                </div>
-            )}
         </header>
     );
 }

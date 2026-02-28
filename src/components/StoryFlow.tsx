@@ -53,8 +53,13 @@ export default function StoryFlow({ script }: Props) {
 
 
   const segmentsCount = segments.length;
-  const quizIndex = hasQuiz ? segmentsCount : -1;
-  const totalSteps = segmentsCount + (hasQuiz ? 1 : 0);
+  const hasVideo = !!localScript.videoUrl;
+
+  // Calculate indices based on presence of Video
+  // Video is always index 0 if it exists
+  const videoIndex = hasVideo ? 0 : -1;
+  const quizIndex = hasQuiz ? (hasVideo ? segmentsCount + 1 : segmentsCount) : -1;
+  const totalSteps = segmentsCount + (hasVideo ? 1 : 0) + (hasQuiz ? 1 : 0);
 
   const [currentStep, setCurrentStep] = useState(0);
   const [viewMode, setViewMode] = useState<"flow" | "full">("flow"); // New State
@@ -126,13 +131,15 @@ export default function StoryFlow({ script }: Props) {
     if (speaking || loading) return;
 
     // Safety check
-    if (!segments[currentStep]) return;
+    // If video exists, step 0 is the video. The text segments start at step 1.
+    const segmentIndex = hasVideo ? currentStep - 1 : currentStep;
+    if (segmentIndex < 0 || !segments[segmentIndex]) return;
 
     // Speak the main text of the current segment
-    const textToSpeak = segments[currentStep].text;
+    const textToSpeak = segments[segmentIndex].text;
 
     // Use the convention seg_{index} for caching
-    const segmentId = `seg_${currentStep}`;
+    const segmentId = `seg_${segmentIndex}`;
 
     playScenarioAudio(userProfile, localScript, {
       text: textToSpeak,
@@ -183,7 +190,10 @@ export default function StoryFlow({ script }: Props) {
   }, [segments, currentStep, speaking, loading, user, localScript, userProfile]);
 
   // Logic to get current segment safely
-  const currentSegment = currentStep < segmentsCount ? segments[currentStep] : segments[segmentsCount - 1];
+  const currentSegmentIndex = hasVideo ? currentStep - 1 : currentStep;
+  const currentSegment = currentSegmentIndex >= 0 && currentSegmentIndex < segmentsCount
+    ? segments[currentSegmentIndex]
+    : segments[segmentsCount - 1]; // Fallback if out of bounds
 
   // Full View Mode
   if (viewMode === "full") {
@@ -268,6 +278,42 @@ export default function StoryFlow({ script }: Props) {
         items={script.quizItems}
         onFinish={handleNext}
       />
+    );
+  } else if (currentStep === videoIndex && localScript.videoUrl) {
+    // --- VIDEO PLAYER CARD ---
+    showControls = true;
+    content = (
+      <motion.div
+        key="video"
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: -20 }}
+        transition={{ duration: 0.3 }}
+        className="w-full"
+      >
+        <div className="bg-white rounded-lg border border-border shadow-sm p-4 md:p-6 flex flex-col gap-6 md:gap-8 min-h-[400px]">
+          <div className="flex flex-col gap-6 text-center items-center h-full flex-1">
+            <span className="text-xs font-bold uppercase tracking-widest text-indigo-500 border border-indigo-100 px-3 py-1 rounded-full bg-indigo-50/50">
+              Video Lesson
+            </span>
+
+            <div className="w-full aspect-video rounded-xl overflow-hidden bg-black shadow-inner border border-border/50">
+              <iframe
+                src={localScript.videoUrl}
+                title="Video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                className="w-full h-full"
+              />
+            </div>
+
+            <div className="text-muted-foreground font-medium text-sm md:text-base mt-2 max-w-xl">
+              Watch the video above to catch the vibe and context. When you're ready to break down the exact phrases, tap <strong className="text-foreground">Next</strong>.
+            </div>
+          </div>
+        </div>
+      </motion.div>
     );
   } else {
     // Story Segment Card (Wrapping the existing card content)

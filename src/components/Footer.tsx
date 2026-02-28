@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="w-full bg-secondary/30 border-t border-border mt-auto hide-in-pwa">
+    <footer className="w-full bg-secondary/30 border-t border-border mt-auto">
       <div className="max-w-2xl mx-auto px-4 md:px-0 py-12 flex flex-col md:flex-row justify-between items-center gap-8">
 
         {/* Brand & Copyright */}
@@ -72,8 +72,7 @@ export default function Footer() {
         </div>
 
         {/* Mini Links */}
-        <div className="flex gap-6 text-sm text-muted-foreground">
-          <Link href="/create-scenario?mode=ai" className="hover:underline hover:text-primary font-medium">Beta: AI Script Refiner</Link>
+        <div className="flex justify-center md:justify-end gap-6 text-sm text-muted-foreground">
           <Link href="/privacy" className="hover:underline hover:text-foreground">Privacy</Link>
           <Link href="/terms" className="hover:underline hover:text-foreground">Terms</Link>
         </div>

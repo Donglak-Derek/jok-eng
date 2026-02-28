@@ -12,11 +12,8 @@ type Props = {
 
   onDelete?: (id: string, e: React.MouseEvent) => void;
   onTogglePublic?: (id: string, current: boolean, e: React.MouseEvent) => void;
-  onRemix?: (script: Script) => void;
-  // onLike and likedSet removed from props as they are handled internally
 };
-
-export default function ScenarioList({ scripts, onDelete, onTogglePublic, onRemix }: Props) {
+export default function ScenarioList({ scripts, onDelete, onTogglePublic }: Props) {
   const router = useRouter();
   const [localScripts, setLocalScripts] = useState<Script[]>(scripts);
 
@@ -48,17 +45,6 @@ export default function ScenarioList({ scripts, onDelete, onTogglePublic, onRemi
       }, 5000);
     }
   }, [newlyCreatedId, router]); // Intentionally omitting localScripts to avoid loops, effectively runs once when ID appears
-
-
-  const handleRemix = (script: Script) => {
-    if (onRemix) {
-      onRemix(script);
-    } else {
-      // Default Remix Behavior (for Standard Scenarios)
-      localStorage.setItem('remixSource', JSON.stringify(script));
-      router.push('/create-scenario?mode=remix');
-    }
-  };
 
   // Check if we have sections
   const hasSections = localScripts.some(s => s.section);
@@ -143,7 +129,6 @@ export default function ScenarioList({ scripts, onDelete, onTogglePublic, onRemi
                       index={index}
                       onDelete={onDelete}
                       onTogglePublic={onTogglePublic}
-                      onRemix={() => handleRemix(script)}
                     />
                   </motion.div>
                 ))}
@@ -169,7 +154,6 @@ export default function ScenarioList({ scripts, onDelete, onTogglePublic, onRemi
             index={index}
             onDelete={onDelete}
             onTogglePublic={onTogglePublic}
-            onRemix={() => handleRemix(script)}
             isNew={script.id === newlyCreatedId}
           />
         </motion.div>

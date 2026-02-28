@@ -32,26 +32,6 @@ export default function CommunityScenariosSection({ searchQuery }: { searchQuery
         });
     }, [user]);
 
-    const handleRemix = async (scriptId: string, e: React.MouseEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (!user) {
-            // Force login for guests trying to remix
-            router.push("/login?redirect=/create-scenario");
-            return;
-        }
-
-        // Check both lists
-        const allScenarios = [...scenarios, ...(originalScripts as UserScript[])];
-        const script = allScenarios.find(s => s.id === scriptId);
-
-        if (!script) return;
-
-        // Use LocalStorage method for reliable pre-filling (matches CreateScenarioForm logic)
-        localStorage.setItem('remixSource', JSON.stringify(script));
-        router.push('/create-scenario?mode=remix');
-    };
-
     const handleShare = async (id: string) => {
         if (id.startsWith("sys-")) return;
         setScenarios(prev => prev.map(s => s.id === id ? { ...s, shares: (s.shares || 0) + 1 } : s));
@@ -152,55 +132,6 @@ export default function CommunityScenariosSection({ searchQuery }: { searchQuery
 
     const visibleScenarios = displayScenarios.slice(0, visibleCount);
 
-    const handleSmartRemix = async (scriptId: string, e: React.MouseEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (!user) {
-            router.push("/login"); // Redirect to login for guests
-            return;
-        }
-
-        let adaptType = "generic";
-        let adaptTarget = "";
-
-        if (activeFilter === "Professional" && userProfile?.occupation) {
-            adaptType = "job";
-            adaptTarget = userProfile.occupation;
-        } else if ((activeFilter === "Funny" || activeFilter === "Spicy") && userProfile?.ageGroup) {
-            adaptType = "vibe";
-            adaptTarget = `${userProfile.ageGroup}`;
-        }
-
-        if (adaptType === "generic") return;
-
-        // Find in visible list which now has both
-        const script = displayScenarios.find(s => s.id === scriptId);
-        if (!script) return;
-
-        localStorage.setItem('remixSource', JSON.stringify(script));
-
-        const params = new URLSearchParams();
-        params.set("mode", "remix");
-        params.set("adaptType", adaptType);
-        params.set("adaptTo", adaptTarget);
-        router.push(`/create-scenario?${params.toString()}`);
-    };
-
-    // Helper to determine if Smart Button should show
-    const canSmartRemix = (script: UserScript | Script) => {
-        const userScript = script as UserScript;
-        // 1. Professional Context
-        if (activeFilter === "Professional" && userProfile?.occupation && userScript.authorOccupation !== userProfile.occupation) {
-            return true;
-        }
-        // 2. Vibe Context (Social)
-        // If user has Vibe Data (Age/Loc) and viewing Social content
-        if ((activeFilter === "Funny" || activeFilter === "Spicy") && userProfile?.ageGroup) {
-            return true;
-        }
-        return false;
-    };
-
     return (
         <section className="w-full mx-auto">
             <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
@@ -251,8 +182,6 @@ export default function CommunityScenariosSection({ searchQuery }: { searchQuery
                                 <ScenarioCard
                                     script={script}
                                     index={index}
-                                    onRemix={handleRemix}
-                                    onSmartRemix={canSmartRemix(script) ? handleSmartRemix : undefined}
                                     onShare={handleShare}
                                     onToggleSave={handleToggleSave}
                                     isSaved={savedSet.has(script.id)}
@@ -276,12 +205,6 @@ export default function CommunityScenariosSection({ searchQuery }: { searchQuery
             ) : (
                 <div className="text-center py-20 bg-secondary/20 rounded-3xl border border-dashed border-border">
                     <p className="text-muted-foreground text-lg">No {activeFilter.toLowerCase()} stories found yet.</p>
-                    <button
-                        onClick={() => router.push("/create-scenario")}
-                        className="mt-4 text-primary font-bold hover:underline"
-                    >
-                        Be the first to write one!
-                    </button>
                 </div>
             )}
         </section>

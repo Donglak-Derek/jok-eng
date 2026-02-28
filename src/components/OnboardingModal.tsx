@@ -30,9 +30,9 @@ export default function OnboardingModal() {
         }
 
         const checkOnboarding = async () => {
-             // Don't show on login page or if already checked in session (optional opt)
-             // For now, check firestore
-             try {
+            // Don't show on login page or if already checked in session (optional opt)
+            // For now, check firestore
+            try {
                 const userRef = doc(db, "users", user.uid);
                 const snap = await getDoc(userRef);
 
@@ -50,11 +50,11 @@ export default function OnboardingModal() {
                     // New user (no doc yet), definitely show onboarding
                     setIsVisible(true);
                 }
-             } catch (e) {
-                 console.error("Error checking onboarding status", e);
-             } finally {
-                 setLoading(false);
-             }
+            } catch (e) {
+                console.error("Error checking onboarding status", e);
+            } finally {
+                setLoading(false);
+            }
         };
 
         checkOnboarding();
@@ -65,29 +65,23 @@ export default function OnboardingModal() {
         setSaving(true);
         try {
             const userRef = doc(db, "users", user.uid);
-            
+
             // Allow merging in case some stats exist
             await setDoc(userRef, {
                 ...formData,
                 uid: user.uid,
                 onboardingCompleted: true,
                 // Ensure defaults for stats if they don't exist
-                totalScenariosCreated: 0, 
+                totalScenariosCreated: 0,
                 totalPractices: 0,
                 totalRemixesInspired: 0,
                 // Phase 1: Freemium Init
                 subscription: {
                     tier: "free",
                     status: "active",
-                    credits: {
-                        dailyLimit: 3,
-                        usage: 0,
-                        lastRefill: Date.now()
-                    },
                     features: {
                         premiumTTS: false,
-                        advancedAnalytics: false,
-                        unlimitedRemix: false
+                        advancedAnalytics: false
                     }
                 }
             }, { merge: true });
@@ -107,7 +101,7 @@ export default function OnboardingModal() {
     return (
         <AnimatePresence>
             <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-                 <motion.div 
+                <motion.div
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     exit={{ scale: 0.9, opacity: 0 }}
@@ -124,13 +118,13 @@ export default function OnboardingModal() {
                     <div className="space-y-6">
                         {/* 1. Origin */}
                         <div className="space-y-2">
-                             <label className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+                            <label className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
                                 Native Language / Origin
                                 <span className="text-red-500">*</span>
-                             </label>
-                             <select 
-                                value={formData.motherLanguage || ""} 
-                                onChange={e => setFormData({...formData, motherLanguage: e.target.value})}
+                            </label>
+                            <select
+                                value={formData.motherLanguage || ""}
+                                onChange={e => setFormData({ ...formData, motherLanguage: e.target.value })}
                                 className="w-full bg-secondary/50 rounded-xl px-4 py-4 font-bold text-lg focus:ring-2 ring-primary/20 outline-none appearance-none"
                             >
                                 <option value="">Select Origin...</option>
@@ -140,15 +134,15 @@ export default function OnboardingModal() {
                             </select>
                         </div>
 
-                         {/* 2. Generation */}
-                         <div className="space-y-2">
-                             <label className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+                        {/* 2. Generation */}
+                        <div className="space-y-2">
+                            <label className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
                                 Generation (The Vibe)
                                 <span className="text-red-500">*</span>
-                             </label>
-                             <select 
-                                value={formData.ageGroup || ""} 
-                                onChange={e => setFormData({...formData, ageGroup: e.target.value as any}) /* eslint-disable-line @typescript-eslint/no-explicit-any */}
+                            </label>
+                            <select
+                                value={formData.ageGroup || ""}
+                                onChange={e => setFormData({ ...formData, ageGroup: e.target.value as any }) /* eslint-disable-line @typescript-eslint/no-explicit-any */}
                                 className="w-full bg-secondary/50 rounded-xl px-4 py-4 font-bold text-lg focus:ring-2 ring-primary/20 outline-none appearance-none"
                             >
                                 <option value="">Select Generation...</option>
@@ -160,13 +154,13 @@ export default function OnboardingModal() {
 
                         {/* 3. Occupation */}
                         <div className="space-y-2">
-                             <label className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+                            <label className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
                                 Occupation
                                 <span className="text-red-500">*</span>
-                             </label>
-                             <select 
-                                value={formData.occupation || ""} 
-                                onChange={e => setFormData({...formData, occupation: e.target.value})}
+                            </label>
+                            <select
+                                value={formData.occupation || ""}
+                                onChange={e => setFormData({ ...formData, occupation: e.target.value })}
                                 className="w-full bg-secondary/50 rounded-xl px-4 py-4 font-bold text-lg focus:ring-2 ring-primary/20 outline-none appearance-none"
                             >
                                 <option value="">Select Job...</option>
@@ -188,7 +182,7 @@ export default function OnboardingModal() {
                         </div>
                     </div>
 
-                    <button 
+                    <button
                         onClick={handleSave}
                         disabled={!formData.motherLanguage || !formData.ageGroup || !formData.occupation || saving}
                         className="w-full mt-8 py-4 rounded-xl bg-foreground text-background font-black text-xl hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"

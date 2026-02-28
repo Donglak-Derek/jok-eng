@@ -18,11 +18,11 @@ service cloud.firestore {
     match /users/{userId} {
       allow read: if request.auth != null && (request.auth.uid == userId || request.auth.uid == "Hx4sxBjGaLST6c3MRWtrKn60c702"); 
       
-      allow create, delete: if request.auth != null && (request.auth.uid == userId || (userId == "jok-eng-official" && request.auth.uid == "Hx4sxBjGaLST6c3MRWtrKn60c702"));
+      allow create, delete: if request.auth != null && (request.auth.uid == userId || (userId == "jok-eng-official" && request.auth.uid in ["Hx4sxBjGaLST6c3MRWtrKn60c702", "pbz1yjIxjRhnAA9N5Fyi4YyNy9R2"]));
       
       allow update: if request.auth != null && (
-          request.auth.uid == userId || 
-          (userId == "jok-eng-official" && request.auth.uid == "Hx4sxBjGaLST6c3MRWtrKn60c702") ||
+          (request.auth.uid == userId && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['subscription'])) || 
+          (userId == "jok-eng-official" && request.auth.uid in ["Hx4sxBjGaLST6c3MRWtrKn60c702", "pbz1yjIxjRhnAA9N5Fyi4YyNy9R2"]) ||
           (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['totalRemixesInspired']))
       );
 

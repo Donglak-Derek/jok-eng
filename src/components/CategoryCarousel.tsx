@@ -3,9 +3,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { categories, scripts } from "@/data";
-// import { useRef } from "react";
-// import { ChevronRight, ChevronLeft } from "lucide-react";
 import { Category } from "@/types";
+import THEME_MAP from "@/lib/themeMap";
 
 interface CategoryCarouselProps {
     variant?: "default" | "minimal";
@@ -13,9 +12,16 @@ interface CategoryCarouselProps {
 }
 
 export default function CategoryCarousel({ variant = "default", disableLinks = false }: CategoryCarouselProps) {
+    // Sort categories: Move "american_culture" to the bottom
+    const sortedCategories = [...categories].sort((a, b) => {
+        if (a.slug === "american_culture") return 1;
+        if (b.slug === "american_culture") return -1;
+        return 0; // Keep original order for the rest
+    });
+
     return (
-        <section className="flex flex-col gap-3 max-w-2xl mx-auto w-full">
-            {categories.map((c, i) => (
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 max-w-5xl mx-auto w-full px-4 md:px-0">
+            {sortedCategories.map((c, i) => (
                 <CategoryCard key={c.slug} c={c} index={i} variant={variant} disableLinks={disableLinks} />
             ))}
         </section>
@@ -26,44 +32,59 @@ export default function CategoryCarousel({ variant = "default", disableLinks = f
 function CategoryCard({ c, index, variant, disableLinks }: { c: Category; index: number; variant: "default" | "minimal"; disableLinks: boolean }) {
     const scriptCount = scripts.filter((s) => s.categorySlug === c.slug).length;
 
+    // Resolve colors from THEME_MAP or use fallback
+    const theme = THEME_MAP[c.color || ""] || THEME_MAP["indigo"];
+    const isPinned = false; // Disabled while under construction
+
     const Content = () => (
-        <div className="flex items-center gap-4 p-3 md:p-4 w-full h-full bg-card rounded-2xl border border-border/50 hover:bg-secondary/40 hover:border-border transition-all group">
-            {/* Small Thumbnail */}
-            <div className="relative w-16 h-16 md:w-20 md:h-20 shrink-0 rounded-xl overflow-hidden bg-secondary">
+        <div className="flex flex-col w-full h-full bg-white rounded-3xl shadow-sm border border-stone-100 overflow-hidden hover:shadow-md transition-shadow duration-300">
+            {/* Full Width Image Header */}
+            <div className="relative w-full aspect-square bg-stone-50">
                 <Image
-                    src={c.image}
+                    src={c.image || "/images/categories/small_talk.png"}
                     alt={c.name}
                     fill
-                    sizes="(max-width: 768px) 64px, 80px"
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    sizes="(max-width: 768px) 100vw, 400px"
+                    className="object-cover"
                 />
             </div>
 
-            {/* Content Details */}
-            <div className="flex-1 min-w-0 py-1">
-                <h3 className="font-bold text-base md:text-lg text-foreground truncate group-hover:text-primary transition-colors">
-                    {c.name}
-                </h3>
-                <p className="text-xs md:text-sm text-muted-foreground mt-0.5">
+            {/* Content Details Below */}
+            <div className="flex flex-col flex-1 p-6 sm:p-8">
+                <div className="flex items-center justify-between gap-3 mb-4">
+                    <h3 className="font-black text-2xl sm:text-3xl text-stone-800 tracking-tight line-clamp-2">
+                        {c.name}
+                    </h3>
+                    {isPinned && (
+                        <span className="text-[10px] uppercase tracking-widest font-bold bg-[#FF5C00] text-white px-3 py-1.5 rounded-full shrink-0">
+                            Featured
+                        </span>
+                    )}
+                </div>
+
+                <p className="text-base text-stone-500 line-clamp-3 leading-relaxed mb-8">
                     {c.description}
                 </p>
-                <span className="inline-block mt-2 text-[10px] md:text-xs font-black uppercase tracking-wider text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                    {scriptCount} Scenarios
-                </span>
+
+                <div className="mt-auto">
+                    <span className="inline-flex items-center text-xs font-bold uppercase tracking-widest text-stone-700 bg-stone-50 px-4 py-2 rounded-full border border-stone-200">
+                        {scriptCount} Scenarios
+                    </span>
+                </div>
             </div>
         </div>
     );
 
     if (disableLinks) {
         return (
-            <div className="w-full">
+            <div className="w-full h-full">
                 <Content />
             </div>
         );
     }
 
     return (
-        <Link href={`/category/${c.slug}`} className="block w-full outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-2xl">
+        <Link href={`/category/${c.slug}`} className="block w-full h-full outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-3xl">
             <Content />
         </Link>
     );

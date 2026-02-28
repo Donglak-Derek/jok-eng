@@ -4,10 +4,11 @@ import { CATEGORY_NAMES } from "@/data/categories";
 export const videoDiagnosticGreeting: Script = {
     id: "video_diagnostic_greeting",
     title: "The Diagnostic Greeting",
-    categorySlug: "small_talk",
-    categoryName: CATEGORY_NAMES["small_talk"],
+    categorySlug: "american_culture",
+    categoryName: "American Culture",
     cleanedEnglish: "How to handle the common 'How are you?' trap effectively.",
     imageUrl: "/images/scenarios/greetings_introvert_3d.png",
+    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ", // Placeholder for actual video
     mode: "cloze",
     culturalInsights: {
         title: "Diagnostic vs. Social",
@@ -33,10 +34,11 @@ export const videoDiagnosticGreeting: Script = {
 export const videoCelestialGreeting: Script = {
     id: "video_celestial_greeting",
     title: "The Celestial Greeting",
-    categorySlug: "small_talk",
-    categoryName: CATEGORY_NAMES["small_talk"],
+    categorySlug: "american_culture",
+    categoryName: "American Culture",
     cleanedEnglish: "Mastering the 'What's up?' response.",
     imageUrl: "/images/scenarios/greetings_introvert_3d.png",
+    videoUrl: "https://www.youtube.com/embed/jNQXAC9IVRw", // Placeholder
     mode: "cloze",
     culturalInsights: {
         title: "What's Up?",
@@ -62,10 +64,11 @@ export const videoCelestialGreeting: Script = {
 export const videoTexasSurvival: Script = {
     id: "video_texas_survival",
     title: "Texas Small Talk",
-    categorySlug: "small_talk",
-    categoryName: CATEGORY_NAMES["small_talk"],
+    categorySlug: "american_culture",
+    categoryName: "American Culture",
     cleanedEnglish: "Survival phrases for the Lone Star State.",
     imageUrl: "/images/scenarios/greetings_introvert_3d.png",
+    videoUrl: "https://www.youtube.com/embed/9bZkp7q19f0", // Placeholder
     mode: "cloze",
     culturalInsights: {
         title: "Southern Hospitality",

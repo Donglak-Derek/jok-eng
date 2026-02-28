@@ -7,10 +7,11 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { UserStats, UserProfile, GENERATION_GROUPS, JOB_CATEGORIES, CULTURE_OPTIONS } from "@/types";
 import { motion } from "framer-motion";
-import { X, Loader2 } from "lucide-react";
+import { X, Loader2, User } from "lucide-react";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { updateProfile } from "firebase/auth";
 import SuccessPath from "@/components/SuccessPath";
+import Link from "next/link";
 
 // Rank Logic Helpers
 const getRank = (scenariosCreated: number) => {
@@ -78,7 +79,54 @@ export default function ProfilePage() {
         // ... loading return
     }
 
-    if (!user) return null;
+    if (!user) {
+        return (
+            <div className="min-h-[100dvh] bg-background flex flex-col items-center justify-center text-center px-6 pb-20">
+                <motion.div
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    className="w-24 h-24 bg-secondary/30 rounded-full flex items-center justify-center mb-6 ring-4 ring-border shadow-2xl"
+                >
+                    <User className="w-12 h-12 text-muted-foreground" />
+                </motion.div>
+                <motion.h1
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.1 }}
+                    className="text-3xl font-black tracking-tight mb-3"
+                >
+                    Save Your Journey
+                </motion.h1>
+                <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                    className="text-muted-foreground max-w-sm mb-8 text-sm md:text-base leading-relaxed"
+                >
+                    Create a free account to track your daily rehearsals, save custom scenarios, and build your Hollywood legacy.
+                </motion.p>
+                <motion.div
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.3 }}
+                    className="w-full max-w-sm flex flex-col gap-4"
+                >
+                    <Link
+                        href="/login"
+                        className="w-full py-4 rounded-xl bg-foreground text-background font-bold text-lg hover:opacity-90 active:scale-[0.98] transition-all shadow-xl flex items-center justify-center"
+                    >
+                        Sign In / Create Account
+                    </Link>
+                    <button
+                        onClick={() => router.push("/")}
+                        className="w-full py-3 text-sm font-bold text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                        Continue as Guest
+                    </button>
+                </motion.div>
+            </div>
+        );
+    }
 
     const rank = getRank(stats?.totalScenariosCreated || 0);
 

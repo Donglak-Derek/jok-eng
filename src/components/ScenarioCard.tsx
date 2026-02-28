@@ -14,8 +14,6 @@ type Props = {
     index: number;
     onDelete?: (id: string, e: React.MouseEvent) => void;
     onTogglePublic?: (id: string, current: boolean, e: React.MouseEvent) => void;
-    onRemix?: (id: string, e: React.MouseEvent) => void;
-    onSmartRemix?: (id: string, e: React.MouseEvent) => void;
     onShare?: (id: string, e: React.MouseEvent) => void;
     onToggleSave?: (id: string, e: React.MouseEvent) => void;
     isSaved?: boolean;
@@ -27,8 +25,6 @@ export default function ScenarioCard({
     index,
     onDelete,
     onTogglePublic,
-    onRemix,
-    onSmartRemix,
     onShare,
     onToggleSave,
     isSaved,
@@ -178,36 +174,6 @@ export default function ScenarioCard({
                                         )}
 
                                     </div>
-                                )}
-                                {onRemix && (
-                                    <button
-                                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); onRemix(script.id, e); }}
-                                        className="
-                                                relative overflow-hidden group/btn px-4 py-1.5 rounded-full 
-                                                bg-gradient-to-r from-violet-600 to-indigo-600 
-                                                text-white shadow-md hover:shadow-lg hover:shadow-indigo-500/30 
-                                                transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]
-                                                ml-2 flex items-center gap-2
-                                            "
-                                        title="Customize this scenario for your situation"
-                                    >
-                                        <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300 pointer-events-none" />
-                                        <Sparkles className="w-3.5 h-3.5 fill-white/20 animate-pulse" />
-                                        <span className="text-xs font-bold tracking-wide uppercase">Remix</span>
-                                    </button>
-                                )}
-                                {onSmartRemix && (
-                                    <button
-                                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); onSmartRemix(script.id, e); }}
-                                        className="
-                                                 p-2 rounded-full text-amber-500 bg-amber-50 hover:bg-amber-100 
-                                                 hover:text-amber-700 hover:scale-105 transition-all ml-1
-                                                 border border-amber-200/50
-                                             "
-                                        title="Adapt for my job (Smart Remix)"
-                                    >
-                                        <Sparkles className="w-4 h-4 fill-amber-500/10" />
-                                    </button>
                                 )}
 
                                 {/* Save Button */}
