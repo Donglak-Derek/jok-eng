@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { categories, scripts } from "@/data";
+import { scripts } from "@/data";
+import { useCategories } from "@/hooks/useCategories";
 import { Category } from "@/types";
 import THEME_MAP from "@/lib/themeMap";
 
@@ -12,16 +13,11 @@ interface CategoryCarouselProps {
 }
 
 export default function CategoryCarousel({ variant = "default", disableLinks = false }: CategoryCarouselProps) {
-    // Sort categories: Move "american_culture" to the bottom
-    const sortedCategories = [...categories].sort((a, b) => {
-        if (a.slug === "american_culture") return 1;
-        if (b.slug === "american_culture") return -1;
-        return 0; // Keep original order for the rest
-    });
+    const { categories } = useCategories();
 
     return (
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 max-w-5xl mx-auto w-full px-4 md:px-0">
-            {sortedCategories.map((c, i) => (
+            {categories.map((c, i) => (
                 <CategoryCard key={c.slug} c={c} index={i} variant={variant} disableLinks={disableLinks} />
             ))}
         </section>

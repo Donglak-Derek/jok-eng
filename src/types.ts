@@ -96,6 +96,9 @@ export type Category = {
   description: string;
   image: string;
   color?: string; // Phase 1: Accent Color
+  // Monetization fields
+  isPremium?: boolean;
+  price?: number; // Optional price for one-time unlock (in cents or USD)
 };
 
 export type UserScript = Script & {
@@ -147,6 +150,10 @@ export interface UserProfile {
   superpower?: string; // e.g. "Empathy", "Wit"
   kryptonite?: string; // e.g. "Small Talk", "Confrontation"
   onboardingCompleted: boolean;
+
+  // Monetization fields
+  purchasedCategories?: string[]; // Array of category slugs the user has bought outright
+
   subscription?: UserSubscription;
 }
 

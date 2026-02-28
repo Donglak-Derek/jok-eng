@@ -11,7 +11,8 @@ import {
     MessageSquareQuote,
     LogOut,
     Sparkles,
-    ShieldAlert
+    ShieldAlert,
+    Layers
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { ADMIN_UID } from "@/lib/constants";
@@ -46,6 +47,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
     const navItems = [
         { label: "Dashboard", href: "/admin", icon: <LayoutDashboard className="w-5 h-5" /> },
+        { label: "Categories", href: "/admin/categories", icon: <Layers className="w-5 h-5" /> },
         { label: "Video Vault", href: "/admin/videos", icon: <Video className="w-5 h-5" /> },
         { label: "AI Generator", href: "/admin/generator", icon: <Sparkles className="w-5 h-5" /> },
         { label: "Blogs", href: "/admin/blogs", icon: <FileText className="w-5 h-5" /> },
