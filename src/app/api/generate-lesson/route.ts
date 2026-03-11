@@ -56,11 +56,13 @@ export async function POST(request: NextRequest) {
         const exactScript = {
             ...data.exactScript,
             id: uuidv4(),
-            categorySlug: "video_lesson",
-            categoryName: "Video Lessons",
+            categorySlug: "american_culture",
+            categoryName: "American Culture",
+            imageUrl: `/images/scenarios/greetings_introvert_3d.png`, // Default image 
+            videoUrl: `https://www.youtube.com/watch?v=${youtubeId}`, // Formatted for VideoScenePlayer compatibility
             mode: "cloze",
             quizItems: data.exactScript.quizItems?.map((q: any) => ({ ...q, id: uuidv4() })) || [],
-            sentences: data.exactScript.sentences?.map((s: any) => ({ ...s, id: uuidv4() })) || []
+            segments: data.exactScript.segments?.map((s: any) => ({ ...s, id: uuidv4() })) || []
         };
 
         // Also save the exact script individually to the jok-eng-official account so it shows up in the main library

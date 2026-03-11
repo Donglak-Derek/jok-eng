@@ -166,6 +166,14 @@ export interface UserSubscription {
   };
 }
 
+export interface UserProgress {
+  uid: string;
+  currentDay: number;
+  completedDays: number[];
+  totalXP: number;
+  personaType?: string; // e.g. "The Silent Expert", "The Power Player"
+}
+
 // Replaced "Age Groups" with "Generations" for better Vibe/Privacy
 export const GENERATION_GROUPS = [
   "Gen Z (Zoomer)",
@@ -197,4 +205,15 @@ export const JOB_CATEGORIES = {
   "Education": ["Teacher", "Professor", "Student"],
   "Trades & Labor": ["Construction", "Electrician", "Driver", "Logistics"],
   "Other": ["Freelancer", "Founder", "Other"]
+};
+
+// Phase 4: Roadmap / 90-Day Challenge
+export type Mission = {
+  id: string;
+  dayNumber: number;
+  title: string;
+  description?: string;
+  scriptId?: string;
+  phase: 1 | 2 | 3; // 1: Days 1-30, 2: Days 31-60, 3: Days 61-90
+  isPremium?: boolean;
 };

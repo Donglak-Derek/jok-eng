@@ -50,6 +50,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         { label: "Categories", href: "/admin/categories", icon: <Layers className="w-5 h-5" /> },
         { label: "Video Vault", href: "/admin/videos", icon: <Video className="w-5 h-5" /> },
         { label: "AI Generator", href: "/admin/generator", icon: <Sparkles className="w-5 h-5" /> },
+        { label: "Missions", href: "/admin/missions", icon: <Sparkles className="w-5 h-5" /> },
         { label: "Blogs", href: "/admin/blogs", icon: <FileText className="w-5 h-5" /> },
         { label: "Scenarios", href: "/admin/scenarios", icon: <MessageSquareQuote className="w-5 h-5" /> },
     ];

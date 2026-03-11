@@ -8,10 +8,10 @@ export default function Footer() {
 
         {/* Brand & Copyright */}
         <div className="text-center md:text-left">
-          <h2 className="font-bold text-xl tracking-tight mb-2 text-foreground">jok-eng.com</h2>
+          <h2 className="font-bold text-xl tracking-tight mb-2 text-foreground">amlyapp.com</h2>
           <p className="text-sm text-muted-foreground">
             Master the unspoken rules. Sound like yourself again. <br />
-            © {new Date().getFullYear()} jok-eng.com. All rights reserved.
+            © {new Date().getFullYear()} amlyapp.com. All rights reserved.
           </p>
         </div>
 

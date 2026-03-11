@@ -18,8 +18,10 @@ export default function Header({ transparent = false }: HeaderProps) {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const pathname = usePathname();
 
-    const isMyPathActive = pathname === "/" || pathname.startsWith("/category");
-    const isLibraryActive = pathname === "/library";
+    const isHomeActive = pathname === "/";
+    const isVideosActive = pathname.startsWith("/videos");
+    const isPracticeActive = pathname.startsWith("/practice");
+    const isProfileActive = pathname.startsWith("/profile");
 
     const headerBg = transparent ? 'bg-gradient-to-b from-black/60 to-transparent border-transparent' : 'bg-white/80 backdrop-blur-md border-b border-border';
     const textColor = transparent ? 'text-white' : 'text-foreground';
@@ -40,28 +42,42 @@ export default function Header({ transparent = false }: HeaderProps) {
                                 priority
                             />
                         </div>
-                        <h1 className={`font-sans font-bold text-xl tracking-tight group-hover:opacity-80 transition-opacity ${textColor}`}>
-                            Jok-eng
+                        <h1 className={`font-sans font-black italic text-xl tracking-tight group-hover:opacity-80 transition-opacity ${textColor}`}>
+                            Amly
                         </h1>
                         <span className={`px-2 py-0.5 text-[10px] uppercase tracking-wider font-bold rounded-full ${transparent ? 'bg-white/20 text-white' : 'bg-secondary text-secondary-foreground'}`}>
                             Beta
                         </span>
                     </Link>
 
-                    <nav className="items-center gap-4 md:gap-6 hidden md:flex">
+                    <nav className="items-center gap-4 md:gap-7 hidden md:flex">
                         <Link
                             href="/"
-                            className={`text-sm md:text-base font-bold transition-colors ${isMyPathActive ? 'text-primary' : mutedTextColor
+                            className={`text-sm md:text-base font-bold transition-colors ${isHomeActive ? 'text-primary' : mutedTextColor
                                 }`}
                         >
-                            My Path
+                            Home
                         </Link>
                         <Link
-                            href="/library"
-                            className={`text-sm md:text-base font-bold transition-colors ${isLibraryActive ? 'text-primary' : mutedTextColor
+                            href="/videos"
+                            className={`text-sm md:text-base font-bold transition-colors ${isVideosActive ? 'text-primary' : mutedTextColor
                                 }`}
                         >
-                            Library
+                            Videos
+                        </Link>
+                        <Link
+                            href="/practice"
+                            className={`text-sm md:text-base font-bold transition-colors ${isPracticeActive ? 'text-primary' : mutedTextColor
+                                }`}
+                        >
+                            Blogs
+                        </Link>
+                        <Link
+                            href="/profile"
+                            className={`text-sm md:text-base font-bold transition-colors ${isProfileActive ? 'text-primary' : mutedTextColor
+                                }`}
+                        >
+                            Profile
                         </Link>
                     </nav>
                 </div>
@@ -111,18 +127,18 @@ export default function Header({ transparent = false }: HeaderProps) {
                                                 My Profile
                                             </Link>
                                             <Link
-                                                href="/library"
+                                                href="/practice"
                                                 className="block px-4 py-2 text-sm text-foreground hover:bg-secondary transition-colors"
                                                 onClick={() => setDropdownOpen(false)}
                                             >
-                                                My Library
+                                                Blogs & Media
                                             </Link>
                                             <Link
-                                                href="/shop"
+                                                href="/"
                                                 className="block px-4 py-2 text-sm text-primary font-bold hover:bg-secondary transition-colors"
                                                 onClick={() => setDropdownOpen(false)}
                                             >
-                                                Premium Store
+                                                Categories Home
                                             </Link>
                                             <Link
                                                 href="/about"

@@ -56,12 +56,12 @@ export default function LandingHero({ onStartDemo }: LandingHeroProps) {
                     transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }} // Custom ease for premium feel
                     className="space-y-6"
                 >
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/30 backdrop-blur-md border border-border/40 text-sm font-medium text-muted-foreground/80 mb-6 tracking-wide uppercase group cursor-default hover:bg-secondary/50 transition-colors">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/30 backdrop-blur-md border border-border/40 text-sm font-medium text-muted-foreground/80 mb-6 tracking-wide uppercase group cursor-default shadow-sm hover:shadow-md hover:bg-secondary/50 transition-all">
                         <span className="relative flex h-2 w-2">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
                         </span>
-                        Jok-Eng.com &bull; Speak Like a Leader
+                        Amly.com &bull; Speak Like a Leader
                     </div>
 
                     <h1 className="text-5xl xs:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter text-balance leading-[1.05] text-foreground">

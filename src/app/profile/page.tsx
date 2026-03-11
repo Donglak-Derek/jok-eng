@@ -11,6 +11,8 @@ import { X, Loader2, User } from "lucide-react";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { updateProfile } from "firebase/auth";
 import SuccessPath from "@/components/SuccessPath";
+import { useUserProgress } from "@/hooks/useUserProgress";
+import { Trophy } from "lucide-react";
 import Link from "next/link";
 
 // Rank Logic Helpers
@@ -24,6 +26,7 @@ const getRank = (scenariosCreated: number) => {
 
 export default function ProfilePage() {
     const { user, refreshProfile, loading: authLoading } = useAuth(); // Added refreshProfile
+    const { progress } = useUserProgress(user?.uid);
     const router = useRouter();
     const [stats, setStats] = useState<UserStats | null>(null);
     const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
@@ -264,6 +267,12 @@ export default function ProfilePage() {
                         delay={0.7}
                     />
                     <StatsCard
+                        icon="⚡"
+                        label="Cultural Power %"
+                        value={Math.min(100, (stats?.totalPractices || 0) * 5)}
+                        delay={0.75}
+                    />
+                    <StatsCard
                         icon="🏆"
                         label="Longest Streak"
                         value={stats?.longestStreak || 0}
@@ -271,6 +280,32 @@ export default function ProfilePage() {
                     />
                 </div>
 
+                {/* Day 90 Mastery Badge (Profile Version) */}
+                {progress?.completedDays.includes(90) && (
+                    <motion.div 
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.9 }}
+                        className="mt-6 w-full p-1 rounded-3xl bg-gradient-to-r from-yellow-300 via-yellow-500 to-yellow-700 shadow-[0_0_30px_rgba(234,179,8,0.2)]"
+                    >
+                        <div className="flex items-center gap-6 px-6 py-6 rounded-[22px] bg-zinc-950/90 backdrop-blur-xl relative overflow-hidden">
+                            <div className="absolute inset-0 bg-[radial-gradient(circle_at_left,rgba(234,179,8,0.1)_0%,transparent_50%)]" />
+                            <motion.div 
+                                animate={{ rotateY: 360 }}
+                                transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+                                className="relative z-10 shrink-0"
+                            >
+                                <Trophy className="w-12 h-12 text-yellow-500 drop-shadow-[0_0_10px_rgba(234,179,8,0.6)]" strokeWidth={1.5} />
+                            </motion.div>
+                            <div className="relative z-10">
+                                <h3 className="text-xl font-black text-white italic tracking-tight">Social Master</h3>
+                                <p className="text-yellow-500/80 text-xs font-bold uppercase tracking-widest mt-0.5">
+                                    90-Day Roadmap Completed
+                                </p>
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
 
             </div>
 

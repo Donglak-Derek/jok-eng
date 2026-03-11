@@ -13,7 +13,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Jok-eng | Speak Like a Leader",
+  title: "Amly | Speak Like a Leader",
   description: "Master high-functioning professional English. Understand the subtext, sound natural, and speak like a leader with AI-powered scenarios.",
   keywords: ["English learning", "professional English", "leadership communication", "business English", "AI English coach"],
   manifest: "/manifest.webmanifest",

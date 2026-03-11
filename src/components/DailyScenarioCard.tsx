@@ -55,13 +55,14 @@ export default function DailyScenarioCard() {
         if (scripts.length === 0) return null;
 
         // If the user isn't logged in, just return a random highly-rated scenario as a hook
+        // Temporarily exclude 'american_culture' as it's under construction
         if (!user) {
-            const featuredCandidates = scripts.slice(0, 10); // Pick from top 10
+            const featuredCandidates = scripts.filter(s => s.categorySlug !== 'american_culture').slice(0, 10); // Pick from top 10
             return featuredCandidates[Math.floor(Math.random() * featuredCandidates.length)];
         }
 
-        // Candidates: Scenarios the user has NOT completed today
-        const candidates = scripts.filter(s => !completedIds.has(s.id));
+        // Candidates: Scenarios the user has NOT completed today, and exclude 'american_culture'
+        const candidates = scripts.filter(s => !completedIds.has(s.id) && s.categorySlug !== 'american_culture');
 
         // If they have somehow completed EVERY scenario today, return null (card hides)
         if (candidates.length === 0) return null;

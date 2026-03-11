@@ -5,6 +5,7 @@ import type { Script } from "@/types";
 import StoryFlow from "@/components/StoryFlow";
 import StandardScriptFlow from "@/components/StandardScriptFlow";
 import SignalDecoder from "@/components/SignalDecoder";
+import { usePremiumAccess } from "@/hooks/usePremiumAccess";
 import { collection, collectionGroup, getDocs, query, where, doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Loader2 } from "lucide-react";
@@ -26,6 +27,9 @@ function ScriptClientInner({ initialScript, scriptId }: { initialScript?: Script
     const [script, setScript] = useState<Script | undefined>(initialScript);
     const [loading, setLoading] = useState(!initialScript);
     const [error, setError] = useState<string | null>(null);
+
+    // Default to a safe empty string to avoid hook violations before script loads
+    const hasPremiumAccess = usePremiumAccess(script?.categorySlug || "");
 
     useEffect(() => {
         if (initialScript || !scriptId) {
@@ -108,7 +112,8 @@ function ScriptClientInner({ initialScript, scriptId }: { initialScript?: Script
         );
     }
 
-    if (script.type === "story_flow") return <StoryFlow script={script} />;
+    // 📖 Legacy Text Methodology Routing
+    if (script.type === "story_flow" || script.videoUrl || script.segments) return <StoryFlow script={script} />;
     if (script.type === "decoder") return <SignalDecoder script={script} />;
     return <StandardScriptFlow script={script} />;
 }

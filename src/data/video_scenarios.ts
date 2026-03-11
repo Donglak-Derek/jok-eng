@@ -8,25 +8,31 @@ export const videoDiagnosticGreeting: Script = {
     categoryName: "American Culture",
     cleanedEnglish: "How to handle the common 'How are you?' trap effectively.",
     imageUrl: "/images/scenarios/greetings_introvert_3d.png",
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ", // Placeholder for actual video
+    videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", // Changed to standard watch URL
     mode: "cloze",
-    culturalInsights: {
-        title: "Diagnostic vs. Social",
-        content: "When someone says 'How are you?', they aren't asking for a medical diagnosis. It's a social ping. If you give a long answer, you're breaking the protocol!"
-    },
-    sentences: [
+    quizItems: [
         {
-            id: "vdg1",
-            en: "The Social Ping",
-            scenario: "Greeting an acquaintance",
+            id: "q1",
+            question: "When the cashier asks 'How are you?', they are expecting you to...",
+            options: [
+                "Give a detailed account of your day",
+                "Explain your current medical problems",
+                "Give a short, positive response like 'Good, how are you?'",
+                "Ignore them completely"
+            ],
+            correctIndex: 2,
+            explanation: "In American culture, 'How are you?' from a stranger is just a greeting, not a literal question about your well-being."
+        }
+    ],
+    segments: [
+        {
+            step: "1",
+            text: "The Social Ping",
+            note: "Greeting an acquaintance: Matches the social expectation perfectly.",
             keywords: [
                 { word: "Good", definition: "Fine/Okay" },
                 { word: "Yourself", definition: "And you?" }
-            ],
-            goodResponse: {
-                text: "I'm [good], thanks! How about [yourself]?",
-                why: "Matches the social expectation perfectly."
-            }
+            ]
         }
     ]
 };
@@ -40,23 +46,29 @@ export const videoCelestialGreeting: Script = {
     imageUrl: "/images/scenarios/greetings_introvert_3d.png",
     videoUrl: "https://www.youtube.com/embed/jNQXAC9IVRw", // Placeholder
     mode: "cloze",
-    culturalInsights: {
-        title: "What's Up?",
-        content: "This is often just a synonym for 'Hello'. You don't actually need to report anything that is happening 'up'."
-    },
-    sentences: [
+    quizItems: [
         {
-            id: "vcg1",
-            en: "The Sky Trap",
-            scenario: "Responding to 'What's up?'",
+            id: "vcgq1",
+            question: "When someone asks 'What's up?', you should typically reply with...",
+            options: [
+                "Everything that happened to you today",
+                "'Not much, you?'",
+                "Look up at the ceiling",
+                "Explain your life goals"
+            ],
+            correctIndex: 1,
+            explanation: "It's just a casual greeting, not a literal question about direction."
+        }
+    ],
+    segments: [
+        {
+            step: "1",
+            text: "The Sky Trap",
+            note: "Responding to 'What's up?': Standard, relaxed response.",
             keywords: [
                 { word: "Much", definition: "A lot" },
                 { word: "Chilling", definition: "Relaxing" }
-            ],
-            goodResponse: {
-                text: "Not [much], just [chilling]. What's up with you?",
-                why: "Standard, relaxed response."
-            }
+            ]
         }
     ]
 };
@@ -70,23 +82,29 @@ export const videoTexasSurvival: Script = {
     imageUrl: "/images/scenarios/greetings_introvert_3d.png",
     videoUrl: "https://www.youtube.com/embed/9bZkp7q19f0", // Placeholder
     mode: "cloze",
-    culturalInsights: {
-        title: "Southern Hospitality",
-        content: "In Texas, 'Howdy' is more than a greeting; it's an invitation to a friendly (but brief) exchange."
-    },
-    sentences: [
+    quizItems: [
         {
-            id: "vts1",
-            en: "The Howdy Habit",
-            scenario: "Meeting a local in Texas",
+            id: "vtsq1",
+            question: "What is the appropriate response to 'Howdy' in Texas?",
+            options: [
+                "Hello there, partner",
+                "Good day to you",
+                "Howdy, how y'all doing?",
+                "I am fine, thank you"
+            ],
+            correctIndex: 2,
+            explanation: "Returning the 'Howdy' and acknowledging the group with 'y'all' is a sign of respect."
+        }
+    ],
+    segments: [
+        {
+            step: "1",
+            text: "The Howdy Habit",
+            note: "Meeting a local in Texas: Instant local points for using 'y'all' correctly.",
             keywords: [
                 { word: "Howdy", definition: "Hello" },
                 { word: "Doing", definition: "How are things" }
-            ],
-            goodResponse: {
-                text: "[Howdy]! How y'all [doing] today?",
-                why: "Instant local points for using 'y'all' correctly."
-            }
+            ]
         }
     ]
 };
