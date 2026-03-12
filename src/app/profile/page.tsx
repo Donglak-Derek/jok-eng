@@ -16,12 +16,12 @@ import { Trophy } from "lucide-react";
 import Link from "next/link";
 
 // Rank Logic Helpers
-const getRank = (scenariosCreated: number) => {
-    if (scenariosCreated >= 50) return { title: "Hollywood Legend 🌟", color: "from-yellow-400 to-amber-600" };
-    if (scenariosCreated >= 20) return { title: "Award Winning Director 🏆", color: "from-purple-400 to-indigo-600" };
-    if (scenariosCreated >= 10) return { title: "Seasoned Professional 🎬", color: "from-blue-400 to-cyan-600" };
-    if (scenariosCreated >= 3) return { title: "Rising Star ✨", color: "from-emerald-400 to-green-600" };
-    return { title: "Rookie Director 🎥", color: "from-slate-400 to-slate-600" };
+const getRank = (xp: number) => {
+    if (xp >= 8000) return { title: "Social Master 👑", color: "from-yellow-400 to-amber-600" };
+    if (xp >= 3000) return { title: "Charisma Coach 🗣️", color: "from-purple-400 to-indigo-600" };
+    if (xp >= 1000) return { title: "Power Player 🤝", color: "from-blue-400 to-cyan-600" };
+    if (xp >= 200) return { title: "Vibe Builder ✨", color: "from-emerald-400 to-green-600" };
+    return { title: "New Arrival 🌱", color: "from-slate-400 to-slate-600" };
 };
 
 export default function ProfilePage() {
@@ -131,7 +131,7 @@ export default function ProfilePage() {
         );
     }
 
-    const rank = getRank(stats?.totalScenariosCreated || 0);
+    const rank = getRank(progress?.totalXP || 0);
 
     return (
         <div className="min-h-screen bg-background text-foreground pb-20">
@@ -207,7 +207,7 @@ export default function ProfilePage() {
                             onClick={() => setIsEditing(true)}
                             className="text-xs font-bold text-primary hover:underline hover:text-primary/80 transition-colors"
                         >
-                            Edit Profile Invity ✏️
+                            Edit Profile Identity ✏️
                         </button>
                     </motion.div>
 
@@ -243,39 +243,39 @@ export default function ProfilePage() {
             <div className="container max-w-4xl mx-auto px-4 -mt-4 relative z-20">
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                     <StatsCard
-                        icon="🎬"
-                        label="Scripts Written"
-                        value={stats?.totalScenariosCreated || 0}
+                        icon="✨"
+                        label="Total XP Earned"
+                        value={(progress?.totalXP || 0).toString()}
                         delay={0.4}
                     />
                     <StatsCard
-                        icon="🔀"
-                        label="Remixes Inspired"
-                        value={stats?.totalRemixesInspired || 0}
+                        icon="✅"
+                        label="Days Completed"
+                        value={(progress?.completedDays?.length || 0).toString()}
                         delay={0.5}
                     />
                     <StatsCard
                         icon="🎭"
-                        label="Rehearsals Done"
-                        value={stats?.totalPractices || 0}
+                        label="Persona Type"
+                        value={progress?.personaType || "N/A"}
                         delay={0.6}
                     />
                     <StatsCard
                         icon="🔥"
                         label="Current Streak"
-                        value={stats?.currentStreak || 0}
+                        value={(stats?.currentStreak || 0).toString()}
                         delay={0.7}
-                    />
-                    <StatsCard
-                        icon="⚡"
-                        label="Cultural Power %"
-                        value={Math.min(100, (stats?.totalPractices || 0) * 5)}
-                        delay={0.75}
                     />
                     <StatsCard
                         icon="🏆"
                         label="Longest Streak"
-                        value={stats?.longestStreak || 0}
+                        value={(stats?.longestStreak || 0).toString()}
+                        delay={0.75}
+                    />
+                    <StatsCard
+                        icon="🎙️"
+                        label="Rehearsals Done"
+                        value={(stats?.totalPractices || 0).toString()}
                         delay={0.8}
                     />
                 </div>
@@ -326,7 +326,10 @@ export default function ProfilePage() {
     );
 }
 
-function StatsCard({ icon, label, value, delay }: { icon: string, label: string, value: number, delay: number }) {
+function StatsCard({ icon, label, value, delay }: { icon: string, label: string, value: string | number, delay: number }) {
+    // Determine font size based on whether it's a long string (like Persona Type)
+    const isLongText = typeof value === 'string' && value.length > 5;
+    
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -337,12 +340,12 @@ function StatsCard({ icon, label, value, delay }: { icon: string, label: string,
             {/* Subtle Gradient Glow on Hover */}
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-purple-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
 
-            <div className="relative z-10">
+            <div className="relative z-10 flex flex-col h-full items-center justify-center">
                 <div className="text-3xl mb-1 filter drop-shadow-sm">{icon}</div>
-                <div className="text-2xl font-black text-foreground mb-0.5 tracking-tight group-hover:scale-105 transition-transform duration-300">
+                <div className={`${isLongText ? 'text-[13px] leading-tight md:text-sm' : 'text-2xl'} font-black text-foreground mb-1 tracking-tight group-hover:scale-105 transition-transform duration-300 min-h-[1.5rem] flex items-center justify-center`}>
                     {value}
                 </div>
-                <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">
+                <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 w-full truncate">
                     {label}
                 </div>
             </div>
@@ -356,10 +359,7 @@ function StatsCard({ icon, label, value, delay }: { icon: string, label: string,
 function EditProfileModal({ user, onClose, initialData }: { user: any, onClose: () => void, initialData: UserProfile }) {
     const [formData, setFormData] = useState<Partial<UserProfile>>({
         displayName: user.displayName || "",
-        occupation: initialData?.occupation || "",
-        ageGroup: initialData?.ageGroup || undefined, // undefined to match type
-        humorStyle: initialData?.humorStyle || "",
-        motherLanguage: initialData?.motherLanguage || ""
+        occupation: initialData?.occupation || ""
     });
     const [saving, setSaving] = useState(false);
 
@@ -425,81 +425,28 @@ function EditProfileModal({ user, onClose, initialData }: { user: any, onClose: 
                         />
                     </div>
 
-                    {/* Culture / Origin (NEW) */}
+                    {/* Job */}
                     <div className="space-y-1">
-                        <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Native Language / Origin</label>
+                        <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Occupation</label>
                         <select
-                            value={formData.motherLanguage || ""}
-                            onChange={e => setFormData({ ...formData, motherLanguage: e.target.value })}
-                            className="w-full bg-secondary/50 rounded-xl px-4 py-3 font-medium focus:ring-2 ring-emerald-500/20 outline-none appearance-none"
-                        >
-                            <option value="">Select Origin...</option>
-                            {CULTURE_OPTIONS.map(c => (
-                                <option key={c} value={c}>{c}</option>
-                            ))}
-                        </select>
-                        <p className="text-[10px] text-muted-foreground">Used to customize scenarios for your culture.</p>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                        {/* Generation (Was Age) */}
-                        <div className="space-y-1">
-                            <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Generation</label>
-                            <select
-                                value={formData.ageGroup || ""}
-                                onChange={e => setFormData({ ...formData, ageGroup: e.target.value as any }) /* eslint-disable-line @typescript-eslint/no-explicit-any */}
-                                className="w-full bg-secondary/50 rounded-xl px-4 py-3 font-medium focus:ring-2 ring-primary/20 outline-none appearance-none"
-                            >
-                                <option value="">Select...</option>
-                                {GENERATION_GROUPS.map(g => (
-                                    <option key={g} value={g}>{g}</option>
-                                ))}
-                            </select>
-                        </div>
-
-                        {/* Job */}
-                        <div className="space-y-1">
-                            <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Occupation</label>
-                            <select
-                                value={formData.occupation || ""}
-                                onChange={e => setFormData({ ...formData, occupation: e.target.value })}
-                                className="w-full bg-secondary/50 rounded-xl px-4 py-3 font-medium focus:ring-2 ring-primary/20 outline-none appearance-none"
-                            >
-                                <option value="">Select...</option>
-                                {/* Handle Array vs Object for JOB_CATEGORIES if definition changed */}
-                                {Array.isArray(JOB_CATEGORIES) ? (
-                                    JOB_CATEGORIES.map(j => (
-                                        <option key={j} value={j}>{j}</option>
-                                    ))
-                                ) : (
-                                    Object.entries(JOB_CATEGORIES).map(([group, roles]) => (
-                                        <optgroup key={group} label={group}>
-                                            {roles.map(role => (
-                                                <option key={role} value={role}>{role}</option>
-                                            ))}
-                                        </optgroup>
-                                    ))
-                                )}
-
-                            </select>
-                        </div>
-                    </div>
-
-                    {/* Humor Style */}
-                    <div className="space-y-1">
-                        <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Humor Style</label>
-                        <select
-                            value={formData.humorStyle || ""}
-                            onChange={e => setFormData({ ...formData, humorStyle: e.target.value })}
+                            value={formData.occupation || ""}
+                            onChange={e => setFormData({ ...formData, occupation: e.target.value })}
                             className="w-full bg-secondary/50 rounded-xl px-4 py-3 font-medium focus:ring-2 ring-primary/20 outline-none appearance-none"
                         >
                             <option value="">Select...</option>
-                            <option value="Witty">Witty</option>
-                            <option value="Dry">Dry</option>
-                            <option value="Sarcastic">Sarcastic</option>
-                            <option value="Dad Jokes">Dad Jokes</option>
-                            <option value="Silly">Silly</option>
-                            <option value="Dark">Dark</option>
+                            {Array.isArray(JOB_CATEGORIES) ? (
+                                JOB_CATEGORIES.map(j => (
+                                    <option key={j} value={j}>{j}</option>
+                                ))
+                            ) : (
+                                Object.entries(JOB_CATEGORIES).map(([group, roles]) => (
+                                    <optgroup key={group} label={group}>
+                                        {roles.map(role => (
+                                            <option key={role} value={role}>{role}</option>
+                                        ))}
+                                    </optgroup>
+                                ))
+                            )}
                         </select>
                     </div>
                 </div>

@@ -1,11 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { getAdminAuth } from "@/lib/firebase-admin";
 
 // Initialize Gemini
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
 export async function POST(request: NextRequest) {
   try {
+    const authHeader = request.headers.get("authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const token = authHeader.split("Bearer ")[1];
+    try {
+        await getAdminAuth().verifyIdToken(token);
+    } catch (e) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     if (!process.env.GEMINI_API_KEY) {
       throw new Error("GEMINI_API_KEY is not set");
     }

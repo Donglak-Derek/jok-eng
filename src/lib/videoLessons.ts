@@ -16,22 +16,26 @@ export interface VideoLesson {
     id?: string;
     youtubeId: string;
     title: string;
+    description?: string;
     transcript?: string;
-    script: Script;
+    script?: Script;
     createdAt: Date | { seconds: number; nanoseconds: number };
 }
 
 const COLLECTION_NAME = "video_lessons";
 
-export async function saveVideoLesson(youtubeId: string, title: string, script: Script, transcript?: string) {
+export async function saveVideoLesson(youtubeId: string, title: string, transcript?: string, script?: Script) {
     try {
-        const docRef = await addDoc(collection(db, COLLECTION_NAME), {
+        const payload: any = {
             youtubeId,
             title,
-            transcript,
-            script,
             createdAt: serverTimestamp(),
-        });
+        };
+
+        if (transcript) payload.transcript = transcript;
+        if (script) payload.script = script;
+
+        const docRef = await addDoc(collection(db, COLLECTION_NAME), payload);
         return docRef.id;
     } catch (e) {
         console.error("Error adding document: ", e);

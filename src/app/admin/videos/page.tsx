@@ -69,7 +69,7 @@ export default function AdminVideosPage() {
                     className="flex items-center gap-2 bg-white text-black px-6 py-3 rounded-full font-black uppercase text-sm tracking-wider hover:scale-105 transition-transform"
                 >
                     <Sparkles className="w-4 h-4" />
-                    AI Generate New
+                    New Video
                 </Link>
             </div>
 
@@ -81,7 +81,6 @@ export default function AdminVideosPage() {
                                 <th className="px-6 py-4">Thumbnail</th>
                                 <th className="px-6 py-4">Title & Context</th>
                                 <th className="px-6 py-4">YouTube ID</th>
-                                <th className="px-6 py-4">Linked Script</th>
                                 <th className="px-6 py-4 text-right">Actions</th>
                             </tr>
                         </thead>
@@ -111,23 +110,10 @@ export default function AdminVideosPage() {
                                         </td>
                                         <td className="px-6 py-4">
                                             <div className="font-bold text-base mb-1">{video.title}</div>
-                                            <div className="text-neutral-500 line-clamp-1">{video.script?.title || "No description"}</div>
+                                            <div className="text-neutral-500 line-clamp-1">{video.description || video.script?.title || "No description"}</div>
                                         </td>
                                         <td className="px-6 py-4 font-mono text-neutral-400">
                                             {video.youtubeId}
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            {video.script?.id ? (
-                                                <Link
-                                                    href={`/script/${video.script.id}`}
-                                                    target="_blank"
-                                                    className="inline-flex items-center gap-1 text-primary hover:text-primary/80 font-mono text-xs bg-primary/10 px-2 py-1 rounded"
-                                                >
-                                                    {video.script.id.slice(0, 8)}... <ExternalLink className="w-3 h-3" />
-                                                </Link>
-                                            ) : (
-                                                <span className="text-neutral-600 text-xs italic">Unlinked</span>
-                                            )}
                                         </td>
                                         <td className="px-6 py-4 text-right flex items-center justify-end gap-2 h-full min-h-[5rem]">
                                             <button

@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { AuthProvider } from "@/context/AuthContext";
 import { ProgressProvider } from "@/context/ProgressContext";
-import OnboardingModal from "@/components/OnboardingModal";
 import InstallPrompt from "@/components/InstallPrompt";
 import BottomNav from "@/components/BottomNav";
 import { Inter } from "next/font/google";
@@ -50,7 +49,6 @@ export default function RootLayout({
         <AuthProvider>
           <ProgressProvider>
             {children}
-            <OnboardingModal />
             <InstallPrompt />
             <BottomNav />
           </ProgressProvider>

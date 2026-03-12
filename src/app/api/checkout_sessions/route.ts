@@ -1,11 +1,26 @@
 import { stripe } from "@/lib/stripe";
 import { NextResponse } from "next/server";
+import { getAdminAuth } from "@/lib/firebase-admin";
 
 export async function POST(req: Request) {
   try {
-    const { userId, email, priceId } = await req.json();
+    const authHeader = req.headers.get("authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const token = authHeader.split("Bearer ")[1];
+    let decodedToken;
+    try {
+      decodedToken = await getAdminAuth().verifyIdToken(token);
+    } catch (e) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    
+    // We get userId securely from the token, ignore client's userId
+    const userId = decodedToken.uid;
+    const { email, priceId } = await req.json();
 
-    if (!userId || !priceId) {
+    if (!priceId) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 

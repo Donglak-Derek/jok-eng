@@ -54,7 +54,12 @@ service cloud.firestore {
     // 🟢 Public Scenarios & Collection Groups
     match /{path=**}/scenarios/{scenarioId} {
       allow read: if resource == null || resource.data.isPublic == true || (request.auth != null && resource.data.userId == request.auth.uid);
-      allow write: if request.auth != null && (request.auth.uid == request.resource.data.userId || (request.resource.data.userId == "jok-eng-official" && request.auth.uid == "Hx4sxBjGaLST6c3MRWtrKn60c702"));
+      
+      // Allow creation ONLY if they are creating under their own ID or the admin is creating under official
+      allow create: if request.auth != null && (request.auth.uid == request.resource.data.userId || (request.resource.data.userId == "jok-eng-official" && request.auth.uid == "Hx4sxBjGaLST6c3MRWtrKn60c702"));
+      
+      // Allow updates/deletes ONLY if the EXISTING resource belongs to them or the admin is editing official
+      allow update, delete: if request.auth != null && (resource.data.userId == request.auth.uid || (resource.data.userId == "jok-eng-official" && request.auth.uid == "Hx4sxBjGaLST6c3MRWtrKn60c702"));
     }
 
     // Specific match for official scenarios to be safe

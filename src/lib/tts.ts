@@ -1,6 +1,7 @@
 import { Script, UserProfile } from "@/types";
 import { db } from "./firebase";
 import { doc, getDoc } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
 // Local Memory Cache: Maps API Request URLs to Local Browser Blob URLs
 const audioBlobCache = new Map<string, string>();
@@ -95,9 +96,17 @@ export async function playScenarioAudio(
     options.onStart();
 
     try {
+        // Fetch User Token for Security Bypass
+        const auth = getAuth();
+        const currentUser = auth.currentUser;
+        if (!currentUser) {
+             throw new Error("User must be authenticated to use TTS.");
+        }
+        const token = await currentUser.getIdToken();
+
         // 1. Check Local In-Memory Cache first
         const voice = options.voice || "en-US-Neural2-F"; // Allow override
-        const apiUrl = `/api/tts?text=${encodeURIComponent(textToPlay)}&voice=${voice}`;
+        const apiUrl = `/api/tts?text=${encodeURIComponent(textToPlay)}&voice=${voice}&token=${token}`;
 
         let targetUrl = apiUrl;
 

@@ -4,6 +4,7 @@
     "phase": 1,
     "module": "The Arrival",
     "title": "The Customs Officer",
+    "imageUrl": "/images/missions/day1.png",
     "image_description": "3D clay style, first-person view of a high-tech airport customs booth. A serious officer in a blue uniform is looking down at a passport. Soft cinematic lighting.",
     "strategic_brief": "Speed > Politeness. Officers want nouns, not stories. Answer only what is asked.",
     "cloze_setup": "In this situation, I should be [______] and avoid [______].",
@@ -59,7 +60,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "The 'How are you' is a social handshake. Once you complete it, the 'contract' is signed and you can check your phone."
+    "x_ray": "The 'How are you' is a social handshake. Once you complete it, the 'contract' is signed and you can check your phone.",
+    "imageUrl": "/images/missions/day2.png"
   },
   {
     "day": 3,
@@ -90,7 +92,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "Customer service in the US is a negotiation. If you use 'Soft Openers' like 'Is there any chance...', people want to help you."
+    "x_ray": "Customer service in the US is a negotiation. If you use 'Soft Openers' like 'Is there any chance...', people want to help you.",
+    "imageUrl": "/images/missions/day3.png"
   },
   {
     "day": 4,
@@ -121,7 +124,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "Tipping is the grease that makes the US gears turn. It acknowledges the person, not just the service."
+    "x_ray": "Tipping is the grease that makes the US gears turn. It acknowledges the person, not just the service.",
+    "imageUrl": "/images/missions/day4.png"
   },
   {
     "day": 5,
@@ -152,7 +156,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "In the US, 'Can I get' is a polite command. It sounds confident but friendly."
+    "x_ray": "In the US, 'Can I get' is a polite command. It sounds confident but friendly.",
+    "imageUrl": "/images/missions/day5.png"
   },
   {
     "day": 6,
@@ -183,7 +188,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "'Excuse me' doesn't mean you did something wrong; it means 'I am about to enter your personal bubble.'"
+    "x_ray": "'Excuse me' doesn't mean you did something wrong; it means 'I am about to enter your personal bubble.'",
+    "imageUrl": "/images/missions/day6.png"
   },
   {
     "day": 7,
@@ -214,7 +220,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "Service questions at the *end* of an interaction are just social 'closers.' Just say yes and move on."
+    "x_ray": "Service questions at the *end* of an interaction are just social 'closers.' Just say yes and move on.",
+    "imageUrl": "/images/missions/day7.png"
   },
   {
     "day": 8,
@@ -245,7 +252,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "If the person's feet are moving, the question is a greeting. If their feet are still, it's a conversation."
+    "x_ray": "If the person's feet are moving, the question is a greeting. If their feet are still, it's a conversation.",
+    "imageUrl": "/images/missions/day8.png"
   },
   {
     "day": 9,
@@ -276,7 +284,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "In a crowded city, giving someone silence is the greatest gift you can offer."
+    "x_ray": "In a crowded city, giving someone silence is the greatest gift you can offer.",
+    "imageUrl": "/images/missions/day9.png"
   },
   {
     "day": 10,
@@ -307,7 +316,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "There is no 'wrong' answer here, but knowing the difference is key. The bar is the 'Social Wing' of American dining."
+    "x_ray": "There is no 'wrong' answer here, but knowing the difference is key. The bar is the 'Social Wing' of American dining.",
+    "imageUrl": "/images/missions/day10.png"
   },
   {
     "day": 11,
@@ -338,7 +348,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "Americans tip to be seen as 'Good People.' It's as much about your reputation as it is about the barista's wages."
+    "x_ray": "Americans tip to be seen as 'Good People.' It's as much about your reputation as it is about the barista's wages.",
+    "imageUrl": "/images/missions/day11.png"
   },
   {
     "day": 12,
@@ -369,7 +380,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "The 'Free Refill' is a symbol of American hospitality. Don't overthink the cost; just enjoy the hydration."
+    "x_ray": "The 'Free Refill' is a symbol of American hospitality. Don't overthink the cost; just enjoy the hydration.",
+    "imageUrl": "/images/missions/day12.png"
   },
   {
     "day": 13,
@@ -400,7 +412,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "In America, your money is your power. If you aren't happy, you take your power back. No apology needed."
+    "x_ray": "In America, your money is your power. If you aren't happy, you take your power back. No apology needed.",
+    "imageUrl": "/images/missions/day13.png"
   },
   {
     "day": 14,
@@ -431,7 +444,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "At the pharmacy, you are a record in a database. Help the human find the record as fast as possible."
+    "x_ray": "At the pharmacy, you are a record in a database. Help the human find the record as fast as possible.",
+    "imageUrl": "/images/missions/day14.png"
   },
   {
     "day": 15,
@@ -462,7 +476,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "American service providers consider themselves 'Artists.' Give them a vision, not a math problem."
+    "x_ray": "American service providers consider themselves 'Artists.' Give them a vision, not a math problem.",
+    "imageUrl": "/images/missions/day15.png"
   },
   {
     "day": 16,
@@ -493,7 +508,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "In the US, 'No rush!' usually means 'Please hurry up, but I'm being nice about it.'"
+    "x_ray": "In the US, 'No rush!' usually means 'Please hurry up, but I'm being nice about it.'",
+    "imageUrl": "/images/missions/day16.png"
   },
   {
     "day": 17,
@@ -524,7 +540,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "Helping someone do their job is the fastest way to get what you want. Be a 'Co-Pilot'."
+    "x_ray": "Helping someone do their job is the fastest way to get what you want. Be a 'Co-Pilot'.",
+    "imageUrl": "/images/missions/day17.png"
   },
   {
     "day": 18,
@@ -555,7 +572,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "In America, 'No' is a complete sentence. You don't owe anyone an explanation for your bank account."
+    "x_ray": "In America, 'No' is a complete sentence. You don't owe anyone an explanation for your bank account.",
+    "imageUrl": "/images/missions/day18.png"
   },
   {
     "day": 19,
@@ -586,7 +604,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "If you are standing up while you eat, a 10-15% tip (or a flat $1) is perfectly fine."
+    "x_ray": "If you are standing up while you eat, a 10-15% tip (or a flat $1) is perfectly fine.",
+    "imageUrl": "/images/missions/day19.png"
   },
   {
     "day": 20,
@@ -617,7 +636,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "In American groups, 'Social Peace' is worth more than $5. Don't be the person who makes the math difficult."
+    "x_ray": "In American groups, 'Social Peace' is worth more than $5. Don't be the person who makes the math difficult.",
+    "imageUrl": "/images/missions/day20.png"
   },
   {
     "day": 21,
@@ -648,7 +668,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "The 'Suburb Wave' is a safety signal. It tells the neighbor: 'I am a friendly resident, not a stranger to worry about.'"
+    "x_ray": "The 'Suburb Wave' is a safety signal. It tells the neighbor: 'I am a friendly resident, not a stranger to worry about.'",
+    "imageUrl": "/images/missions/day21.png"
   },
   {
     "day": 22,
@@ -679,7 +700,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "Americans love 'Complaining Up' (complaining about the weather or the building management) to build instant rapport with strangers."
+    "x_ray": "Americans love 'Complaining Up' (complaining about the weather or the building management) to build instant rapport with strangers.",
+    "imageUrl": "/images/missions/day22.png"
   },
   {
     "day": 23,
@@ -710,7 +732,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "In the US, people are very protective of their privacy, but they are 100% open about their pets. Use the pet as your 'Social Passport'."
+    "x_ray": "In the US, people are very protective of their privacy, but they are 100% open about their pets. Use the pet as your 'Social Passport'.",
+    "imageUrl": "/images/missions/day23.png"
   },
   {
     "day": 24,
@@ -741,7 +764,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "The phrase 'Could you help me understand...' is a power move. It forces them to look at the data without feeling blamed."
+    "x_ray": "The phrase 'Could you help me understand...' is a power move. It forces them to look at the data without feeling blamed.",
+    "imageUrl": "/images/missions/day24.png"
   },
   {
     "day": 25,
@@ -772,7 +796,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "Americans view their neighborhood as a shared product. If you keep the product 'clean,' you are welcomed into the club."
+    "x_ray": "Americans view their neighborhood as a shared product. If you keep the product 'clean,' you are welcomed into the club.",
+    "imageUrl": "/images/missions/day25.png"
   },
   {
     "day": 26,
@@ -803,7 +828,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "Neighborhood apps are 'Digital Anthropology.' Use them to see what people care about (Crime, Dogs, Property), but don't get 'muddy'."
+    "x_ray": "Neighborhood apps are 'Digital Anthropology.' Use them to see what people care about (Crime, Dogs, Property), but don't get 'muddy'.",
+    "imageUrl": "/images/missions/day26.png"
   },
   {
     "day": 27,
@@ -834,7 +860,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "In a lonely world, being recognized at your local shop is 'Social Gold.' Keep that relationship warm."
+    "x_ray": "In a lonely world, being recognized at your local shop is 'Social Gold.' Keep that relationship warm.",
+    "imageUrl": "/images/missions/day27.png"
   },
   {
     "day": 28,
@@ -865,7 +892,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "The 'Blame the Third Party' trick (The Walls, The Rules, The Manager) allows you to get what you want without the neighbor hating you."
+    "x_ray": "The 'Blame the Third Party' trick (The Walls, The Rules, The Manager) allows you to get what you want without the neighbor hating you.",
+    "imageUrl": "/images/missions/day28.png"
   },
   {
     "day": 29,
@@ -896,7 +924,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "In the US, 'Whenever' is a way to end a conversation warmly. It is a 'Vibe,' not a 'Time'."
+    "x_ray": "In the US, 'Whenever' is a way to end a conversation warmly. It is a 'Vibe,' not a 'Time'.",
+    "imageUrl": "/images/missions/day29.png"
   },
   {
     "day": 30,
@@ -927,7 +956,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "Even if they say 'Nothing!', bring a 6-pack of soda/beer or a bag of chips. It’s the 'Entry Fee' for American friendship."
+    "x_ray": "Even if they say 'Nothing!', bring a 6-pack of soda/beer or a bag of chips. It’s the 'Entry Fee' for American friendship.",
+    "imageUrl": "/images/missions/day30.png"
   },
   {
     "day": 31,
@@ -958,7 +988,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "American 'Work-Talk' is a mix of 80% professional and 20% personal. Giving a small personal fact (where you are from) makes you 'Safe' to talk to."
+    "x_ray": "American 'Work-Talk' is a mix of 80% professional and 20% personal. Giving a small personal fact (where you are from) makes you 'Safe' to talk to.",
+    "imageUrl": "/images/missions/day31.png"
   },
   {
     "day": 32,
@@ -989,7 +1020,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "Joining a group isn't about what you say; it's about matching their 'Energy Level.' If they are excited, look excited."
+    "x_ray": "Joining a group isn't about what you say; it's about matching their 'Energy Level.' If they are excited, look excited.",
+    "imageUrl": "/images/missions/day32.png"
   },
   {
     "day": 33,
@@ -1020,7 +1052,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "In US digital culture, 'No Emoji = Angry.' Adding a simple thumbs-up or a smile is like a 'Social Insurance' policy."
+    "x_ray": "In US digital culture, 'No Emoji = Angry.' Adding a simple thumbs-up or a smile is like a 'Social Insurance' policy.",
+    "imageUrl": "/images/missions/day33.png"
   },
   {
     "day": 34,
@@ -1051,7 +1084,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "Being 'Good at your job' in America includes being 'Good to be around.' Don't skip the small talk."
+    "x_ray": "Being 'Good at your job' in America includes being 'Good to be around.' Don't skip the small talk.",
+    "imageUrl": "/images/missions/day34.png"
   },
   {
     "day": 35,
@@ -1082,7 +1116,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "Respecting people's 'Inbox Space' is a hidden way to show you are a high-level professional."
+    "x_ray": "Respecting people's 'Inbox Space' is a hidden way to show you are a high-level professional.",
+    "imageUrl": "/images/missions/day35.png"
   },
   {
     "day": 36,
@@ -1113,7 +1148,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "In the US, 'Favors' aren't about the coffee; they are about showing that you are 'Thinking of the Team.'"
+    "x_ray": "In the US, 'Favors' aren't about the coffee; they are about showing that you are 'Thinking of the Team.'",
+    "imageUrl": "/images/missions/day36.png"
   },
   {
     "day": 37,
@@ -1144,7 +1180,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "The phrase 'Got a quick sec?' is the 'Escape Hatch' for Americans. It lets them finish their thought before they talk to you."
+    "x_ray": "The phrase 'Got a quick sec?' is the 'Escape Hatch' for Americans. It lets them finish their thought before they talk to you.",
+    "imageUrl": "/images/missions/day37.png"
   },
   {
     "day": 38,
@@ -1175,7 +1212,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "American style is about 'Effortless Competence.' You want to look like you put in effort, but not like you're worried about it."
+    "x_ray": "American style is about 'Effortless Competence.' You want to look like you put in effort, but not like you're worried about it.",
+    "imageUrl": "/images/missions/day38.png"
   },
   {
     "day": 39,
@@ -1206,7 +1244,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "In the US, 'The Team' is a family-lite. If the family is celebrating, you show up for 5 minutes."
+    "x_ray": "In the US, 'The Team' is a family-lite. If the family is celebrating, you show up for 5 minutes.",
+    "imageUrl": "/images/missions/day39.png"
   },
   {
     "day": 40,
@@ -1237,7 +1276,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "At lunch, you aren't an Engineer; you are a Person who eats. Focus on the 'Person' part."
+    "x_ray": "At lunch, you aren't an Engineer; you are a Person who eats. Focus on the 'Person' part.",
+    "imageUrl": "/images/missions/day40.png"
   },
   {
     "day": 41,
@@ -1268,7 +1308,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "When an American says 'Interesting' without a smile, it usually means 'I disagree, but I don't want to hurt your feelings yet.'"
+    "x_ray": "When an American says 'Interesting' without a smile, it usually means 'I disagree, but I don't want to hurt your feelings yet.'",
+    "imageUrl": "/images/missions/day41.png"
   },
   {
     "day": 42,
@@ -1299,7 +1340,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "'Per my last email' is a 'Yellow Card' in the office. It means: 'I've already told you this, don't make me tell you again.'"
+    "x_ray": "'Per my last email' is a 'Yellow Card' in the office. It means: 'I've already told you this, don't make me tell you again.'",
+    "imageUrl": "/images/missions/day42.png"
   },
   {
     "day": 43,
@@ -1330,7 +1372,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "In the US, 'When you have a chance' is a test of your 'Proactiveness.' It's an invitation to show you prioritize their work."
+    "x_ray": "In the US, 'When you have a chance' is a test of your 'Proactiveness.' It's an invitation to show you prioritize their work.",
+    "imageUrl": "/images/missions/day43.png"
   },
   {
     "day": 44,
@@ -1361,7 +1404,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "The 'Bread' (Praise) is to keep you happy. The 'Meat' (Criticism) is what gets you promoted."
+    "x_ray": "The 'Bread' (Praise) is to keep you happy. The 'Meat' (Criticism) is what gets you promoted.",
+    "imageUrl": "/images/missions/day44.png"
   },
   {
     "day": 45,
@@ -1392,7 +1436,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "In the US, 'Swing by' is a way to lower the pressure of a meeting, but the content of the meeting is still important."
+    "x_ray": "In the US, 'Swing by' is a way to lower the pressure of a meeting, but the content of the meeting is still important.",
+    "imageUrl": "/images/missions/day45.png"
   },
   {
     "day": 46,
@@ -1423,7 +1468,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "In the US, 'I hear you' is the 'Esc' key on the keyboard. It ends the current process gracefully."
+    "x_ray": "In the US, 'I hear you' is the 'Esc' key on the keyboard. It ends the current process gracefully.",
+    "imageUrl": "/images/missions/day46.png"
   },
   {
     "day": 47,
@@ -1454,7 +1500,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "In America, 'Visibility' is currency. Looping someone in is like giving them a seat at the table."
+    "x_ray": "In America, 'Visibility' is currency. Looping someone in is like giving them a seat at the table.",
+    "imageUrl": "/images/missions/day47.png"
   },
   {
     "day": 48,
@@ -1485,7 +1532,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "The 'Weekend Update' is a social glue. It proves you aren't just a work-robot."
+    "x_ray": "The 'Weekend Update' is a social glue. It proves you aren't just a work-robot.",
+    "imageUrl": "/images/missions/day48.png"
   },
   {
     "day": 49,
@@ -1516,7 +1564,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "In the US, 'Sometime' is a way to end a conversation on a 'High Note.' It is a 'Vibe,' not a 'Commitment.'"
+    "x_ray": "In the US, 'Sometime' is a way to end a conversation on a 'High Note.' It is a 'Vibe,' not a 'Commitment.'",
+    "imageUrl": "/images/missions/day49.png"
   },
   {
     "day": 50,
@@ -1547,7 +1596,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "The Annual Review is a 'Sales Pitch' where YOU are the product. If you don't believe in the product, why should they?"
+    "x_ray": "The Annual Review is a 'Sales Pitch' where YOU are the product. If you don't believe in the product, why should they?",
+    "imageUrl": "/images/missions/day50.png"
   },
   {
     "day": 51,
@@ -1578,7 +1628,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "When someone says something obviously false with a straight face, they are inviting you to complain with them through humor."
+    "x_ray": "When someone says something obviously false with a straight face, they are inviting you to complain with them through humor.",
+    "imageUrl": "/images/missions/day51.png"
   },
   {
     "day": 52,
@@ -1609,7 +1660,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "In the US, only confident people make fun of themselves. By laughing, you acknowledge their status and their humility."
+    "x_ray": "In the US, only confident people make fun of themselves. By laughing, you acknowledge their status and their humility.",
+    "imageUrl": "/images/missions/day52.png"
   },
   {
     "day": 53,
@@ -1640,7 +1692,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "You don't need to be an expert on Hollywood. Just react to the *emotion* behind the reference."
+    "x_ray": "You don't need to be an expert on Hollywood. Just react to the *emotion* behind the reference.",
+    "imageUrl": "/images/missions/day53.png"
   },
   {
     "day": 54,
@@ -1671,7 +1724,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "In the US, bad jokes are used to break the tension of a 'Serious' workplace."
+    "x_ray": "In the US, bad jokes are used to break the tension of a 'Serious' workplace.",
+    "imageUrl": "/images/missions/day54.png"
   },
   {
     "day": 55,
@@ -1702,7 +1756,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "Hyperbole is just a way to show 'Enthusiasm.' It’s not a statement of fact."
+    "x_ray": "Hyperbole is just a way to show 'Enthusiasm.' It’s not a statement of fact.",
+    "imageUrl": "/images/missions/day55.png"
   },
   {
     "day": 56,
@@ -1733,7 +1788,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "You don't need to speak like a teenager to be liked. Just 'Understanding' the slang is 90% of the battle."
+    "x_ray": "You don't need to speak like a teenager to be liked. Just 'Understanding' the slang is 90% of the battle.",
+    "imageUrl": "/images/missions/day56.png"
   },
   {
     "day": 57,
@@ -1764,7 +1820,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "If someone jokes about you, joke with them. It shows you have high 'Social EQ' and aren't easily hurt."
+    "x_ray": "If someone jokes about you, joke with them. It shows you have high 'Social EQ' and aren't easily hurt.",
+    "imageUrl": "/images/missions/day57.png"
   },
   {
     "day": 58,
@@ -1795,7 +1852,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "In the US, 'The Game' is the default small talk. Knowing the 'Vibe' of the local team is a huge social advantage."
+    "x_ray": "In the US, 'The Game' is the default small talk. Knowing the 'Vibe' of the local team is a huge social advantage.",
+    "imageUrl": "/images/missions/day58.png"
   },
   {
     "day": 59,
@@ -1826,7 +1884,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "Americans often use 'Negative Irony' to praise someone who is doing so well that it's obvious."
+    "x_ray": "Americans often use 'Negative Irony' to praise someone who is doing so well that it's obvious.",
+    "imageUrl": "/images/missions/day59.png"
   },
   {
     "day": 60,
@@ -1857,7 +1916,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "Happy Hour is a 'Sanctuary.' The person who brings 'Stress' into the 'Sanctuary' is never invited back."
+    "x_ray": "Happy Hour is a 'Sanctuary.' The person who brings 'Stress' into the 'Sanctuary' is never invited back.",
+    "imageUrl": "/images/missions/day60.png"
   },
   {
     "day": 61,
@@ -1888,7 +1948,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "In America, the 'Floor' belongs to whoever takes it. If you wait to be asked, people assume you have nothing to say."
+    "x_ray": "In America, the 'Floor' belongs to whoever takes it. If you wait to be asked, people assume you have nothing to say.",
+    "imageUrl": "/images/missions/day61.png"
   },
   {
     "day": 62,
@@ -1919,7 +1980,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "By framing disagreement as a 'different perspective' based on 'data,' you allow the other person to change their mind without losing face."
+    "x_ray": "By framing disagreement as a 'different perspective' based on 'data,' you allow the other person to change their mind without losing face.",
+    "imageUrl": "/images/missions/day62.png"
   },
   {
     "day": 63,
@@ -1950,7 +2012,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "American bosses value 'Can-do' attitudes. When you ask to 'Prioritize,' you are still saying 'Yes' to their authority while saying 'No' to the workload."
+    "x_ray": "American bosses value 'Can-do' attitudes. When you ask to 'Prioritize,' you are still saying 'Yes' to their authority while saying 'No' to the workload.",
+    "imageUrl": "/images/missions/day63.png"
   },
   {
     "day": 64,
@@ -1981,7 +2044,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "When you defend an idea with 'Logic' rather than 'Feeling,' you become a strategic partner instead of just a 'worker.'"
+    "x_ray": "When you defend an idea with 'Logic' rather than 'Feeling,' you become a strategic partner instead of just a 'worker.'",
+    "imageUrl": "/images/missions/day64.png"
   },
   {
     "day": 65,
@@ -2012,7 +2076,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "In the US, 'Niceness' is often confused with 'Weakness.' Holding your ground shows you believe your ideas have value."
+    "x_ray": "In the US, 'Niceness' is often confused with 'Weakness.' Holding your ground shows you believe your ideas have value.",
+    "imageUrl": "/images/missions/day65.png"
   },
   {
     "day": 66,
@@ -2043,7 +2108,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "In the US, 'Mistakes' are okay. 'Excuses' are not. Own the error to end the conflict immediately."
+    "x_ray": "In the US, 'Mistakes' are okay. 'Excuses' are not. Own the error to end the conflict immediately.",
+    "imageUrl": "/images/missions/day66.png"
   },
   {
     "day": 67,
@@ -2074,7 +2140,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "Good leaders protect the team's standards. High-vibe conflict means being honest enough to help someone grow."
+    "x_ray": "Good leaders protect the team's standards. High-vibe conflict means being honest enough to help someone grow.",
+    "imageUrl": "/images/missions/day67.png"
   },
   {
     "day": 68,
@@ -2105,7 +2172,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "Managers care about 'Results.' If you frame conflict as an obstacle to results, they will move mountains for you."
+    "x_ray": "Managers care about 'Results.' If you frame conflict as an obstacle to results, they will move mountains for you.",
+    "imageUrl": "/images/missions/day68.png"
   },
   {
     "day": 69,
@@ -2136,7 +2204,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "American clients value 'Predictability' over 'Politeness.' Tell them the truth today so they can plan for it."
+    "x_ray": "American clients value 'Predictability' over 'Politeness.' Tell them the truth today so they can plan for it.",
+    "imageUrl": "/images/missions/day69.png"
   },
   {
     "day": 70,
@@ -2167,7 +2236,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "Conflict is the 'Fire' that makes the 'Steel' of a great project. Jump into the fire to lead the way out."
+    "x_ray": "Conflict is the 'Fire' that makes the 'Steel' of a great project. Jump into the fire to lead the way out.",
+    "imageUrl": "/images/missions/day70.png"
   },
   {
     "day": 71,
@@ -2198,7 +2268,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "Executives think in 'Numbers' and 'Growth.' If you talk their language, they remember your name."
+    "x_ray": "Executives think in 'Numbers' and 'Growth.' If you talk their language, they remember your name.",
+    "imageUrl": "/images/missions/day71.png"
   },
   {
     "day": 72,
@@ -2229,7 +2300,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "The 'Humble-Brag' formula: [Achievement] + [Gratitude for Team] + [Future Goal]."
+    "x_ray": "The 'Humble-Brag' formula: [Achievement] + [Gratitude for Team] + [Future Goal].",
+    "imageUrl": "/images/missions/day72.png"
   },
   {
     "day": 73,
@@ -2260,7 +2332,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "In the US, 'Making the rounds' is a standard networking phrase that implies you are a busy, in-demand professional."
+    "x_ray": "In the US, 'Making the rounds' is a standard networking phrase that implies you are a busy, in-demand professional.",
+    "imageUrl": "/images/missions/day73.png"
   },
   {
     "day": 74,
@@ -2291,7 +2364,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "Internal mobility in the US is about 'Internal Marketing.' Show them how you make their life easier."
+    "x_ray": "Internal mobility in the US is about 'Internal Marketing.' Show them how you make their life easier.",
+    "imageUrl": "/images/missions/day74.png"
   },
   {
     "day": 75,
@@ -2322,7 +2396,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "The best time to network is when you *don't* need a job. It builds a foundation of genuine trust."
+    "x_ray": "The best time to network is when you *don't* need a job. It builds a foundation of genuine trust.",
+    "imageUrl": "/images/missions/day75.png"
   },
   {
     "day": 76,
@@ -2353,7 +2428,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "American audiences crave 'Engagement.' Even if you are nervous, fake the energy until you feel it."
+    "x_ray": "American audiences crave 'Engagement.' Even if you are nervous, fake the energy until you feel it.",
+    "imageUrl": "/images/missions/day76.png"
   },
   {
     "day": 77,
@@ -2384,7 +2460,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "Being a 'Connector' is a high-status role. When you help others network, you increase your own value."
+    "x_ray": "Being a 'Connector' is a high-status role. When you help others network, you increase your own value.",
+    "imageUrl": "/images/missions/day77.png"
   },
   {
     "id": 78,
@@ -2416,7 +2493,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "Social media for professionals is about 'Proof of Work.' Every comment is a tiny resume."
+    "x_ray": "Social media for professionals is about 'Proof of Work.' Every comment is a tiny resume.",
+    "imageUrl": "/images/missions/day78.png"
   },
   {
     "day": 79,
@@ -2447,7 +2525,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "In the US, people love to give advice but they hate to give 'Commitment.' Start small and build the habit."
+    "x_ray": "In the US, people love to give advice but they hate to give 'Commitment.' Start small and build the habit.",
+    "imageUrl": "/images/missions/day79.png"
   },
   {
     "day": 80,
@@ -2478,7 +2557,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "In the final round, it’s not about 'Can you do the job?' it’s 'Do we want to win with you?'"
+    "x_ray": "In the final round, it’s not about 'Can you do the job?' it’s 'Do we want to win with you?'",
+    "imageUrl": "/images/missions/day80.png"
   },
   {
     "day": 81,
@@ -2509,7 +2589,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "Americans respect people who know their 'Market Value.' If you don't ask for it, they assume you don't know it."
+    "x_ray": "Americans respect people who know their 'Market Value.' If you don't ask for it, they assume you don't know it.",
+    "imageUrl": "/images/missions/day81.png"
   },
   {
     "day": 82,
@@ -2540,7 +2621,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "The 'Two-Week Notice' is a test of character. Leaving with a 'Succession Plan' is the ultimate professional move."
+    "x_ray": "The 'Two-Week Notice' is a test of character. Leaving with a 'Succession Plan' is the ultimate professional move.",
+    "imageUrl": "/images/missions/day82.png"
   },
   {
     "day": 83,
@@ -2571,7 +2653,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "A 'Power Player' makes their boss look good. When your boss succeeds because of you, you rise with them."
+    "x_ray": "A 'Power Player' makes their boss look good. When your boss succeeds because of you, you rise with them.",
+    "imageUrl": "/images/missions/day83.png"
   },
   {
     "day": 84,
@@ -2602,7 +2685,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "In the US, 'Noise' is cheap. 'Clarity' is expensive. Be the one who provides clarity."
+    "x_ray": "In the US, 'Noise' is cheap. 'Clarity' is expensive. Be the one who provides clarity.",
+    "imageUrl": "/images/missions/day84.png"
   },
   {
     "day": 85,
@@ -2633,7 +2717,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "The 'Hero's Journey' is the default American logic. Your user is the hero; your app is the sword."
+    "x_ray": "The 'Hero's Journey' is the default American logic. Your user is the hero; your app is the sword.",
+    "imageUrl": "/images/missions/day85.png"
   },
   {
     "day": 86,
@@ -2664,7 +2749,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "The US is a continent, not a country. A 'Power Player' knows which version of 'American' to speak."
+    "x_ray": "The US is a continent, not a country. A 'Power Player' knows which version of 'American' to speak.",
+    "imageUrl": "/images/missions/day86.png"
   },
   {
     "day": 87,
@@ -2695,7 +2781,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "In a flat hierarchy, 'Social Capital' is the only currency. Spend it by helping others first."
+    "x_ray": "In a flat hierarchy, 'Social Capital' is the only currency. Spend it by helping others first.",
+    "imageUrl": "/images/missions/day87.png"
   },
   {
     "day": 88,
@@ -2726,7 +2813,8 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "Availability is not the same as Value. A 'Power Player' is available when it matters, not whenever they are called."
+    "x_ray": "Availability is not the same as Value. A 'Power Player' is available when it matters, not whenever they are called.",
+    "imageUrl": "/images/missions/day88.png"
   },
   {
     "day": 89,
@@ -2757,7 +2845,8 @@
         "allow_retry": true
       }
     ],
-    "x_ray": "In the C-Suite, 'Time' is the most expensive resource. If you save them time, you are an ally."
+    "x_ray": "In the C-Suite, 'Time' is the most expensive resource. If you save them time, you are an ally.",
+    "imageUrl": "/images/missions/day89.png"
   },
   {
     "day": 90,
@@ -2788,6 +2877,7 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "The journey from Day 1 to Day 90 wasn't about words. It was about the person you became while saying them."
+    "x_ray": "The journey from Day 1 to Day 90 wasn't about words. It was about the person you became while saying them.",
+    "imageUrl": "/images/missions/day90.png"
   }
 ]

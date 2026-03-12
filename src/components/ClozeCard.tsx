@@ -11,6 +11,7 @@ import { db } from "@/lib/firebase";
 import { doc, updateDoc } from "firebase/firestore";
 import { toast } from "react-hot-toast";
 import { UserScript } from "@/types";
+import { getAuth } from "firebase/auth";
 
 type Props = {
   sentence: Sentence;
@@ -143,7 +144,9 @@ export default function ClozeCard({
     } else {
       // Fallback for Preview (No Script Object)
       try {
+        const token = await getAuth().currentUser?.getIdToken();
         const params = new URLSearchParams({ text: cleanText(textToDisplay), voice: "en-US-AriaNeural" });
+        if (token) params.append("token", token);
         const audio = new Audio(`/api/tts?${params}`);
         audioRef.current = audio;
 

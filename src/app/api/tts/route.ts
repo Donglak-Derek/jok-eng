@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as googleTTS from "google-tts-api";
-import { getAdminStorage } from "@/lib/firebase-admin";
+import { getAdminStorage, getAdminAuth } from "@/lib/firebase-admin";
 import crypto from "crypto";
 
 const GOOGLE_API_KEY = process.env.GOOGLE_TTS_API_KEY;
@@ -9,6 +9,17 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const text = searchParams.get("text");
     const voice = searchParams.get("voice") || "en-US-AriaNeural";
+    const token = searchParams.get("token");
+
+    if (!token) {
+        return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    try {
+        await getAdminAuth().verifyIdToken(token);
+    } catch (e) {
+        return new NextResponse("Unauthorized", { status: 401 });
+    }
 
     if (!text) {
         return new NextResponse("Missing text", { status: 400 });
