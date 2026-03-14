@@ -95,13 +95,18 @@ export async function playScenarioAudio(
     stopCurrentAudio();
     options.onStart();
 
+    const auth = getAuth();
+    const currentUser = auth.currentUser;
+
+    if (!currentUser) {
+        // SYNCHRONOUS FALLBACK: Must run immediately to satisfy Safari's strict play-on-click rules
+        console.warn("Guest user: Falling back to native TTS synchronously");
+        speakNative(textToPlay, () => {}, options.onEnd);
+        return;
+    }
+
     try {
         // Fetch User Token for Security Bypass
-        const auth = getAuth();
-        const currentUser = auth.currentUser;
-        if (!currentUser) {
-             throw new Error("User must be authenticated to use TTS.");
-        }
         const token = await currentUser.getIdToken();
 
         // 1. Check Local In-Memory Cache first
@@ -159,7 +164,7 @@ export async function playScenarioAudio(
     } catch (e) {
         console.error("TTS Logic Error", e);
         // Fallback to native if API fails entirely
-        speakNative(textToPlay, options.onStart, options.onEnd);
+        speakNative(textToPlay, () => {}, options.onEnd);
     }
 }
 

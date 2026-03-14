@@ -87,6 +87,11 @@ export default function ScenarioCard({
                             <h3 className="font-bold text-lg text-foreground leading-tight group-hover:text-primary transition-colors mb-1">
                                 {script.title}
                             </h3>
+                            {script.categoryName && (
+                                <p className="text-xs font-bold uppercase tracking-wider text-primary mb-1">
+                                    {script.categoryName}
+                                </p>
+                            )}
                             <p className="text-muted-foreground text-sm line-clamp-2 leading-relaxed opacity-90">
                                 {script.cleanedEnglish || script.context}
                             </p>

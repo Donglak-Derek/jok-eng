@@ -9,8 +9,8 @@
     "strategic_brief": "Speed > Politeness. Officers want nouns, not stories. Answer only what is asked.",
     "cloze_setup": "In this situation, I should be [______] and avoid [______].",
     "cloze_keywords": [
-      "Direct",
-      "Stories"
+      "on my toes",
+      "jumping the gun"
     ],
     "scenario_text": "The officer looks up and asks: 'What is the purpose of your visit?'",
     "options": [
@@ -29,7 +29,11 @@
         "allow_retry": false
       }
     ],
-    "x_ray": "Americans in authority roles prioritize efficiency. Short answers signal that you have nothing to hide."
+    "x_ray": "Americans in authority roles prioritize efficiency. Short answers signal that you have nothing to hide.",
+    "cloze_translations": {
+      "on my toes": "정신을 바짝 차리다",
+      "jumping the gun": "성급하게 굴다"
+    }
   },
   {
     "day": 2,
@@ -38,10 +42,10 @@
     "title": "The Uber Greeting",
     "image_description": "3D clay style, view from the sidewalk looking into an open back door of a clean white car. A friendly driver is waving from the front seat.",
     "strategic_brief": "The 'Vibe Check.' A brief, friendly acknowledgement allows you to sit in silence later.",
-    "cloze_setup": "A quick [______] is required, but a long [______] is optional.",
+    "cloze_setup": "A quick [______] is [______], but a long [______] is [______].",
     "cloze_keywords": [
-      "Greeting",
-      "Conversation"
+      "required",
+      "optional"
     ],
     "scenario_text": "You get in. The driver says: 'Hey! How's your morning going so far?'",
     "options": [
@@ -61,7 +65,11 @@
       }
     ],
     "x_ray": "The 'How are you' is a social handshake. Once you complete it, the 'contract' is signed and you can check your phone.",
-    "imageUrl": "/images/missions/day2.png"
+    "imageUrl": "/images/missions/day2.png",
+    "cloze_translations": {
+      "required": "필수적인",
+      "optional": "선택적인"
+    }
   },
   {
     "day": 3,
@@ -72,8 +80,8 @@
     "strategic_brief": "The 'Special Request.' In the US, it is okay to ask for a better experience if you are polite.",
     "cloze_setup": "I can [______] for a better room if I am [______].",
     "cloze_keywords": [
-      "Ask",
-      "Polite"
+      "petition",
+      "entitled"
     ],
     "scenario_text": "The receptionist says: 'I have you in room 302.' You wanted a higher floor. What do you say?",
     "options": [
@@ -93,7 +101,11 @@
       }
     ],
     "x_ray": "Customer service in the US is a negotiation. If you use 'Soft Openers' like 'Is there any chance...', people want to help you.",
-    "imageUrl": "/images/missions/day3.png"
+    "imageUrl": "/images/missions/day3.png",
+    "cloze_translations": {
+      "petition": "청원하다, 간청하다",
+      "entitled": "자격이 있는, 권리가 있는"
+    }
   },
   {
     "day": 4,
@@ -104,8 +116,9 @@
     "strategic_brief": "The Hand-off. Tipping for physical help is immediate and cash-based.",
     "cloze_setup": "Tipping is a [______] for someone's [______].",
     "cloze_keywords": [
-      "Reward",
-      "Effort"
+      "gratuity",
+      "service",
+      "token of appreciation"
     ],
     "scenario_text": "The bellhop finishes placing your bags. It’s time for the tip. How do you handle it?",
     "options": [
@@ -125,7 +138,12 @@
       }
     ],
     "x_ray": "Tipping is the grease that makes the US gears turn. It acknowledges the person, not just the service.",
-    "imageUrl": "/images/missions/day4.png"
+    "imageUrl": "/images/missions/day4.png",
+    "cloze_translations": {
+      "gratuity": "봉사료",
+      "service": "서비스",
+      "token of appreciation": "감사의 표시"
+    }
   },
   {
     "day": 5,
@@ -136,8 +154,8 @@
     "strategic_brief": "The Modification. Customizing your order is not annoying; it’s expected.",
     "cloze_setup": "Ordering coffee is about [______] and [______].",
     "cloze_keywords": [
-      "Speed",
-      "Precision"
+      "grab and go",
+      "daily ritual"
     ],
     "scenario_text": "The barista asks: 'What can I get for you?' You want a Latte with oat milk.",
     "options": [
@@ -157,7 +175,11 @@
       }
     ],
     "x_ray": "In the US, 'Can I get' is a polite command. It sounds confident but friendly.",
-    "imageUrl": "/images/missions/day5.png"
+    "imageUrl": "/images/missions/day5.png",
+    "cloze_translations": {
+      "grab and go": "간편하게 사서 가기",
+      "daily ritual": "일상의 의식"
+    }
   },
   {
     "day": 6,
@@ -166,10 +188,10 @@
     "title": "The Grocery Aisle",
     "image_description": "3D clay style, a grocery store aisle with colorful cereal boxes. Another shopper is blocking the shelf you need to reach.",
     "strategic_brief": "The 3-Foot Rule. Respecting personal space is the highest social law in the US.",
-    "cloze_setup": "I should use the phrase [______] to enter someone's [______].",
+    "cloze_setup": "I should use the [______] [______] to [______] [______].",
     "cloze_keywords": [
-      "Excuse me",
-      "Space"
+      "phrase",
+      "enter someone's"
     ],
     "scenario_text": "Someone is standing in front of the cereal you want. How do you get past?",
     "options": [
@@ -189,7 +211,11 @@
       }
     ],
     "x_ray": "'Excuse me' doesn't mean you did something wrong; it means 'I am about to enter your personal bubble.'",
-    "imageUrl": "/images/missions/day6.png"
+    "imageUrl": "/images/missions/day6.png",
+    "cloze_translations": {
+      "phrase": "어구",
+      "enter someone's": "누구의 ~에 들어가다"
+    }
   },
   {
     "day": 7,
@@ -200,8 +226,8 @@
     "strategic_brief": "The 'Did you find everything?' Script. This is a ritual, not a survey.",
     "cloze_setup": "This question is a [______], not a real [______].",
     "cloze_keywords": [
-      "Routine",
-      "Investigation"
+      "loaded question",
+      "rhetorical question"
     ],
     "scenario_text": "The cashier asks: 'Did you find everything okay today?'",
     "options": [
@@ -221,7 +247,11 @@
       }
     ],
     "x_ray": "Service questions at the *end* of an interaction are just social 'closers.' Just say yes and move on.",
-    "imageUrl": "/images/missions/day7.png"
+    "imageUrl": "/images/missions/day7.png",
+    "cloze_translations": {
+      "loaded question": "유도 질문",
+      "rhetorical question": "수사 의문문"
+    }
   },
   {
     "day": 8,
@@ -230,10 +260,10 @@
     "title": "The 'How are you?' Trap",
     "image_description": "3D clay style, walking past a coworker or neighbor in a hallway. They are walking the opposite direction and don't stop.",
     "strategic_brief": "The Drive-by Greeting. 'How are you' is often just another way of saying 'Hello.'",
-    "cloze_setup": "When someone is [______], 'How are you' is just a [______].",
+    "cloze_setup": "When someone is [______], 'How are you' is [______] a [______].",
     "cloze_keywords": [
-      "Moving",
-      "Greeting"
+      "'How are you'",
+      "just"
     ],
     "scenario_text": "A neighbor walks past you quickly and says 'Hey, how's it going?' as they keep walking.",
     "options": [
@@ -253,7 +283,11 @@
       }
     ],
     "x_ray": "If the person's feet are moving, the question is a greeting. If their feet are still, it's a conversation.",
-    "imageUrl": "/images/missions/day8.png"
+    "imageUrl": "/images/missions/day8.png",
+    "cloze_translations": {
+      "'How are you'": "잘 지내세요?",
+      "just": "단지"
+    }
   },
   {
     "day": 9,
@@ -262,10 +296,11 @@
     "title": "Public Transit Rules",
     "image_description": "3D clay style, inside a subway car or bus. People are sitting with headphones on, looking at their phones.",
     "strategic_brief": "The Invisible Wall. In public transit, 'polite' means 'leaving people alone.'",
-    "cloze_setup": "Public transit is a [______] space where people want [______].",
+    "cloze_setup": "[______] is a [______] space where people want [______].",
     "cloze_keywords": [
-      "Shared",
-      "Privacy"
+      "Public transit",
+      "shared space",
+      "personal space"
     ],
     "scenario_text": "You sit down next to someone. Should you try to make small talk?",
     "options": [
@@ -285,7 +320,12 @@
       }
     ],
     "x_ray": "In a crowded city, giving someone silence is the greatest gift you can offer.",
-    "imageUrl": "/images/missions/day9.png"
+    "imageUrl": "/images/missions/day9.png",
+    "cloze_translations": {
+      "Public transit": "대중교통",
+      "shared space": "공유 공간",
+      "personal space": "개인 공간"
+    }
   },
   {
     "day": 10,
@@ -294,10 +334,10 @@
     "title": "The Solo Dinner",
     "image_description": "3D clay style, a warm restaurant interior with a bar area and tables. A host is waiting to seat you.",
     "strategic_brief": "Bar vs. Table. Where you sit determines your 'Social Availability.'",
-    "cloze_setup": "Sitting at the [______] is for talking; the [______] is for privacy.",
+    "cloze_setup": "Sitting at the [______] is for [______]; the [______] is for [______].",
     "cloze_keywords": [
-      "Bar",
-      "Table"
+      "privacy",
+      "talking"
     ],
     "scenario_text": "The host asks: 'Just one? Would you like a table or a spot at the bar?'",
     "options": [
@@ -317,7 +357,11 @@
       }
     ],
     "x_ray": "There is no 'wrong' answer here, but knowing the difference is key. The bar is the 'Social Wing' of American dining.",
-    "imageUrl": "/images/missions/day10.png"
+    "imageUrl": "/images/missions/day10.png",
+    "cloze_translations": {
+      "privacy": "사생활",
+      "talking": "대화"
+    }
   },
   {
     "day": 11,
@@ -360,8 +404,8 @@
     "strategic_brief": "Abundance Logic. In the US, basic drinks (Water, Soda, Drip Coffee) are usually bottomless. You don't need to ask every time.",
     "cloze_setup": "Refills are often [______], so I don't need to be [______].",
     "cloze_keywords": [
-      "Automatic",
-      "Shy"
+      "bottomless",
+      "sparing"
     ],
     "scenario_text": "Your glass is half-empty. You want more, but you're worried about the cost. How do you handle it?",
     "options": [
@@ -381,7 +425,11 @@
       }
     ],
     "x_ray": "The 'Free Refill' is a symbol of American hospitality. Don't overthink the cost; just enjoy the hydration.",
-    "imageUrl": "/images/missions/day12.png"
+    "imageUrl": "/images/missions/day12.png",
+    "cloze_translations": {
+      "bottomless": "무한 리필",
+      "sparing": "아끼는"
+    }
   },
   {
     "day": 13,
@@ -392,8 +440,8 @@
     "strategic_brief": "The Right to Change Your Mind. In the US, 'The Customer is Always Right' is the law. You don't need a deep excuse to return something.",
     "cloze_setup": "I can be [______] about my return without being [______].",
     "cloze_keywords": [
-      "Direct",
-      "Apologetic"
+      "optimistic",
+      "presumptuous"
     ],
     "scenario_text": "The clerk asks: 'Is there anything wrong with the item, or did you just change your mind?'",
     "options": [
@@ -413,7 +461,11 @@
       }
     ],
     "x_ray": "In America, your money is your power. If you aren't happy, you take your power back. No apology needed.",
-    "imageUrl": "/images/missions/day13.png"
+    "imageUrl": "/images/missions/day13.png",
+    "cloze_translations": {
+      "optimistic": "낙관적인",
+      "presumptuous": "주제넘은"
+    }
   },
   {
     "day": 14,
@@ -422,10 +474,10 @@
     "title": "The Pharmacy Script",
     "image_description": "3D clay style, a pharmacy counter. A pharmacist in a white coat is looking at a computer screen. Signs for 'Pick Up' and 'Drop Off' are visible.",
     "strategic_brief": "The Identity Check. Picking up medicine is a rapid-fire exchange of personal data (Name/Birthday).",
-    "cloze_setup": "Speed is key. I should lead with my [______] and [______].",
+    "cloze_setup": "Speed is [______]. I should [______] my [______] and [______].",
     "cloze_keywords": [
-      "Last Name",
-      "Birthdate"
+      "key",
+      "lead with"
     ],
     "scenario_text": "The pharmacist says: 'Hi, picking up?'",
     "options": [
@@ -445,7 +497,11 @@
       }
     ],
     "x_ray": "At the pharmacy, you are a record in a database. Help the human find the record as fast as possible.",
-    "imageUrl": "/images/missions/day14.png"
+    "imageUrl": "/images/missions/day14.png",
+    "cloze_translations": {
+      "key": "핵심",
+      "lead with": "앞세우다"
+    }
   },
   {
     "day": 15,
@@ -454,10 +510,11 @@
     "title": "The Haircut Vibe",
     "image_description": "3D clay style, sitting in a barber chair looking at a mirror. A barber with tattoos is holding a comb and scissors.",
     "strategic_brief": "The Visual Goal. Don't describe the process (cut 2 inches); describe the result (clean and professional).",
-    "cloze_setup": "I should describe the [______] I want, not just the [______].",
+    "cloze_setup": "I [______] [______] the [______] I want, [______] the [______].",
     "cloze_keywords": [
-      "Style",
-      "Measurement"
+      "should",
+      "describe",
+      "not just"
     ],
     "scenario_text": "The barber asks: 'So, what are we doing today?'",
     "options": [
@@ -477,7 +534,12 @@
       }
     ],
     "x_ray": "American service providers consider themselves 'Artists.' Give them a vision, not a math problem.",
-    "imageUrl": "/images/missions/day15.png"
+    "imageUrl": "/images/missions/day15.png",
+    "cloze_translations": {
+      "should": "~해야 한다",
+      "describe": "묘사하다, 설명하다",
+      "not just": "단지 ~만은 아니다"
+    }
   },
   {
     "day": 16,
@@ -488,8 +550,8 @@
     "strategic_brief": "The 'Check-in.' If service is slow, you have the right to ask, but keep the 'Vibe' collaborative, not accusatory.",
     "cloze_setup": "I should ask for an [______], not a [______].",
     "cloze_keywords": [
-      "Update",
-      "Reason"
+      "alleviation",
+      "impediment"
     ],
     "scenario_text": "You've been waiting for a long time. How do you catch the server's attention?",
     "options": [
@@ -509,7 +571,11 @@
       }
     ],
     "x_ray": "In the US, 'No rush!' usually means 'Please hurry up, but I'm being nice about it.'",
-    "imageUrl": "/images/missions/day16.png"
+    "imageUrl": "/images/missions/day16.png",
+    "cloze_translations": {
+      "alleviation": "완화",
+      "impediment": "방해"
+    }
   },
   {
     "day": 17,
@@ -520,8 +586,8 @@
     "strategic_brief": "Landmark Logic. Americans navigate by 'big things' (next to the red sign), not just numbers.",
     "cloze_setup": "I should give the driver a [______] to help them [______].",
     "cloze_keywords": [
-      "Landmark",
-      "Navigate"
+      "heads-up",
+      "help out"
     ],
     "scenario_text": "The driver is lost. What do you text them?",
     "options": [
@@ -541,7 +607,11 @@
       }
     ],
     "x_ray": "Helping someone do their job is the fastest way to get what you want. Be a 'Co-Pilot'.",
-    "imageUrl": "/images/missions/day17.png"
+    "imageUrl": "/images/missions/day17.png",
+    "cloze_translations": {
+      "heads-up": "미리 알려주기",
+      "help out": "돕다"
+    }
   },
   {
     "day": 18,
@@ -552,8 +622,9 @@
     "strategic_brief": "The Firm Boundary. Salespeople in the US are trained to be 'Aggressively Friendly.' You must be 'Friendly but Firm.'",
     "cloze_setup": "I can say [______] without feeling [______].",
     "cloze_keywords": [
-      "No",
-      "Guilty"
+      "speak one's mind",
+      "mince words",
+      "take offense"
     ],
     "scenario_text": "The staff member says: 'But for just $10 more, you get the sauna! Don't you want the sauna?'",
     "options": [
@@ -573,7 +644,12 @@
       }
     ],
     "x_ray": "In America, 'No' is a complete sentence. You don't owe anyone an explanation for your bank account.",
-    "imageUrl": "/images/missions/day18.png"
+    "imageUrl": "/images/missions/day18.png",
+    "cloze_translations": {
+      "speak one's mind": "솔직하게 말하다",
+      "mince words": "돌려 말하다",
+      "take offense": "기분 상하다"
+    }
   },
   {
     "day": 19,
@@ -582,10 +658,10 @@
     "title": "The iPad Flip Anxiety",
     "image_description": "3D clay style, a person standing at a fast-casual salad shop. The worker is looking at them while they decide on the tip screen.",
     "strategic_brief": "The Social Pressure. The iPad tip screen is designed to make you feel watched. Stay calm.",
-    "cloze_setup": "The tip screen is a [______], not a [______].",
+    "cloze_setup": "The [______] is a [______], [______] [______].",
     "cloze_keywords": [
-      "Choice",
-      "Commandment"
+      "tip screen",
+      "not a"
     ],
     "scenario_text": "You are at a Subway-style shop. They just handed you a sandwich. The 20% tip button is staring at you.",
     "options": [
@@ -605,7 +681,11 @@
       }
     ],
     "x_ray": "If you are standing up while you eat, a 10-15% tip (or a flat $1) is perfectly fine.",
-    "imageUrl": "/images/missions/day19.png"
+    "imageUrl": "/images/missions/day19.png",
+    "cloze_translations": {
+      "tip screen": "팁 화면",
+      "not a": "~가 아니다"
+    }
   },
   {
     "day": 20,
@@ -616,8 +696,8 @@
     "strategic_brief": "The Venmo Dance. One person usually pays the whole bill, and everyone else 'Venmos' them immediately.",
     "cloze_setup": "Splitting the bill is about [______] and [______].",
     "cloze_keywords": [
-      "Trust",
-      "Speed"
+      "fairness",
+      "mutual respect"
     ],
     "scenario_text": "The bill comes. Your new friend says: 'I'll just put it on my card and you guys can Venmo me.'",
     "options": [
@@ -637,7 +717,11 @@
       }
     ],
     "x_ray": "In American groups, 'Social Peace' is worth more than $5. Don't be the person who makes the math difficult.",
-    "imageUrl": "/images/missions/day20.png"
+    "imageUrl": "/images/missions/day20.png",
+    "cloze_translations": {
+      "fairness": "공정성",
+      "mutual respect": "상호 존중"
+    }
   },
   {
     "day": 21,
@@ -646,10 +730,10 @@
     "title": "The Garage Door Wave",
     "image_description": "3D clay style, first-person view from a driveway. A neighbor is standing across the street by their mailbox, looking toward you.",
     "strategic_brief": "The 3-Second Rule. In the US, a hand wave is a social 'Ping.' It says 'I see you and we are cool,' without requiring a conversation.",
-    "cloze_setup": "A wave is a [______] acknowledgement that protects my [______].",
+    "cloze_setup": "A [______] is a [______] [______] that protects my [______].",
     "cloze_keywords": [
-      "Visual",
-      "Privacy"
+      "wave",
+      "acknowledgement"
     ],
     "scenario_text": "You are getting mail and see your neighbor across the street. They look at you. What do you do?",
     "options": [
@@ -669,7 +753,11 @@
       }
     ],
     "x_ray": "The 'Suburb Wave' is a safety signal. It tells the neighbor: 'I am a friendly resident, not a stranger to worry about.'",
-    "imageUrl": "/images/missions/day21.png"
+    "imageUrl": "/images/missions/day21.png",
+    "cloze_translations": {
+      "wave": "파동",
+      "acknowledgement": "인정"
+    }
   },
   {
     "day": 22,
@@ -678,10 +766,10 @@
     "title": "The Mailroom Chat",
     "image_description": "3D clay style, a modern apartment mailroom with rows of silver lockers. A neighbor is struggling with a large Amazon box.",
     "strategic_brief": "The Shared Space. Small talk in mailrooms is 100% about the environment (the heat, the packages, the elevator).",
-    "cloze_setup": "I should talk about the [______] rather than [______] questions.",
+    "cloze_setup": "I should [______] the [______] [______] [______] questions.",
     "cloze_keywords": [
-      "Environment",
-      "Personal"
+      "rather than",
+      "talk about"
     ],
     "scenario_text": "You're both getting mail. The neighbor says: 'Man, the AC is totally broken in the lobby today.'",
     "options": [
@@ -701,7 +789,11 @@
       }
     ],
     "x_ray": "Americans love 'Complaining Up' (complaining about the weather or the building management) to build instant rapport with strangers.",
-    "imageUrl": "/images/missions/day22.png"
+    "imageUrl": "/images/missions/day22.png",
+    "cloze_translations": {
+      "rather than": "~보다는",
+      "talk about": "~에 대해 이야기하다"
+    }
   },
   {
     "day": 23,
@@ -742,10 +834,10 @@
     "title": "The Utility Call",
     "image_description": "3D clay style, holding a phone to your ear. The screen shows 'Electricity Co. - On Hold'. You need to fix a billing error.",
     "strategic_brief": "The Polite Persistence. Customer service agents handle angry people all day. Being the 'Nice One' gets you better results.",
-    "cloze_setup": "Being [______] makes the agent want to [______] me.",
+    "cloze_setup": "[______] [______] makes the agent [______] [______] me.",
     "cloze_keywords": [
-      "Kind",
-      "Help"
+      "Being",
+      "want to"
     ],
     "scenario_text": "The agent finally answers: 'How can I help you today?'",
     "options": [
@@ -765,7 +857,11 @@
       }
     ],
     "x_ray": "The phrase 'Could you help me understand...' is a power move. It forces them to look at the data without feeling blamed.",
-    "imageUrl": "/images/missions/day24.png"
+    "imageUrl": "/images/missions/day24.png",
+    "cloze_translations": {
+      "Being": "~하는 것",
+      "want to": "~하고 싶다"
+    }
   },
   {
     "day": 25,
@@ -774,10 +870,10 @@
     "title": "The Trash Rules",
     "image_description": "3D clay style, a sidewalk with a Blue (Recycle) bin and a Black (Trash) bin. A neighbor is watching you from their window.",
     "strategic_brief": "The 'Good Citizen' Test. In many US neighborhoods, how you handle your trash is how neighbors judge your character.",
-    "cloze_setup": "Following the [______] shows I respect the [______].",
+    "cloze_setup": "[______] the [______] shows I [______] the [______].",
     "cloze_keywords": [
-      "Rules",
-      "Community"
+      "Following",
+      "respect"
     ],
     "scenario_text": "You have a large cardboard box. What is the 'Pro' move?",
     "options": [
@@ -797,7 +893,11 @@
       }
     ],
     "x_ray": "Americans view their neighborhood as a shared product. If you keep the product 'clean,' you are welcomed into the club.",
-    "imageUrl": "/images/missions/day25.png"
+    "imageUrl": "/images/missions/day25.png",
+    "cloze_translations": {
+      "Following": "이어서",
+      "respect": "존경하다"
+    }
   },
   {
     "day": 26,
@@ -808,8 +908,8 @@
     "strategic_brief": "The Digital Fence. Neighborhood apps are for 'Observation,' not for joining every argument.",
     "cloze_setup": "I should [______] more than I [______] on these apps.",
     "cloze_keywords": [
-      "Watch",
-      "Post"
+      "create",
+      "consume"
     ],
     "scenario_text": "You see people arguing about a local park in the app. What do you do?",
     "options": [
@@ -829,7 +929,11 @@
       }
     ],
     "x_ray": "Neighborhood apps are 'Digital Anthropology.' Use them to see what people care about (Crime, Dogs, Property), but don't get 'muddy'.",
-    "imageUrl": "/images/missions/day26.png"
+    "imageUrl": "/images/missions/day26.png",
+    "cloze_translations": {
+      "create": "만들다",
+      "consume": "소비하다"
+    }
   },
   {
     "day": 27,
@@ -838,10 +942,10 @@
     "title": "Becoming a 'Regular'",
     "image_description": "3D clay style, a cozy local cafe. The barista recognizes you as you walk in.",
     "strategic_brief": "The Third Place. A 'Regular' is someone the staff knows. It’s the first step to feeling like you belong in a city.",
-    "cloze_setup": "Being a 'Regular' provides a sense of [______] in a new [______].",
+    "cloze_setup": "Being a '[______]' provides a [______] [______] in a new [______].",
     "cloze_keywords": [
-      "Belonging",
-      "Place"
+      "Regular",
+      "sense of"
     ],
     "scenario_text": "The barista says: 'Hey! The usual today?'",
     "options": [
@@ -861,7 +965,11 @@
       }
     ],
     "x_ray": "In a lonely world, being recognized at your local shop is 'Social Gold.' Keep that relationship warm.",
-    "imageUrl": "/images/missions/day27.png"
+    "imageUrl": "/images/missions/day27.png",
+    "cloze_translations": {
+      "Regular": "단골",
+      "sense of": "~감 (예: 소속감, 안정감)"
+    }
   },
   {
     "day": 28,

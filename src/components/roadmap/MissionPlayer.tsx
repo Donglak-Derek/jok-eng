@@ -185,11 +185,21 @@ export default function MissionPlayer({ dayId }: { dayId: number }) {
                             <h1 className="text-3xl md:text-5xl font-black italic tracking-tight drop-shadow-sm">
                                 {mission.title}
                             </h1>
-                            <div className="p-4 rounded-2xl bg-secondary/50 border border-border">
-                                <p className="text-muted-foreground text-sm font-medium leading-relaxed">
-                                    <strong className="text-foreground">Brief:</strong> {mission.strategic_brief}
-                                </p>
-                            </div>
+                            <details className="group rounded-2xl bg-secondary/50 border border-border transition-all open:bg-secondary [&_summary::-webkit-details-marker]:hidden overflow-hidden">
+                                <summary className="flex items-center justify-between cursor-pointer p-4 font-bold text-foreground text-sm list-none select-none">
+                                    <span className="flex items-center gap-2">
+                                        Strategic Brief
+                                    </span>
+                                    <span className="w-5 h-5 flex items-center justify-center shrink-0 transition-transform duration-300 group-open:-rotate-180 text-muted-foreground group-hover:text-foreground">
+                                        <svg fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+                                    </span>
+                                </summary>
+                                <div className="px-4 pb-4 pt-1">
+                                    <p className="text-muted-foreground text-sm font-medium leading-relaxed border-t border-border/50 pt-3">
+                                        {mission.strategic_brief}
+                                    </p>
+                                </div>
+                            </details>
                         </div>
                     </motion.div>
                 )}

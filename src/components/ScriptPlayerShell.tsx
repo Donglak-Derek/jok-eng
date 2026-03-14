@@ -216,18 +216,17 @@ export default function ScriptPlayerShell({
 
             {/* --- FOOTER (Navigation) --- */}
             {!hasFinished && (
-                <div className="flex-none bg-white border-t border-border z-10 pb-safe">
-                    <div className="max-w-3xl mx-auto px-4 py-3 md:px-6 md:py-4 flex items-center justify-between gap-4">
+                <div className="flex-none bg-white border-t border-border z-10 pb-safe shadow-[0_-4px_20px_-10px_rgba(0,0,0,0.1)]">
+                    <div className="max-w-3xl mx-auto px-4 py-4 md:px-6 md:py-6 flex items-center justify-between gap-4">
 
                         {/* Restart (Subtle, Left) */}
                         <Button
                             variant="ghost"
                             onClick={onRestart}
-                            size="md"
-                            className="text-muted-foreground hover:text-foreground shrink-0 w-12 h-12 rounded-full p-0"
+                            className="text-muted-foreground hover:text-foreground shrink-0 w-16 h-16 rounded-full p-0 flex items-center justify-center bg-secondary/30 hover:bg-secondary/80"
                             title="Restart from beginning"
                         >
-                            <RotateCcw className="w-9 h-9" />
+                            <RotateCcw className="w-8 h-8" />
                         </Button>
 
                         {/* Navigation Group (Right) */}
@@ -238,7 +237,7 @@ export default function ScriptPlayerShell({
                                 variant="ghost"
                                 onClick={onPrev}
                                 disabled={!onPrev || currentStep === 0}
-                                className={`shrink-0 px-4 transition-opacity ${(!onPrev || currentStep === 0) ? "opacity-0 pointer-events-none" : "opacity-100"}`}
+                                className={`shrink-0 px-6 py-4 h-16 rounded-2xl text-lg font-bold transition-opacity bg-secondary/30 hover:bg-secondary/80 ${(!onPrev || currentStep === 0) ? "opacity-0 pointer-events-none" : "opacity-100"}`}
                             >
                                 Prev
                             </Button>
@@ -247,9 +246,8 @@ export default function ScriptPlayerShell({
                             <Button
                                 variant="primary"
                                 onClick={onNext}
-                                size="lg"
-                                className="flex-1 shadow-lg shadow-indigo-200 hover:shadow-xl transition-all active:scale-[0.98] text-base font-bold min-w-[120px]"
-                                rightIcon={<ChevronRight className="w-5 h-5 ml-1" />}
+                                className="flex-1 h-16 px-6 shadow-lg shadow-indigo-200 hover:shadow-xl transition-all active:scale-[0.98] text-xl font-black min-w-[140px] rounded-2xl flex justify-center items-center gap-2"
+                                rightIcon={<ChevronRight className="w-6 h-6" />}
                             >
                                 Next
                             </Button>

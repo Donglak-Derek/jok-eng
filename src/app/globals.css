@@ -74,7 +74,7 @@
   --input: 214.3 31.8% 91.4%;
   --ring: 221.2 83.2% 53.3%;
 
-  --radius: 0.5rem;
+  --radius: 1.25rem;
 }
 
 .dark {
@@ -116,6 +116,14 @@
     @apply bg-background text-foreground overflow-x-hidden max-w-[100vw];
     -webkit-tap-highlight-color: transparent;
     overscroll-behavior-y: none;
+    font-size: 16px;
+  }
+
+  /* Boost text size on mobile screens to make reading easier based on user feedback */
+  @media (max-width: 768px) {
+    html {
+      font-size: 18px;
+    }
   }
 
   body {

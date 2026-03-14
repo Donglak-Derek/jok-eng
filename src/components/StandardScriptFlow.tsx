@@ -232,9 +232,9 @@ export default function StandardScriptFlow({ script }: Props) {
     };
 
     const handleBackToMenu = async () => {
-        // If it's a custom script (UserScript) or has no category (e.g. generated), go to Library
+        // If it's a custom script (UserScript) or has no category (e.g. generated), go to Home
         if ('userId' in script || !script.categorySlug) {
-            router.push('/?tab=my_scenarios');
+            router.push('/');
         } else {
             router.push(`/category/${script.categorySlug}`);
         }

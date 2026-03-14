@@ -24,7 +24,7 @@ function Storefront() {
         {
             id: "90-day-roadmap",
             title: "90-Day Social Master Roadmap",
-            description: "The definitive, step-by-step psychological training system to completely rebuild your social engine from the ground up.",
+            description: "Rebuild your social engine from the ground up.",
             price: "Free",
             icon: <Star className="w-8 h-8 text-yellow-400 fill-yellow-400" />,
             color: "from-yellow-500 to-orange-600",
@@ -41,7 +41,7 @@ function Storefront() {
         {
             id: "dating-kit",
             title: "The Dating Blueprint",
-            description: "A 14-day rapid-fire course on flirtation, subtext, and building romantic tension without being weird.",
+            description: "Master flirtation and subtext.",
             price: "$49",
             icon: <Zap className="w-8 h-8 text-rose-400 fill-rose-400" />,
             color: "from-rose-500 to-pink-600",
@@ -55,7 +55,7 @@ function Storefront() {
         {
             id: "corporate-power",
             title: "Corporate Power Player",
-            description: "Navigate office politics, lead high-stakes meetings, and negotiate raises using tactical empathy.",
+            description: "Navigate office politics and lead meetings.",
             price: "$79",
             icon: <Shield className="w-8 h-8 text-blue-400 fill-blue-400" />,
             color: "from-blue-500 to-indigo-600",
@@ -136,7 +136,7 @@ function Storefront() {
                             transition={{ duration: 0.5, delay: 0.2 }}
                             className="text-muted-foreground font-medium text-lg md:text-xl max-w-2xl mx-auto leading-relaxed"
                         >
-                            Premium interactive courses designed to rewire how you communicate, connect, and influence. 
+                            Rewire how you connect.
                         </motion.p>
                     </div>
 
@@ -223,9 +223,6 @@ function Storefront() {
                             <h2 className="text-3xl md:text-5xl font-black italic tracking-tighter uppercase mb-4">
                                 Practice Category Library
                             </h2>
-                            <p className="text-muted-foreground font-medium text-lg max-w-2xl mx-auto">
-                                Free situational training modules. Jump in and start building your social muscles.
-                            </p>
                         </div>
                         <TrainingPacks />
                     </div>
@@ -236,9 +233,6 @@ function Storefront() {
                             <h2 className="text-3xl md:text-5xl font-black italic tracking-tighter uppercase mb-4">
                                 Premium Action Packs
                             </h2>
-                            <p className="text-muted-foreground font-medium text-lg max-w-2xl mx-auto">
-                                Deep dive into specialized psychological playbooks.
-                            </p>
                         </div>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
