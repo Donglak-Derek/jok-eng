@@ -978,10 +978,10 @@
     "title": "The Noise Complaint",
     "image_description": "3D clay style, an apartment hallway at 11 PM. Loud music is coming from the neighbor's door. You have work tomorrow.",
     "strategic_brief": "The 'Soft' Conflict. Americans hate direct confrontation with neighbors. Use the 'Help' frame.",
-    "cloze_setup": "I should frame the noise as an [______] rather than an [______].",
+    "cloze_setup": "I should [______] the noise as an [______] [______] an [______].",
     "cloze_keywords": [
-      "Issue",
-      "Attack"
+      "frame",
+      "rather than"
     ],
     "scenario_text": "You knock on the neighbor's door. They open it. What is your line?",
     "options": [
@@ -1001,7 +1001,11 @@
       }
     ],
     "x_ray": "The 'Blame the Third Party' trick (The Walls, The Rules, The Manager) allows you to get what you want without the neighbor hating you.",
-    "imageUrl": "/images/missions/day28.png"
+    "imageUrl": "/images/missions/day28.png",
+    "cloze_translations": {
+      "frame": "(~으로) 간주하다, 해석하다",
+      "rather than": "~보다는 오히려, ~하기보다는"
+    }
   },
   {
     "day": 29,
@@ -1010,10 +1014,10 @@
     "title": "The 'Stop By' Lie",
     "image_description": "3D clay style, a neighbor waving while walking away. They say: 'We should grab a drink sometime! Stop by whenever!'",
     "strategic_brief": "The Politeness Trap. 'Stop by whenever' almost always means 'Don't stop by without a text first.'",
-    "cloze_setup": "'Whenever' is a [______] phrase, not a [______].",
+    "cloze_setup": "'[______]' is a [______] [______], not a [______].",
     "cloze_keywords": [
-      "Polite",
-      "Schedule"
+      "Whenever",
+      "phrase"
     ],
     "scenario_text": "They just said 'Stop by whenever!' How do you actually handle it?",
     "options": [
@@ -1033,7 +1037,11 @@
       }
     ],
     "x_ray": "In the US, 'Whenever' is a way to end a conversation warmly. It is a 'Vibe,' not a 'Time'.",
-    "imageUrl": "/images/missions/day29.png"
+    "imageUrl": "/images/missions/day29.png",
+    "cloze_translations": {
+      "Whenever": "언제든지",
+      "phrase": "어구"
+    }
   },
   {
     "day": 30,
@@ -1044,8 +1052,8 @@
     "strategic_brief": "The 'Plus One' & The Gift. Never show up empty-handed to a residential invite.",
     "cloze_setup": "I should always [______] what I can [______] to the party.",
     "cloze_keywords": [
-      "Ask",
-      "Bring"
+      "figure out",
+      "contribute"
     ],
     "scenario_text": "They invite you over for a BBQ. What is your follow-up question?",
     "options": [
@@ -1065,7 +1073,11 @@
       }
     ],
     "x_ray": "Even if they say 'Nothing!', bring a 6-pack of soda/beer or a bag of chips. It’s the 'Entry Fee' for American friendship.",
-    "imageUrl": "/images/missions/day30.png"
+    "imageUrl": "/images/missions/day30.png",
+    "cloze_translations": {
+      "figure out": "알아내다, 파악하다",
+      "contribute": "기여하다, 공헌하다"
+    }
   },
   {
     "day": 31,
@@ -1074,10 +1086,10 @@
     "title": "The 15-Second Bio",
     "image_description": "3D clay style, first-person view standing in a bright modern office with a standing desk. A smiling coworker in a branded hoodie is holding a coffee and looking at you.",
     "strategic_brief": "The 'Value-First' Intro. In the US, your name is less important than what you 'Do' for the team. Keep it short and high-energy.",
-    "cloze_setup": "I should lead with my [______] and one [______] detail.",
+    "cloze_setup": "I should [______] my [______] and one [______] [______].",
     "cloze_keywords": [
-      "Role",
-      "Personal"
+      "lead with",
+      "detail"
     ],
     "scenario_text": "A new teammate walks up: 'Hey! I'm Sarah from Design. You're the new dev, right?'",
     "options": [
@@ -1097,7 +1109,11 @@
       }
     ],
     "x_ray": "American 'Work-Talk' is a mix of 80% professional and 20% personal. Giving a small personal fact (where you are from) makes you 'Safe' to talk to.",
-    "imageUrl": "/images/missions/day31.png"
+    "imageUrl": "/images/missions/day31.png",
+    "cloze_translations": {
+      "lead with": "으로 시작하다",
+      "detail": "세부 사항"
+    }
   },
   {
     "day": 32,
@@ -1108,8 +1124,8 @@
     "strategic_brief": "The Open Circle. If people are standing in a way that leaves a gap, you are invited to listen, but not necessarily to speak yet.",
     "cloze_setup": "I can [______] the group without [______] the flow.",
     "cloze_keywords": [
-      "Join",
-      "Interrupting"
+      "intervene",
+      "disrupting the flow"
     ],
     "scenario_text": "Two coworkers are talking about a crazy football game. You know nothing about football. What do you do?",
     "options": [
@@ -1129,7 +1145,11 @@
       }
     ],
     "x_ray": "Joining a group isn't about what you say; it's about matching their 'Energy Level.' If they are excited, look excited.",
-    "imageUrl": "/images/missions/day32.png"
+    "imageUrl": "/images/missions/day32.png",
+    "cloze_translations": {
+      "intervene": "개입하다",
+      "disrupting the flow": "흐름을 방해하다"
+    }
   },
   {
     "day": 33,
@@ -1140,8 +1160,8 @@
     "strategic_brief": "The Digital Handshake. Slack is 'Business Casual.' Use emojis to show you aren't an angry robot.",
     "cloze_setup": "I should use [______] to soften the [______] of my text.",
     "cloze_keywords": [
-      "Emojis",
-      "Tone"
+      "euphemisms",
+      "impact"
     ],
     "scenario_text": "You are busy, but you can help in 10 minutes. How do you reply?",
     "options": [
@@ -1161,7 +1181,11 @@
       }
     ],
     "x_ray": "In US digital culture, 'No Emoji = Angry.' Adding a simple thumbs-up or a smile is like a 'Social Insurance' policy.",
-    "imageUrl": "/images/missions/day33.png"
+    "imageUrl": "/images/missions/day33.png",
+    "cloze_translations": {
+      "euphemisms": "완곡어법",
+      "impact": "영향"
+    }
   },
   {
     "day": 34,
@@ -1170,10 +1194,11 @@
     "title": "The Pre-Meeting 2 Minutes",
     "image_description": "3D clay style, a Zoom/Teams call screen with 4 avatars. People are waiting for the Host to start. One person is talking about their weekend.",
     "strategic_brief": "The 'Dead Air' Rule. Americans hate silence. The 2 minutes before a meeting starts is for 'Relationship Maintenance.'",
-    "cloze_setup": "Small talk before a [______] builds [______] with the team.",
+    "cloze_setup": "[______] before a [______] [______] [______] with the [______].",
     "cloze_keywords": [
-      "Meeting",
-      "Trust"
+      "Small talk",
+      "builds",
+      "team"
     ],
     "scenario_text": "Everyone is waiting. Someone asks you: 'Han, how's the new apartment coming along?'",
     "options": [
@@ -1193,7 +1218,12 @@
       }
     ],
     "x_ray": "Being 'Good at your job' in America includes being 'Good to be around.' Don't skip the small talk.",
-    "imageUrl": "/images/missions/day34.png"
+    "imageUrl": "/images/missions/day34.png",
+    "cloze_translations": {
+      "Small talk": "잡담",
+      "builds": "형성하다",
+      "team": "팀"
+    }
   },
   {
     "day": 35,
@@ -1204,8 +1234,8 @@
     "strategic_brief": "The Noise Filter. Don't be the person who fills 50 inboxes with a 'Me too' message.",
     "cloze_setup": "I should [______] the sender [______] if my message is just a 'Congrats'.",
     "cloze_keywords": [
-      "Email",
-      "Directly"
+      "rub someone the wrong way",
+      "terse"
     ],
     "scenario_text": "Your boss sends an email to the whole department announcing a promotion. Everyone is hitting 'Reply All' to say 'Congrats!'. What do you do?",
     "options": [
@@ -1225,7 +1255,11 @@
       }
     ],
     "x_ray": "Respecting people's 'Inbox Space' is a hidden way to show you are a high-level professional.",
-    "imageUrl": "/images/missions/day35.png"
+    "imageUrl": "/images/missions/day35.png",
+    "cloze_translations": {
+      "rub someone the wrong way": "누군가를 불쾌하게 만들다, 심기를 거스르다",
+      "terse": "간결한, 퉁명스러운"
+    }
   },
   {
     "day": 36,
@@ -1234,10 +1268,11 @@
     "title": "The Coffee Run",
     "image_description": "3D clay style, standing at your desk, putting on a jacket. Your coworker is looking at you.",
     "strategic_brief": "The 'Favor' Loop. Offering to grab a coffee for a teammate is the fastest way to turn a 'Coworker' into a 'Work Friend.'",
-    "cloze_setup": "Offering a [______] is a low-cost way to build [______].",
+    "cloze_setup": "Offering a [______] is a [______] way to build [______].",
     "cloze_keywords": [
-      "Favor",
-      "Social Capital"
+      "low-cost",
+      "free trial",
+      "customer loyalty"
     ],
     "scenario_text": "You are going to the breakroom or Starbucks. How do you phrase the offer?",
     "options": [
@@ -1257,7 +1292,12 @@
       }
     ],
     "x_ray": "In the US, 'Favors' aren't about the coffee; they are about showing that you are 'Thinking of the Team.'",
-    "imageUrl": "/images/missions/day36.png"
+    "imageUrl": "/images/missions/day36.png",
+    "cloze_translations": {
+      "low-cost": "저비용",
+      "free trial": "무료 체험",
+      "customer loyalty": "고객 충성도"
+    }
   },
   {
     "day": 37,
@@ -1268,8 +1308,8 @@
     "strategic_brief": "The Visual Cue. Headphones are the universal 'Do Not Disturb' sign. If you must interrupt, use a 'Soft Opener.'",
     "cloze_setup": "I should [______] their [______] before I start talking.",
     "cloze_keywords": [
-      "Acknowledge",
-      "Focus"
+      "size up",
+      "demeanor"
     ],
     "scenario_text": "You need a quick answer on a project. They are wearing headphones. What do you do?",
     "options": [
@@ -1289,7 +1329,11 @@
       }
     ],
     "x_ray": "The phrase 'Got a quick sec?' is the 'Escape Hatch' for Americans. It lets them finish their thought before they talk to you.",
-    "imageUrl": "/images/missions/day37.png"
+    "imageUrl": "/images/missions/day37.png",
+    "cloze_translations": {
+      "size up": "평가하다",
+      "demeanor": "태도"
+    }
   },
   {
     "day": 38,
@@ -1300,8 +1344,8 @@
     "strategic_brief": "The Middle Ground. In modern US offices, being 'Over-dressed' is sometimes as bad as being 'Under-dressed.'",
     "cloze_setup": "It's better to be [______] slightly more [______] than everyone else.",
     "cloze_keywords": [
-      "Dressed",
-      "Professional"
+      "ahead of the curve",
+      "on the ball"
     ],
     "scenario_text": "The company says the vibe is 'Casual.' What do you wear for your first big presentation?",
     "options": [
@@ -1321,7 +1365,11 @@
       }
     ],
     "x_ray": "American style is about 'Effortless Competence.' You want to look like you put in effort, but not like you're worried about it.",
-    "imageUrl": "/images/missions/day38.png"
+    "imageUrl": "/images/missions/day38.png",
+    "cloze_translations": {
+      "ahead of the curve": "시대를 앞서가는",
+      "on the ball": "기민한"
+    }
   },
   {
     "day": 39,
@@ -1330,10 +1378,11 @@
     "title": "The Birthday Celebration",
     "image_description": "3D clay style, a group of coworkers gathered around a desk with a store-bought cake. Someone is lighting candles.",
     "strategic_brief": "The 'Mandatory Fun.' Even if you find it cheesy, participating in office celebrations is how you prove you are a 'Cultural Fit.'",
-    "cloze_setup": "Participating in [______] rituals builds [______] with the group.",
+    "cloze_setup": "[______] in [______] [______] [______] [______] with the group.",
     "cloze_keywords": [
-      "Office",
-      "Bonds"
+      "Participating",
+      "rituals",
+      "builds"
     ],
     "scenario_text": "Everyone is singing 'Happy Birthday' to a coworker you don't know very well. What do you do?",
     "options": [
@@ -1353,7 +1402,12 @@
       }
     ],
     "x_ray": "In the US, 'The Team' is a family-lite. If the family is celebrating, you show up for 5 minutes.",
-    "imageUrl": "/images/missions/day39.png"
+    "imageUrl": "/images/missions/day39.png",
+    "cloze_translations": {
+      "Participating": "참여하다",
+      "rituals": "의식",
+      "builds": "형성하다"
+    }
   },
   {
     "day": 40,
@@ -1364,8 +1418,8 @@
     "strategic_brief": "The Safe Zone. A team lunch is a test of your 'Humanity.' Talk about hobbies, food, and movies—not the project due at 5 PM.",
     "cloze_setup": "Team lunches are for [______] building, not [______] updates.",
     "cloze_keywords": [
-      "Relationship",
-      "Status"
+      "team building",
+      "status updates"
     ],
     "scenario_text": "The conversation dies down for a second. What do you say?",
     "options": [
@@ -1385,7 +1439,11 @@
       }
     ],
     "x_ray": "At lunch, you aren't an Engineer; you are a Person who eats. Focus on the 'Person' part.",
-    "imageUrl": "/images/missions/day40.png"
+    "imageUrl": "/images/missions/day40.png",
+    "cloze_translations": {
+      "team building": "팀 빌딩",
+      "status updates": "상황 업데이트"
+    }
   },
   {
     "day": 41,
@@ -1396,8 +1454,8 @@
     "strategic_brief": "The Polite Pivot. In the US, 'Interesting' is a neutral word used to avoid saying 'I don't like this' or 'This is weird.'",
     "cloze_setup": "I should [______] their [______] before I assume they agree.",
     "cloze_keywords": [
-      "Probe",
-      "Intent"
+      "gauge",
+      "stance"
     ],
     "scenario_text": "You just finished sharing a bold new idea. Your boss says: 'Hmm. That's a very... interesting perspective, Han.'",
     "options": [
@@ -1417,7 +1475,11 @@
       }
     ],
     "x_ray": "When an American says 'Interesting' without a smile, it usually means 'I disagree, but I don't want to hurt your feelings yet.'",
-    "imageUrl": "/images/missions/day41.png"
+    "imageUrl": "/images/missions/day41.png",
+    "cloze_translations": {
+      "gauge": "가늠하다",
+      "stance": "입장"
+    }
   },
   {
     "day": 42,
@@ -1426,10 +1488,10 @@
     "title": "Professional Aggression",
     "image_description": "3D clay style, a smartphone screen showing an email notification. The subject line is 'RE: Project Update' and the first line is visible.",
     "strategic_brief": "The Email Sword. Phrases like 'Per my last email' are the American way of saying 'You aren't listening and I'm annoyed.'",
-    "cloze_setup": "I should [______] the [______] rather than getting defensive.",
+    "cloze_setup": "I should [______] the [______] rather than [______].",
     "cloze_keywords": [
-      "Acknowledge",
-      "Correction"
+      "face the music",
+      "getting defensive"
     ],
     "scenario_text": "A teammate emails you: 'Per my last email, the deadline was actually yesterday. Do you have the files?'",
     "options": [
@@ -1449,7 +1511,11 @@
       }
     ],
     "x_ray": "'Per my last email' is a 'Yellow Card' in the office. It means: 'I've already told you this, don't make me tell you again.'",
-    "imageUrl": "/images/missions/day42.png"
+    "imageUrl": "/images/missions/day42.png",
+    "cloze_translations": {
+      "face the music": "책임을 지다",
+      "getting defensive": "방어적이 되다"
+    }
   },
   {
     "day": 43,
@@ -1490,10 +1556,10 @@
     "title": "The Feedback Sandwich",
     "image_description": "3D clay style, a one-on-one meeting with a manager. They are smiling and nodding, but they have a list of 'Notes' on their iPad.",
     "strategic_brief": "The 'But' Pivot. Americans wrap criticism in two layers of praise. You must listen for the 'Middle' layer.",
-    "cloze_setup": "The [______] is usually found right after the word [______].",
+    "cloze_setup": "The [______] is [______] found [______] the word [______].",
     "cloze_keywords": [
-      "Criticism",
-      "But"
+      "usually",
+      "right after"
     ],
     "scenario_text": "Your manager says: 'You've been doing great work on the design, BUT I'd like to see you participate more in meetings. Otherwise, keep it up!'",
     "options": [
@@ -1513,7 +1579,11 @@
       }
     ],
     "x_ray": "The 'Bread' (Praise) is to keep you happy. The 'Meat' (Criticism) is what gets you promoted.",
-    "imageUrl": "/images/missions/day44.png"
+    "imageUrl": "/images/missions/day44.png",
+    "cloze_translations": {
+      "usually": "보통",
+      "right after": "바로 뒤에"
+    }
   },
   {
     "day": 45,
@@ -1522,10 +1592,10 @@
     "title": "The 'Swing By' Logic",
     "image_description": "3D clay style, a manager walking past your office door. They pause for a split second and point toward their office.",
     "strategic_brief": "The Unscheduled Sync. 'Swing by my office later' is a polite way of saying 'We need to talk privately.'",
-    "cloze_setup": "A 'Swing By' is usually [______], but I should [______] it seriously.",
+    "cloze_setup": "A '[______]' is usually [______], but I should [______] it seriously.",
     "cloze_keywords": [
-      "Informal",
-      "Take"
+      "Swing By",
+      "take it seriously"
     ],
     "scenario_text": "Your boss says: 'Hey Han, swing by my office before you head out today.'",
     "options": [
@@ -1545,7 +1615,11 @@
       }
     ],
     "x_ray": "In the US, 'Swing by' is a way to lower the pressure of a meeting, but the content of the meeting is still important.",
-    "imageUrl": "/images/missions/day45.png"
+    "imageUrl": "/images/missions/day45.png",
+    "cloze_translations": {
+      "Swing By": "잠깐 들르다",
+      "take it seriously": "진지하게 받아들이다"
+    }
   },
   {
     "day": 46,
