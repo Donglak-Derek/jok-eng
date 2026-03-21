@@ -3,39 +3,11 @@ import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Mission } from "@/types";
 
-import { mockMissionData } from "@/data/missionsMock";
+import { missions as mockMissionData } from "@/data/missions";
 
 // Mock data generator for testing if Firestore is empty
 const generateMockMissions = (): Mission[] => {
-    return Array.from({ length: 90 }).map((_, i) => {
-        const dayNumber = i + 1;
-
-        const actualData = mockMissionData.find(m => m.day === dayNumber);
-        if (actualData) {
-            return {
-                id: `mission-${dayNumber}`,
-                dayNumber,
-                title: actualData.title,
-                description: actualData.strategic_brief,
-                phase: actualData.phase as any,
-                isPremium: actualData.phase === 3,
-            };
-        }
-
-        let phase: 1 | 2 | 3 = 1;
-        if (dayNumber > 60) phase = 3;
-        else if (dayNumber > 30) phase = 2;
-
-        return {
-            id: `mission-${dayNumber}`,
-            dayNumber,
-            title: phase === 1 ? `Mock Mission Day ${dayNumber}` : phase === 2 ? `Vibe Builder Day ${dayNumber}` : `Power Player Day ${dayNumber}`,
-            description: "Complete this scenario to build your social muscles.",
-            phase,
-            isPremium: phase === 3,
-            scriptId: `script-placeholder-${dayNumber}`
-        };
-    });
+    return mockMissionData;
 };
 
 export function useMissions() {
@@ -48,7 +20,7 @@ export function useMissions() {
                 // Try fetching from Firestore
                 const q = query(
                     collection(db, "missions"),
-                    orderBy("dayNumber", "asc")
+                    orderBy("day", "asc")
                 );
                 const querySnapshot = await getDocs(q);
 
@@ -57,15 +29,11 @@ export function useMissions() {
                     setMissions(generateMockMissions());
                 } else {
                     const fetchedMissions = querySnapshot.docs.map(doc => {
-                        const data = doc.data();
+                        const data = doc.data() as Mission;
                         return {
-                            id: doc.id,
-                            dayNumber: data.dayNumber || data.day,
-                            title: data.title,
-                            description: data.strategic_brief || "",
-                            phase: data.phase || 1,
-                            isPremium: data.phase === 3,
-                            ...data
+                            ...data,
+                            // Ensure numeric fields are preserved
+                            day: data.day,
                         };
                     }) as Mission[];
                     setMissions(fetchedMissions);

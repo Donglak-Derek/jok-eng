@@ -172,6 +172,9 @@ export interface UserProgress {
   completedDays: number[];
   totalXP: number;
   personaType?: string; // e.g. "The Silent Expert", "The Power Player"
+  streak: number;
+  lastCompletedDate?: string; // ISO string for streak calculation
+  badges: string[]; // Achievement IDs
 }
 
 // Replaced "Age Groups" with "Generations" for better Vibe/Privacy
@@ -208,12 +211,46 @@ export const JOB_CATEGORIES = {
 };
 
 // Phase 4: Roadmap / 90-Day Challenge
-export type Mission = {
+export type MissionOption = {
   id: string;
-  dayNumber: number;
+  text: string;
+  vibe_score: number;
+  feedback: string;
+  allow_retry: boolean;
+  audioUrl?: string;
+};
+
+export type Mission = {
+  day: number;
+  phase: number;
+  module: string;
   title: string;
-  description?: string;
-  scriptId?: string;
-  phase: 1 | 2 | 3; // 1: Days 1-30, 2: Days 31-60, 3: Days 61-90
-  isPremium?: boolean;
+  imageUrl?: string;
+  image_description?: string;
+  strategic_brief: string;
+  cloze_setup: string;
+  cloze_keywords: string[];
+  scenario_text: string;
+  scenarioAudioUrl?: string;
+  options: MissionOption[];
+  x_ray: string;
+  x_rayAudioUrl?: string;
+  cloze_translations?: Record<string, string>;
+  season: number;
+  xp: number;
+  achievementId?: string;
+};
+
+export type Season = {
+  id: number;
+  title: string;
+  days: [number, number]; // [startDay, endDay]
+  description: string;
+};
+
+export type Achievement = {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
 };

@@ -21,26 +21,26 @@ export default function TrainingPacks() {
     // Grouping logic for Training Packs
     const packs = [
         {
-            title: "Small Talk Gym",
-            description: "Master the art of casual conversation and networking.",
+            title: "Small Talk Weights",
+            description: "Lift the small talk weights! Get your networking reps in!!",
             keywords: ["small_talk", "dating", "networking", "socializing"],
             categories: [] as Category[]
         },
         {
-            title: "The Professional Suite",
-            description: "Command the boardroom and ace your interviews.",
+            title: "The Boardroom Bootcamp",
+            description: "Crush those interviews! Build your executive muscle!!",
             keywords: ["business", "interview", "office", "professional"],
             categories: [] as Category[]
         },
         {
-            title: "Slang Lab & Culture",
-            description: "Understand the subtext. Speak like a local.",
+            title: "Culture Conditioning",
+            description: "Train your slang! Speak like a true local!!",
             keywords: ["slang", "american_culture", "culture", "street"],
             categories: [] as Category[]
         },
         {
-            title: "General Practice",
-            description: "More scenarios to keep your muscles sharp.",
+            title: "Full Body Workout",
+            description: "Keep those social muscles sharp! Do these extra reps!!",
             keywords: [], // Catch-all
             categories: [] as Category[]
         }
@@ -101,7 +101,7 @@ export default function TrainingPacks() {
                                                 {c.description}
                                             </p>
                                             <div className="text-xs font-bold uppercase tracking-widest text-primary">
-                                                Enter Arena &rarr;
+                                                Start Set &rarr;
                                             </div>
                                         </div>
                                     </div>

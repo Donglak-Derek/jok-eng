@@ -42,14 +42,14 @@ export default function RoadmapPath({ missions }: RoadmapPathProps) {
 
             {/* Phase sections visual breaks */}
             {missions.map((mission, index) => {
-                const showPhase2Header = mission.dayNumber === 31;
-                const showPhase3Header = mission.dayNumber === 61;
-                const isActive = progress?.currentDay === mission.dayNumber;
+                const showPhase2Header = mission.day === 31;
+                const showPhase3Header = mission.day === 61;
+                const isActive = progress?.currentDay === mission.day;
 
                 return (
                     <div 
-                        key={mission.id} 
-                        id={`mission-node-${mission.dayNumber}`}
+                        key={mission.day} 
+                        id={`mission-node-${mission.day}`}
                         className="w-full flex flex-col items-center"
                     >
                         {showPhase2Header && (
@@ -71,12 +71,12 @@ export default function RoadmapPath({ missions }: RoadmapPathProps) {
                         <MissionNode 
                             mission={mission} 
                             index={index} 
-                            isCompleted={progress?.completedDays.includes(mission.dayNumber) || false}
-                            isLocked={mission.dayNumber > (progress?.currentDay || 1)}
+                            isCompleted={progress?.completedDays.includes(mission.day) || false}
+                            isLocked={mission.day > (progress?.currentDay || 1)}
                         />
                         
                         {/* Guest Conversion Banner after Day 3 */}
-                        {!user && mission.dayNumber === 3 && (
+                        {!user && mission.day === 3 && (
                             <motion.div 
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}

@@ -70,7 +70,7 @@ export default function Header({ transparent = false }: HeaderProps) {
                             className={`text-sm md:text-base font-bold transition-colors ${isPracticeActive ? 'text-primary' : mutedTextColor
                                 }`}
                         >
-                            Blogs
+                            Practice
                         </Link>
                         <Link
                             href="/profile"
@@ -131,14 +131,14 @@ export default function Header({ transparent = false }: HeaderProps) {
                                                 className="block px-4 py-2 text-sm text-foreground hover:bg-secondary transition-colors"
                                                 onClick={() => setDropdownOpen(false)}
                                             >
-                                                Blogs & Media
+                                                Practice & Arena
                                             </Link>
                                             <Link
                                                 href="/"
                                                 className="block px-4 py-2 text-sm text-primary font-bold hover:bg-secondary transition-colors"
                                                 onClick={() => setDropdownOpen(false)}
                                             >
-                                                Categories Home
+                                                90-Day Roadmap
                                             </Link>
                                             <Link
                                                 href="/about"

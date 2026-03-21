@@ -55,12 +55,12 @@ export default function MissionNode({ mission, index, isCompleted, isLocked }: M
             viewport={{ once: true, margin: "-50px" }}
             transition={{ delay: 0.1, type: "spring", stiffness: 100 }}
             className={`relative flex flex-col items-center justify-center my-6 ${!isLocked ? 'cursor-pointer' : ''}`}
-            onClick={() => !isLocked && router.push(`/mission/mission-${mission.dayNumber}`)}
+            onClick={() => !isLocked && router.push(`/mission/mission-${mission.day}`)}
             style={{ transform: `translateX(${xOffset}px)` }}
         >
             <div className={`relative flex items-center justify-center w-24 h-24 rounded-full font-black text-2xl transition-transform active:scale-95 z-10 ${bgStyle} ${ringStyle}`}>
                 {!isLocked && !isCompleted ? (
-                    <span className="drop-shadow-sm">{mission.dayNumber}</span>
+                    <span className="drop-shadow-sm">{mission.day}</span>
                 ) : (
                     icon
                 )}
@@ -68,7 +68,7 @@ export default function MissionNode({ mission, index, isCompleted, isLocked }: M
 
             <div className={`mt-5 text-center px-5 py-3 rounded-2xl backdrop-blur-xl bg-card border ${isCompleted ? 'border-emerald-500/30' : 'border-border'} min-w-[140px] max-w-[220px] shadow-lg ${textStyle}`}>
                 <div className="text-[10px] uppercase font-black tracking-widest opacity-80 mb-1">
-                    Day {mission.dayNumber}
+                    Day {mission.day}
                 </div>
                 <div className="text-sm font-bold leading-tight drop-shadow-sm">
                     {mission.title}
