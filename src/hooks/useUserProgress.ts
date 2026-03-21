@@ -21,6 +21,8 @@ export function useUserProgress(uid: string | undefined) {
                         currentDay: 1,
                         completedDays: [],
                         totalXP: 0,
+                        streak: 0,
+                        badges: [],
                     };
                     localStorage.setItem("amly_guest_progress", JSON.stringify(defaultGuestProgress));
                     setProgress(defaultGuestProgress);
@@ -46,6 +48,8 @@ export function useUserProgress(uid: string | undefined) {
                     currentDay: 1,
                     completedDays: [],
                     totalXP: 0,
+                    streak: 0,
+                    badges: [],
                 };
                 try {
                     await setDoc(docRef, newProgress);
