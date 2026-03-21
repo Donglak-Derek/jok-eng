@@ -17,14 +17,18 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "incremental": true,
+    "baseUrl": ".",
     "plugins": [
       {
         "name": "next"
       }
     ],
     "paths": {
+      "@/types": [
+        "src/types/index"
+      ],
       "@/*": [
-        "./src/*"
+        "src/*"
       ]
     }
   },
