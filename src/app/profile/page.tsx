@@ -278,10 +278,16 @@ export default function ProfilePage() {
                         value={(stats?.totalPractices || 0).toString()}
                         delay={0.8}
                     />
+                    <StatsCard
+                        icon="🔄"
+                        label="Roadmap Cycles"
+                        value={(progress?.completions || 0).toString()}
+                        delay={0.85}
+                    />
                 </div>
 
-                {/* Day 90 Mastery Badge (Profile Version) */}
-                {progress?.completedDays.includes(90) && (
+                {/* Day 90 Mastery Badge (Profile Version) - Persistent & Stackable */}
+                {((progress?.completions || 0) > 0 || progress?.completedDays.includes(90)) && (
                     <motion.div 
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -298,9 +304,16 @@ export default function ProfilePage() {
                                 <Trophy className="w-12 h-12 text-yellow-500 drop-shadow-[0_0_10px_rgba(234,179,8,0.6)]" strokeWidth={1.5} />
                             </motion.div>
                             <div className="relative z-10">
-                                <h3 className="text-xl font-black text-white italic tracking-tight">Social Master</h3>
+                                <div className="flex items-center gap-2">
+                                    <h3 className="text-xl font-black text-white italic tracking-tight uppercase">Social Master</h3>
+                                    {(progress?.completions ?? 0) > 0 && (
+                                        <span className="bg-yellow-500 text-black text-[10px] font-black px-2 py-0.5 rounded-full">
+                                            x{(progress?.completions ?? 0) + (progress?.completedDays?.includes(90) ? 1 : 0)}
+                                        </span>
+                                    )}
+                                </div>
                                 <p className="text-yellow-500/80 text-xs font-bold uppercase tracking-widest mt-0.5">
-                                    90-Day Roadmap Completed
+                                    {progress?.completedDays?.includes(90) ? "90-Day Mission Accomplished" : "Veteran Roadmap Survivor"}
                                 </p>
                             </div>
                         </div>

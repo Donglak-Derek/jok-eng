@@ -1,11 +1,13 @@
-import { Mission } from "@/types";
+import { Mission, Season } from "@/types";
 import MissionNode from "./MissionNode";
 import { useAuth } from "@/context/AuthContext";
 import { useUserProgress } from "@/hooks/useUserProgress";
 import { motion } from "framer-motion";
-import { Trophy, ArrowRight, Star } from "lucide-react";
+import { Trophy, ArrowRight, Star, Hexagon } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
+import { seasons } from "@/data/missions";
+import CompletionCard from "./CompletionCard";
 
 interface RoadmapPathProps {
     missions: Mission[];
@@ -13,7 +15,7 @@ interface RoadmapPathProps {
 
 export default function RoadmapPath({ missions }: RoadmapPathProps) {
     const { user } = useAuth();
-    const { progress } = useUserProgress(user?.uid);
+    const { progress, resetRoadmap } = useUserProgress(user?.uid);
     const containerRef = useRef<HTMLDivElement>(null);
 
     // Auto-scroll to current day
@@ -37,93 +39,100 @@ export default function RoadmapPath({ missions }: RoadmapPathProps) {
 
     return (
         <div className="relative w-full py-10 flex flex-col items-center overflow-x-hidden">
-            {/* Background dashed path */}
-            <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-1 border-l-4 border-dashed border-border/40 -z-10" />
-
-            {/* Phase sections visual breaks */}
-            {missions.map((mission, index) => {
-                const showPhase2Header = mission.day === 31;
-                const showPhase3Header = mission.day === 61;
-                const isActive = progress?.currentDay === mission.day;
-
+            {seasons.map((season) => {
+                const seasonMissions = missions.filter(m => m.day >= season.days[0] && m.day <= season.days[1]);
+                const isSeasonLocked = season.days[0] > (progress?.currentDay || 1);
+                
                 return (
-                    <div 
-                        key={mission.day} 
-                        id={`mission-node-${mission.day}`}
-                        className="w-full flex flex-col items-center"
-                    >
-                        {showPhase2Header && (
-                            <div className="my-16 flex flex-col items-center text-center">
-                                <div className="h-px w-48 bg-gradient-to-r from-transparent via-border to-transparent mb-4" />
-                                <h2 className="text-2xl font-black tracking-widest uppercase text-muted-foreground italic mb-1">Phase 2: The Vibe Builder</h2>
-                                <p className="text-sm text-muted-foreground/80 font-medium">Locked until Day 31</p>
-                                <div className="h-px w-48 bg-gradient-to-r from-transparent via-border to-transparent mt-4" />
-                            </div>
-                        )}
-                        {showPhase3Header && (
-                            <div className="my-16 flex flex-col items-center text-center">
-                                <div className="h-px w-48 bg-gradient-to-r from-transparent via-yellow-500/50 to-transparent mb-4" />
-                                <h2 className="text-2xl font-black tracking-widest uppercase text-yellow-500 italic mb-1">Phase 3: The Power Player</h2>
-                                <p className="text-sm text-yellow-500/80 font-medium">Premium content</p>
-                                <div className="h-px w-48 bg-gradient-to-r from-transparent via-yellow-500/50 to-transparent mt-4" />
-                            </div>
-                        )}
-                        <MissionNode 
-                            mission={mission} 
-                            index={index} 
-                            isCompleted={progress?.completedDays.includes(mission.day) || false}
-                            isLocked={mission.day > (progress?.currentDay || 1)}
-                        />
-                        
-                        {/* Guest Conversion Banner after Day 3 */}
-                        {!user && mission.day === 3 && (
+                    <div key={season.id} className="w-full flex flex-col items-center mb-16 px-4">
+                        {/* Season Header */}
+                        <div className="w-full max-w-md mb-8">
                             <motion.div 
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                className="my-12 w-full max-w-sm px-6 py-8 rounded-3xl bg-gradient-to-br from-primary/90 to-purple-600/90 backdrop-blur-xl border border-white/20 text-white shadow-2xl text-center relative overflow-hidden"
+                                initial={{ opacity: 0, x: -20 }}
+                                whileInView={{ opacity: 1, x: 0 }}
+                                className="relative z-10 bg-zinc-900 border-l-4 border-primary p-4 flex flex-col items-start gap-1 shadow-xl"
                             >
-                                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl transform translate-x-10 -translate-y-10" />
-                                <div className="relative z-10 space-y-4">
-                                    <Star className="w-10 h-10 mx-auto fill-yellow-400 text-yellow-400 drop-shadow-[0_0_10px_rgba(250,204,21,0.5)]" />
-                                    <h3 className="text-2xl font-black tracking-tight">You're on a roll!</h3>
-                                    <p className="text-white/90 font-medium text-sm">
-                                        You've unlocked the first 3 days. Create a free account to automatically save your XP and unlock Day 4.
-                                    </p>
-                                    <Link 
-                                        href="/login"
-                                        className="mt-4 block w-full py-4 px-6 bg-white text-primary font-bold rounded-xl shadow-lg hover:scale-105 active:scale-95 transition-transform flex items-center justify-center gap-2"
-                                    >
-                                        Save My Progress <ArrowRight className="w-5 h-5" />
-                                    </Link>
+                                <div className="flex items-center gap-2">
+                                    <Hexagon className="w-4 h-4 fill-primary text-primary" />
+                                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/80">Season {season.id}</span>
                                 </div>
+                                <h2 className="text-xl font-black italic tracking-tighter uppercase text-white leading-none">{season.title}</h2>
+                                <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mt-1">
+                                    {season.description}
+                                </p>
                             </motion.div>
-                        )}
+                        </div>
+
+                        {/* Missions in Season - Clean Vertical List */}
+                        <div className="w-full max-w-md space-y-3">
+                            {seasonMissions.map((mission, index) => {
+                                const isCompleted = progress?.completedDays.includes(mission.day) || false;
+                                const isLocked = mission.day > (progress?.currentDay || 1);
+
+                                return (
+                                    <div 
+                                        key={mission.day} 
+                                        id={`mission-node-${mission.day}`}
+                                        className="w-full"
+                                    >
+                                        <MissionNode 
+                                            mission={mission} 
+                                            index={index} 
+                                            isCompleted={isCompleted}
+                                            isLocked={isLocked}
+                                        />
+                                        
+                                        {/* Guest Conversion Banner after Day 3 */}
+                                        {!user && mission.day === 3 && (
+                                            <motion.div 
+                                                initial={{ opacity: 0, y: 20 }}
+                                                whileInView={{ opacity: 1, y: 0 }}
+                                                className="my-8 w-full px-6 py-8 rounded-2xl bg-gradient-to-br from-zinc-900 to-zinc-800 border border-primary/30 text-white shadow-2xl text-center relative overflow-hidden"
+                                            >
+                                                <div className="relative z-10 space-y-4">
+                                                    <Star className="w-8 h-8 mx-auto fill-primary text-primary" />
+                                                    <h3 className="text-xl font-black tracking-tight uppercase italic">Secure Your Progress</h3>
+                                                    <p className="text-zinc-400 font-medium text-xs leading-relaxed">
+                                                        You've reached Day 3. Create a free profile to save your XP and unlock the full 90-day mission tree.
+                                                    </p>
+                                                    <Link 
+                                                        href="/login"
+                                                        className="mt-4 block w-full py-3 px-6 bg-primary text-primary-foreground font-black uppercase tracking-widest text-xs rounded-sm shadow-lg hover:opacity-90 active:scale-95 transition-all flex items-center justify-center gap-2"
+                                                    >
+                                                        Join the Army <ArrowRight className="w-4 h-4" />
+                                                    </Link>
+                                                </div>
+                                            </motion.div>
+                                        )}
+                                    </div>
+                                );
+                            })}
+                        </div>
                     </div>
                 );
             })}
+
+            {/* Roadmap Completion Card - Always Visible */}
+            <CompletionCard 
+                onReset={resetRoadmap} 
+                completions={progress?.completions || 0} 
+                isLocked={!progress?.completedDays?.includes(90)}
+            />
 
             {/* The Mastery Award (Day 90 Completion) */}
             {progress?.completedDays.includes(90) && (
                 <motion.div 
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.5, type: "spring" }}
-                    className="mt-20 mb-10 w-full max-w-sm p-1 rounded-3xl bg-gradient-to-b from-yellow-300 via-yellow-500 to-yellow-700 shadow-[0_0_50px_rgba(234,179,8,0.4)]"
+                    className="mt-20 mb-10 w-full max-w-sm p-1 bg-primary"
                 >
-                    <div className="px-6 py-10 rounded-[22px] bg-zinc-950 text-center relative overflow-hidden flex flex-col items-center">
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,179,8,0.15)_0%,transparent_70%)]" />
-                        <motion.div 
-                            animate={{ rotateY: 360 }}
-                            transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                            className="relative z-10 mb-6"
-                        >
-                            <Trophy className="w-20 h-20 text-yellow-500 drop-shadow-[0_0_15px_rgba(234,179,8,0.8)]" strokeWidth={1.5} />
-                        </motion.div>
-                        <div className="relative z-10 space-y-2">
-                            <div className="text-yellow-500 uppercase tracking-[0.3em] text-xs font-black">90-Day Journey Complete</div>
-                            <h2 className="text-3xl font-black text-white italic tracking-tighter">Social Master</h2>
-                            <p className="text-zinc-400 text-sm font-medium pt-2">
-                                You have completed the definitive path. Your social engine is now fully upgraded. Use your power wisely.
+                    <div className="px-6 py-10 bg-zinc-950 text-center relative flex flex-col items-center">
+                        <Trophy className="w-16 h-16 text-primary mb-6" />
+                        <div className="space-y-2">
+                            <div className="text-primary uppercase tracking-[0.3em] text-[10px] font-black underline decoration-2 decoration-primary underline-offset-4">Mission Accomplished</div>
+                            <h2 className="text-3xl font-black text-white italic tracking-tighter uppercase">Social Master</h2>
+                            <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest pt-4">
+                                You are now a fully upgraded social engine.
                             </p>
                         </div>
                     </div>

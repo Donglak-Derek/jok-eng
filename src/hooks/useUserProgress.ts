@@ -23,6 +23,7 @@ export function useUserProgress(uid: string | undefined) {
                         totalXP: 0,
                         streak: 0,
                         badges: [],
+                        completions: 0,
                     };
                     localStorage.setItem("amly_guest_progress", JSON.stringify(defaultGuestProgress));
                     setProgress(defaultGuestProgress);
@@ -50,6 +51,7 @@ export function useUserProgress(uid: string | undefined) {
                     totalXP: 0,
                     streak: 0,
                     badges: [],
+                    completions: 0,
                 };
                 try {
                     await setDoc(docRef, newProgress);
@@ -126,5 +128,37 @@ export function useUserProgress(uid: string | undefined) {
         }
     };
 
-    return { progress, loading, recordMissionSuccess };
+    const resetRoadmap = async () => {
+        if (!progress) return;
+
+        const newCompletions = (progress.completions || 0) + 1;
+        const updates: Partial<UserProgress> = {
+            currentDay: 1,
+            completedDays: [],
+            completions: newCompletions
+        };
+
+        if (!uid || progress.uid === "guest") {
+            const updatedProgress: UserProgress = {
+                ...progress,
+                ...updates
+            } as UserProgress;
+            localStorage.setItem("amly_guest_progress", JSON.stringify(updatedProgress));
+            setProgress(updatedProgress);
+            return;
+        }
+
+        try {
+            const docRef = doc(db, "userProgress", uid);
+            await updateDoc(docRef, updates);
+            setProgress({
+                ...progress,
+                ...updates
+            } as UserProgress);
+        } catch (error) {
+            console.error("Failed to reset roadmap", error);
+        }
+    };
+
+    return { progress, loading, recordMissionSuccess, resetRoadmap };
 }

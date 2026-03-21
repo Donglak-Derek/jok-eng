@@ -9,6 +9,7 @@ import { useAuth } from "@/context/AuthContext";
 import StreakWidget from "@/components/StreakWidget";
 import { Loader2 } from "lucide-react";
 import HeroSection from "@/components/roadmap/HeroSection";
+import PracticeCTA from "@/components/roadmap/PracticeCTA";
 
 function RoadmapDashboard() {
     const { user, loading: authLoading } = useAuth();
@@ -45,6 +46,9 @@ function RoadmapDashboard() {
                     {/* The Path */}
                     <RoadmapPath missions={missions} />
                 </div>
+
+                {/* Practice Arena CTA */}
+                <PracticeCTA />
             </main>
 
             <Footer />

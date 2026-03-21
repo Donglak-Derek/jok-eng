@@ -175,6 +175,7 @@ export interface UserProgress {
   streak: number;
   lastCompletedDate?: string; // ISO string for streak calculation
   badges: string[]; // Achievement IDs
+  completions?: number; // Number of times 90-day roadmap was finished
 }
 
 // Replaced "Age Groups" with "Generations" for better Vibe/Privacy

@@ -32,26 +32,27 @@ export default function HeroSection() {
                 </motion.div>
 
                 {/* The Main Animation */}
-                <div className="relative flex items-center justify-center text-6xl md:text-8xl lg:text-9xl font-black italic tracking-tighter uppercase leading-none">
-                    <span className="text-primary italic">Am</span>
+                <div className="relative flex items-center justify-center text-4xl xs:text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black italic tracking-tighter uppercase leading-none w-full px-4">
+                    <span className="text-primary italic shrink-0">Am</span>
                     
                     <motion.div
                         animate={{ 
                             width: isShrunk ? 0 : "auto",
                             opacity: isShrunk ? 0 : 1,
-                            marginRight: isShrunk ? 0 : "0.2em",
-                            marginLeft: isShrunk ? 0 : "0.1em"
+                            marginRight: isShrunk ? 0 : "0.15em",
+                            marginLeft: isShrunk ? 0 : "0.1em",
+                            scaleX: isShrunk ? 0.5 : 1
                         }}
                         transition={{ 
                             duration: 0.8, 
                             ease: [0.16, 1, 0.3, 1] 
                         }}
-                        className="overflow-hidden whitespace-nowrap text-muted-foreground/40"
+                        className="overflow-hidden whitespace-nowrap text-muted-foreground/40 origin-left"
                     >
                         erican +
                     </motion.div>
 
-                    <span className="text-primary italic">ly</span>
+                    <span className="text-primary italic shrink-0">ly</span>
                 </div>
 
                 {/* Motivational Copy */}
