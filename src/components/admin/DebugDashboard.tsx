@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { DetailedMissionData } from "@/hooks/useMission";
+import { Mission } from "@/types";
 
 export default function DebugDashboard() {
-    const [missions, setMissions] = useState<DetailedMissionData[]>([]);
+    const [missions, setMissions] = useState<Mission[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -14,7 +14,7 @@ export default function DebugDashboard() {
             try {
                 const q = query(collection(db, "missions"), orderBy("day", "asc"));
                 const snap = await getDocs(q);
-                const loadedMissions = snap.docs.map(doc => doc.data() as DetailedMissionData);
+                const loadedMissions = snap.docs.map(doc => doc.data() as Mission);
                 setMissions(loadedMissions);
             } catch (error) {
                 console.error("Error fetching missions for debug:", error);

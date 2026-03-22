@@ -2,36 +2,12 @@ import { useState, useEffect } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
-// Reflecting the exact JSON structure we uploaded for the 90 days
-export interface MissionOption {
-    id: string;
-    text: string;
-    vibe_score: number;
-    feedback: string;
-    // We can infer allow_retry or rely purely on vibe_score < 80 in UI
-    allow_retry?: boolean; 
-}
+import { Mission, MissionOption } from "@/types";
 
-export interface DetailedMissionData {
-    day: number;
-    phase: number;
-    module: string;
-    title: string;
-    image_description?: string;
-    strategic_brief: string;
-    cloze_setup: string;
-    cloze_keywords: string[];
-    scenario_text: string;
-    options: MissionOption[];
-    x_ray: string;
-    imageUrl?: string;
-    // Optionally might have these in older mock data formats, keep for safety
-    character?: string;
-    cloze_dialogue?: string;
-}
+export type { Mission, MissionOption };
 
 export function useMission(dayId: number) {
-    const [mission, setMission] = useState<DetailedMissionData | null>(null);
+    const [mission, setMission] = useState<Mission | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -47,7 +23,7 @@ export function useMission(dayId: number) {
 
                 if (docSnap.exists()) {
                     if (isMounted) {
-                        setMission(docSnap.data() as DetailedMissionData);
+                        setMission(docSnap.data() as Mission);
                     }
                 } else {
                     if (isMounted) {

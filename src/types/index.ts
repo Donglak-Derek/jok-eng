@@ -240,6 +240,9 @@ export type Mission = {
   season: number;
   xp: number;
   achievementId?: string;
+  // Legacy fields for safety
+  character?: string;
+  cloze_dialogue?: string;
 };
 
 export type Season = {

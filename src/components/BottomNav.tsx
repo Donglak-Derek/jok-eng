@@ -30,6 +30,11 @@ export default function BottomNav() {
         }
     ];
 
+    const hiddenRoutes = ["/mission", "/scenario", "/script"];
+    const isHidden = hiddenRoutes.some(route => pathname?.startsWith(route));
+
+    if (isHidden) return null;
+
     return (
         <div
             className="md:hidden fixed bottom-0 left-0 w-full bg-background/90 backdrop-blur-md border-t border-border z-50 px-6 pt-3"
