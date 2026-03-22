@@ -21,26 +21,26 @@ export default function TrainingPacks() {
     // Grouping logic for Training Packs
     const packs = [
         {
-            title: "Small Talk Weights",
-            description: "Lift the small talk weights! Get your networking reps in!!",
+            title: "Networking Reps",
+            description: "Master the art of effortless small talk and kill social anxiety.",
             keywords: ["small_talk", "dating", "networking", "socializing"],
             categories: [] as Category[]
         },
         {
-            title: "The Boardroom Bootcamp",
-            description: "Crush those interviews! Build your executive muscle!!",
+            title: "High-Stakes Office",
+            description: "Nail every interview and command every office negotiation.",
             keywords: ["business", "interview", "office", "professional"],
             categories: [] as Category[]
         },
         {
-            title: "Culture Conditioning",
-            description: "Train your slang! Speak like a true local!!",
+            title: "American Vibe",
+            description: "Unlock cultural nuances and slang to sound like a local insider.",
             keywords: ["slang", "american_culture", "culture", "street"],
             categories: [] as Category[]
         },
         {
-            title: "Full Body Workout",
-            description: "Keep those social muscles sharp! Do these extra reps!!",
+            title: "All-Access Grind",
+            description: "Complete training sets for high-volume social conditioning.",
             keywords: [], // Catch-all
             categories: [] as Category[]
         }
@@ -88,7 +88,6 @@ export default function TrainingPacks() {
                                                 sizes="(max-width: 768px) 100vw, 300px"
                                                 className="object-cover transition-transform duration-500 group-hover:scale-105"
                                             />
-                                            {/* 3D clay overlay style could be added here */}
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60" />
                                             <div className="absolute bottom-4 left-4 right-4 text-white">
                                                 <h3 className="font-black text-xl tracking-tight leading-tight drop-shadow-md">

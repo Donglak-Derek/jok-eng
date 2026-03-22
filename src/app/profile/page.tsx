@@ -10,18 +10,18 @@ import { motion } from "framer-motion";
 import { X, Loader2, User } from "lucide-react";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { updateProfile } from "firebase/auth";
-import SuccessPath from "@/components/SuccessPath";
 import { useUserProgress } from "@/hooks/useUserProgress";
 import { Trophy } from "lucide-react";
 import Link from "next/link";
+import ActivityTracker from "@/components/profile/ActivityTracker";
 
 // Rank Logic Helpers
 const getRank = (xp: number) => {
-    if (xp >= 8000) return { title: "Social Master 👑", color: "from-yellow-400 to-amber-600" };
-    if (xp >= 3000) return { title: "Charisma Coach 🗣️", color: "from-purple-400 to-indigo-600" };
-    if (xp >= 1000) return { title: "Power Player 🤝", color: "from-blue-400 to-cyan-600" };
-    if (xp >= 200) return { title: "Vibe Builder ✨", color: "from-emerald-400 to-green-600" };
-    return { title: "New Arrival 🌱", color: "from-slate-400 to-slate-600" };
+    if (xp >= 8000) return { title: "Elite Commander 👑", color: "from-yellow-400 to-amber-600" };
+    if (xp >= 3000) return { title: "Tactical Lead 🗣️", color: "from-purple-400 to-indigo-600" };
+    if (xp >= 1000) return { title: "Social Athlete 🤝", color: "from-blue-400 to-cyan-600" };
+    if (xp >= 200) return { title: "Active Trainee ✨", color: "from-emerald-400 to-green-600" };
+    return { title: "Recruit 🌱", color: "from-slate-400 to-slate-600" };
 };
 
 export default function ProfilePage() {
@@ -98,7 +98,7 @@ export default function ProfilePage() {
                     transition={{ delay: 0.1 }}
                     className="text-3xl font-black tracking-tight mb-3"
                 >
-                    Save Your Journey
+                    Secure Your Account
                 </motion.h1>
                 <motion.p
                     initial={{ opacity: 0 }}
@@ -106,7 +106,7 @@ export default function ProfilePage() {
                     transition={{ delay: 0.2 }}
                     className="text-muted-foreground max-w-sm mb-8 text-sm md:text-base leading-relaxed"
                 >
-                    Create a free account to track your daily rehearsals, save custom scenarios, and build your Hollywood legacy.
+                    Create a free account to track your daily Training Log and build elite social muscle.
                 </motion.p>
                 <motion.div
                     initial={{ y: 20, opacity: 0 }}
@@ -237,11 +237,13 @@ export default function ProfilePage() {
                 </div>
             </div>
 
-
+            <div className="container max-w-4xl mx-auto px-4 -mt-2 mb-8 relative z-30">
+                <ActivityTracker activityLog={progress?.activityLog} />
+            </div>
 
             {/* Stats Grid */}
             <div className="container max-w-4xl mx-auto px-4 -mt-4 relative z-20">
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                     <StatsCard
                         icon="✨"
                         label="Total XP Earned"
@@ -255,34 +257,22 @@ export default function ProfilePage() {
                         delay={0.5}
                     />
                     <StatsCard
-                        icon="🎭"
-                        label="Persona Type"
-                        value={progress?.personaType || "N/A"}
+                        icon="⚡"
+                        label="Current Grit"
+                        value={(progress?.streak || 0).toString()}
                         delay={0.6}
                     />
                     <StatsCard
-                        icon="🔥"
-                        label="Current Streak"
-                        value={(stats?.currentStreak || 0).toString()}
+                        icon="🏆"
+                        label="Max Grit"
+                        value={(stats?.longestStreak || 0).toString()}
                         delay={0.7}
                     />
-                    <StatsCard
-                        icon="🏆"
-                        label="Longest Streak"
-                        value={(stats?.longestStreak || 0).toString()}
-                        delay={0.75}
-                    />
-                    <StatsCard
-                        icon="🎙️"
-                        label="Rehearsals Done"
-                        value={(stats?.totalPractices || 0).toString()}
-                        delay={0.8}
-                    />
-                    <StatsCard
+                     <StatsCard
                         icon="🔄"
                         label="Roadmap Cycles"
                         value={(progress?.completions || 0).toString()}
-                        delay={0.85}
+                        delay={0.8}
                     />
                 </div>
 
@@ -322,8 +312,7 @@ export default function ProfilePage() {
 
             </div>
 
-            <div className="container max-w-4xl mx-auto px-4 mt-12">
-                <SuccessPath totalPractices={stats?.totalPractices || 0} />
+            <div className="container max-w-4xl mx-auto px-4 mt-8">
             </div>
 
             {/* Edit Profile Modal */}

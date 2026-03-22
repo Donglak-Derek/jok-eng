@@ -3,6 +3,7 @@ import { doc, setDoc, updateDoc, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { UserProgress } from "@/types";
 import { calculatePersona } from "@/lib/persona";
+import { calculateNewStreak } from "@/lib/gamification";
 
 export function useUserProgress(uid: string | undefined) {
     const [progress, setProgress] = useState<UserProgress | null>(null);
@@ -78,14 +79,25 @@ export function useUserProgress(uid: string | undefined) {
                 const newCompletedDays = Array.from(new Set([...progress.completedDays, dayId]));
                 const newTotalXP = progress.totalXP + xpGained;
                 const newCurrentDay = progress.currentDay === dayId ? dayId + 1 : progress.currentDay;
-                const newPersona = calculatePersona(vibeScore, progress.personaType);
+                const today = new Date().toISOString().split('T')[0];
+                const currentLog = progress.activityLog || {};
+                const newLog = { 
+                    ...currentLog,
+                    [today]: (currentLog[today] || 0) + 1
+                };
 
+                const newPersona = calculatePersona(vibeScore, progress.personaType);
+                const { newStreak } = calculateNewStreak(progress.streak, progress.lastPracticeTimestamp || 0);
                 const updatedProgress: UserProgress = {
                     ...progress,
                     currentDay: newCurrentDay,
                     completedDays: newCompletedDays,
                     totalXP: newTotalXP,
-                    personaType: newPersona
+                    personaType: newPersona,
+                    streak: newStreak,
+                    lastPracticeTimestamp: Date.now(),
+                    lastCompletedDate: new Date().toISOString(),
+                    activityLog: newLog
                 };
 
                 localStorage.setItem("amly_guest_progress", JSON.stringify(updatedProgress));
@@ -97,6 +109,13 @@ export function useUserProgress(uid: string | undefined) {
         }
 
         try {
+            const today = new Date().toISOString().split('T')[0];
+            const currentLog = progress.activityLog || {};
+            const newLog = { 
+                ...currentLog,
+                [today]: (currentLog[today] || 0) + 1
+            };
+
             const docRef = doc(db, "userProgress", uid);
             
             // Calculate new values
@@ -104,16 +123,18 @@ export function useUserProgress(uid: string | undefined) {
             const newTotalXP = progress.totalXP + xpGained;
             const newCurrentDay = progress.currentDay === dayId ? dayId + 1 : progress.currentDay;
             
-            // Recalculate persona - pass the history of vibe scores (for MVP, we'll store vibe history here soon or derive it, 
-            // but for now we just pass the new one as a mock history array or update persona separately.
-            // Actually, calculatePersona can just take an average. For now let's just use the current vibeScore to nudge the persona.
             const newPersona = calculatePersona(vibeScore, progress.personaType);
+            const { newStreak } = calculateNewStreak(progress.streak, progress.lastPracticeTimestamp || 0);
 
             const updates: Partial<UserProgress> = {
                 currentDay: newCurrentDay,
                 completedDays: newCompletedDays,
                 totalXP: newTotalXP,
-                personaType: newPersona
+                personaType: newPersona,
+                streak: newStreak,
+                lastPracticeTimestamp: Date.now(),
+                lastCompletedDate: new Date().toISOString(),
+                activityLog: newLog
             };
 
             await updateDoc(docRef, updates);

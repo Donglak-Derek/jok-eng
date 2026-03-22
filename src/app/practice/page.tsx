@@ -23,16 +23,16 @@ function Storefront() {
     const storeItems = [
         {
             id: "90-day-roadmap",
-            title: "Do this 2 min everyday for 90 days.",
-            description: "if you want to be Amly.",
+            title: "Daily Social Grit",
+            description: "The essential 2-minute daily foundation for bulletproof social fluency.",
             price: "Free",
-            icon: <Star className="w-8 h-8 text-yellow-400 fill-yellow-400" />,
-            color: "from-yellow-500 to-orange-600",
-            glow: "bg-yellow-500/20",
-            bgPattern: "bg-[radial-gradient(circle_at_top_right,rgba(234,179,8,0.15)_0%,transparent_60%)]",
-            link: "/", // Routes to landing page now
+            icon: <Star className="w-8 h-8 text-yellow-500 fill-yellow-500/20" />,
+            color: "from-zinc-900 to-zinc-800",
+            glow: "bg-indigo-500/10",
+            bgPattern: "bg-[radial-gradient(circle_at_top_right,rgba(99,102,241,0.08)_0%,transparent_60%)]",
+            link: "/", 
             isOwned: true, 
-            buttonText: "Start Training",
+            buttonText: "Resume Training",
             popular: true
         },
     ];
@@ -40,30 +40,30 @@ function Storefront() {
     const paidItems = [
         {
             id: "dating-kit",
-            title: "Dating Bootcamp",
-            description: "Do 20 rounds of this! Get that flirtation muscle!!",
+            title: "Flirtation Drills",
+            description: "Master the art of calibrated attraction and high-stakes charisma.",
             price: "$49",
-            icon: <Zap className="w-8 h-8 text-rose-400 fill-rose-400" />,
-            color: "from-rose-500 to-pink-600",
-            glow: "bg-rose-500/20",
-            bgPattern: "bg-[radial-gradient(circle_at_top_right,rgba(244,63,94,0.15)_0%,transparent_60%)]",
+            icon: <Zap className="w-8 h-8 text-rose-500 fill-rose-500/20" />,
+            color: "from-zinc-950 to-rose-950/20",
+            glow: "bg-rose-500/10",
+            bgPattern: "bg-[radial-gradient(circle_at_top_right,rgba(244,63,94,0.08)_0%,transparent_60%)]",
             link: "/shop/dating-kit",
             isOwned: false,
-            buttonText: "Unlock Course",
+            buttonText: "Unlock Module",
             popular: false
         },
         {
             id: "corporate-power",
-            title: "Corporate Heavyweight",
-            description: "Lift heavy politics! Build your meeting muscle!!",
+            title: "Executive Presence",
+            description: "Command the boardroom and navigate complex corporate politics with ease.",
             price: "$79",
-            icon: <Shield className="w-8 h-8 text-blue-400 fill-blue-400" />,
-            color: "from-blue-500 to-indigo-600",
-            glow: "bg-blue-500/20",
-            bgPattern: "bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.15)_0%,transparent_60%)]",
+            icon: <Shield className="w-8 h-8 text-indigo-400 fill-indigo-400/20" />,
+            color: "from-zinc-950 to-indigo-950/20",
+            glow: "bg-indigo-500/10",
+            bgPattern: "bg-[radial-gradient(circle_at_top_right,rgba(79,70,229,0.08)_0%,transparent_60%)]",
             link: "/shop/corporate-power",
             isOwned: false,
-            buttonText: "Unlock Course",
+            buttonText: "Unlock Module",
             popular: false
         }
     ];
@@ -127,90 +127,94 @@ function Storefront() {
                         </motion.h1>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
-                        {storeItems.map((item, index) => (
-                            <motion.div
-                                key={item.id}
-                                initial={{ opacity: 0, y: 30 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.3 + (index * 0.1), duration: 0.4 }}
-                                className={`group relative rounded-[32px] overflow-hidden border ${item.popular ? 'border-primary/50 md:col-span-2' : 'border-border'} bg-card transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl`}
-                            >
-                                <div className={`absolute top-0 right-0 w-64 h-64 rounded-full blur-[80px] -z-10 ${item.glow} opacity-50 group-hover:opacity-100 transition-opacity`} />
-                                <div className={`relative h-full p-8 flex flex-col ${item.bgPattern}`}>
-                                    <div className="flex justify-between items-start mb-8">
-                                        <div className="w-16 h-16 rounded-2xl bg-zinc-900 shadow-xl flex items-center justify-center relative overflow-hidden">
-                                            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
-                                            <div className="relative z-10">{item.icon}</div>
-                                        </div>
-                                        <div className="flex flex-col items-end gap-2">
-                                            {item.popular && (
-                                                <span className="bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-sm shadow-sm ring-1 ring-primary/50">
-                                                    90-Day Challenge
-                                                </span>
-                                            )}
-                                            {!item.isOwned ? (
-                                                <span className="bg-secondary text-secondary-foreground text-sm font-black px-4 py-1.5 rounded-full">
-                                                    {item.price}
-                                                </span>
-                                            ) : (
-                                                <span className="flex items-center gap-1.5 bg-emerald-500/10 text-emerald-500 text-sm font-black px-4 py-1.5 rounded-full border border-emerald-500/20">
-                                                    <Unlock className="w-4 h-4" /> {item.price === 'Free' ? 'Free' : 'Purchased'}
-                                                </span>
-                                            )}
-                                        </div>
-                                    </div>
-                                    <div className="flex-1">
-                                        <h2 className={`text-2xl md:text-3xl font-black italic tracking-tight mb-3 ${item.popular ? 'md:text-4xl' : ''}`}>
-                                            {item.title}
-                                        </h2>
-                                        <p className="text-muted-foreground font-medium leading-relaxed mb-8 max-w-xl">
-                                            {item.description}
-                                        </p>
-                                    </div>
-                                    <Link 
-                                        href={item.link}
-                                        className={`mt-auto w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-[0.98]
-                                            ${item.isOwned 
-                                                ? 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20' 
-                                                : 'bg-zinc-900 text-white hover:bg-zinc-800 border border-zinc-800'
-                                            }`}
-                                    >
-                                        {item.isOwned ? <PlayCircle className="w-5 h-5" /> : <Lock className="w-5 h-5" />}
-                                        {item.buttonText}
-                                    </Link>
-                                    {item.popular && progress && (
-                                        <div className="mt-4 flex items-center justify-between text-sm font-medium pt-4 border-t border-border/50">
-                                            <span className="text-muted-foreground">Current Progress</span>
-                                            <span className="text-primary font-black">Day {progress.currentDay} / 90</span>
-                                        </div>
-                                    )}
-                                </div>
-                            </motion.div>
-                        ))}
-                    </div>
-
-                    <div className="mt-12 border-t border-border/50 pt-10 relative z-10">
-                        <div className="text-left mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-2">
-                            <div>
-                                <h2 className="text-2xl md:text-4xl font-black italic tracking-tighter uppercase text-foreground">
-                                    Extra Practice
-                                </h2>
-                                <p className="text-muted-foreground font-medium text-sm mt-1">Hone specific skills with targeted training packs.</p>
-                            </div>
-                        </div>
+                    <div className="mt-12 relative z-10">
                         <TrainingPacks />
                     </div>
 
-                    <div className="mt-16 border-t border-border/50 pt-10 relative z-10">
+                    <div className="mt-20 border-t border-border/50 pt-12 relative z-10">
+                        <div className="text-left mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-2">
+                            <div>
+                                <h2 className="text-2xl md:text-4xl font-black italic tracking-tighter uppercase text-foreground">
+                                    Base Training
+                                </h2>
+                                <p className="text-muted-foreground font-medium text-sm mt-1">Foundational social conditioning for the long-term grind.</p>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
+                            {storeItems.map((item, index) => (
+                                <motion.div
+                                    key={item.id}
+                                    initial={{ opacity: 0, y: 30 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.3 + (index * 0.1), duration: 0.4 }}
+                                    className={`group relative rounded-[32px] overflow-hidden border ${item.popular ? 'border-primary/50 md:col-span-2' : 'border-border'} bg-card transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl`}
+                                >
+                                    <div className={`absolute top-0 right-0 w-64 h-64 rounded-full blur-[80px] -z-10 ${item.glow} opacity-50 group-hover:opacity-100 transition-opacity`} />
+                                    <div className={`relative h-full p-8 flex flex-col ${item.bgPattern}`}>
+                                        <div className="flex justify-between items-start mb-8">
+                                            <div className="w-16 h-16 rounded-2xl bg-zinc-900 shadow-xl flex items-center justify-center relative overflow-hidden">
+                                                <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
+                                                <div className="relative z-10">{item.icon}</div>
+                                            </div>
+                                            <div className="flex flex-col items-end gap-2">
+                                                {item.popular && (
+                                                    <span className="bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-sm shadow-sm ring-1 ring-primary/50">
+                                                        90-Day Challenge
+                                                    </span>
+                                                )}
+                                                {!item.isOwned ? (
+                                                    <span className="bg-secondary text-secondary-foreground text-sm font-black px-4 py-1.5 rounded-full">
+                                                        {item.price}
+                                                    </span>
+                                                ) : (
+                                                    <span className="flex items-center gap-1.5 bg-emerald-500/10 text-emerald-500 text-sm font-black px-4 py-1.5 rounded-full border border-emerald-500/20">
+                                                        <Unlock className="w-4 h-4" /> {item.price === 'Free' ? 'Free' : 'Purchased'}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </div>
+                                        <div className="flex-1">
+                                            <h2 className={`text-2xl md:text-3xl font-black italic tracking-tight mb-3 ${item.popular ? 'md:text-4xl' : ''}`}>
+                                                {item.title}
+                                            </h2>
+                                            <p className="text-muted-foreground font-medium leading-relaxed mb-8 max-w-xl">
+                                                {item.description}
+                                            </p>
+                                        </div>
+                                        <Link 
+                                            href={item.link}
+                                            className={`mt-auto w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-[0.98]
+                                                ${item.isOwned 
+                                                    ? 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20' 
+                                                    : 'bg-zinc-900 text-white hover:bg-zinc-800 border border-zinc-800'
+                                                }`}
+                                        >
+                                            {item.isOwned ? <PlayCircle className="w-5 h-5" /> : <Lock className="w-5 h-5" />}
+                                            {item.buttonText}
+                                        </Link>
+                                        {item.popular && progress && (
+                                            <div className="mt-4 flex items-center justify-between text-sm font-medium pt-4 border-t border-border/50">
+                                                <span className="text-muted-foreground">Current Progress</span>
+                                                <span className="text-primary font-black">Day {progress.currentDay} / 90</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="mt-20 border-t border-border/50 pt-12 relative z-10">
                         <div className="text-left mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-2">
                             <div>
                                 <h2 className="text-2xl md:text-4xl font-black italic tracking-tighter uppercase text-foreground">
                                     Premium Modules
                                 </h2>
-                                <p className="text-muted-foreground font-medium text-sm mt-1">Specialized career and lifestyle programs.</p>
+                                <p className="text-muted-foreground font-medium text-sm mt-1">Advanced elite-level programs to push your limits.</p>
                             </div>
                         </div>
+
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
                             {paidItems.map((item, index) => (
                                 <motion.div

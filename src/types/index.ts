@@ -174,6 +174,8 @@ export interface UserProgress {
   personaType?: string; // e.g. "The Silent Expert", "The Power Player"
   streak: number;
   lastCompletedDate?: string; // ISO string for streak calculation
+  lastPracticeTimestamp?: number; // Precise timestamp for mathematical calculations
+  activityLog?: Record<string, number>; // YYYY-MM-DD -> session count
   badges: string[]; // Achievement IDs
   completions?: number; // Number of times 90-day roadmap was finished
 }
