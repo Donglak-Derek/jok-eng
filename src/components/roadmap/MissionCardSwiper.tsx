@@ -251,62 +251,66 @@ export default function MissionCardSwiper({ mission, onComplete, onRetry, onNext
         {step === "WIN" && (
           <motion.div
             key="win"
-            initial={{ opacity: 0, scale: 0.8 }}
+            initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="absolute inset-0 p-8 flex flex-col items-center justify-center text-center space-y-8 bg-zinc-950"
+            className="absolute inset-0 p-8 flex flex-col items-center justify-center text-center space-y-6 bg-zinc-950"
           >
             <div className="relative">
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                className="absolute inset-0 bg-primary/20 blur-[60px] rounded-full"
+                className="absolute inset-0 bg-primary/20 blur-[50px] rounded-full"
               />
-              <div className="relative w-32 h-32 bg-primary text-white rounded-full flex items-center justify-center shadow-2xl shadow-primary/50 border-4 border-white/20">
-                <Award className="w-16 h-16" />
+              <div className="relative w-24 h-24 bg-primary text-white rounded-full flex items-center justify-center shadow-2xl shadow-primary/50 border-2 border-white/20">
+                <Award className="w-12 h-12" />
               </div>
             </div>
 
-            <div className="space-y-2">
-              <h2 className="text-4xl font-black italic tracking-tighter uppercase text-white">Mission Complete</h2>
-              <p className="text-primary font-black uppercase tracking-[0.2em] text-xs">Skill Unlocked: Social Opener</p>
-            </div>
-
-            <div className="flex justify-around w-full py-4 border-y border-white/5">
-              <div className="flex flex-col items-center">
-                <div className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-1">XP Earned</div>
-                <div className="text-3xl font-black text-primary">+{mission.xp}</div>
-              </div>
-              <div className="w-px h-12 bg-white/5" />
-              <div className="flex flex-col items-center">
-                <div className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-1">Success</div>
-                <div className="text-3xl font-black text-white">100%</div>
+            <div className="space-y-1">
+              <h2 className="text-3xl font-black italic tracking-tighter uppercase text-white leading-none">Mission Complete</h2>
+              <div className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-primary/10 rounded-sm border border-primary/20">
+                <span className="text-primary font-black uppercase tracking-[0.2em] text-[10px]">Skill Unlocked: Social Opener</span>
               </div>
             </div>
 
-            <div className="flex flex-col gap-3 w-full">
+            {/* Tactical Scoreboard */}
+            <div className="w-full py-4 px-6 bg-zinc-900/50 border-y border-white/5 flex items-center justify-between">
+              <div className="text-left">
+                <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-0.5">XP Earned</p>
+                <p className="text-2xl font-black text-primary italic leading-none">+{mission.xp}</p>
+              </div>
+              <div className="h-8 w-px bg-white/10" />
+              <div className="text-right">
+                <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-0.5">Proficiency</p>
+                <p className="text-2xl font-black text-white italic leading-none">100%</p>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-3 w-full pt-2">
               {onNext && (
                 <button
                   onClick={onNext}
-                  className="w-full py-5 bg-primary text-white font-black uppercase tracking-widest text-sm rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-xl shadow-primary/20"
+                  className="w-full py-5 bg-primary text-primary-foreground font-black uppercase tracking-widest text-sm rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-xl shadow-primary/30"
                 >
-                  Next Mission <ChevronRight className="w-5 h-5" />
+                  Next Training Day <ChevronRight className="w-5 h-5" />
                 </button>
               )}
               
               <button
                 onClick={handleRestart}
-                className="w-full py-5 bg-zinc-800 text-white font-black uppercase tracking-widest text-sm rounded-2xl hover:bg-zinc-700 transition-all flex items-center justify-center gap-2 border border-white/5"
+                className="w-full py-4 bg-transparent text-zinc-400 font-bold uppercase tracking-widest text-[11px] rounded-2xl hover:text-white hover:bg-white/5 transition-all flex items-center justify-center gap-2 border border-white/10"
               >
-                <RotateCcw className="w-4 h-4" /> Repeat Mission
+                <RotateCcw className="w-3.5 h-3.5" /> Repeat Set
               </button>
 
-              <div className="flex items-center justify-center gap-8 pt-2">
+              <div className="flex items-center justify-center gap-6 pt-2">
                 <button
                   onClick={() => window.location.href = "/practice"}
                   className="text-[11px] font-black uppercase tracking-widest text-zinc-500 hover:text-primary transition-colors flex items-center gap-1.5"
                 >
-                  <Zap className="w-3.5 h-3.5" /> Practice Area
+                  Practice Arena
                 </button>
+                <span className="w-1 h-1 rounded-full bg-zinc-800" />
                 <button
                   onClick={() => window.location.href = "/"}
                   className="text-[11px] font-black uppercase tracking-widest text-zinc-500 hover:text-white transition-colors"

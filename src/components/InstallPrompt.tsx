@@ -76,7 +76,7 @@ export default function InstallPrompt() {
                     initial={{ y: 50, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ y: 50, opacity: 0 }}
-                    className="fixed bottom-6 left-4 right-4 z-50 max-w-sm mx-auto bg-neutral-900 border border-neutral-700 shadow-2xl rounded-2xl p-4 flex items-center justify-between gap-4"
+                    className="fixed bottom-28 md:bottom-8 left-4 right-4 z-[60] max-w-sm mx-auto bg-neutral-900/90 backdrop-blur-xl border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] rounded-2xl p-4 flex items-center justify-between gap-4"
                 >
                     <div className="flex items-center gap-3 flex-1 overflow-hidden">
                         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center shrink-0">
