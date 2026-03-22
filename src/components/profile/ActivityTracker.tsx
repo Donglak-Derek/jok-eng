@@ -15,6 +15,8 @@ export default function ActivityTracker({ activityLog = {} }: ActivityTrackerPro
   const totalDays = weeks * daysInWeek;
   
   const today = new Date();
+  today.setHours(12, 0, 0, 0); // Normalize to noon to avoid DST issues
+  
   const dates: Date[] = [];
   
   // Find the most recent Sunday to start the grid (GitHub style)
@@ -24,6 +26,7 @@ export default function ActivityTracker({ activityLog = {} }: ActivityTrackerPro
   // Generate the 91-day window (13 weeks)
   for (let i = totalDays - 1; i >= 0; i--) {
     const d = new Date(startDay);
+    d.setHours(12, 0, 0, 0); // Ensure each date is at noon
     d.setDate(startDay.getDate() - i);
     dates.push(d);
   }
