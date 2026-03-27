@@ -170,7 +170,7 @@ export default function StoryCard({
 
     return (
       <motion.p
-        className={`${dynamicFontSize} font-bold leading-relaxed text-foreground leading-snug`}
+        className={`${dynamicFontSize} font-black leading-tight text-white italic tracking-tight leading-snug`}
         variants={containerVariants}
         initial="hidden"
         animate={isEffectiveGlobalReveal ? "visible" : "hidden"}
@@ -193,18 +193,18 @@ export default function StoryCard({
                   }
                 }}
                 className={`
-                  inline-block rounded mx-1 px-1.5 border-b-4 transition-all duration-300
+                  inline-block rounded px-2.5 mx-1 border-b-2 transition-all duration-300 relative
                   ${isRevealed
-                    ? "bg-yellow-100 border-yellow-300 text-foreground cursor-default"
-                    : "bg-slate-100 border-slate-300 text-transparent cursor-pointer hover:bg-slate-200 select-none min-w-[3ch] text-center"
+                    ? "bg-primary/10 border-primary/30 text-white cursor-default"
+                    : "bg-zinc-800 border-white/10 text-transparent cursor-pointer hover:bg-zinc-700/50 select-none min-w-[4ch] text-center"
                   }
                   ${mode !== "standard" && !isRevealed ? "active:scale-95" : ""}
                 `}
                 animate={{
                   scale: isRevealed ? [1, 1.05, 1] : 1,
-                  backgroundColor: isRevealed ? "#fef9c3" : "#f1f5f9",
-                  borderColor: isRevealed ? "#fde047" : "#cbd5e1",
-                  color: isRevealed ? "#0f172a" : "rgba(15, 23, 42, 0)"
+                  backgroundColor: isRevealed ? "rgba(var(--primary-rgb), 0.1)" : "rgba(39, 39, 42, 1)",
+                  borderColor: isRevealed ? "rgba(var(--primary-rgb), 0.3)" : "rgba(255, 255, 255, 0.1)",
+                  color: isRevealed ? "#ffffff" : "rgba(255, 255, 255, 0)"
                 }}
               >
                 {content}
@@ -231,35 +231,35 @@ export default function StoryCard({
   const alignClass = isSkit ? (isSpeakerA ? 'text-left items-start' : 'text-right items-end') : 'text-center items-center';
   const bubbleClass = isSkit
     ? (isSpeakerA
-      ? 'bg-blue-50 border-blue-100 rounded-tr-3xl rounded-bl-3xl rounded-br-3xl'
-      : 'bg-purple-50 border-purple-100 rounded-tl-3xl rounded-bl-3xl rounded-br-3xl')
-    : 'bg-white rounded-lg'; // Default
+      ? "bg-blue-500/10 border-blue-500/20 rounded-tr-[40px] rounded-bl-[40px] rounded-br-[40px]"
+      : "bg-purple-500/10 border-purple-500/20 rounded-tl-[40px] rounded-bl-[40px] rounded-br-[40px]")
+    : "bg-zinc-900/50 rounded-3xl border-white/5"; // Default
 
   return (
     <div className={`
-        relative flex flex-col gap-4 p-6 md:p-10 border shadow-sm transition-all hover:shadow-md h-full
+        relative flex flex-col gap-6 p-8 md:p-12 border shadow-2xl transition-all hover:shadow-primary/5 h-full backdrop-blur-xl overflow-hidden
         ${bubbleClass}
-        ${!isSkit && 'border-border'}
     `}>
+      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
 
       {/* HEADER: Section or Speaker Badge */}
       <div className={`flex w-full ${isSkit ? (isSpeakerA ? 'justify-start' : 'justify-end') : 'justify-center'}`}>
         {sentence.section && (
-          <span className="px-3 py-1 bg-black text-white text-xs font-black uppercase tracking-widest rounded-full">
+          <span className="px-3 py-1 bg-zinc-950 text-zinc-500 border border-white/5 text-[9px] font-black uppercase tracking-[0.2em] rounded-sm">
             {sentence.section}
           </span>
         )}
         {sentence.speaker && (
-          <span className={`flex items-center gap-2 px-3 py-1 text-xs font-bold uppercase tracking-widest rounded-full ${isSpeakerA ? 'bg-blue-200 text-blue-800' : 'bg-purple-200 text-purple-800'}`}>
-            <User className="w-3 h-3" /> {sentence.speaker === 'A' ? myRole : otherRole}
+          <span className={`flex items-center gap-2 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] rounded-sm border ${isSpeakerA ? "bg-blue-500/20 text-blue-400 border-blue-500/30 shadow-[0_0_15px_rgba(59,130,246,0.2)]" : "bg-purple-500/20 text-purple-400 border-purple-500/30 shadow-[0_0_15px_rgba(168,85,247,0.2)]"}`}>
+            <User className="w-3.5 h-3.5" /> {sentence.speaker === 'A' ? myRole : otherRole}
           </span>
         )}
       </div>
 
       {/* Mood Badge (Optional) */}
       {sentence.mood && (
-        <div className={`text-xs font-medium italic text-muted-foreground w-full ${isSkit ? (isSpeakerA ? 'text-left' : 'text-right') : 'text-center'}`}>
-          (Mood: {sentence.mood})
+        <div className={`text-[10px] font-black uppercase tracking-widest text-zinc-500/60 w-full ${isSkit ? (isSpeakerA ? 'text-left' : 'text-right') : 'text-center'}`}>
+          [ Tactical Intensity: {sentence.mood} ]
         </div>
       )}
 
@@ -273,21 +273,19 @@ export default function StoryCard({
       {/* Info / Feedback Section */}
       <div className="min-h-[24px] flex flex-col items-center gap-4">
         {mode === "cloze" && !anyRevealed && (
-          <div className="text-sm text-muted-foreground italic animate-pulse">
-            Click hidden boxes to reveal
+          <div className="text-[10px] font-black text-zinc-500 uppercase tracking-widest animate-pulse">
+            Click hidden descriptors to reveal
           </div>
         )}
         {anyRevealed && keywords.length > 0 && (
-          <div className="flex flex-wrap justify-center gap-2 animate-in fade-in slide-in-from-bottom-2 duration-500">
+          <div className="flex flex-wrap justify-center gap-3 animate-in fade-in slide-in-from-bottom-2 duration-500">
             {keywords.map((k) => (
               <span
                 key={k.word}
-                className="text-sm px-4 py-2 bg-secondary text-secondary-foreground rounded-lg border border-border text-left leading-snug break-words"
+                className="text-xs font-bold px-4 py-3 bg-zinc-950/80 text-zinc-300 rounded-xl border border-white/5 text-left leading-snug break-words shadow-inner"
               >
-                <span className="font-semibold">{k.word}</span>
-                <span className="text-muted-foreground ml-1 opacity-70">
-                  : {k.definition.replace(/^Hidden:\s*/, "")}
-                </span>
+                <span className="font-black text-primary uppercase tracking-wider">{k.word}</span>
+                <span className="text-zinc-500 ml-1.5 opacity-60">: {k.definition.replace(/^Hidden:\s*/, "")}</span>
               </span>
             ))}
           </div>
@@ -303,9 +301,9 @@ export default function StoryCard({
         variant={speaking ? "outline" : "primary"}
         size="lg"
         isLoading={loading}
-        className="w-full h-14 text-lg font-medium rounded-md mt-auto"
+        className="w-full h-16 text-sm font-black uppercase tracking-[0.2em] rounded-2xl shadow-2xl shadow-primary/20 hover:scale-[1.01] transition-all active:scale-[0.99] mt-auto"
       >
-        {speaking ? <AudioVisualizer /> : <span className="flex items-center gap-2"><AudioLines className="w-5 h-5" /> Play Audio</span>}
+        {speaking ? <AudioVisualizer /> : <span className="flex items-center gap-2"><AudioLines className="w-5 h-5" /> Execute Audio</span>}
       </Button>
 
     </div>

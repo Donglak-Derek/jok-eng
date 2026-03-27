@@ -64,9 +64,9 @@ export default function TrainingPacks() {
         <div className="space-y-16">
             {packs.filter(p => p.categories.length > 0).map((pack, packIndex) => (
                 <div key={pack.title} className="w-full">
-                    <div className="mb-6 pl-2 border-l-4 border-primary">
-                        <h2 className="text-3xl font-black italic tracking-tighter uppercase">{pack.title}</h2>
-                        <p className="text-muted-foreground font-medium">{pack.description}</p>
+                    <div className="mb-6 pl-3 border-l-4 border-primary">
+                        <h2 className="text-3xl font-black italic tracking-tighter uppercase text-white">{pack.title}</h2>
+                        <p className="text-zinc-500 font-medium">{pack.description}</p>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
@@ -79,7 +79,7 @@ export default function TrainingPacks() {
                                 transition={{ delay: i * 0.1 }}
                             >
                                 <Link href={`/category/${c.slug}`} className="block w-full h-full group outline-none">
-                                    <div className="flex flex-col w-full h-full bg-card rounded-3xl shadow-sm border border-border overflow-hidden group-hover:shadow-md transition-all duration-300 group-hover:-translate-y-1">
+                                    <div className="flex flex-col w-full h-full bg-zinc-900/50 rounded-3xl shadow-2xl border border-white/5 overflow-hidden group-hover:border-primary/20 transition-all duration-500 group-hover:-translate-y-1">
                                         <div className="relative w-full aspect-video bg-muted">
                                             <Image
                                                 src={c.image || "/images/categories/small_talk.png"}
@@ -95,12 +95,12 @@ export default function TrainingPacks() {
                                                 </h3>
                                             </div>
                                         </div>
-                                        <div className="p-5 flex-1 flex flex-col justify-between bg-card text-card-foreground">
-                                            <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
+                                        <div className="p-5 flex-1 flex flex-col justify-between">
+                                            <p className="text-sm text-zinc-400 font-medium line-clamp-2 mb-4 leading-relaxed">
                                                 {c.description}
                                             </p>
-                                            <div className="text-xs font-bold uppercase tracking-widest text-primary">
-                                                Start Set &rarr;
+                                            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-primary group-hover:translate-x-1 transition-transform">
+                                                Initialize Training &rarr;
                                             </div>
                                         </div>
                                     </div>

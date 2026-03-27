@@ -13,9 +13,8 @@ import { useAuth } from "@/context/AuthContext";
 import { updateDoc, onSnapshot, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useDailyProgress } from "@/hooks/useDailyProgress";
-import { calculateNewStreak } from "@/lib/gamification";
-import { getDoc } from "firebase/firestore";
-import { PartyPopper } from "lucide-react";
+import { useUserProgress } from "@/hooks/useUserProgress";
+import { Trophy } from "lucide-react";
 import StandardFullView from "./StandardFullView";
 import CulturalNoteCard from "@/components/CulturalNoteCard";
 import QuizCard from "@/components/QuizCard";
@@ -70,9 +69,10 @@ export default function StandardScriptFlow({ script }: Props) {
         prev: prevEpisode ? { id: prevEpisode.id, title: prevEpisode.title } : undefined
     } : undefined;
 
-    // ... (auth/progress hooks unchanged)
+    // auth/progress hooks
     const { markComplete } = useDailyProgress();
     const { getRepeats } = useProgress();
+    const { recordPractice } = useUserProgress(user?.uid);
 
     const sentencesCount = sentences.length;
     // ... (indices logic unchanged)
@@ -149,30 +149,8 @@ export default function StandardScriptFlow({ script }: Props) {
                     lastPracticedAt: serverTimestamp()
                 }, { merge: true });
 
-                const userRef = doc(db, "users", user.uid);
-
-                // --- STREAK LOGIC ---
-                const userSnap = await getDoc(userRef);
-                let currentStreak = 0;
-                let lastPractice = 0;
-                let longestStreak = 0;
-
-                if (userSnap.exists()) {
-                    const data = userSnap.data();
-                    currentStreak = data.currentStreak || 0;
-                    lastPractice = data.lastPracticeTimestamp || 0;
-                    longestStreak = data.longestStreak || 0;
-                }
-
-                const { newStreak } = calculateNewStreak(currentStreak, lastPractice);
-                const newLongest = Math.max(longestStreak, newStreak);
-
-                await updateDoc(userRef, {
-                    totalPractices: increment(1),
-                    currentStreak: newStreak,
-                    lastPracticeTimestamp: Date.now(), // Store as number for easier math
-                    longestStreak: newLongest
-                });
+                // Centralized Practice Recording (Streak/XP)
+                recordPractice(10, 80); 
                 // --------------------
 
                 if (isOwner) {
@@ -297,16 +275,20 @@ export default function StandardScriptFlow({ script }: Props) {
             >
                 <Confetti />
 
-                <div className="w-24 h-24 bg-gradient-to-br from-yellow-200 to-amber-400 rounded-full flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(251,191,36,0.4)] animate-in zoom-in-50 duration-500">
-                    <PartyPopper className="w-12 h-12 text-white drop-shadow-md" />
+                <div className="w-24 h-24 bg-zinc-900 rounded-[32px] border border-primary/20 flex items-center justify-center mb-8 shadow-[0_0_30px_rgba(var(--primary),0.1)] relative overflow-hidden group">
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent" />
+                    <Trophy className="w-10 h-10 text-primary drop-shadow-lg relative z-10 transition-transform group-hover:scale-110" />
                 </div>
 
-                <h2 className="text-3xl md:text-4xl font-bold mb-2 tracking-tight">Training Complete!</h2>
-                <p className="text-muted-foreground text-lg mb-8">{encouragement}</p>
+                <h2 className="text-3xl md:text-5xl font-black italic uppercase tracking-tighter text-white mb-2">
+                    Training Objective Cleared
+                </h2>
+                <p className="text-zinc-500 font-bold uppercase tracking-widest text-xs mb-10">{encouragement}</p>
 
-                <div className="bg-secondary/30 border border-secondary p-6 rounded-2xl mb-8 flex flex-col items-center min-w-[200px]">
-                    <span className="text-sm uppercase tracking-wider text-muted-foreground font-semibold mb-1">Total Reps</span>
-                    <div className="text-5xl font-black text-primary tabular-nums">
+                <div className="bg-zinc-950/50 border border-white/5 p-8 rounded-[32px] mb-10 flex flex-col items-center min-w-[240px] shadow-2xl relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none" />
+                    <span className="text-[10px] uppercase font-black tracking-[0.3em] text-zinc-600 mb-4">Total Script Mastery</span>
+                    <div className="text-6xl font-black text-primary tabular-nums italic tracking-tighter">
                         {currentReps}
                     </div>
                 </div>
@@ -332,7 +314,7 @@ export default function StandardScriptFlow({ script }: Props) {
                         <Button
                             variant="outline"
                             onClick={() => router.push(`/scenario/${seriesProp.next!.id}`)}
-                            className="w-full h-12 border-indigo-200 text-indigo-700 hover:bg-indigo-50 mt-2"
+                            className="w-full h-12 border-primary/20 text-primary hover:bg-primary/5 mt-2 text-sm font-black uppercase tracking-widest"
                         >
                             Next Episode: {seriesProp.next.title}
                         </Button>
@@ -343,9 +325,9 @@ export default function StandardScriptFlow({ script }: Props) {
                         <Button
                             variant="ghost"
                             onClick={() => window.open(script.relatedBlogUrl, '_blank')}
-                            className="w-full h-12 text-primary font-bold hover:bg-primary/5 mt-2"
+                            className="w-full h-12 text-primary font-black uppercase tracking-widest hover:bg-primary/5 mt-2 text-xs"
                         >
-                            Read Full Guide &reg;
+                            Read Full Mission Guide &reg;
                         </Button>
                     )}
                     {script.relatedBlogId && !script.relatedBlogUrl && (

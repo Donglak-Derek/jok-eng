@@ -83,19 +83,19 @@ export default function ScenarioList({ scripts, onDelete, onTogglePublic }: Prop
     };
 
     const sectionStyles: Record<string, string> = {
-      "The Dating Minefield": "bg-pink-50/50 border-pink-100 rounded-3xl p-6 -mx-4 md:-mx-6",
-      "Social Emergencies": "bg-yellow-50/50 border-yellow-100 rounded-3xl p-6 -mx-4 md:-mx-6",
-      signal_decoders: "bg-red-50/50 border-red-100 rounded-3xl p-6 -mx-4 md:-mx-6",
-      slang_vocab: "bg-purple-50/50 border-purple-100 rounded-3xl p-6 -mx-4 md:-mx-6",
-      life_work: "bg-blue-50/50 border-blue-100 rounded-3xl p-6 -mx-4 md:-mx-6"
+      "The Dating Minefield": "bg-rose-500/5 border-rose-500/10 rounded-3xl p-6 -mx-4 md:-mx-6 border",
+      "Social Emergencies": "bg-amber-500/5 border-amber-500/10 rounded-3xl p-6 -mx-4 md:-mx-6 border",
+      signal_decoders: "bg-red-500/5 border-red-500/10 rounded-3xl p-6 -mx-4 md:-mx-6 border",
+      slang_vocab: "bg-purple-500/5 border-purple-500/10 rounded-3xl p-6 -mx-4 md:-mx-6 border",
+      life_work: "bg-blue-500/5 border-blue-500/10 rounded-3xl p-6 -mx-4 md:-mx-6 border"
     };
 
     const sectionHeaderStyles: Record<string, string> = {
-      "The Dating Minefield": "border-pink-400 text-pink-900/80",
-      "Social Emergencies": "border-yellow-400 text-yellow-900/80",
-      signal_decoders: "border-red-400 text-red-900/80",
-      slang_vocab: "border-purple-400 text-purple-900/80",
-      life_work: "border-blue-400 text-blue-900/80"
+      "The Dating Minefield": "border-rose-500 text-rose-400",
+      "Social Emergencies": "border-amber-500 text-amber-400",
+      signal_decoders: "border-red-500 text-red-400",
+      slang_vocab: "border-purple-500 text-purple-400",
+      life_work: "border-blue-500 text-blue-400"
     };
 
     return (
@@ -113,7 +113,7 @@ export default function ScenarioList({ scripts, onDelete, onTogglePublic }: Prop
 
           return (
             <div key={sectionKey} className={`${customStyle} mb-8 transition-colors duration-300`}>
-              <h2 className={`text-xl md:text-2xl font-bold mb-6 pl-3 border-l-4 ${headerBorderColor} ${headerTextColor}`}>
+              <h2 className={`text-xl md:text-2xl font-black italic uppercase tracking-tighter mb-6 pl-3 border-l-4 ${headerBorderColor} ${headerTextColor}`}>
                 {sectionTitles[sectionKey] || sectionKey}
               </h2>
               <div className="grid grid-cols-1 gap-4 md:gap-5">

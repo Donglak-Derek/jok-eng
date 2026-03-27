@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Confetti from "@/components/Confetti";
 import { Button } from "@/components/Button";
 import { useAuth } from "@/context/AuthContext";
+import { useUserProgress } from "@/hooks/useUserProgress";
 import { updateDoc, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { UserScript, Sentence } from "@/types";
@@ -91,9 +92,13 @@ export default function StoryFlow({ script }: Props) {
 
   // Auth context
   const { user, userProfile } = useAuth();
+  const { recordPractice } = useUserProgress(user?.uid);
   const isOwner = user && 'userId' in script && (script as UserScript).userId === user.uid;
 
   const handleFinishTraining = async () => {
+    // Centralized Practice Recording (Streak/XP)
+    recordPractice(10, 80); // Default XP and vibe score for story completion
+
     // Save repeats
     const nextRepeats = repeats + 1;
     setRepeats(nextRepeats);
@@ -218,15 +223,16 @@ export default function StoryFlow({ script }: Props) {
         transition={{ duration: 0.4 }}
         className="w-full"
       >
-        <div className="bg-white rounded-lg border border-border shadow-sm p-8 md:p-12 flex flex-col items-center text-center gap-6">
+        <div className="bg-zinc-900/80 rounded-[32px] border border-white/5 shadow-2xl p-8 md:p-12 flex flex-col items-center text-center gap-6 relative overflow-hidden backdrop-blur-xl">
+          <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
           <Confetti />
-          <div className="text-6xl mb-2">🎉</div>
+          <div className="text-6xl mb-2 grayscale">🏆</div>
 
           <div className="space-y-2">
-            <h2 className="text-3xl font-bold text-foreground">
-              Story Complete!
+            <h2 className="text-3xl font-black italic uppercase tracking-tighter text-white">
+              Story Objective Cleared
             </h2>
-            <p className="text-lg text-muted-foreground">You&apos;ve mastered this flow.</p>
+            <p className="text-lg text-zinc-500 font-medium">Flow mastery achieved.</p>
           </div>
 
           <div className="w-full max-w-sm flex flex-col gap-3 mt-4">
@@ -296,7 +302,7 @@ export default function StoryFlow({ script }: Props) {
         transition={{ duration: 0.3 }}
         className="w-full"
       >
-        <div className="bg-white rounded-lg border border-border shadow-sm p-4 md:p-6 min-h-[400px]">
+        <div className="bg-zinc-900/50 rounded-2xl border border-white/5 shadow-2xl p-4 md:p-6 min-h-[400px]">
           <VideoCard
             videoUrl={localScript.videoUrl}
             onEnd={() => setCanProceedFromVideo(true)}
@@ -335,10 +341,10 @@ export default function StoryFlow({ script }: Props) {
             />
           </div>
         ) : (
-          <div className="bg-white rounded-lg border border-border shadow-sm p-6 md:p-12 flex flex-col gap-6 md:gap-8 min-h-[400px]">
+          <div className="bg-zinc-900/50 rounded-2xl border border-white/5 shadow-2xl p-6 md:p-12 flex flex-col gap-6 md:gap-8 min-h-[400px]">
             <div className="flex flex-col gap-6 text-center items-center">
-              <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground border border-border px-3 py-1 rounded-full bg-secondary/50">
-                Step {currentSegment.step}
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 border border-white/5 px-4 py-1.5 rounded-sm bg-zinc-950 shadow-inner">
+                Sector Step {currentSegment.step}
               </span>
 
               {/* Main English Text */}
@@ -347,9 +353,9 @@ export default function StoryFlow({ script }: Props) {
               </div>
 
               {/* Coaching Note */}
-              <div className="w-full text-foreground/80 italic text-lg bg-secondary/20 px-6 py-4 rounded-lg border border-secondary flex gap-3 items-start justify-center">
-                <Lightbulb className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-1" />
-                <span className="font-medium">{currentSegment.note}</span>
+              <div className="w-full text-zinc-300 italic text-lg bg-primary/5 px-6 py-5 rounded-xl border border-primary/10 flex gap-4 items-start justify-center shadow-lg">
+                <Lightbulb className="w-5 h-5 text-primary flex-shrink-0 mt-1" />
+                <span className="font-semibold tracking-tight">{currentSegment.note}</span>
               </div>
             </div>
 
@@ -359,10 +365,10 @@ export default function StoryFlow({ script }: Props) {
                 {currentSegment.keywords.map((k) => (
                   <span
                     key={k.word}
-                    className="text-sm px-3 py-1 rounded-md bg-blue-50 text-blue-700 border border-blue-100"
+                    className="text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-md bg-blue-500/10 text-blue-400 border border-blue-500/20 shadow-sm"
                   >
-                    <span className="font-semibold">{k.word}</span>
-                    <span className="opacity-75">: {k.definition}</span>
+                    <span className="font-black">{k.word}</span>
+                    <span className="opacity-60 ml-1.5 font-medium">: {k.definition}</span>
                   </span>
                 ))}
               </div>

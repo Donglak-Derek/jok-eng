@@ -47,9 +47,13 @@ export default function SignalFullView({ script, onBack }: Props) {
 
   const getDangerColor = (level: string) => {
       const l = level.toLowerCase();
-      if (l.includes("critical") || l.includes("run") || l.includes("red flag") || l.includes("high")) return "text-red-600 bg-red-50 border-red-100";
-      if (l.includes("medium") || l.includes("caution") || l.includes("flake")) return "text-orange-600 bg-orange-50 border-orange-100";
-      return "text-green-600 bg-green-50 border-green-100";
+      if (l.includes("critical") || l.includes("run") || l.includes("red flag") || l.includes("high")) {
+          return "text-rose-400 bg-rose-500/10 border-rose-500/20 shadow-[0_0_10px_rgba(244,63,94,0.1)]";
+      }
+      if (l.includes("medium") || l.includes("caution") || l.includes("flake")) {
+          return "text-amber-400 bg-amber-500/10 border-amber-500/20 shadow-[0_0_10px_rgba(245,158,11,0.1)]";
+      }
+      return "text-emerald-400 bg-emerald-500/10 border-emerald-500/20 shadow-[0_0_10px_rgba(16,185,129,0.1)]";
   };
 
   return (
@@ -77,26 +81,27 @@ export default function SignalFullView({ script, onBack }: Props) {
 
       <div className="space-y-4 mt-4">
         {script.decoderItems?.map((item, index) => (
-            <div key={index} className="flex flex-col gap-3 p-5 rounded-lg border border-border bg-white shadow-sm hover:shadow-md transition-shadow">
-                <div className="flex justify-between items-start gap-4">
-                    <div className="flex gap-3">
-                         <span className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-secondary text-xs font-bold text-secondary-foreground mt-0.5">
-                            {index + 1}
+            <div key={index} className="flex flex-col gap-4 p-6 rounded-2xl border border-white/5 bg-zinc-900/40 shadow-xl group overflow-hidden relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/[0.01] to-transparent pointer-events-none" />
+                <div className="flex justify-between items-start gap-4 relative z-10">
+                    <div className="flex gap-4">
+                         <span className="flex-shrink-0 flex items-center justify-center w-7 h-7 rounded-lg bg-zinc-950 text-[10px] font-black text-zinc-500 border border-white/5 shadow-inner mt-1">
+                            {String(index + 1).padStart(2, '0')}
                         </span>
                         <div>
-                            <h3 className="text-lg font-bold text-foreground leading-tight">
+                            <h3 className="text-xl font-black text-white italic tracking-tight leading-tight uppercase">
                                 &quot;{item.phrase}&quot;
                             </h3>
-                            <p className="text-sm text-muted-foreground mt-1">Literal: {item.literalMeaning}</p>
+                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 mt-2">Literal Decryption: {item.literalMeaning}</p>
                         </div>
                     </div>
                      <button
                         onClick={() => speak(item.phrase, index)}
                         disabled={speakingIndex !== null}
-                        className={`p-2 rounded-full transition-colors flex-shrink-0 ${
+                        className={`p-3 rounded-xl transition-all shadow-2xl flex-shrink-0 ${
                             speakingIndex === index 
-                            ? "bg-primary text-primary-foreground" 
-                            : "bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground"
+                            ? "bg-primary text-white scale-110 shadow-primary/30" 
+                            : "bg-zinc-950 text-zinc-500 border border-white/5 hover:bg-primary hover:text-white hover:border-primary/50"
                         }`}
                         aria-label="Play audio"
                     >
@@ -108,14 +113,14 @@ export default function SignalFullView({ script, onBack }: Props) {
                     </button>
                 </div>
                 
-                <div className="flex flex-col gap-2 pl-9 bg-secondary/10 p-3 rounded-md mt-1">
-                     <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold uppercase text-muted-foreground">Meaning:</span>
-                        <span className="font-medium text-foreground">{item.actualMeaning}</span>
+                <div className="flex flex-col gap-3 pl-11 bg-zinc-950/40 p-5 rounded-2xl mt-1 border border-white/5 relative z-10">
+                     <div className="flex items-center gap-3">
+                        <span className="text-[10px] font-black uppercase text-zinc-500 tracking-widest">Calculated Meaning:</span>
+                        <span className="font-bold text-zinc-200">{item.actualMeaning}</span>
                      </div>
-                     <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold uppercase text-muted-foreground">Traffic Light:</span>
-                        <span className={`text-xs font-bold px-2 py-0.5 rounded border ${getDangerColor(item.dangerLevel)}`}>
+                     <div className="flex items-center gap-3">
+                        <span className="text-[10px] font-black uppercase text-zinc-500 tracking-widest">Protocol Stance:</span>
+                        <span className={`text-[9px] font-black px-3 py-1 rounded uppercase tracking-widest border ${getDangerColor(item.dangerLevel)}`}>
                             {item.dangerLevel}
                         </span>
                      </div>

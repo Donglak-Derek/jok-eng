@@ -225,18 +225,18 @@ export default function ClozeCard({
                   }
                 }}
                 className={`
-                  inline-block rounded mx-1 px-1.5 border-b-4 transition-all duration-300
+                  inline-block rounded px-2.5 mx-1 border-b-2 transition-all duration-300 relative
                   ${isRevealed
-                    ? "bg-yellow-100 border-yellow-300 text-foreground cursor-default"
-                    : "bg-slate-100 border-slate-300 text-transparent cursor-pointer hover:bg-slate-200 select-none min-w-[3ch] text-center"
+                    ? "bg-primary/10 border-primary/30 text-white cursor-default"
+                    : "bg-zinc-800 border-white/10 text-transparent cursor-pointer hover:bg-zinc-700/50 select-none min-w-[4ch] text-center"
                   }
                   ${mode !== "standard" && !isRevealed ? "active:scale-95" : ""}
                 `}
                 animate={{
                   scale: isRevealed ? [1, 1.05, 1] : 1,
-                  backgroundColor: isRevealed ? "#fef9c3" : "#f1f5f9",
-                  borderColor: isRevealed ? "#fde047" : "#cbd5e1",
-                  color: isRevealed ? "#0f172a" : "rgba(15, 23, 42, 0)"
+                  backgroundColor: isRevealed ? "rgba(var(--primary-rgb), 0.1)" : "rgba(39, 39, 42, 1)",
+                  borderColor: isRevealed ? "rgba(var(--primary-rgb), 0.3)" : "rgba(255, 255, 255, 0.1)",
+                  color: isRevealed ? "#ffffff" : "rgba(255, 255, 255, 0)"
                 }}
               >
                 {content}
@@ -250,13 +250,14 @@ export default function ClozeCard({
   };
 
   return (
-    <div className="bg-white rounded-lg border border-border p-8 md:p-12 flex flex-col gap-8 shadow-sm transition-all hover:shadow-md text-center h-full">
+    <div className="bg-zinc-900/50 rounded-3xl border border-white/5 p-8 md:p-14 flex flex-col gap-8 shadow-2xl transition-all text-center h-full relative overflow-hidden backdrop-blur-xl">
+      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
 
 
 
       {/* Scenario / Context (if any) - Shifted down or kept as is */}
       {sentence.scenario && (
-        <div className="text-xs font-semibold text-primary/80 uppercase tracking-widest mb-2">
+        <div className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/60 mb-2">
           {sentence.scenario}
         </div>
       )}
@@ -273,21 +274,21 @@ export default function ClozeCard({
 
         {/* Instructions for Cloze */}
         {mode === "cloze" && !anyRevealed && (
-          <div className="text-sm text-muted-foreground italic animate-pulse">
-            Click hidden boxes to reveal
+          <div className="text-xs font-bold text-zinc-500 uppercase tracking-widest animate-pulse">
+            Click hidden indicators to initiate reveal
           </div>
         )}
 
         {/* Keywords (if standard or revealed) */}
         {anyRevealed && keywords.length > 0 && (
-          <div className="flex flex-wrap justify-center gap-2 animate-in fade-in slide-in-from-bottom-2 duration-500">
+          <div className="flex flex-wrap justify-center gap-3 animate-in fade-in slide-in-from-bottom-2 duration-500">
             {keywords.map((k) => (
               <span
                 key={k.word}
-                className="text-sm px-4 py-2 bg-secondary text-secondary-foreground rounded-lg border border-border text-left leading-snug max-w-full whitespace-normal break-words h-auto"
+                className="text-xs font-bold px-4 py-3 bg-zinc-950/80 text-zinc-300 rounded-xl border border-white/5 text-left leading-snug max-w-full whitespace-normal break-words h-auto shadow-inner"
               >
-                <span className="font-semibold">{k.word}</span>
-                <span className="text-muted-foreground ml-1 opacity-70">
+                <span className="font-black text-primary uppercase tracking-wider">{k.word}</span>
+                <span className="text-zinc-500 ml-1.5 opacity-80">
                   : {k.definition.replace(/^Hidden:\s*/, "")}
                 </span>
               </span>

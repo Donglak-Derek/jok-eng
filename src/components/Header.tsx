@@ -23,9 +23,12 @@ export default function Header({ transparent = false }: HeaderProps) {
     const isPracticeActive = pathname.startsWith("/practice");
     const isProfileActive = pathname.startsWith("/profile");
 
-    const headerBg = transparent ? 'bg-gradient-to-b from-black/60 to-transparent border-transparent' : 'bg-white/80 backdrop-blur-md border-b border-border';
-    const textColor = transparent ? 'text-white' : 'text-foreground';
-    const mutedTextColor = transparent ? 'text-white/80 hover:text-white' : 'text-muted-foreground hover:text-foreground';
+    const headerBg = transparent 
+        ? 'bg-gradient-to-b from-black/80 to-transparent border-transparent' 
+        : 'bg-zinc-950/90 backdrop-blur-md border-b border-white/5';
+    
+    const textColor = 'text-white';
+    const mutedTextColor = 'text-zinc-500 hover:text-white';
 
     return (
         <header className={`fixed top-0 z-50 w-full px-4 md:px-0 py-3 transition-colors duration-300 ${headerBg}`}>
@@ -42,10 +45,10 @@ export default function Header({ transparent = false }: HeaderProps) {
                                 priority
                             />
                         </div>
-                        <h1 className={`font-sans font-black italic text-xl tracking-tight group-hover:opacity-80 transition-opacity ${textColor}`}>
+                        <h1 className="font-sans font-black italic text-xl tracking-tight group-hover:opacity-80 transition-opacity text-white">
                             Amly
                         </h1>
-                        <span className={`px-2 py-0.5 text-[10px] uppercase tracking-wider font-bold rounded-full ${transparent ? 'bg-white/20 text-white' : 'bg-secondary text-secondary-foreground'}`}>
+                        <span className="ml-2 px-1.5 py-0.5 text-[8px] uppercase tracking-[0.2em] font-black rounded-sm bg-primary/10 text-primary border border-primary/20">
                             Beta
                         </span>
                     </Link>
@@ -53,29 +56,25 @@ export default function Header({ transparent = false }: HeaderProps) {
                     <nav className="items-center gap-4 md:gap-7 hidden md:flex">
                         <Link
                             href="/"
-                            className={`text-sm md:text-base font-bold transition-colors ${isHomeActive ? 'text-primary' : mutedTextColor
-                                }`}
+                            className={`text-[10px] font-black uppercase tracking-[0.2em] transition-all hover:tracking-[0.25em] ${isHomeActive ? 'text-primary' : mutedTextColor}`}
                         >
                             Home
                         </Link>
                         <Link
                             href="/videos"
-                            className={`text-sm md:text-base font-bold transition-colors ${isVideosActive ? 'text-primary' : mutedTextColor
-                                }`}
+                            className={`text-[10px] font-black uppercase tracking-[0.2em] transition-all hover:tracking-[0.25em] ${isVideosActive ? 'text-primary' : mutedTextColor}`}
                         >
                             Videos
                         </Link>
                         <Link
                             href="/practice"
-                            className={`text-sm md:text-base font-bold transition-colors ${isPracticeActive ? 'text-primary' : mutedTextColor
-                                }`}
+                            className={`text-[10px] font-black uppercase tracking-[0.2em] transition-all hover:tracking-[0.25em] ${isPracticeActive ? 'text-primary' : mutedTextColor}`}
                         >
                             Practice
                         </Link>
                         <Link
                             href="/profile"
-                            className={`text-sm md:text-base font-bold transition-colors ${isProfileActive ? 'text-primary' : mutedTextColor
-                                }`}
+                            className={`text-[10px] font-black uppercase tracking-[0.2em] transition-all hover:tracking-[0.25em] ${isProfileActive ? 'text-primary' : mutedTextColor}`}
                         >
                             Profile
                         </Link>
@@ -114,49 +113,53 @@ export default function Header({ transparent = false }: HeaderProps) {
                                 {dropdownOpen && (
                                     <>
                                         <div className="fixed inset-0 z-40 bg-transparent" onClick={() => setDropdownOpen(false)} />
-                                        <div className="absolute right-0 mt-2 w-56 bg-white border border-border rounded-lg shadow-lg py-1 z-50 overflow-hidden text-black">
-                                            <div className="px-4 py-3 border-b border-border bg-secondary/30">
-                                                <p className="font-medium text-sm text-foreground truncate">{user.displayName}</p>
-                                                <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                                        <div className="absolute right-0 mt-3 w-60 bg-zinc-900 border border-white/10 rounded-xl shadow-2xl py-2 z-50 overflow-hidden ring-1 ring-black/50">
+                                            <div className="px-4 py-3 border-b border-white/5 bg-white/5 mb-1">
+                                                <p className="font-bold text-sm text-white truncate lowercase tracking-tight">{user.displayName}</p>
+                                                <div className="flex items-center gap-1.5 mt-0.5">
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                                                    <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Active Operator</p>
+                                                </div>
                                             </div>
-                                            <Link
-                                                href="/profile"
-                                                className="block px-4 py-2 text-sm text-foreground hover:bg-secondary transition-colors"
-                                                onClick={() => setDropdownOpen(false)}
-                                            >
-                                                My Profile
-                                            </Link>
-                                            <Link
-                                                href="/practice"
-                                                className="block px-4 py-2 text-sm text-foreground hover:bg-secondary transition-colors"
-                                                onClick={() => setDropdownOpen(false)}
-                                            >
-                                                Practice & Arena
-                                            </Link>
-                                            <Link
-                                                href="/"
-                                                className="block px-4 py-2 text-sm text-primary font-bold hover:bg-secondary transition-colors"
-                                                onClick={() => setDropdownOpen(false)}
-                                            >
-                                                90-Day Roadmap
-                                            </Link>
-                                            <Link
-                                                href="/about"
-                                                className="block px-4 py-2 text-sm text-foreground hover:bg-secondary transition-colors"
-                                                onClick={() => setDropdownOpen(false)}
-                                            >
-                                                About & Help
-                                            </Link>
+                                            
+                                            <div className="px-1.5 py-1 space-y-0.5">
+                                                <Link
+                                                    href="/profile"
+                                                    className="flex items-center gap-3 px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-zinc-300 hover:text-white hover:bg-white/5 rounded-lg transition-all group/item"
+                                                    onClick={() => setDropdownOpen(false)}
+                                                >
+                                                    <span className="w-1 h-1 rounded-full bg-zinc-700 group-hover/item:bg-primary transition-colors" />
+                                                    Personal Profile
+                                                </Link>
+                                                <Link
+                                                    href="/practice"
+                                                    className="flex items-center gap-3 px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-zinc-300 hover:text-white hover:bg-white/5 rounded-lg transition-all group/item"
+                                                    onClick={() => setDropdownOpen(false)}
+                                                >
+                                                    <span className="w-1 h-1 rounded-full bg-zinc-700 group-hover/item:bg-primary transition-colors" />
+                                                    Practice & Arena
+                                                </Link>
+                                                <Link
+                                                    href="/"
+                                                    className="flex items-center gap-3 px-3 py-2 text-[11px] font-black uppercase tracking-wider text-primary hover:bg-primary/5 rounded-lg transition-all group/item"
+                                                    onClick={() => setDropdownOpen(false)}
+                                                >
+                                                    <span className="w-1 h-1 rounded-full bg-primary" />
+                                                    90-Day Roadmap
+                                                </Link>
+                                            </div>
 
-                                            <button
-                                                onClick={() => {
-                                                    logout();
-                                                    setDropdownOpen(false);
-                                                }}
-                                                className="w-full text-left block px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
-                                            >
-                                                Logout
-                                            </button>
+                                            <div className="mt-2 pt-2 border-t border-white/5 px-1.5 pb-1">
+                                                <button
+                                                    onClick={() => {
+                                                        logout();
+                                                        setDropdownOpen(false);
+                                                    }}
+                                                    className="w-full flex items-center gap-3 px-3 py-2 text-[10px] font-black uppercase tracking-widest text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-all"
+                                                >
+                                                    Terminate Session
+                                                </button>
+                                            </div>
                                         </div>
                                     </>
                                 )}

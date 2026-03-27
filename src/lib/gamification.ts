@@ -13,6 +13,9 @@
  * 
  * 2. 24h - 48h (Grace Period):
  *    - Freeze streak. (Do not reset, do not increment).
+ *    - Actually, user wants it to be 0 if they miss even 1 day.
+ *    - Standard: If you miss a day, it resets.
+ *    - 48h limit seems fair to account for "day after tomorrow".
  * 
  * 3. > 48h:
  *    - Reset to 1 (current session counts as the first of new streak).
@@ -61,14 +64,13 @@ export const calculateNewStreak = (
         }
     }
 
-    // Rule 2: 24h - 60h (Extended Grace Period)
-    // We allow up to 60 hours (2.5 days) to account for "Missed 1 day" + "Session Time" + "Timezone shifts".
-    // If they come back within this window, they save the streak AND get credit for today (+1).
-    if (diffHours >= 24 && diffHours < 60) {
+    // Rule 2: 24h - 48h (Grace Period)
+    // If they come back within 48 hours, they save the streak.
+    if (diffHours >= 24 && diffHours < 48) {
         return { newStreak: currentStreak + 1, status: "active" };
     }
 
-    // Rule 3: > 60h (Hard Reset)
+    // Rule 3: > 48h (Hard Reset)
     // Reset to 1 (this session helps start new streak)
     return { newStreak: 1, status: "lost" };
 };
@@ -79,6 +81,6 @@ export const getStreakStatus = (lastPracticeTimestamp: number = 0): StreakStatus
     const diffHours = (Date.now() - lastPracticeTimestamp) / (1000 * 60 * 60);
     
     if (diffHours < 24) return "active";
-    if (diffHours < 60) return "at_risk"; // Matches the logic above
+    if (diffHours < 48) return "at_risk"; 
     return "lost";
 };

@@ -70,13 +70,13 @@ export default function ScriptPlayerShell({
     const [isSharing, setIsSharing] = useState(false);
 
     return (
-        <div className="fixed inset-0 z-[100] flex flex-col bg-background text-foreground overflow-hidden">
+        <div className="fixed inset-0 z-[100] flex flex-col bg-zinc-950 text-foreground overflow-hidden">
 
             {/* --- HEADER --- */}
             {/* --- HEADER --- */}
             {/* --- HEADER --- */}
-            <header className="flex-none w-full bg-white/80 backdrop-blur-md border-b border-border z-10">
-                <div className="max-w-3xl mx-auto px-4 py-4 md:px-6 md:py-5">
+            <header className="flex-none w-full bg-zinc-950/80 backdrop-blur-md border-b border-white/5 z-10">
+                <div className="max-w-3xl mx-auto px-4 py-3 md:px-6 md:py-4">
                     <div className="flex items-center justify-between w-full">
                         {/* 1. Back Button (Bracket Style) */}
                         <Link
@@ -89,14 +89,14 @@ export default function ScriptPlayerShell({
 
                         {/* 2. Audio Badge */}
                         {props.audioStatus === 'premium' ? (
-                            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-indigo-50 border border-indigo-100">
-                                <Diamond className="w-3.5 h-3.5 text-indigo-500" />
-                                <span className="text-[10px] font-bold text-indigo-600 uppercase tracking-widest hidden md:inline">Premium Audio</span>
+                            <div className="flex items-center gap-1.5 px-3 py-1 rounded-sm bg-primary/10 border border-primary/20 shadow-[0_0_10px_rgba(var(--primary),0.1)]">
+                                <Diamond className="w-3.5 h-3.5 text-primary" />
+                                <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em] hidden md:inline ml-1">Tactical Audio</span>
                             </div>
                         ) : props.audioStatus === 'robot' ? (
-                            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-neutral-100 border border-neutral-200">
-                                <Bot className="w-3.5 h-3.5 text-neutral-500" />
-                                <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest hidden md:inline">Robot Voice</span>
+                            <div className="flex items-center gap-1.5 px-3 py-1 rounded-sm bg-zinc-900 border border-white/5">
+                                <Bot className="w-3.5 h-3.5 text-zinc-500" />
+                                <span className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] hidden md:inline ml-1">Synthesized Voice</span>
                             </div>
                         ) : null}
 
@@ -192,16 +192,16 @@ export default function ScriptPlayerShell({
 
                     {/* Series Indicator */}
                     {series && (
-                        <div className="absolute top-1 left-1/2 -translate-x-1/2 text-[10px] uppercase font-bold tracking-widest text-muted-foreground/70 bg-secondary/50 px-2 py-0.5 rounded-full backdrop-blur-sm border border-border/50">
-                            Series: Ep {series.current} / {series.total}
+                        <div className="absolute top-1 left-1/2 -translate-x-1/2 text-[9px] uppercase font-black tracking-[0.2em] text-zinc-500 bg-zinc-900/80 px-3 py-1 rounded-sm shadow-xl backdrop-blur-sm border border-white/5">
+                            Mission Sector: {series.current} <span className="mx-1 text-zinc-500 opacity-30">/</span> {series.total}
                         </div>
                     )}
                 </div>
 
                 {/* Progress Line */}
-                <div className="w-full h-1 bg-secondary">
+                <div className="w-full h-1 bg-zinc-950">
                     <div
-                        className="h-full bg-primary transition-all duration-300 ease-out"
+                        className="h-full bg-primary transition-all duration-300 ease-out shadow-[0_0_8px_rgba(var(--primary),0.5)]"
                         style={{ width: `${Math.min((currentStep / totalSteps) * 100, 100)}%` }}
                     />
                 </div>
@@ -216,17 +216,17 @@ export default function ScriptPlayerShell({
 
             {/* --- FOOTER (Navigation) --- */}
             {!hasFinished && (
-                <div className="flex-none bg-white border-t border-border z-10 pb-safe shadow-[0_-4px_20px_-10px_rgba(0,0,0,0.1)]">
+                <div className="flex-none bg-zinc-950 border-t border-white/5 z-10 pb-safe shadow-[0_-4px_30px_rgba(0,0,0,0.4)]">
                     <div className="max-w-3xl mx-auto px-4 py-4 md:px-6 md:py-6 flex items-center justify-between gap-4">
 
                         {/* Restart (Subtle, Left) */}
                         <Button
                             variant="ghost"
                             onClick={onRestart}
-                            className="text-muted-foreground hover:text-foreground shrink-0 w-16 h-16 rounded-full p-0 flex items-center justify-center bg-secondary/30 hover:bg-secondary/80"
-                            title="Restart from beginning"
+                            className="text-zinc-500 hover:text-white shrink-0 w-16 h-16 rounded-2xl p-0 flex items-center justify-center bg-zinc-900 border border-white/5 hover:border-white/10 transition-all active:scale-95"
+                            title="Restart Mission"
                         >
-                            <RotateCcw className="w-8 h-8" />
+                            <RotateCcw className="w-7 h-7" />
                         </Button>
 
                         {/* Navigation Group (Right) */}
@@ -237,7 +237,7 @@ export default function ScriptPlayerShell({
                                 variant="ghost"
                                 onClick={onPrev}
                                 disabled={!onPrev || currentStep === 0}
-                                className={`shrink-0 px-6 py-4 h-16 rounded-2xl text-lg font-bold transition-opacity bg-secondary/30 hover:bg-secondary/80 ${(!onPrev || currentStep === 0) ? "opacity-0 pointer-events-none" : "opacity-100"}`}
+                                className={`shrink-0 px-8 h-16 rounded-2xl text-sm font-black uppercase tracking-widest transition-all bg-zinc-900 border border-white/5 text-zinc-400 hover:text-white active:scale-95 ${(!onPrev || currentStep === 0) ? "opacity-0 pointer-events-none" : "opacity-100"}`}
                             >
                                 Prev
                             </Button>
@@ -246,8 +246,8 @@ export default function ScriptPlayerShell({
                             <Button
                                 variant="primary"
                                 onClick={onNext}
-                                className="flex-1 h-16 px-6 shadow-lg shadow-indigo-200 hover:shadow-xl transition-all active:scale-[0.98] text-xl font-black min-w-[140px] rounded-2xl flex justify-center items-center gap-2"
-                                rightIcon={<ChevronRight className="w-6 h-6" />}
+                                className="flex-1 h-16 px-8 shadow-2xl shadow-primary/20 transition-all active:scale-[0.98] text-sm font-black uppercase tracking-[0.2em] min-w-[140px] rounded-2xl flex justify-center items-center gap-2"
+                                rightIcon={<ChevronRight className="w-5 h-5" />}
                             >
                                 Next
                             </Button>

@@ -31,37 +31,38 @@ export default function CulturalNoteCard({ title, content, vocabulary, onNext }:
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.9, x: -100 }} // Animate out left
         onClick={(e) => e.stopPropagation()} // Stop backdrop click from firing on content tap
-        className="bg-white rounded-3xl shadow-xl overflow-hidden border border-indigo-100 flex flex-col max-h-[85vh] cursor-auto relative"
+        className="bg-zinc-900/50 rounded-[40px] shadow-2xl overflow-hidden border border-white/5 flex flex-col max-h-[85vh] cursor-auto relative backdrop-blur-xl"
       >
-        <div className="bg-indigo-50 p-6 flex flex-col items-center justify-center text-center border-b border-indigo-100 shrink-0">
-          <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mb-3 text-indigo-600">
-            <Globe className="w-6 h-6" />
+        <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
+        <div className="bg-zinc-950/30 p-8 flex flex-col items-center justify-center text-center border-b border-white/5 shrink-0 relative z-10">
+          <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-4 text-primary border border-primary/20 shadow-[0_0_20px_rgba(var(--primary),0.1)]">
+            <Globe className="w-8 h-8" />
           </div>
-          <h2 className="text-xl font-black text-indigo-900 leading-tight">
+          <h2 className="text-2xl font-black text-white italic uppercase tracking-tighter leading-tight">
             {title}
           </h2>
-          <span className="text-[10px] uppercase tracking-widest text-indigo-500 font-bold mt-1">
-            Cultural Context
+          <span className="text-[10px] uppercase font-black tracking-[0.3em] text-zinc-500 mt-2">
+            Intelligence Report
           </span>
-          <div className="absolute top-4 right-4 md:hidden text-indigo-300 text-xs animate-pulse">
+          <div className="absolute top-4 right-6 md:hidden text-zinc-600 text-[10px] font-black uppercase tracking-widest animate-pulse">
              Swipe ↔
           </div>
         </div>
 
-        <div className="p-6 flex-1 flex flex-col items-center overflow-y-auto">
-            <p className="text-base text-slate-600 leading-relaxed text-center font-medium mb-6">
+        <div className="p-8 flex-1 flex flex-col items-center overflow-y-auto relative z-10">
+            <p className="text-lg text-zinc-300 leading-relaxed text-center font-medium mb-8">
                 {content}
             </p>
 
             {vocabulary && vocabulary.length > 0 && (
-                <div className="w-full bg-indigo-50/50 rounded-xl p-4 border border-indigo-100">
-                    <h3 className="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-3 text-center">
-                        Key Vocabulary
+                <div className="w-full bg-zinc-950/50 rounded-2xl p-6 border border-white/5 shadow-inner">
+                    <h3 className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em] mb-4 text-center">
+                        Sector Lexicon
                     </h3>
-                    <ul className="space-y-2">
+                    <ul className="space-y-3">
                         {vocabulary.map((item, idx) => (
-                            <li key={idx} className="text-sm text-slate-700">
-                                <span className="font-bold text-indigo-900">{item.word}</span>: <span className="opacity-90">{item.definition}</span>
+                            <li key={idx} className="text-sm text-zinc-400 leading-snug">
+                                <span className="font-black text-primary uppercase tracking-wider">{item.word}</span> <span className="text-zinc-600 mx-1">:</span> <span className="opacity-90">{item.definition}</span>
                             </li>
                         ))}
                     </ul>
@@ -69,15 +70,15 @@ export default function CulturalNoteCard({ title, content, vocabulary, onNext }:
             )}
         </div>
 
-        <div className="p-4 bg-slate-50 border-t border-slate-100 shrink-0">
+        <div className="p-6 bg-zinc-950/80 border-t border-white/5 shrink-0 relative z-10">
           <button
             onClick={onNext}
-            className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] text-white rounded-xl font-bold text-lg transition-all flex items-center justify-center gap-2 shadow-lg shadow-indigo-200"
+            className="w-full py-5 bg-primary hover:opacity-90 active:scale-[0.98] text-white rounded-2xl font-black uppercase tracking-widest text-lg transition-all flex items-center justify-center gap-3 shadow-2xl shadow-primary/20"
           >
-            Got it <ArrowRight className="w-5 h-5" />
+            Acknowledge <ArrowRight className="w-5 h-5" />
           </button>
-          <p className="text-center text-xs text-muted-foreground mt-2 md:hidden">
-              Swipe or Tap outside to dismiss
+          <p className="text-center text-[10px] font-black text-zinc-600 uppercase tracking-[0.2em] mt-4 md:hidden">
+              Swipe or Tap outside to proceed
           </p>
         </div>
       </motion.div>

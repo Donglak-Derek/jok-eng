@@ -67,30 +67,31 @@ export default function StoryFullView({ script, onBack }: Props) {
 
       <div className="space-y-6 mt-4">
         {script.segments?.map((segment, index) => (
-            <div key={index} className="flex gap-4 p-4 rounded-lg border border-border bg-white shadow-sm hover:shadow-md transition-shadow">
-                <div className="flex-shrink-0 mt-1">
-                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-secondary text-xs font-bold text-secondary-foreground">
-                        {index + 1}
+            <div key={index} className="flex gap-5 p-6 rounded-2xl border border-white/5 bg-zinc-900/40 shadow-xl hover:bg-zinc-900/60 transition-all group overflow-hidden relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/[0.01] to-transparent pointer-events-none" />
+                <div className="flex-shrink-0 mt-1 relative z-10">
+                    <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-zinc-950 text-[10px] font-black text-zinc-500 border border-white/5 shadow-inner">
+                        {String(index + 1).padStart(2, '0')}
                     </span>
                 </div>
-                <div className="flex-1 space-y-2">
-                    <p className="text-lg font-medium text-foreground leading-relaxed">
+                <div className="flex-1 space-y-2 relative z-10">
+                    <p className="text-lg font-black text-white leading-tight italic tracking-tight">
                         {segment.text}
                     </p>
                     {segment.note && (
-                        <p className="text-sm text-muted-foreground italic">
+                        <p className="text-xs font-black uppercase tracking-widest text-primary/60">
                             {segment.note}
                         </p>
                     )}
                 </div>
-                <div className="flex-shrink-0">
+                <div className="flex-shrink-0 relative z-10">
                     <button
                         onClick={() => speak(segment.text, index)}
                         disabled={speakingIndex !== null}
-                        className={`p-2 rounded-full transition-colors ${
+                        className={`p-3 rounded-xl transition-all shadow-2xl ${
                             speakingIndex === index 
-                            ? "bg-primary text-primary-foreground" 
-                            : "bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground"
+                            ? "bg-primary text-white scale-110 shadow-primary/30" 
+                            : "bg-zinc-950 text-zinc-500 border border-white/5 hover:bg-primary hover:text-white hover:border-primary/50"
                         }`}
                         aria-label="Play audio"
                     >

@@ -1,13 +1,38 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { doc, setDoc, updateDoc, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { UserProgress } from "@/types";
 import { calculatePersona } from "@/lib/persona";
-import { calculateNewStreak } from "@/lib/gamification";
+import { calculateNewStreak, getStreakStatus } from "@/lib/gamification";
 
 export function useUserProgress(uid: string | undefined) {
     const [progress, setProgress] = useState<UserProgress | null>(null);
     const [loading, setLoading] = useState(true);
+
+    const checkStreakReset = useCallback(async (currentProgress: UserProgress) => {
+        if (!currentProgress.lastPracticeTimestamp) return currentProgress;
+        
+        const status = getStreakStatus(currentProgress.lastPracticeTimestamp);
+        if (status === "lost" && currentProgress.streak > 0) {
+            const updates: Partial<UserProgress> = { streak: 0 };
+            
+            // Update local state
+            const updated = { ...currentProgress, ...updates };
+            
+            // Persistent update
+            if (!uid || uid === "guest") {
+                localStorage.setItem("amly_guest_progress", JSON.stringify(updated));
+            } else {
+                try {
+                    await updateDoc(doc(db, "userProgress", uid), updates);
+                } catch (e) {
+                    console.error("Failed to reset expired streak in DB", e);
+                }
+            }
+            return updated;
+        }
+        return currentProgress;
+    }, [uid]);
 
     useEffect(() => {
         if (!uid) {
@@ -15,7 +40,8 @@ export function useUserProgress(uid: string | undefined) {
             try {
                 const stored = localStorage.getItem("amly_guest_progress");
                 if (stored) {
-                    setProgress(JSON.parse(stored));
+                    const parsed = JSON.parse(stored) as UserProgress;
+                    checkStreakReset(parsed).then(setProgress);
                 } else {
                     const defaultGuestProgress: UserProgress = {
                         uid: "guest",
@@ -41,7 +67,9 @@ export function useUserProgress(uid: string | undefined) {
 
         const unsubscribe = onSnapshot(docRef, async (docSnap) => {
             if (docSnap.exists()) {
-                setProgress(docSnap.data() as UserProgress);
+                const data = docSnap.data() as UserProgress;
+                const validated = await checkStreakReset(data);
+                setProgress(validated);
                 setLoading(false);
             } else {
                 // Initialize if it doesn't exist
@@ -68,37 +96,42 @@ export function useUserProgress(uid: string | undefined) {
         });
 
         return () => unsubscribe();
-    }, [uid]);
+    }, [uid, checkStreakReset]);
 
-    const recordMissionSuccess = async (dayId: number, xpGained: number, vibeScore: number) => {
+    const recordPractice = async (xpGained: number, vibeScore: number, dayId?: number) => {
         if (!progress) return;
+
+        const today = new Date().toISOString().split('T')[0];
+        const currentLog = progress.activityLog || {};
+        const newLog = { 
+            ...currentLog,
+            [today]: (currentLog[today] || 0) + 1
+        };
+
+        const newPersona = calculatePersona(vibeScore, progress.personaType);
+        const { newStreak } = calculateNewStreak(progress.streak, progress.lastPracticeTimestamp || 0);
+
+        const updates: Partial<UserProgress> = {
+            totalXP: progress.totalXP + xpGained,
+            personaType: newPersona,
+            streak: newStreak,
+            lastPracticeTimestamp: Date.now(),
+            lastCompletedDate: new Date().toISOString(),
+            activityLog: newLog
+        };
+
+        if (dayId !== undefined) {
+            updates.completedDays = Array.from(new Set([...progress.completedDays, dayId]));
+            updates.currentDay = progress.currentDay === dayId ? dayId + 1 : progress.currentDay;
+        }
 
         // Guest mode update
         if (!uid || progress.uid === "guest") {
             try {
-                const newCompletedDays = Array.from(new Set([...progress.completedDays, dayId]));
-                const newTotalXP = progress.totalXP + xpGained;
-                const newCurrentDay = progress.currentDay === dayId ? dayId + 1 : progress.currentDay;
-                const today = new Date().toISOString().split('T')[0];
-                const currentLog = progress.activityLog || {};
-                const newLog = { 
-                    ...currentLog,
-                    [today]: (currentLog[today] || 0) + 1
-                };
-
-                const newPersona = calculatePersona(vibeScore, progress.personaType);
-                const { newStreak } = calculateNewStreak(progress.streak, progress.lastPracticeTimestamp || 0);
                 const updatedProgress: UserProgress = {
                     ...progress,
-                    currentDay: newCurrentDay,
-                    completedDays: newCompletedDays,
-                    totalXP: newTotalXP,
-                    personaType: newPersona,
-                    streak: newStreak,
-                    lastPracticeTimestamp: Date.now(),
-                    lastCompletedDate: new Date().toISOString(),
-                    activityLog: newLog
-                };
+                    ...updates
+                } as UserProgress;
 
                 localStorage.setItem("amly_guest_progress", JSON.stringify(updatedProgress));
                 setProgress(updatedProgress);
@@ -109,41 +142,12 @@ export function useUserProgress(uid: string | undefined) {
         }
 
         try {
-            const today = new Date().toISOString().split('T')[0];
-            const currentLog = progress.activityLog || {};
-            const newLog = { 
-                ...currentLog,
-                [today]: (currentLog[today] || 0) + 1
-            };
-
             const docRef = doc(db, "userProgress", uid);
-            
-            // Calculate new values
-            const newCompletedDays = Array.from(new Set([...progress.completedDays, dayId]));
-            const newTotalXP = progress.totalXP + xpGained;
-            const newCurrentDay = progress.currentDay === dayId ? dayId + 1 : progress.currentDay;
-            
-            const newPersona = calculatePersona(vibeScore, progress.personaType);
-            const { newStreak } = calculateNewStreak(progress.streak, progress.lastPracticeTimestamp || 0);
-
-            const updates: Partial<UserProgress> = {
-                currentDay: newCurrentDay,
-                completedDays: newCompletedDays,
-                totalXP: newTotalXP,
-                personaType: newPersona,
-                streak: newStreak,
-                lastPracticeTimestamp: Date.now(),
-                lastCompletedDate: new Date().toISOString(),
-                activityLog: newLog
-            };
-
             await updateDoc(docRef, updates);
-
             setProgress({
                 ...progress,
                 ...updates
             } as UserProgress);
-            
         } catch (error) {
             console.error("Failed to update mission progress", error);
         }
@@ -181,5 +185,11 @@ export function useUserProgress(uid: string | undefined) {
         }
     };
 
-    return { progress, loading, recordMissionSuccess, resetRoadmap };
+    return { 
+        progress, 
+        loading, 
+        recordPractice, 
+        recordMissionSuccess: (dayId: number, xp: number, vibe: number) => recordPractice(xp, vibe, dayId),
+        resetRoadmap 
+    };
 }

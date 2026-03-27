@@ -18,6 +18,7 @@ type Props = {
     onToggleSave?: (id: string, e: React.MouseEvent) => void;
     isSaved?: boolean;
     isNew?: boolean;
+    className?: string;
 };
 
 export default function ScenarioCard({
@@ -28,7 +29,8 @@ export default function ScenarioCard({
     onShare,
     onToggleSave,
     isSaved,
-    isNew
+    isNew,
+    className
 }: Props) {
 
     // ... (existing logic)
@@ -49,9 +51,14 @@ export default function ScenarioCard({
     return (
         <div className="h-full block">
             <motion.div
-                // ... (motion props)
-                className={`...`}
+                layout
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
+                className={`group relative h-full flex flex-col bg-zinc-900/50 rounded-2xl border border-white/5 hover:border-primary/20 transition-all duration-500 overflow-hidden shadow-2xl hover:-translate-y-1 ${className}`}
             >
+                {/* Horizontal Accent (Grit Theme) */}
+                <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-primary/10 transition-colors" />
                 <Link href={href} className="flex-1 flex flex-col min-w-0">
                     {/* Cover Image */}
                     <div className="relative w-full aspect-[4/3] md:aspect-[1.8/1] bg-secondary/10 overflow-hidden shrink-0">
@@ -74,25 +81,25 @@ export default function ScenarioCard({
 
                         {/* Floating Badge: Repeats */}
                         {mounted && repeats > 0 && (
-                            <div className="absolute top-2 right-2 flex items-center gap-1 text-[10px] font-bold text-white bg-black/40 backdrop-blur-md px-2 py-1 rounded-full">
-                                <Repeat className="w-3 h-3" />
-                                {repeats}
+                            <div className="absolute top-2 right-2 flex items-center gap-1.5 text-[9px] font-black italic uppercase tracking-widest text-white bg-zinc-950/80 backdrop-blur-md px-2.5 py-1.5 rounded-sm border border-white/10 shadow-xl">
+                                <Repeat className="w-3 h-3 text-primary" />
+                                <span className="text-zinc-300">{repeats}</span> <span className="opacity-40">REPS</span>
                             </div>
                         )}
                     </div>
 
-                    <div className="p-4 flex flex-col gap-1 flex-1 relative min-w-0">
+                    <div className="p-5 flex flex-col gap-1 flex-1 relative min-w-0">
                         {/* Title & Context */}
                         <div className="min-w-0">
-                            <h3 className="font-bold text-lg text-foreground leading-tight group-hover:text-primary transition-colors mb-1">
+                            <h3 className="font-bold text-lg text-white leading-tight group-hover:text-primary transition-colors mb-1 italic">
                                 {script.title}
                             </h3>
                             {script.categoryName && (
-                                <p className="text-xs font-bold uppercase tracking-wider text-primary mb-1">
+                                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-2 opacity-80">
                                     {script.categoryName}
                                 </p>
                             )}
-                            <p className="text-muted-foreground text-sm line-clamp-2 leading-relaxed opacity-90">
+                            <p className="text-zinc-400 text-sm line-clamp-2 leading-relaxed font-medium">
                                 {script.cleanedEnglish || script.context}
                             </p>
 
@@ -104,28 +111,28 @@ export default function ScenarioCard({
                             )) && (
                                     <div className="flex flex-wrap gap-1.5 mt-3">
                                         {(script as UserScript).authorOccupation && (
-                                            <span className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-medium bg-blue-50 text-blue-700 border border-blue-100">
+                                            <span className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-blue-500/10 text-blue-400 border border-blue-500/20">
                                                 💼 {(script as UserScript).authorOccupation}
                                             </span>
                                         )}
                                         {(script as UserScript).authorAgeGroup && (
-                                            <span className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-medium bg-amber-50 text-amber-700 border border-amber-100">
+                                            <span className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-amber-500/10 text-amber-400 border border-amber-500/20">
                                                 ⚡ {(script as UserScript).authorAgeGroup}
                                             </span>
                                         )}
                                         {(script as UserScript).authorCountry && (
-                                            <span className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">
+                                            <span className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                                                 🌍 {(script as UserScript).authorCountry}
                                             </span>
                                         )}
 
                                         {/* Difficulty Badge */}
                                         {script.difficulty && (
-                                            <span className={`inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-medium border
-                                            ${script.difficulty === "Beginner" || script.difficulty.includes("Mild") ? "bg-green-50 text-green-700 border-green-100" : ""}
-                                            ${script.difficulty === "Normal" || script.difficulty.includes("Medium") ? "bg-blue-50 text-blue-700 border-blue-100" : ""}
-                                            ${script.difficulty === "Native" || script.difficulty.includes("Spicy") ? "bg-rose-50 text-rose-700 border-rose-100" : ""}
-                                            ${!["Beginner", "Normal", "Native"].some(d => script.difficulty?.includes(d)) && !script.difficulty.includes("Mild") && !script.difficulty.includes("Medium") && !script.difficulty.includes("Spicy") ? "bg-slate-50 text-slate-700 border-slate-100" : ""}
+                                            <span className={`inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border
+                                            ${script.difficulty === "Beginner" || script.difficulty.includes("Mild") ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" : ""}
+                                            ${script.difficulty === "Normal" || script.difficulty.includes("Medium") ? "bg-blue-500/10 text-blue-400 border-blue-500/20" : ""}
+                                            ${script.difficulty === "Native" || script.difficulty.includes("Spicy") ? "bg-rose-500/10 text-rose-400 border-rose-500/20" : ""}
+                                            ${!["Beginner", "Normal", "Native"].some(d => script.difficulty?.includes(d)) && !script.difficulty.includes("Mild") && !script.difficulty.includes("Medium") && !script.difficulty.includes("Spicy") ? "bg-zinc-800 text-zinc-400 border-white/5" : ""}
                                         `}>
                                                 🔥 {script.difficulty}
                                             </span>
@@ -133,7 +140,7 @@ export default function ScenarioCard({
 
                                         {/* Format Badge (Script Only) */}
                                         {script.format && (
-                                            <span className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-medium bg-violet-50 text-violet-700 border border-violet-100">
+                                            <span className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-violet-500/10 text-violet-400 border border-violet-500/20">
                                                 {script.format === "Social Dojo" ? "🥋" : script.format === "Rapid Fire" ? "⚡" : "📜"} {script.format}
                                             </span>
                                         )}
@@ -144,18 +151,18 @@ export default function ScenarioCard({
                         <div className="flex-1" /> {/* Spacer */}
 
                         {/* Footer: Minimal & Clean */}
-                        <div className="pt-4 mt-2 flex items-center justify-between">
+                        <div className="pt-4 mt-2 flex items-center justify-between border-t border-white/5">
                             <div className="flex items-center gap-2">
                                 {/* Author Name Only - No Icon */}
-                                <span className="text-xs font-semibold text-muted-foreground/80">{authorName || "Jok-Eng"}</span>
+                                <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500 group-hover:text-zinc-300 transition-colors">{authorName || "Jok-Eng Official"}</span>
                             </div>
 
-                            <div className="flex items-center gap-5">
+                            <div className="flex items-center gap-4">
                                 {/* Remix Count (Was Like) */}
                                 {isUserScript && (script as UserScript).remixCount !== undefined && (script as UserScript).remixCount! > 0 && (
-                                    <div className="flex items-center gap-1.5 text-muted-foreground" title="Remixes inspired">
-                                        <Shuffle className="w-4 h-4" />
-                                        <span className="text-xs font-medium">{(script as UserScript).remixCount}</span>
+                                    <div className="flex items-center gap-1.5 text-zinc-500" title="Remixes inspired">
+                                        <Shuffle className="w-3.5 h-3.5" />
+                                        <span className="text-[10px] font-black">{(script as UserScript).remixCount}</span>
                                     </div>
                                 )}
 
@@ -163,22 +170,20 @@ export default function ScenarioCard({
                                 {onTogglePublic && !isPublic && (
                                     <button
                                         onClick={(e) => { e.preventDefault(); e.stopPropagation(); onTogglePublic(script.id, true, e); }}
-                                        className="hover:text-foreground text-amber-500"
+                                        className="text-amber-500/50 hover:text-amber-500 transition-colors"
                                     >
-                                        <Lock className="w-5 h-5" />
+                                        <Lock className="w-4 h-4" />
                                     </button>
                                 )}
 
-                                {/* Edit/Delete */}
+                                {/* Delete */}
                                 {onDelete && (
-                                    <div className="flex gap-4 border-l border-border/30 pl-4">
-                                        {onDelete && (
-                                            <button onClick={(e) => onDelete(script.id, e)} className="text-muted-foreground hover:text-red-600 transition-colors">
-                                                <Trash2 className="w-5 h-5" />
-                                            </button>
-                                        )}
-
-                                    </div>
+                                    <button 
+                                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); onDelete(script.id, e); }}
+                                        className="text-zinc-500 hover:text-red-500/80 transition-colors"
+                                    >
+                                        <Trash2 className="w-4 h-4" />
+                                    </button>
                                 )}
 
                                 {/* Save Button */}
@@ -186,10 +191,10 @@ export default function ScenarioCard({
                                     <button
                                         onClick={(e) => { e.preventDefault(); e.stopPropagation(); onToggleSave(script.id, e); }}
                                         className={`
-                                                 ml-2 p-2 rounded-full transition-all active:scale-90
+                                                 transition-all active:scale-90
                                                  ${isSaved
-                                                ? "text-primary bg-primary/10 hover:bg-primary/20"
-                                                : "text-muted-foreground/60 hover:text-primary hover:bg-secondary"
+                                                ? "text-primary shadow-[0_0_10px_rgba(var(--primary),0.3)]"
+                                                : "text-zinc-600 hover:text-primary"
                                             }
                                              `}
                                         title={isSaved ? "Unsave" : "Save for later"}

@@ -63,20 +63,21 @@ export default function QuizCard({ items, onFinish }: Props) {
              <motion.div 
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 p-8 text-center flex flex-col items-center justify-center gap-6"
+                className="bg-zinc-900/50 rounded-[40px] shadow-2xl overflow-hidden border border-white/5 p-12 text-center flex flex-col items-center justify-center gap-8 backdrop-blur-xl relative"
              >
-                <div className="w-24 h-24 bg-yellow-100 text-yellow-500 rounded-full flex items-center justify-center">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
+                <div className="w-24 h-24 bg-primary/10 text-primary rounded-3xl flex items-center justify-center border border-primary/20 shadow-[0_0_30px_rgba(var(--primary),0.2)]">
                     <span className="text-4xl">🏆</span>
                 </div>
                 <div>
-                    <h2 className="text-3xl font-black text-slate-800 mb-2">Quiz Complete!</h2>
-                    <p className="text-slate-500 text-lg">You scored {score} out of {items.length}</p>
+                    <h2 className="text-4xl font-black italic text-white mb-2 uppercase tracking-tighter">Objective Cleared</h2>
+                    <p className="text-zinc-500 text-lg uppercase font-bold tracking-widest">Efficiency: {score} / {items.length}</p>
                 </div>
                 <button
                     onClick={onFinish}
-                    className="w-full py-4 bg-black text-white rounded-xl font-bold text-lg hover:bg-slate-800 transition-colors"
+                    className="w-full py-5 bg-primary text-white rounded-2xl font-black uppercase tracking-widest text-lg hover:opacity-90 transition-all shadow-2xl shadow-primary/20"
                 >
-                    Finish
+                    Return to Mission
                 </button>
              </motion.div>
         </div>
@@ -90,37 +91,38 @@ export default function QuizCard({ items, onFinish }: Props) {
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: -20 }}
-        className="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 flex flex-col max-h-[85vh]"
+        className="bg-zinc-900/50 rounded-[40px] shadow-2xl overflow-hidden border border-white/5 flex flex-col max-h-[85vh] backdrop-blur-xl relative"
       >
+        <div className="absolute inset-0 bg-gradient-to-br from-white/[0.01] to-transparent pointer-events-none" />
         {/* Header */}
-        <div className="bg-slate-50 p-6 border-b border-slate-100 flex justify-between items-center">
-            <div className="flex items-center gap-2 text-slate-600 font-bold">
-                <HelpCircle className="w-5 h-5" />
-                <span>Quiz {currentIndex + 1}/{items.length}</span>
+        <div className="bg-zinc-950/80 p-6 border-b border-white/5 flex justify-between items-center relative z-10">
+            <div className="flex items-center gap-3 text-zinc-400 font-black uppercase tracking-widest text-xs">
+                <HelpCircle className="w-4 h-4 text-primary" />
+                <span>Sector Assessment {currentIndex + 1}/{items.length}</span>
             </div>
-            <span className="text-xs font-mono bg-slate-200 px-2 py-1 rounded text-slate-600">
+            <span className="text-[10px] font-black bg-zinc-900 border border-white/10 px-3 py-1.5 rounded uppercase tracking-[0.2em] text-zinc-500">
                 Score: {score}
             </span>
         </div>
 
         {/* Question */}
-        <div className="p-6 pb-2">
-             <h3 className="text-xl font-bold text-slate-800 leading-snug">
+        <div className="p-8 pb-4 relative z-10">
+             <h3 className="text-2xl font-black text-white italic leading-tight tracking-tight uppercase">
                 {currentItem.question}
              </h3>
         </div>
 
         {/* Options */}
-        <div className="p-6 pt-2 flex-1 flex flex-col gap-3 overflow-y-auto">
+        <div className="p-8 pt-4 flex-1 flex flex-col gap-4 overflow-y-auto relative z-10">
              {currentItem.options.map((option, idx) => {
-                 let stateStyles = "bg-white border-slate-200 hover:border-blue-400 hover:bg-blue-50";
+                 let stateStyles = "bg-zinc-900 border-white/5 hover:border-primary/50 hover:bg-primary/5 text-zinc-300";
                  if (showResult) {
                      if (idx === currentItem.correctIndex) {
-                         stateStyles = "bg-green-50 border-green-500 text-green-700";
+                         stateStyles = "bg-emerald-500/10 border-emerald-500/50 text-emerald-400";
                      } else if (idx === selectedOption) {
-                         stateStyles = "bg-red-50 border-red-500 text-red-700";
+                         stateStyles = "bg-rose-500/10 border-rose-500/50 text-rose-400 shadow-[0_0_20px_rgba(244,63,94,0.1)]";
                      } else {
-                         stateStyles = "opacity-50 grayscale border-transparent";
+                         stateStyles = "opacity-30 grayscale border-white/5 text-zinc-600";
                      }
                  }
 
@@ -149,16 +151,16 @@ export default function QuizCard({ items, onFinish }: Props) {
                  <motion.div 
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
-                    className="bg-slate-50 p-6 border-t border-slate-100"
+                    className="bg-zinc-950/50 p-8 border-t border-white/5 relative z-10"
                  >
-                     <p className="text-sm text-slate-600 mb-4 bg-white p-3 rounded-lg border border-slate-100">
-                         <strong>💡 Explanation:</strong> {currentItem.explanation}
+                     <p className="text-sm text-zinc-400 mb-6 bg-zinc-900 p-5 rounded-2xl border border-white/5 leading-relaxed">
+                         <strong className="text-primary uppercase tracking-widest text-[10px] block mb-2">Strategy Intelligence:</strong> {currentItem.explanation}
                      </p>
                      <button
                         onClick={handleNext}
-                        className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-colors"
+                        className="w-full py-5 bg-primary text-white rounded-2xl font-black uppercase tracking-widest flex items-center justify-center gap-3 transition-all hover:opacity-90 shadow-2xl shadow-primary/20"
                      >
-                        {currentIndex < items.length - 1 ? "Next Question" : "See Results"} <ArrowRight className="w-4 h-4" />
+                        {currentIndex < items.length - 1 ? "Next Analysis" : "Final Debrief"} <ArrowRight className="w-5 h-5" />
                      </button>
                  </motion.div>
              )}
