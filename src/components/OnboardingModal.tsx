@@ -100,80 +100,78 @@ export default function OnboardingModal() {
     // Force user to stay if visible (no onClose)
     return (
         <AnimatePresence>
-            <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+            <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-zinc-950/80 backdrop-blur-2xl">
                 <motion.div
-                    initial={{ scale: 0.9, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: 0.9, opacity: 0 }}
-                    className="bg-background w-full max-w-lg rounded-3xl p-8 shadow-2xl relative border border-border"
+                    initial={{ scale: 0.95, opacity: 0, y: 20 }}
+                    animate={{ scale: 1, opacity: 1, y: 0 }}
+                    exit={{ scale: 0.95, opacity: 0, y: 20 }}
+                    className="bg-zinc-900/50 w-full max-w-xl rounded-[40px] p-10 md:p-14 shadow-[0_0_100px_rgba(0,0,0,0.5)] relative border border-white/5 backdrop-blur-3xl overflow-hidden"
                 >
-                    <div className="text-center mb-8">
-                        <div className="text-4xl mb-3">👋</div>
-                        <h2 className="text-3xl font-black mb-2">Welcome to Jok-eng!</h2>
-                        <p className="text-muted-foreground">
-                            Let&apos;s customize the AI to match your vibe.
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
+                    <div className="text-center mb-10 relative z-10">
+                        <div className="text-5xl mb-4 drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">🛰️</div>
+                        <h2 className="text-4xl md:text-5xl font-black mb-2 italic uppercase tracking-tighter text-white">System Initialization</h2>
+                        <p className="text-zinc-500 font-bold uppercase tracking-[0.2em] text-xs">
+                            Syncing operator profile with tactical database
                         </p>
                     </div>
 
                     <div className="space-y-6">
-                        {/* 1. Origin */}
-                        <div className="space-y-2">
-                            <label className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
-                                Native Language / Origin
-                                <span className="text-red-500">*</span>
+                        <div className="space-y-3">
+                            <label className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500 flex items-center gap-2">
+                                Primary Sector / Origin
+                                <span className="text-primary">*</span>
                             </label>
                             <select
                                 value={formData.motherLanguage || ""}
                                 onChange={e => setFormData({ ...formData, motherLanguage: e.target.value })}
-                                className="w-full bg-secondary/50 rounded-xl px-4 py-4 font-bold text-lg focus:ring-2 ring-primary/20 outline-none appearance-none"
+                                className="w-full bg-zinc-950/50 border border-white/5 rounded-2xl px-6 py-5 font-black text-lg text-white focus:ring-2 ring-primary/20 outline-none appearance-none transition-all"
                             >
-                                <option value="">Select Origin...</option>
+                                <option value="" className="bg-zinc-900">IDENTIFY SECTOR...</option>
                                 {CULTURE_OPTIONS.map(c => (
-                                    <option key={c} value={c}>{c}</option>
+                                    <option key={c} value={c} className="bg-zinc-900">{c}</option>
                                 ))}
                             </select>
                         </div>
 
-                        {/* 2. Generation */}
-                        <div className="space-y-2">
-                            <label className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
-                                Generation (The Vibe)
-                                <span className="text-red-500">*</span>
+                        <div className="space-y-3">
+                            <label className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500 flex items-center gap-2">
+                                Operator Generation
+                                <span className="text-primary">*</span>
                             </label>
                             <select
                                 value={formData.ageGroup || ""}
                                 onChange={e => setFormData({ ...formData, ageGroup: e.target.value as any }) /* eslint-disable-line @typescript-eslint/no-explicit-any */}
-                                className="w-full bg-secondary/50 rounded-xl px-4 py-4 font-bold text-lg focus:ring-2 ring-primary/20 outline-none appearance-none"
+                                className="w-full bg-zinc-950/50 border border-white/5 rounded-2xl px-6 py-5 font-black text-lg text-white focus:ring-2 ring-primary/20 outline-none appearance-none transition-all"
                             >
-                                <option value="">Select Generation...</option>
+                                <option value="" className="bg-zinc-900">SELECT VIBE...</option>
                                 {GENERATION_GROUPS.map(g => (
-                                    <option key={g} value={g}>{g}</option>
+                                    <option key={g} value={g} className="bg-zinc-900">{g}</option>
                                 ))}
                             </select>
                         </div>
 
-                        {/* 3. Occupation */}
-                        <div className="space-y-2">
-                            <label className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
-                                Occupation
-                                <span className="text-red-500">*</span>
+                        <div className="space-y-3">
+                            <label className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500 flex items-center gap-2">
+                                Field of Operation
+                                <span className="text-primary">*</span>
                             </label>
                             <select
                                 value={formData.occupation || ""}
                                 onChange={e => setFormData({ ...formData, occupation: e.target.value })}
-                                className="w-full bg-secondary/50 rounded-xl px-4 py-4 font-bold text-lg focus:ring-2 ring-primary/20 outline-none appearance-none"
+                                className="w-full bg-zinc-950/50 border border-white/5 rounded-2xl px-6 py-5 font-black text-lg text-white focus:ring-2 ring-primary/20 outline-none appearance-none transition-all"
                             >
-                                <option value="">Select Job...</option>
+                                <option value="" className="bg-zinc-900">SELECT FIELD...</option>
                                 {/* Handle Array vs Object for JOB_CATEGORIES */}
                                 {Array.isArray(JOB_CATEGORIES) ? (
                                     JOB_CATEGORIES.map(j => (
-                                        <option key={j} value={j}>{j}</option>
+                                        <option key={j} value={j} className="bg-zinc-900">{j}</option>
                                     ))
                                 ) : (
                                     Object.entries(JOB_CATEGORIES).map(([group, roles]) => (
-                                        <optgroup key={group} label={group}>
+                                        <optgroup key={group} label={group} className="bg-zinc-900">
                                             {roles.map(role => (
-                                                <option key={role} value={role}>{role}</option>
+                                                <option key={role} value={role} className="bg-zinc-900">{role}</option>
                                             ))}
                                         </optgroup>
                                     ))
@@ -185,10 +183,10 @@ export default function OnboardingModal() {
                     <button
                         onClick={handleSave}
                         disabled={!formData.motherLanguage || !formData.ageGroup || !formData.occupation || saving}
-                        className="w-full mt-8 py-4 rounded-xl bg-foreground text-background font-black text-xl hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                        className="w-full mt-10 py-5 rounded-2xl bg-primary text-white font-black text-xl hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-3 disabled:opacity-30 disabled:grayscale disabled:cursor-not-allowed shadow-[0_0_30px_rgba(var(--primary),0.2)] relative z-10"
                     >
                         {saving && <Loader2 className="w-6 h-6 animate-spin" />}
-                        {saving ? "Setting up..." : "Start My Studio 🚀"}
+                        {saving ? "UPLOADING DATA..." : "AUTHORIZE ACCESS 🚀"}
                     </button>
 
                 </motion.div>

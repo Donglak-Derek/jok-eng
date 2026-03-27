@@ -73,10 +73,10 @@ function SignalCard({
                                     });
                                 }}
                                 className={`
-                                    inline-block rounded mx-1 px-1.5 border-b-2 transition-all duration-300 align-baseline
+                                    inline-block rounded px-2.5 mx-1 border-b-2 transition-all duration-300 align-baseline relative
                                     ${isWordRevealed
-                                        ? "bg-indigo-100 border-indigo-300 text-indigo-900 cursor-default"
-                                        : "bg-indigo-50 border-indigo-200 text-transparent cursor-pointer hover:bg-indigo-100 select-none min-w-[3ch] text-center"
+                                        ? "bg-primary/10 border-primary/30 text-white cursor-default"
+                                        : "bg-zinc-800 border-white/10 text-transparent cursor-pointer hover:bg-zinc-700 select-none min-w-[3ch] text-center"
                                     }
                                 `}
                             >
@@ -147,11 +147,12 @@ function SignalCard({
     const anyWordRevealed = isGlobalRevealed || localRevealedWords.size > 0;
 
     return (
-        <div className="bg-white rounded-lg border border-border shadow-sm overflow-hidden flex flex-col h-full">
+        <div className="bg-zinc-900/50 rounded-[40px] border border-white/5 shadow-2xl overflow-hidden flex flex-col h-full relative backdrop-blur-xl">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/[0.01] to-transparent pointer-events-none" />
             {/* THE SIGNAL (Top) */}
-            <div className="p-8 md:p-10 bg-slate-50 border-b border-border text-center flex flex-col items-center gap-4 relative">
-                <div className="text-sm font-bold uppercase tracking-wider text-muted-foreground">The Signal</div>
-                <div className="text-2xl md:text-3xl font-bold text-foreground leading-snug">
+            <div className="p-10 md:p-14 bg-zinc-950/30 border-b border-white/5 text-center flex flex-col items-center gap-6 relative z-10">
+                <div className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500">Signal Intercepted</div>
+                <div className="text-3xl md:text-5xl font-black text-white italic tracking-tight leading-none uppercase">
                     &quot;{renderClozeText(item.phrase)}&quot;
                 </div>
 
@@ -164,8 +165,8 @@ function SignalCard({
                                 if (!isWordActive) return null;
 
                                 return (
-                                    <span key={k.word} className="text-sm px-3 py-2 bg-indigo-100 text-indigo-900 rounded-lg border border-indigo-200 shadow-sm text-left whitespace-normal break-words max-w-full leading-snug h-auto">
-                                        <span className="font-bold">{k.word}</span>: {k.definition}
+                                    <span key={k.word} className="text-[11px] font-black uppercase tracking-widest px-4 py-2 bg-zinc-950 text-zinc-300 rounded-lg border border-white/5 shadow-inner leading-snug">
+                                        <span className="text-primary mr-1.5">{k.word}</span> <span className="text-zinc-600">:</span> {k.definition}
                                     </span>
                                 );
                             })}
@@ -179,17 +180,17 @@ function SignalCard({
 
                 <Button
                     onClick={handlePlay}
-                    variant="secondary"
-                    size="md"
-                    className={`mt-4 w-full md:w-auto ${speaking ? "animate-pulse" : ""}`}
+                    variant={speaking ? "outline" : "primary"}
+                    size="lg"
+                    className={`mt-6 w-full md:w-auto h-16 rounded-2xl px-10 transition-all ${speaking ? "bg-primary/20" : "shadow-2xl shadow-primary/20"}`}
                     leftIcon={<Volume2 className="w-5 h-5" />}
                 >
-                    {speaking ? "Playing Audio..." : "Listen to Signal"}
+                    {speaking ? "DECODING AUDIO..." : "EXECUTE VERBAL ANALYSIS"}
                 </Button>
             </div>
 
             {/* THE DECODE (Bottom - Revealed) */}
-            <div className="flex-1 p-8 md:p-10 flex flex-col items-center justify-center relative bg-white">
+            <div className="flex-1 p-10 md:p-14 flex flex-col items-center justify-center relative bg-transparent z-10">
                 <AnimatePresence mode="wait">
                     {!isRevealed && !isGlobalRevealed ? (
                         <motion.div
@@ -198,17 +199,15 @@ function SignalCard({
                             exit={{ opacity: 0, scale: 0.95 }}
                             className="flex flex-col items-center gap-6"
                         >
-                            <p className="text-3xl md:text-4xl font-bold text-center bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent">
-                                What does it imply?
+                            <p className="text-4xl md:text-5xl font-black italic text-center text-white uppercase tracking-tighter leading-none mb-4">
+                                Strategic Gap detected
                             </p>
                             <Button
                                 onClick={() => setIsRevealed(true)}
                                 variant="primary"
-                                size="xl"
-                                className="rounded-full px-12 py-8 text-xl font-bold shadow-xl shadow-indigo-500/20 hover:scale-105 transition-all"
-                                rightIcon={<span className="text-2xl ml-2">🕵️‍♂️</span>}
+                                className="rounded-2xl px-12 py-9 text-xl font-black uppercase tracking-widest shadow-[0_0_50px_rgba(var(--primary),0.3)] hover:scale-105 transition-all"
                             >
-                                Decode Meaning
+                                Initiate Local Decoding
                             </Button>
                         </motion.div>
                     ) : (
@@ -218,24 +217,24 @@ function SignalCard({
                             className="w-full space-y-8"
                         >
                             {/* The Risk */}
-                            <div className="flex gap-4 items-start">
-                                <div className="p-2 bg-red-100 text-red-600 rounded-lg shrink-0">
-                                    <AlertTriangle className="w-6 h-6" />
+                            <div className="flex gap-6 items-start bg-rose-500/5 p-6 rounded-3xl border border-rose-500/20 shadow-2xl">
+                                <div className="p-3 bg-rose-500/20 text-rose-500 rounded-xl shrink-0 border border-rose-500/30">
+                                    <AlertTriangle className="w-8 h-8" />
                                 </div>
-                                <div>
-                                    <h4 className="font-bold text-red-700 mb-1 text-lg">Hidden Risk</h4>
-                                    <p className="text-foreground/80 leading-relaxed text-lg">{item.actualMeaning}</p>
+                                <div className="space-y-1">
+                                    <h4 className="font-black text-rose-500 uppercase tracking-[0.2em] text-[11px]">Subliminal Threat</h4>
+                                    <p className="text-white font-bold leading-tight text-xl italic tracking-tight">{item.actualMeaning}</p>
                                 </div>
                             </div>
 
                             {/* The Safe Move */}
-                            <div className="flex gap-4 items-start">
-                                <div className="p-2 bg-green-100 text-green-600 rounded-lg shrink-0">
-                                    <ShieldCheck className="w-6 h-6" />
+                            <div className="flex gap-6 items-start bg-emerald-500/5 p-6 rounded-3xl border border-emerald-500/20 shadow-2xl">
+                                <div className="p-3 bg-emerald-500/20 text-emerald-500 rounded-xl shrink-0 border border-emerald-500/30">
+                                    <ShieldCheck className="w-8 h-8" />
                                 </div>
-                                <div>
-                                    <h4 className="font-bold text-green-700 mb-1 text-lg">Smart Move</h4>
-                                    <p className="text-foreground/80 leading-relaxed text-lg">{item.survivalTip}</p>
+                                <div className="space-y-1">
+                                    <h4 className="font-black text-emerald-500 uppercase tracking-[0.2em] text-[11px]">Tactical Counter</h4>
+                                    <p className="text-white font-bold leading-tight text-xl italic tracking-tight">{item.survivalTip}</p>
                                 </div>
                             </div>
                         </motion.div>
@@ -404,28 +403,30 @@ export default function SignalDecoder({ script }: Props) {
                 key="completion"
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="w-full py-10 md:py-16 text-center flex flex-col items-center"
+                className="w-full py-16 md:py-24 text-center flex flex-col items-center"
             >
                 <Confetti />
-                <div className="w-24 h-24 bg-gradient-to-br from-indigo-200 to-indigo-400 rounded-full flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(99,102,241,0.4)] animate-in zoom-in-50 duration-500">
-                    <PartyPopper className="w-12 h-12 text-white drop-shadow-md" />
+                <div className="w-32 h-32 bg-primary/10 border border-primary/20 rounded-[40px] flex items-center justify-center mb-8 shadow-[0_0_50px_rgba(var(--primary),0.3)] animate-in zoom-in-50 duration-500 relative">
+                    <div className="absolute inset-0 bg-primary/5 blur-2xl rounded-full" />
+                    <PartyPopper className="w-16 h-16 text-primary drop-shadow-[0_0_10px_rgba(var(--primary),0.5)] relative z-10" />
                 </div>
-                <h2 className="text-3xl md:text-4xl font-bold mb-2 tracking-tight">Decoding Complete!</h2>
-                <p className="text-muted-foreground text-lg mb-8">{encouragement}</p>
+                <h2 className="text-4xl md:text-6xl font-black italic text-white mb-2 uppercase tracking-tighter">Mission Accomplished</h2>
+                <p className="text-zinc-500 text-xl font-black uppercase tracking-[0.3em] mb-12">{encouragement}</p>
 
-                <div className="bg-secondary/30 border border-secondary p-6 rounded-2xl mb-8 flex flex-col items-center min-w-[200px]">
-                    <span className="text-sm uppercase tracking-wider text-muted-foreground font-semibold mb-1">Total Reps</span>
-                    <div className="text-5xl font-black text-primary tabular-nums">
+                <div className="bg-zinc-900/50 border border-white/5 p-10 rounded-[40px] mb-12 flex flex-col items-center min-w-[280px] shadow-2xl backdrop-blur-xl relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
+                    <span className="text-xs uppercase tracking-[0.4em] text-zinc-600 font-black mb-2 relative z-10">Total Repetitions</span>
+                    <div className="text-7xl font-black text-white tabular-nums relative z-10 drop-shadow-[0_0_20px_rgba(255,255,255,0.1)]">
                         {currentReps}
                     </div>
                 </div>
 
-                <div className="flex flex-col w-full max-w-xs gap-3">
-                    <Button onClick={handlePracticeAgain} className="w-full h-14 text-lg font-bold rounded-full shadow-lg" variant="primary">
-                        Practice Again (Rep {currentReps + 1})
+                <div className="flex flex-col w-full max-w-sm gap-4">
+                    <Button onClick={handlePracticeAgain} className="w-full h-16 text-sm font-black uppercase tracking-[0.2em] rounded-2xl shadow-2xl shadow-primary/20 hover:scale-[1.02] transition-all" variant="primary">
+                        Initiate Rep {currentReps + 1}
                     </Button>
-                    <Button variant="ghost" onClick={() => router.push(`/category/${script.categorySlug}`)} className="w-full h-12 text-muted-foreground">
-                        Back to Menu
+                    <Button variant="ghost" onClick={() => router.push(`/category/${script.categorySlug}`)} className="w-full h-14 text-zinc-500 font-black uppercase tracking-widest text-xs">
+                        &larr; Return to Base
                     </Button>
                 </div>
             </motion.div>
