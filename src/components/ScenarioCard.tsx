@@ -91,15 +91,15 @@ export default function ScenarioCard({
                     <div className="p-5 flex flex-col gap-1 flex-1 relative min-w-0">
                         {/* Title & Context */}
                         <div className="min-w-0">
-                            <h3 className="font-bold text-lg text-white leading-tight group-hover:text-primary transition-colors mb-1 italic">
+                            <h3 className="font-black text-xl text-white italic uppercase tracking-tighter group-hover:text-primary transition-colors mb-2 leading-none">
                                 {script.title}
                             </h3>
                             {script.categoryName && (
-                                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-2 opacity-80">
+                                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-4 opacity-80">
                                     {script.categoryName}
                                 </p>
                             )}
-                            <p className="text-zinc-400 text-sm line-clamp-2 leading-relaxed font-medium">
+                            <p className="text-zinc-500 text-sm line-clamp-2 leading-relaxed font-bold italic">
                                 {script.cleanedEnglish || script.context}
                             </p>
 
@@ -154,7 +154,7 @@ export default function ScenarioCard({
                         <div className="pt-4 mt-2 flex items-center justify-between border-t border-white/5">
                             <div className="flex items-center gap-2">
                                 {/* Author Name Only - No Icon */}
-                                <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500 group-hover:text-zinc-300 transition-colors">{authorName || "Jok-Eng Official"}</span>
+                                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600 group-hover:text-zinc-400 transition-colors">{authorName || "SYSTEM OFFICIAL"}</span>
                             </div>
 
                             <div className="flex items-center gap-4">

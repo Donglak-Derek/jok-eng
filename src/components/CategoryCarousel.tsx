@@ -33,37 +33,39 @@ function CategoryCard({ c, index, variant, disableLinks }: { c: Category; index:
     const isPinned = false; // Disabled while under construction
 
     const Content = () => (
-        <div className="flex flex-col w-full h-full bg-white rounded-3xl shadow-sm border border-stone-100 overflow-hidden hover:shadow-md transition-shadow duration-300">
+        <div className="flex flex-col w-full h-full bg-zinc-900/50 rounded-[40px] shadow-2xl border border-white/5 overflow-hidden group transition-all duration-500 hover:border-white/10 relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/[0.01] to-transparent pointer-events-none" />
             {/* Full Width Image Header */}
-            <div className="relative w-full aspect-square bg-stone-50">
+            <div className="relative w-full aspect-square bg-zinc-950 overflow-hidden">
                 <Image
                     src={c.image || "/images/categories/small_talk.png"}
                     alt={c.name}
                     fill
                     sizes="(max-width: 768px) 100vw, 400px"
-                    className="object-cover"
+                    className="object-cover group-hover:scale-110 transition-transform duration-700"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 to-transparent pointer-events-none" />
             </div>
 
             {/* Content Details Below */}
-            <div className="flex flex-col flex-1 p-6 sm:p-8">
+            <div className="flex flex-col flex-1 p-8 md:p-10 relative z-10">
                 <div className="flex items-center justify-between gap-3 mb-4">
-                    <h3 className="font-black text-2xl sm:text-3xl text-stone-800 tracking-tight line-clamp-2">
+                    <h3 className="font-black text-3xl md:text-4xl text-white italic uppercase tracking-tighter line-clamp-2">
                         {c.name}
                     </h3>
                     {isPinned && (
-                        <span className="text-[10px] uppercase tracking-widest font-bold bg-[#FF5C00] text-white px-3 py-1.5 rounded-full shrink-0">
+                        <span className="text-[10px] uppercase tracking-[0.3em] font-black bg-primary text-white px-4 py-2 rounded-lg shrink-0 shadow-[0_0_20px_rgba(var(--primary),0.3)]">
                             Featured
                         </span>
                     )}
                 </div>
 
-                <p className="text-base text-stone-500 line-clamp-3 leading-relaxed mb-8">
+                <p className="text-lg text-zinc-500 font-bold italic line-clamp-3 leading-relaxed mb-10">
                     {c.description}
                 </p>
 
                 <div className="mt-auto">
-                    <span className="inline-flex items-center text-xs font-bold uppercase tracking-widest text-stone-700 bg-stone-50 px-4 py-2 rounded-full border border-stone-200">
+                    <span className="inline-flex items-center text-[10px] font-black uppercase tracking-[0.3em] text-primary bg-primary/10 px-5 py-2.5 rounded-xl border border-primary/20">
                         {scriptCount} Scenarios
                     </span>
                 </div>

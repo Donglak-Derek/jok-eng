@@ -32,31 +32,32 @@ export default function ActivityTracker({ activityLog = {} }: ActivityTrackerPro
   }
 
   const getIntensity = (count: number) => {
-    if (!count || count === 0) return "bg-zinc-800/30";
-    if (count === 1) return "bg-indigo-900/40 border-indigo-500/10";
-    if (count === 2) return "bg-indigo-700/60 border-indigo-500/20";
-    if (count <= 4) return "bg-indigo-500 border-indigo-400/30 shadow-[0_0_8px_rgba(99,102,241,0.2)]";
-    return "bg-indigo-300 border-white/20 shadow-[0_0_12px_rgba(165,180,252,0.4)]";
+    if (!count || count === 0) return "bg-zinc-900/30 border-white/5";
+    if (count === 1) return "bg-primary/20 border-primary/30";
+    if (count === 2) return "bg-primary/40 border-primary/50";
+    if (count <= 4) return "bg-primary/70 border-primary/70 shadow-[0_0_15px_rgba(var(--primary),0.2)]";
+    return "bg-primary border-white/30 shadow-[0_0_20px_rgba(var(--primary),0.4)]";
   };
 
   const activeDaysCount = Object.keys(activityLog).length;
 
   return (
-    <div className="w-full bg-card/50 backdrop-blur-sm rounded-3xl p-6 border border-border/40 shadow-sm overflow-hidden">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-indigo-500/10 rounded-lg">
-            <Dumbbell className="w-5 h-5 text-indigo-400" />
+    <div className="w-full bg-zinc-900/50 backdrop-blur-xl rounded-[40px] p-8 border border-white/5 shadow-2xl relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.01] to-transparent pointer-events-none" />
+      <div className="flex items-center justify-between mb-8 relative z-10">
+        <div className="flex items-center gap-4">
+          <div className="p-3 bg-primary/10 rounded-2xl border border-primary/20 shadow-[0_0_15px_rgba(var(--primary),0.1)]">
+            <Dumbbell className="w-6 h-6 text-primary" />
           </div>
           <div>
-            <h3 className="font-bold text-lg tracking-tight">Training Log</h3>
-            <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Consistency History</p>
+            <h3 className="font-black text-2xl italic uppercase tracking-tighter text-white">Training Log</h3>
+            <p className="text-[10px] text-zinc-500 font-black uppercase tracking-[0.3em]">Operational Consistency</p>
           </div>
         </div>
         
         <div className="text-right">
-          <div className="text-2xl font-black text-indigo-400 italic leading-none">{activeDaysCount}</div>
-          <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">Active Days</div>
+          <div className="text-3xl font-black text-primary italic leading-none">{activeDaysCount}</div>
+          <div className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600 mt-1">Active Cycles</div>
         </div>
       </div>
 
@@ -93,18 +94,17 @@ export default function ActivityTracker({ activityLog = {} }: ActivityTrackerPro
           </div>
         </div>
 
-        {/* Legend */}
-        <div className="flex items-center justify-between mt-6 pt-4 border-t border-border/20">
-          <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground font-bold uppercase tracking-widest">
-            <span>Low Grit</span>
-            <div className="flex gap-1 mx-1">
-              <div className="w-2.5 h-2.5 rounded-[1px] bg-zinc-800/30" />
-              <div className="w-2.5 h-2.5 rounded-[1px] bg-indigo-900/40" />
-              <div className="w-2.5 h-2.5 rounded-[1px] bg-indigo-700/60" />
-              <div className="w-2.5 h-2.5 rounded-[1px] bg-indigo-500" />
-              <div className="w-2.5 h-2.5 rounded-[1px] bg-indigo-300" />
+        <div className="flex items-center justify-between mt-8 pt-6 border-t border-white/5 relative z-10">
+          <div className="flex items-center gap-2 text-[10px] text-zinc-600 font-black uppercase tracking-[0.2em]">
+            <span>Low Output</span>
+            <div className="flex gap-1.5 mx-2">
+              <div className="w-3 h-3 rounded-[2px] bg-zinc-900/30 border border-white/5" />
+              <div className="w-3 h-3 rounded-[2px] bg-primary/20 border border-primary/30" />
+              <div className="w-3 h-3 rounded-[2px] bg-primary/40 border border-primary/50" />
+              <div className="w-3 h-3 rounded-[2px] bg-primary/70 border border-primary/70" />
+              <div className="w-3 h-3 rounded-[2px] bg-primary border border-white/30" />
             </div>
-            <span>High Intensity</span>
+            <span>High Grit</span>
           </div>
           
           <div className="flex items-center gap-1 text-[10px] text-muted-foreground/40 italic">

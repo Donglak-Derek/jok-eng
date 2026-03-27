@@ -10,7 +10,7 @@ const MODES = [
     subtitle: "Focus: Nuance",
     description: "Read the room. Don't just translate words—learn the culturally right answer for the moment.",
     image: "/mode-dojo.png",
-    color: "bg-blue-50 text-blue-600 border-blue-200",
+    color: "bg-blue-500/10 text-blue-400 border-blue-500/20",
     delay: 0
   },
   {
@@ -19,7 +19,7 @@ const MODES = [
     subtitle: "Focus: Flow",
     description: "Keep them listening. Practice telling full, engaging stories from start to finish.",
     image: "/mode-open-mic.png",
-    color: "bg-pink-50 text-pink-600 border-pink-200",
+    color: "bg-rose-500/10 text-rose-400 border-rose-500/20",
     delay: 0.1
   },
   {
@@ -28,7 +28,7 @@ const MODES = [
     subtitle: "Focus: Wit",
     description: "Think fast. Real life moves quickly. Learn to handle rapid dialogue and banter.",
     image: "/mode-skit.png",
-    color: "bg-purple-50 text-purple-600 border-purple-200",
+    color: "bg-purple-500/10 text-purple-400 border-purple-500/20",
     delay: 0.2
   }
 ];
@@ -49,18 +49,19 @@ export default function ModeCards() {
         {MODES.map((mode) => (
           <motion.div
             key={mode.id}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, scale: 0.95, y: 30 }}
+            whileInView={{ opacity: 1, scale: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: mode.delay, duration: 0.5 }}
+            transition={{ delay: mode.delay, duration: 0.6, ease: "easeOut" }}
             className={`
-                relative overflow-hidden rounded-3xl p-6 md:p-8 
-                border-2 ${mode.color.split(" ")[2]} 
-                ${mode.color.split(" ")[0]} 
-                flex flex-col gap-4
-                hover:scale-[1.02] transition-transform duration-300 shadow-sm
+                relative overflow-hidden rounded-[40px] p-8 md:p-10 
+                border border-white/5
+                bg-zinc-900/50 backdrop-blur-xl
+                flex flex-col gap-6
+                hover:scale-[1.02] transition-all duration-500 shadow-2xl group
             `}
           >
+            <div className="absolute inset-0 bg-gradient-to-br from-white/[0.01] to-transparent pointer-events-none" />
             {/* Image */}
             <div className={`w-full aspect-[4/3] rounded-2xl overflow-hidden relative shadow-sm ${mode.color.split(" ")[1]} bg-secondary/10`}>
                 <Image 
@@ -72,13 +73,13 @@ export default function ModeCards() {
             </div>
 
             <div>
-                <div className="flex items-center justify-between mb-1">
-                    <h3 className="text-xl font-black uppercase tracking-tight text-foreground/90">{mode.title}</h3>
-                    <span className="text-[10px] font-bold uppercase tracking-widest bg-white/60 px-2 py-1 rounded-full text-foreground/50">
+                <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-2xl font-black italic uppercase tracking-tighter text-white">{mode.title}</h3>
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] bg-white/5 border border-white/10 px-3 py-1.5 rounded-lg text-zinc-400">
                         {mode.subtitle.split(": ")[1]}
                     </span>
                 </div>
-                <p className="text-sm md:text-base font-medium text-foreground/70 leading-relaxed">
+                <p className="text-base font-bold italic text-zinc-500 leading-relaxed">
                     {mode.description}
                 </p>
             </div>
