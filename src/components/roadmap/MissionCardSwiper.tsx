@@ -49,7 +49,12 @@ export default function MissionCardSwiper({ mission, onComplete, onRetry, onNext
     if (step === "INTRO") setStep("SCENARIO");
     else if (step === "SCENARIO") setStep("CHOICE");
     else if (step === "CHOICE" && selectedOption) setStep("XRAY");
-    else if (step === "XRAY") setStep("WIN");
+    else if (step === "XRAY") {
+        if (selectedOption && selectedOption.vibe_score >= 80) {
+            onComplete(selectedOption);
+        }
+        setStep("WIN");
+    }
   };
 
   const handleRestart = () => {
@@ -60,9 +65,6 @@ export default function MissionCardSwiper({ mission, onComplete, onRetry, onNext
   const handleChoice = (option: MissionOption) => {
     setSelectedOption(option);
     setStep("XRAY");
-    if (option.vibe_score >= 80) {
-      onComplete(option);
-    }
   };
 
   const handleRetry = () => {
@@ -80,25 +82,16 @@ export default function MissionCardSwiper({ mission, onComplete, onRetry, onNext
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            className="absolute inset-0 flex flex-col"
+            className="absolute inset-0 flex flex-col justify-center items-center text-center p-8 bg-zinc-950"
           >
-            <div className="relative flex-1 min-h-[30%]">
-              <Image
-                src={mission.imageUrl || "/images/placeholder.png"}
-                alt={mission.title}
-                fill
-                className="object-cover brightness-75 scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/20 to-transparent" />
-            </div>
-            <div className="p-8 space-y-4 relative z-10 shrink-0 bg-zinc-950 overflow-y-auto max-h-[60%]">
+            <div className="space-y-6 max-w-xs md:max-w-sm relative z-10 w-full overflow-y-auto">
               <div className="inline-block px-3 py-1 bg-primary/20 text-primary border border-primary/30 rounded-full text-[10px] font-black uppercase tracking-widest">
                 Day {mission.day} • {mission.module}
               </div>
-              <h1 className="text-2xl font-black italic tracking-tighter text-white uppercase leading-none">
+              <h1 className="text-3xl font-black italic tracking-tighter text-white uppercase leading-tight">
                 {mission.title}
               </h1>
-              <p className="text-zinc-400 text-lg font-medium leading-relaxed">
+              <p className="text-zinc-400 text-lg font-medium leading-relaxed pb-4">
                 {mission.strategic_brief}
               </p>
               <button
@@ -125,7 +118,7 @@ export default function MissionCardSwiper({ mission, onComplete, onRetry, onNext
                   src={mission.imageUrl || "/images/placeholder.png"}
                   alt={mission.title}
                   fill
-                  className="object-cover"
+                  className="object-cover scale-125 transform origin-center"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/40 to-transparent" />
                 
@@ -214,16 +207,25 @@ export default function MissionCardSwiper({ mission, onComplete, onRetry, onNext
                   {mission.x_ray}
                 </p>
 
-                <div className={`p-6 rounded-2xl border-2 transition-all duration-500 ${selectedOption.vibe_score >= 80 ? 'bg-green-500/10 border-green-500/30' : 'bg-red-500/10 border-red-500/30'}`}>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Result</span>
-                    <span className={`text-xl font-black ${selectedOption.vibe_score >= 80 ? 'text-green-500' : 'text-red-500'}`}>
-                      {selectedOption.vibe_score}% Vibe
-                    </span>
+                <div className={`p-6 rounded-2xl border-2 transition-all duration-500 relative overflow-hidden ${selectedOption.vibe_score >= 80 ? 'bg-green-500/10 border-green-500/30' : 'bg-red-500/10 border-red-500/30'}`}>
+                  {/* Animated Background Gauge */}
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${selectedOption.vibe_score}%` }}
+                    transition={{ duration: 1, ease: "easeOut" }}
+                    className={`absolute left-0 top-0 bottom-0 opacity-[0.15] ${selectedOption.vibe_score >= 80 ? 'bg-green-500' : 'bg-red-500'}`}
+                  />
+                  <div className="relative z-10">
+                    <div className="flex items-center justify-between mb-2">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Result</span>
+                        <span className={`text-xl font-black ${selectedOption.vibe_score >= 80 ? 'text-green-500' : 'text-red-500'}`}>
+                        {selectedOption.vibe_score}% Vibe
+                        </span>
+                    </div>
+                    <p className="text-zinc-300 font-medium leading-relaxed">
+                        {selectedOption.feedback}
+                    </p>
                   </div>
-                  <p className="text-zinc-300 font-medium leading-relaxed">
-                    {selectedOption.feedback}
-                  </p>
                 </div>
               </div>
             </div>
@@ -308,7 +310,7 @@ export default function MissionCardSwiper({ mission, onComplete, onRetry, onNext
                   onClick={() => window.location.href = "/practice"}
                   className="text-[11px] font-black uppercase tracking-widest text-zinc-500 hover:text-primary transition-colors flex items-center gap-1.5"
                 >
-                  Practice Arena
+                  Store
                 </button>
                 <span className="w-1 h-1 rounded-full bg-zinc-800" />
                 <button
@@ -331,7 +333,7 @@ function SwipeCard({ option, onSelect, isLeft }: { option: MissionOption, onSele
   const rotate = useTransform(x, [-100, 100], [-10, 10]);
   const opacity = useTransform(x, [-150, -100, 0, 100, 150], [0, 1, 1, 1, 0]);
   const background = useTransform(x, [-100, 0, 100], [
-    "rgba(239, 68, 68, 0.2)", // Red
+    "rgba(34, 197, 94, 0.2)", // Green
     "rgba(24, 24, 27, 0.8)", // Zinc-900
     "rgba(34, 197, 94, 0.2)" // Green
   ]);
@@ -372,9 +374,9 @@ function SwipeCard({ option, onSelect, isLeft }: { option: MissionOption, onSele
       </motion.div>
       <motion.div
         style={{ opacity: useTransform(x, [-50, 0], [1, 0]) }}
-        className="absolute inset-0 flex items-center justify-start pl-8 bg-red-500/20 rounded-3xl pointer-events-none"
+        className="absolute inset-0 flex items-center justify-start pl-8 bg-green-500/20 rounded-3xl pointer-events-none"
       >
-        <Lock className="w-8 h-8 text-red-500" />
+        <Zap className="w-8 h-8 text-green-500" />
       </motion.div>
     </motion.div>
   );

@@ -70,7 +70,7 @@ export default function Header({ transparent = false }: HeaderProps) {
                             href="/practice"
                             className={`text-[10px] font-black uppercase tracking-[0.2em] transition-all hover:tracking-[0.25em] ${isPracticeActive ? 'text-primary' : mutedTextColor}`}
                         >
-                            Practice
+                            Store
                         </Link>
                         <Link
                             href="/profile"
@@ -137,7 +137,7 @@ export default function Header({ transparent = false }: HeaderProps) {
                                                     onClick={() => setDropdownOpen(false)}
                                                 >
                                                     <span className="w-1 h-1 rounded-full bg-zinc-700 group-hover/item:bg-primary transition-colors" />
-                                                    Practice & Arena
+                                                    Store
                                                 </Link>
                                                 <Link
                                                     href="/"

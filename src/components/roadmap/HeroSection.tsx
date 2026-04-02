@@ -28,7 +28,7 @@ export default function HeroSection() {
                     animate={{ opacity: 1, y: 0 }}
                     className="px-3 py-1 bg-primary/10 border border-primary/30 rounded-sm text-[10px] font-black tracking-[0.3em] uppercase text-primary mb-4"
                 >
-                    Mission: Amly // Social Engine Upgrade
+                    Mission: Live Better in America
                 </motion.div>
 
                 {/* The Main Animation */}
@@ -63,10 +63,10 @@ export default function HeroSection() {
                     className="space-y-4 max-w-2xl"
                 >
                     <h2 className="text-2xl md:text-3xl lg:text-4xl font-black tracking-tight text-foreground uppercase italic leading-tight">
-                        Speaking English isn&apos;t enough. <br className="sm:hidden" /> You need the <span className="text-primary">Culture.</span>
+                        English isn&apos;t enough. <br className="sm:hidden" /> Learn the <span className="text-primary">culture.</span>
                     </h2>
                     <p className="text-muted-foreground font-medium text-lg md:text-xl">
-                        Do this 2 minutes everyday for 90 days if you want to be <span className="font-bold text-foreground underline decoration-primary decoration-4">Amly</span>.
+                        2-minute daily missions. Real American life.
                     </p>
                 </motion.div>
 

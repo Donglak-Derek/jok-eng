@@ -36,7 +36,7 @@ export default function PracticeCTA() {
                         href="/practice"
                         className="inline-flex items-center gap-3 bg-primary text-primary-foreground px-8 py-4 font-black uppercase tracking-widest text-xs rounded-sm hover:opacity-95 active:scale-95 transition-all shadow-xl shadow-primary/20"
                     >
-                        Enter Practice Arena <ArrowRight className="w-4 h-4" />
+                        Enter Store <ArrowRight className="w-4 h-4" />
                     </Link>
                 </div>
 
