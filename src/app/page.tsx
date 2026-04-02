@@ -11,6 +11,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useCategories } from "@/hooks/useCategories";
+import ResumeBanner from "@/components/ResumeBanner";
 
 function LandingDashboard() {
     const { user, loading: authLoading } = useAuth();
@@ -65,6 +66,7 @@ function LandingDashboard() {
 
             <main className="flex-1 w-full pt-12 pb-20">
                 <HeroSection />
+                <ResumeBanner />
 
                 {/* User Stats/Streak Area */}
                 {user && (

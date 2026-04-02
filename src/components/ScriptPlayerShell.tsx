@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, RotateCcw, FileText, Eye, EyeOff, ArrowLeft, Volume2, VolumeX, Share2, Bot, Diamond } from "lucide-react";
@@ -68,6 +68,16 @@ export default function ScriptPlayerShell({
     ...props // Capture audioStatus etc
 }: Props) {
     const [isSharing, setIsSharing] = useState(false);
+
+    useEffect(() => {
+        if (title) {
+            localStorage.setItem("amly_last_visit", JSON.stringify({
+                path: window.location.pathname,
+                title: title,
+                type: "Scenario"
+            }));
+        }
+    }, [title, categorySlug]);
 
     return (
         <div className="fixed inset-0 z-[100] flex flex-col bg-zinc-950 text-foreground overflow-hidden">

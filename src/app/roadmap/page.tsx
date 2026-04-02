@@ -17,6 +17,11 @@ function RoadmapDashboard() {
 
     useEffect(() => {
         setMounted(true);
+        localStorage.setItem("amly_last_visit", JSON.stringify({
+            title: "90-Day Challenge",
+            path: "/roadmap",
+            type: "Roadmap"
+        }));
     }, []);
 
     if (!mounted || authLoading || missionsLoading) {
