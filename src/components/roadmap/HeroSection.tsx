@@ -62,11 +62,11 @@ export default function HeroSection() {
                     transition={{ delay: 0.5 }}
                     className="space-y-4 max-w-2xl"
                 >
-                    <h2 className="text-2xl md:text-4xl font-black tracking-tight text-foreground uppercase italic leading-tight">
-                        Do this! <br className="sm:hidden" /> For your <span className="text-primary">English!</span>
+                    <h2 className="text-2xl md:text-3xl lg:text-4xl font-black tracking-tight text-foreground uppercase italic leading-tight">
+                        Speaking English isn&apos;t enough. <br className="sm:hidden" /> You need the <span className="text-primary">Culture.</span>
                     </h2>
                     <p className="text-muted-foreground font-medium text-lg md:text-xl">
-                        Do this 2 min everyday for 90 days if you want to be <span className="font-bold text-foreground underline decoration-primary decoration-4">Amly</span>.
+                        Do this 2 minutes everyday for 90 days if you want to be <span className="font-bold text-foreground underline decoration-primary decoration-4">Amly</span>.
                     </p>
                 </motion.div>
 

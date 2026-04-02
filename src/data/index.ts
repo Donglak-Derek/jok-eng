@@ -20,9 +20,18 @@ export const scripts: Script[] = [
   ...videoScenarios,
 ];
 
-export const categories: Category[] = Array.from(
-  new Set(scripts.map((s) => s.categorySlug))
-).map((slug) => {
+const orderedSlugs = [
+  "american_culture",
+  "small_talk",
+  "texting_decoder",
+  "office_banter",
+  "the_sarcasm_detector",
+  "the_party_survival_kit",
+  "the_polite_fight",
+  "dating_and_disasters"
+];
+
+export const categories: Category[] = orderedSlugs.map((slug) => {
   const details = CATEGORY_DETAILS[slug];
   // Fallback if details are missing to avoid empty src error
   if (!details) {
