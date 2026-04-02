@@ -4,7 +4,7 @@ import { useEffect, useState, use } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { doc, getDoc, getDocs, collectionGroup, query, where } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import ScriptClient from "@/app/script/[id]/ScriptClient";
+import ScriptClient from "@/components/player/ScriptClient";
 import { UserScript } from "@/types";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/Button";

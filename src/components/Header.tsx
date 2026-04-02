@@ -20,7 +20,7 @@ export default function Header({ transparent = false }: HeaderProps) {
 
     const isHomeActive = pathname === "/";
     const isVideosActive = pathname.startsWith("/videos");
-    const isPracticeActive = pathname.startsWith("/practice");
+    const isStoreActive = pathname.startsWith("/shop");
     const isProfileActive = pathname.startsWith("/profile");
 
     const headerBg = transparent 
@@ -67,8 +67,8 @@ export default function Header({ transparent = false }: HeaderProps) {
                             Videos
                         </Link>
                         <Link
-                            href="/practice"
-                            className={`text-[10px] font-black uppercase tracking-[0.2em] transition-all hover:tracking-[0.25em] ${isPracticeActive ? 'text-primary' : mutedTextColor}`}
+                            href="/shop"
+                            className={`text-[10px] font-black uppercase tracking-[0.2em] transition-all hover:tracking-[0.25em] ${isStoreActive ? 'text-primary' : mutedTextColor}`}
                         >
                             Store
                         </Link>
@@ -132,7 +132,7 @@ export default function Header({ transparent = false }: HeaderProps) {
                                                     Personal Profile
                                                 </Link>
                                                 <Link
-                                                    href="/practice"
+                                                    href="/shop"
                                                     className="flex items-center gap-3 px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-zinc-300 hover:text-white hover:bg-white/5 rounded-lg transition-all group/item"
                                                     onClick={() => setDropdownOpen(false)}
                                                 >
@@ -145,7 +145,7 @@ export default function Header({ transparent = false }: HeaderProps) {
                                                     onClick={() => setDropdownOpen(false)}
                                                 >
                                                     <span className="w-1 h-1 rounded-full bg-primary" />
-                                                    90-Day Roadmap
+                                                    Practice
                                                 </Link>
                                             </div>
 

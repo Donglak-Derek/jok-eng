@@ -2,16 +2,16 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Compass, PlaySquare, Dumbbell, User } from "lucide-react";
+import { Compass, PlaySquare, Dumbbell, User, ShoppingBag } from "lucide-react";
 
 export default function BottomNav() {
     const pathname = usePathname();
 
     const navItems = [
         {
-            name: "Roadmap",
+            name: "Practice",
             href: "/",
-            icon: Compass,
+            icon: Dumbbell,
         },
         {
             name: "Videos",
@@ -19,9 +19,9 @@ export default function BottomNav() {
             icon: PlaySquare,
         },
         {
-            name: "Practice",
-            href: "/practice",
-            icon: Dumbbell,
+            name: "Store",
+            href: "/shop",
+            icon: ShoppingBag,
         },
         {
             name: "Profile",
