@@ -73,6 +73,7 @@ export default function Footer() {
 
         {/* Mini Links */}
         <div className="flex justify-center md:justify-end gap-6 text-sm text-muted-foreground">
+          <Link href="/about" className="hover:underline hover:text-foreground">About</Link>
           <Link href="/privacy" className="hover:underline hover:text-foreground">Privacy</Link>
           <Link href="/terms" className="hover:underline hover:text-foreground">Terms</Link>
         </div>

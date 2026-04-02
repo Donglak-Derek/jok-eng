@@ -124,6 +124,14 @@ export default function Header({ transparent = false }: HeaderProps) {
                                             
                                             <div className="px-1.5 py-1 space-y-0.5">
                                                 <Link
+                                                    href="/about"
+                                                    className="flex items-center gap-3 px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-zinc-300 hover:text-white hover:bg-white/5 rounded-lg transition-all group/item"
+                                                    onClick={() => setDropdownOpen(false)}
+                                                >
+                                                    <span className="w-1 h-1 rounded-full bg-zinc-700 group-hover/item:bg-primary transition-colors" />
+                                                    About
+                                                </Link>
+                                                <Link
                                                     href="/profile"
                                                     className="flex items-center gap-3 px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-zinc-300 hover:text-white hover:bg-white/5 rounded-lg transition-all group/item"
                                                     onClick={() => setDropdownOpen(false)}
