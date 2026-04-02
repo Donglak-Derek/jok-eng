@@ -1,6 +1,4 @@
-"use client";
-
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import type { Script } from "@/types";
 import { motion, AnimatePresence } from "framer-motion";
 import ClozeCard from "@/components/ClozeCard";
@@ -23,10 +21,29 @@ export default function InlineScenario({ script, isActive, onComplete, onLockCha
     const hasCulturalInsight = !!script.culturalInsights;
     const hasQuiz = !!script.quizItems && script.quizItems.length > 0;
 
-    // In InlineScenario, the quiz is handled as a single step that internalizes its own sub-steps.
-    const culturalInsightIndex = hasCulturalInsight ? sentences.length : -1;
-    const quizIndex = hasQuiz ? (sentences.length + (hasCulturalInsight ? 1 : 0)) : -1;
-    const totalSteps = sentences.length + (hasCulturalInsight ? 1 : 0) + (hasQuiz ? 1 : 0);
+    type FlowStep =
+        | { type: 'sentence'; sentence: any; originalIndex: number; subStep?: 0 | 1 | 2 }
+        | { type: 'culturalInsight' }
+        | { type: 'quiz' };
+
+    const steps = useMemo(() => {
+        const arr: FlowStep[] = [];
+        sentences.forEach((s, idx) => {
+            if (s.badResponse && s.goodResponse) {
+                arr.push({ type: 'sentence', sentence: s, originalIndex: idx, subStep: 0 });
+                arr.push({ type: 'sentence', sentence: s, originalIndex: idx, subStep: 1 });
+                arr.push({ type: 'sentence', sentence: s, originalIndex: idx, subStep: 2 });
+            } else {
+                arr.push({ type: 'sentence', sentence: s, originalIndex: idx });
+            }
+        });
+
+        if (hasCulturalInsight) arr.push({ type: 'culturalInsight' });
+        if (hasQuiz) arr.push({ type: 'quiz' });
+        return arr;
+    }, [sentences, hasCulturalInsight, hasQuiz]);
+
+    const totalSteps = steps.length;
 
     const [currentIndex, setCurrentIndex] = useState(0);
     const [heardSet, setHeardSet] = useState<Set<number>>(new Set());
@@ -42,6 +59,17 @@ export default function InlineScenario({ script, isActive, onComplete, onLockCha
     }, [isCompletion, onLockChange]);
 
     const handleNext = () => {
+        if (currentIndex < steps.length) {
+            const currentStepMatch = steps[currentIndex];
+            if (currentStepMatch.type === 'sentence') {
+                setHeardSet((prev) => {
+                    const next = new Set(prev);
+                    next.add(currentStepMatch.originalIndex);
+                    return next;
+                });
+            }
+        }
+
         if (currentIndex < totalSteps) {
             setCurrentIndex(prev => prev + 1);
         }
@@ -82,91 +110,88 @@ export default function InlineScenario({ script, isActive, onComplete, onLockCha
                 </div>
             </motion.div>
         );
-    } else if (currentIndex === culturalInsightIndex) {
-        currentContent = (
-            <motion.div key={`insight-${currentIndex}`} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="h-full flex flex-col p-6 overflow-y-auto">
-                <CulturalNoteCard
-                    title={script.culturalInsights!.title}
-                    content={script.culturalInsights!.content}
-                    vocabulary={script.culturalInsights!.vocabulary}
-                    onNext={handleNext}
-                />
-                <button
-                    onClick={handleNext}
-                    className="mt-auto w-full bg-primary text-primary-foreground font-bold py-4 rounded-xl"
-                >
-                    Got It
-                </button>
-            </motion.div>
-        );
-    } else if (hasQuiz && currentIndex >= quizIndex) {
-        if (script.quizItems) {
+    } else {
+        const stepMatch = steps[currentIndex];
+
+        if (stepMatch.type === 'culturalInsight') {
+            currentContent = (
+                <motion.div key={`insight-${currentIndex}`} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="h-full flex flex-col p-6 overflow-y-auto">
+                    <CulturalNoteCard
+                        title={script.culturalInsights!.title}
+                        content={script.culturalInsights!.content}
+                        vocabulary={script.culturalInsights!.vocabulary}
+                        onNext={handleNext}
+                    />
+                    <button
+                        onClick={handleNext}
+                        className="mt-auto w-full bg-primary text-primary-foreground font-bold py-4 rounded-xl"
+                    >
+                        Got It
+                    </button>
+                </motion.div>
+            );
+        } else if (stepMatch.type === 'quiz') {
             currentContent = (
                 <motion.div key={`quiz`} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="h-full flex flex-col p-6 overflow-y-auto">
                     <QuizCard
-                        items={script.quizItems}
+                        items={script.quizItems!}
                         onFinish={handleNext}
                     />
                 </motion.div>
             );
-        } else {
-            // Failsafe push to completion
-            handleNext();
-        }
-    } else {
-        // Render Sentence (Cloze or Chat)
-        const currentSentence = sentences[currentIndex];
+        } else if (stepMatch.type === 'sentence') {
+            const currentSentence = stepMatch.sentence;
+            let CardComponent;
+            if (script.mode === "cloze" && currentSentence.keywords && currentSentence.keywords.length > 0) {
+                CardComponent = (
+                    <ClozeCard
+                        sentence={currentSentence}
+                        index={stepMatch.originalIndex}
+                        heard={heardSet.has(stepMatch.originalIndex)}
+                        onHeard={(idx) => {
+                            setHeardSet(prev => {
+                                const next = new Set(prev);
+                                next.add(idx);
+                                return next;
+                            });
+                        }}
+                        mode="cloze"
+                        script={script}
+                        isAutoPlayEnabled={isAutoPlayEnabled && isActive}
+                    />
+                );
+            } else {
+                CardComponent = (
+                    <ComparisonCard
+                        sentence={currentSentence}
+                        index={stepMatch.originalIndex}
+                        subStep={stepMatch.subStep as any}
+                        onHeard={(idx) => {
+                            setHeardSet(prev => {
+                                const next = new Set(prev);
+                                next.add(idx);
+                                return next;
+                            });
+                        }}
+                        mode="standard"
+                        script={script}
+                        isAutoPlayEnabled={isAutoPlayEnabled && isActive}
+                    />
+                );
+            }
 
-        let CardComponent;
-        if (script.mode === "cloze" && currentSentence.keywords && currentSentence.keywords.length > 0) {
-            CardComponent = (
-                <ClozeCard
-                    sentence={currentSentence}
-                    index={currentIndex}
-                    heard={heardSet.has(currentIndex)}
-                    onHeard={(idx) => {
-                        setHeardSet(prev => {
-                            const next = new Set(prev);
-                            next.add(idx);
-                            return next;
-                        });
-                    }}
-                    mode="cloze"
-                    script={script}
-                    isAutoPlayEnabled={isAutoPlayEnabled && isActive}
-                />
-            );
-        } else {
-            CardComponent = (
-                <ComparisonCard
-                    sentence={currentSentence}
-                    index={currentIndex}
-                    onHeard={(idx) => {
-                        setHeardSet(prev => {
-                            const next = new Set(prev);
-                            next.add(idx);
-                            return next;
-                        });
-                    }}
-                    mode="standard"
-                    script={script}
-                    isAutoPlayEnabled={isAutoPlayEnabled && isActive}
-                />
-            );
-        }
-
-        currentContent = (
-            <motion.div key={`sentence-${currentIndex}`} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="h-full flex flex-col p-4 md:p-6 overflow-y-auto pb-32">
-                <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center gap-2">
-                        <div className="text-xs font-bold uppercase tracking-widest text-neutral-500">
-                            {script.categoryName || "Scenario"}
+            currentContent = (
+                <motion.div key={`sentence-${currentIndex}`} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="h-full flex flex-col p-4 md:p-6 overflow-y-auto pb-32">
+                    <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center gap-2">
+                            <div className="text-xs font-bold uppercase tracking-widest text-neutral-500">
+                                {script.categoryName || "Scenario"}
+                            </div>
+                            <span className="text-neutral-700">•</span>
+                            <div className="text-xs font-mono text-neutral-400">
+                                {currentIndex + 1} / {totalSteps}
+                            </div>
                         </div>
-                        <span className="text-neutral-700">•</span>
-                        <div className="text-xs font-mono text-neutral-400">
-                            {currentIndex + 1} / {totalSteps}
-                        </div>
-                    </div>
                     {/* Auto Play Toggle */}
                     <button
                         onClick={toggleAutoPlay}
@@ -183,6 +208,7 @@ export default function InlineScenario({ script, isActive, onComplete, onLockCha
                 {CardComponent}
             </motion.div>
         );
+        }
     }
 
     return (
