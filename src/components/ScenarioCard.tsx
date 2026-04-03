@@ -46,7 +46,7 @@ export default function ScenarioCard({
     const [mounted, setMounted] = React.useState(false);
     // ... useEffect
 
-    const href = isUserScript ? `/scenario/${script.id}` : `/script/${script.id}`;
+    const href = `/scenario/${script.id}`;
 
     return (
         <div className="h-full block">

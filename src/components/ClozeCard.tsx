@@ -3,7 +3,7 @@
 import { useMemo, useState, useRef, useEffect, useCallback } from "react";
 import type { Sentence, Script } from "@/types";
 import { Button } from "@/components/Button";
-import { AudioLines } from "lucide-react";
+import { Bot, Gem } from "lucide-react";
 import { motion } from "framer-motion";
 import { playScenarioAudio } from "@/lib/tts"; // Centralized TTS
 import { useAuth } from "@/context/AuthContext"; // For profile/limits
@@ -125,19 +125,16 @@ export default function ClozeCard({
           if (targetIndex !== -1) {
             newSentences[targetIndex] = { ...newSentences[targetIndex], audioUrl: url };
 
-            let scriptRef;
-            if ('userId' in script) {
-              scriptRef = doc(db, `users/${(script as UserScript).userId}/scenarios`, script.id);
-            } else {
-              scriptRef = doc(db, `users/jok-eng-official/scenarios`, script.id);
+            // Only attempt to save if the user owns the script
+            if ('userId' in script && userProfile?.uid && (script as UserScript).userId === userProfile.uid) {
+                const scriptRef = doc(db, `users/${userProfile.uid}/scenarios`, script.id);
+                updateDoc(scriptRef, { sentences: newSentences }).then(() => {
+                    toast.success("💎 You just sponsored this audio for the community!", {
+                        duration: 4000,
+                        position: "bottom-center"
+                    });
+                }).catch(e => console.error("Audio save error:", e));
             }
-
-            updateDoc(scriptRef, { sentences: newSentences }).catch(e => console.error(e));
-
-            toast.success("💎 You just sponsored this audio for the community!", {
-              duration: 4000,
-              position: "bottom-center"
-            });
           }
         }
       });
@@ -306,9 +303,9 @@ export default function ClozeCard({
         variant={speaking ? "outline" : "primary"}
         size="lg"
         isLoading={loading}
-        className="w-full h-14 text-lg font-medium rounded-md mt-auto"
+        className="w-full h-14 text-lg font-medium rounded-md mt-auto shadow-2xl shadow-primary/20 hover:scale-[1.01] transition-all active:scale-[0.99]"
       >
-        {speaking ? <AudioVisualizer /> : <span className="flex items-center gap-2"><AudioLines className="w-5 h-5" /> Play Audio</span>}
+        {speaking ? <AudioVisualizer /> : <span className="flex items-center gap-2">{sentence.audioUrl ? <Gem className="w-5 h-5 text-teal-400" /> : <Bot className="w-5 h-5 text-zinc-400" />} Play Audio</span>}
       </Button>
 
     </div>

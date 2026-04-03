@@ -8,6 +8,7 @@ const audioBlobCache = new Map<string, string>();
 
 // Global reference to prevent overlapping audio
 let currentAudio: HTMLAudioElement | null = null;
+let globalPlaybackGeneration = 0;
 
 function stopCurrentAudio() {
     if (currentAudio) {
@@ -85,14 +86,16 @@ export async function playScenarioAudio(
     }
 
 
+    // Increment global generation id so pending async tasks know they are stale
+    globalPlaybackGeneration++;
+    const currentGeneration = globalPlaybackGeneration;
+
     // STRATEGY 1: CHECK LEGACY CACHE FIRST (Backward Compatibility)
     if (cachedUrl) {
         playAudioFromUrl(cachedUrl, options.onStart, options.onEnd, options.onError);
         return;
     }
 
-    // STRATEGY 2: CALL GLOBAL CACHED API
-    stopCurrentAudio();
     options.onStart();
 
     const auth = getAuth();
@@ -135,7 +138,13 @@ export async function playScenarioAudio(
             }
         }
 
+        if (globalPlaybackGeneration !== currentGeneration) {
+            // A new play request came in while we were fetching. Abort this one.
+            return;
+        }
+
         // 2. Play Audio
+        stopCurrentAudio();
         const audio = new Audio(targetUrl);
         currentAudio = audio;
 

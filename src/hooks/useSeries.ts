@@ -20,6 +20,7 @@ export function useSeries(seriesId?: string, currentScriptId?: string) {
                 const q = query(
                     collectionGroup(db, "scenarios"),
                     where("seriesId", "==", seriesId),
+                    where("isPublic", "==", true)
                     // orderBy("createdAt", "asc") // Risk of index error. Let's sort client side for now.
                 );
 

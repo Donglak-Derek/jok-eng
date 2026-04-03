@@ -17,7 +17,7 @@ import { playScenarioAudio } from "@/lib/tts";
 import { useDailyProgress } from "@/hooks/useDailyProgress";
 import { useProgress } from "@/context/ProgressContext";
 
-import { Volume2, AlertTriangle, ShieldCheck, PartyPopper } from "lucide-react";
+import { AlertTriangle, ShieldCheck, PartyPopper, Bot, Gem } from "lucide-react";
 import { toast } from "react-hot-toast";
 
 type Props = {
@@ -182,10 +182,9 @@ function SignalCard({
                     onClick={handlePlay}
                     variant={speaking ? "outline" : "primary"}
                     size="lg"
-                    className={`mt-6 w-full md:w-auto h-16 rounded-2xl px-10 transition-all ${speaking ? "bg-primary/20" : "shadow-2xl shadow-primary/20"}`}
-                    leftIcon={<Volume2 className="w-5 h-5" />}
+                    className={`mt-6 w-full md:w-auto h-16 rounded-2xl px-10 transition-all text-sm font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/20 hover:scale-[1.01] active:scale-[0.99]`}
                 >
-                    {speaking ? "DECODING AUDIO..." : "EXECUTE VERBAL ANALYSIS"}
+                    {speaking ? "DECODING AUDIO..." : <span className="flex items-center gap-2">{item.audioUrl ? <Gem className="w-5 h-5 text-teal-400" /> : <Bot className="w-5 h-5 text-zinc-400" />} Listen To Audio</span>}
                 </Button>
             </div>
 
@@ -199,15 +198,22 @@ function SignalCard({
                             exit={{ opacity: 0, scale: 0.95 }}
                             className="flex flex-col items-center gap-6"
                         >
-                            <p className="text-4xl md:text-5xl font-black italic text-center text-white uppercase tracking-tighter leading-none mb-4">
-                                Strategic Gap detected
+                            <div className="w-16 h-16 rounded-full border border-zinc-700 flex items-center justify-center mb-8 relative">
+                                <div className="absolute inset-0 rounded-full border border-primary/30 animate-[ping_2.5s_infinite]" />
+                                <div className="w-2 h-2 rounded-full bg-primary" />
+                            </div>
+                            <p className="text-xs font-black tracking-[0.3em] uppercase text-zinc-500 mb-2">
+                                [ TACTICAL PAUSE ]
+                            </p>
+                            <p className="text-2xl md:text-3xl font-black italic text-center text-white uppercase tracking-tight mb-8">
+                                Strategic Gap Detected
                             </p>
                             <Button
                                 onClick={() => setIsRevealed(true)}
                                 variant="primary"
-                                className="rounded-2xl px-12 py-9 text-xl font-black uppercase tracking-widest shadow-[0_0_50px_rgba(var(--primary),0.3)] hover:scale-105 transition-all"
+                                className="rounded-2xl px-10 py-6 text-sm font-black uppercase tracking-widest shadow-[0_0_30px_rgba(var(--primary),0.3)] hover:scale-105 transition-all"
                             >
-                                Initiate Local Decoding
+                                Decode Signal
                             </Button>
                         </motion.div>
                     ) : (
@@ -302,13 +308,24 @@ export default function SignalDecoder({ script }: Props) {
             );
 
             // Background persistence
-            let scriptRef;
-            if ('userId' in script) {
-                scriptRef = doc(db, `users/${(script as any).userId}/scenarios`, script.id);
-            } else {
-                scriptRef = doc(db, `users/jok-eng-official/scenarios`, script.id);
+            if ('userId' in script && user?.uid && (script as UserScript).userId === user.uid) {
+                const scriptRef = doc(db, `users/${user.uid}/scenarios`, script.id);
+                updateDoc(scriptRef, { decoderItems: newItems }).catch(e => console.error("Failed to persist audio", e));
+            } else if (!('userId' in script)) {
+                // Official script sponsorship via secure API
+                user?.getIdToken().then(token => {
+                    fetch('/api/sponsor', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            scenarioId: script.id,
+                            sentenceId,
+                            type: 'decoderItem',
+                            audioUrl: url,
+                            token
+                        })
+                    }).catch(e => console.error("Sponsor API error:", e));
+                });
             }
-            updateDoc(scriptRef, { decoderItems: newItems }).catch(e => console.error("Failed to persist audio", e));
 
             return { ...prev, decoderItems: newItems };
         });

@@ -108,7 +108,7 @@ export default function AdminScenariosPage() {
                                         </td>
                                         <td className="px-6 py-4 text-right space-x-2">
                                             <Link
-                                                href={`/script/${scenario.id}`}
+                                                href={`/scenario/${scenario.id}`}
                                                 target="_blank"
                                                 className="p-2 inline-flex text-neutral-500 hover:text-white hover:bg-neutral-700 rounded-lg transition-colors"
                                                 title="Preview Scenario"

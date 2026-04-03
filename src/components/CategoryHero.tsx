@@ -198,7 +198,7 @@ export default function CategoryHero({
                             </div>
                         </div>
 
-                        <Link href={`/script/${nextUpScript.id}`} className="block relative z-10 w-full">
+                        <Link href={`/scenario/${nextUpScript.id}`} className="block relative z-10 w-full">
                             <Button className={`w-full ${theme.accent} hover:opacity-90 border-transparent text-white shadow-xl shadow-primary/20 py-6 text-sm font-black uppercase tracking-widest`}>
                                 <Play className="w-4 h-4 mr-2" fill="currentColor" />
                                 Begin Training

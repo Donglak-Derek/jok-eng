@@ -23,10 +23,10 @@ export default function Header({ transparent = false }: HeaderProps) {
     const isStoreActive = pathname.startsWith("/shop");
     const isProfileActive = pathname.startsWith("/profile");
 
-    const headerBg = transparent 
-        ? 'bg-gradient-to-b from-black/80 to-transparent border-transparent' 
+    const headerBg = transparent
+        ? 'bg-gradient-to-b from-black/80 to-transparent border-transparent'
         : 'bg-zinc-950/90 backdrop-blur-md border-b border-white/5';
-    
+
     const textColor = 'text-white';
     const mutedTextColor = 'text-zinc-500 hover:text-white';
 
@@ -35,16 +35,6 @@ export default function Header({ transparent = false }: HeaderProps) {
             <div className="max-w-2xl mx-auto w-full flex items-center justify-between px-4 md:px-6 xl:px-0">
                 <div className="flex-1 flex justify-start items-center gap-4 md:gap-8">
                     <Link href="/" className="group flex items-center gap-0">
-                        <div className="relative w-8 h-8 md:w-9 md:h-9">
-                            <Image
-                                src="/logo-v2.png"
-                                alt="Jok-Eng Logo"
-                                fill
-                                sizes="(max-width: 768px) 32px, 36px"
-                                className={`object-contain drop-shadow-sm transition-transform group-hover:scale-105 duration-300 ${transparent ? 'invert brightness-0' : ''}`}
-                                priority
-                            />
-                        </div>
                         <h1 className="font-sans font-black italic text-xl tracking-tight group-hover:opacity-80 transition-opacity text-white">
                             Amly
                         </h1>
@@ -121,7 +111,7 @@ export default function Header({ transparent = false }: HeaderProps) {
                                                     <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Active Operator</p>
                                                 </div>
                                             </div>
-                                            
+
                                             <div className="px-1.5 py-1 space-y-0.5">
                                                 <Link
                                                     href="/about"

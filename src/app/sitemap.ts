@@ -28,7 +28,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // 3. Static System Scripts (Legacy/Fallback)
   const staticScriptRoutes = staticScripts.map((script) => ({
-    url: `${BASE_URL}/script/${script.id}`,
+    url: `${BASE_URL}/scenario/${script.id}`,
     lastModified: new Date(),
     changeFrequency: 'monthly' as const,
     priority: 0.6,
@@ -49,7 +49,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     dynamicScriptRoutes = snapshot.docs.map(doc => {
       const data = doc.data();
       return {
-        url: `${BASE_URL}/script/${doc.id}`,
+        url: `${BASE_URL}/scenario/${doc.id}`,
         lastModified: data.updatedAt ? new Date(data.updatedAt) : new Date(),
         changeFrequency: 'weekly' as const,
         priority: 0.7,

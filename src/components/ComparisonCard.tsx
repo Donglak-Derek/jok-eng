@@ -3,7 +3,7 @@
 import { useRef, useEffect, useCallback, useMemo, useState } from "react";
 import type { Sentence, Script } from "@/types";
 import { Button } from "@/components/Button";
-import { Volume2 } from "lucide-react";
+import { Bot, Gem } from "lucide-react";
 import { motion } from "framer-motion";
 import { playScenarioAudio } from "@/lib/tts";
 import { useAuth } from "@/context/AuthContext";
@@ -149,19 +149,16 @@ export default function ComparisonCard({
           if (targetIndex !== -1) {
             newSentences[targetIndex] = { ...newSentences[targetIndex], audioUrl: url };
 
-            let scriptRef;
-            if ('userId' in script) {
-              scriptRef = doc(db, `users/${(script as UserScript).userId}/scenarios`, script.id);
-            } else {
-              scriptRef = doc(db, `users/jok-eng-official/scenarios`, script.id);
+            // Only attempt to save if the user owns the script
+            if ('userId' in script && userProfile?.uid && (script as UserScript).userId === userProfile.uid) {
+                const scriptRef = doc(db, `users/${userProfile.uid}/scenarios`, script.id);
+                updateDoc(scriptRef, { sentences: newSentences }).then(() => {
+                    toast.success("💎 You just sponsored this audio for the community!", {
+                        duration: 4000,
+                        position: "bottom-center"
+                    });
+                }).catch(e => console.error("Audio save error:", e));
             }
-
-            updateDoc(scriptRef, { sentences: newSentences }).catch(e => console.error(e));
-
-            toast.success("💎 You just sponsored this audio for the community!", {
-              duration: 4000,
-              position: "bottom-center"
-            });
           }
         }
       });
@@ -253,12 +250,16 @@ export default function ComparisonCard({
         {/* STEP 0: DECISION REQUIRED */}
         {subStep === 0 && (
           <div className="flex-1 flex flex-col items-center justify-center min-h-[200px] animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <p className="text-3xl md:text-5xl font-black italic text-center mb-10 text-white uppercase tracking-tighter leading-none">
-                Decision Required
-            </p>
-            <div className="text-sm font-black uppercase tracking-widest text-zinc-500 animate-pulse">
-                Click Next to analyze options
-            </div>
+             <div className="w-16 h-16 rounded-full border border-zinc-700 flex items-center justify-center mb-8 relative">
+                 <div className="absolute inset-0 rounded-full border border-primary/30 animate-[ping_2.5s_infinite]" />
+                 <div className="w-2 h-2 rounded-full bg-primary" />
+             </div>
+             <p className="text-xs font-black tracking-[0.3em] uppercase text-zinc-500 mb-2">
+                 [ TACTICAL PAUSE ]
+             </p>
+             <p className="text-2xl md:text-3xl font-black italic text-center text-white uppercase tracking-tight">
+                 Analyze Subtext
+             </p>
           </div>
         )}
 
@@ -344,7 +345,7 @@ export default function ComparisonCard({
                 isLoading={loading}
                 className="w-full h-16 text-sm font-black uppercase tracking-[0.2em] rounded-2xl shadow-2xl shadow-primary/20 hover:scale-[1.01] transition-all active:scale-[0.99]"
                 >
-                {speaking ? <AudioVisualizer /> : <span className="flex items-center gap-2"><Volume2 className="w-5 h-5" /> Listen To Audio</span>}
+                {speaking ? <AudioVisualizer /> : <span className="flex items-center gap-2">{sentence.audioUrl ? <Gem className="w-5 h-5 text-teal-400" /> : <Bot className="w-5 h-5 text-zinc-400" />} Listen To Audio</span>}
                 </Button>
             </div>
           </motion.div>

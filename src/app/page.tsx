@@ -133,7 +133,7 @@ function LandingDashboard() {
                                 >
                                     <Link href={`/category/${c.slug}`} className="block w-full h-full group outline-none">
                                         <div className="flex flex-col w-full h-full bg-zinc-900/50 rounded-[32px] shadow-2xl border border-white/5 overflow-hidden group-hover:border-emerald-500/30 transition-all duration-500 group-hover:-translate-y-1">
-                                            <div className="relative w-full aspect-video bg-zinc-950">
+                                            <div className="relative w-full aspect-video bg-zinc-950 overflow-hidden">
                                                 <Image
                                                     src={c.image || "/images/categories/small_talk.png"}
                                                     alt={c.name}
@@ -141,24 +141,22 @@ function LandingDashboard() {
                                                     sizes="(max-width: 768px) 100vw, 400px"
                                                     className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100"
                                                 />
-                                                <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/40 to-transparent" />
                                                 
                                                 <div className="absolute top-4 left-4">
                                                     <div className="bg-zinc-950/80 backdrop-blur-md text-emerald-500 border border-emerald-500/20 text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1.5 rounded-sm flex items-center gap-2">
                                                         <span>Phase {i + 1}</span>
                                                     </div>
                                                 </div>
-
-                                                <div className="absolute bottom-6 left-6 right-6 text-white">
-                                                    <h3 className="font-black text-2xl md:text-3xl tracking-tight leading-tight italic uppercase">
-                                                        {c.name}
-                                                    </h3>
-                                                </div>
                                             </div>
                                             <div className="p-6 md:p-8 flex-1 flex flex-col justify-between bg-zinc-950">
-                                                <p className="text-base text-zinc-400 font-medium mb-6 leading-relaxed">
-                                                    {c.description}
-                                                </p>
+                                                <div className="mb-6">
+                                                    <h3 className="font-black text-2xl md:text-3xl tracking-tight leading-tight italic uppercase text-white mb-4">
+                                                        {c.name}
+                                                    </h3>
+                                                    <p className="text-base text-zinc-400 font-medium leading-relaxed">
+                                                        {c.description}
+                                                    </p>
+                                                </div>
                                                 <div className="text-xs font-black uppercase tracking-[0.2em] text-emerald-500 group-hover:translate-x-2 transition-transform inline-flex items-center gap-2">
                                                     Initialize Training <span className="text-lg opacity-50">&rarr;</span>
                                                 </div>

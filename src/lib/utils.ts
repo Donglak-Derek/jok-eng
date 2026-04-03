@@ -5,12 +5,6 @@ export function cn(...classes: (string | undefined | null | false)[]) {
 }
 
 export function getScriptAudioStatus(script: Script): 'premium' | 'robot' | undefined {
-    // 1. Official Scripts (No userId) -> Default to Premium (Assumption: Official content has audio)
-    if (!('userId' in script)) {
-        return 'premium';
-    }
-
-    // 2. User/Community Scripts -> Check for actual audioUrl presence
     // Check sentences (Standard)
     if (script.sentences && script.sentences.length > 0) {
         if (script.sentences.some(s => !!s.audioUrl)) return 'premium';
