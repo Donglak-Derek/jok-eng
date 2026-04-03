@@ -105,7 +105,7 @@ export default function StoryCard({
           if (targetIndex !== -1) {
             newSentences[targetIndex] = { ...newSentences[targetIndex], audioUrl: url };
 
-            // Only attempt to save if the user owns the script
+            // Background persistence
             if ('userId' in script && userProfile?.uid && (script as UserScript).userId === userProfile.uid) {
                 const scriptRef = doc(db, `users/${userProfile.uid}/scenarios`, script.id);
                 updateDoc(scriptRef, { sentences: newSentences }).then(() => {
@@ -114,6 +114,25 @@ export default function StoryCard({
                         position: "bottom-center"
                     });
                 }).catch(e => console.error("Audio save error:", e));
+            } else if (!('userId' in script)) {
+                // Official script sponsorship via secure API
+                getAuth().currentUser?.getIdToken().then(token => {
+                    fetch('/api/sponsor', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            scenarioId: script.id,
+                            sentenceId: sentence.id,
+                            type: 'sentence',
+                            audioUrl: url,
+                            token
+                        })
+                    }).then(() => {
+                        toast.success("💎 You just sponsored this audio for the community!", {
+                            duration: 4000,
+                            position: "bottom-center"
+                        });
+                    }).catch(e => console.error("Sponsor API error:", e));
+                });
             }
           }
         }
@@ -300,7 +319,7 @@ export default function StoryCard({
         isLoading={loading}
         className="w-full h-16 text-sm font-black uppercase tracking-[0.2em] rounded-2xl shadow-2xl shadow-primary/20 hover:scale-[1.01] transition-all active:scale-[0.99] mt-auto"
       >
-        {speaking ? <AudioVisualizer /> : <span className="flex items-center gap-2">{sentence.audioUrl ? <Gem className="w-5 h-5 text-teal-400" /> : <Bot className="w-5 h-5 text-zinc-400" />} Execute Audio</span>}
+        {speaking ? <AudioVisualizer /> : <span className="flex items-center gap-2">{sentence.audioUrl ? <Gem className="w-5 h-5 text-teal-400" /> : <Bot className="w-5 h-5 text-zinc-400" />} Listen To Audio</span>}
       </Button>
 
     </div>

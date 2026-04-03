@@ -149,7 +149,7 @@ export default function ComparisonCard({
           if (targetIndex !== -1) {
             newSentences[targetIndex] = { ...newSentences[targetIndex], audioUrl: url };
 
-            // Only attempt to save if the user owns the script
+            // Background persistence
             if ('userId' in script && userProfile?.uid && (script as UserScript).userId === userProfile.uid) {
                 const scriptRef = doc(db, `users/${userProfile.uid}/scenarios`, script.id);
                 updateDoc(scriptRef, { sentences: newSentences }).then(() => {
@@ -158,6 +158,25 @@ export default function ComparisonCard({
                         position: "bottom-center"
                     });
                 }).catch(e => console.error("Audio save error:", e));
+            } else if (!('userId' in script)) {
+                // Official script sponsorship via secure API
+                getAuth().currentUser?.getIdToken().then(token => {
+                    fetch('/api/sponsor', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            scenarioId: script.id,
+                            sentenceId: sentence.id,
+                            type: 'sentence',
+                            audioUrl: url,
+                            token
+                        })
+                    }).then(() => {
+                        toast.success("💎 You just sponsored this audio for the community!", {
+                            duration: 4000,
+                            position: "bottom-center"
+                        });
+                    }).catch(e => console.error("Sponsor API error:", e));
+                });
             }
           }
         }
