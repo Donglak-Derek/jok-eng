@@ -38,6 +38,15 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: "/script/:id",
+        destination: "/scenario/:id",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default withPWA(nextConfig);
