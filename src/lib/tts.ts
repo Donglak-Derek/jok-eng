@@ -6,44 +6,51 @@ import { getAuth } from "firebase/auth";
 // Local Memory Cache: Maps API Request URLs to Local Browser Blob URLs
 const audioBlobCache = new Map<string, string>();
 
-// Global reference to prevent overlapping audio
-let currentAudio: HTMLAudioElement | null = null;
+// Silent 1-pixel/1-millisecond sound to "bless" the audio context synchronously on mobile
+const SILENCE_DATA_URI = "data:audio/wav;base64,UklGRigAAABXQVZFWm1zZSAAAABIAAAAL09wdGlvbnMAAABpZDN0AAAAAAA=";
+
+// Global reference to prevent overlapping audio and maintain mobile "blessed" state
+let globalAudio: HTMLAudioElement | null = null;
 let globalPlaybackGeneration = 0;
 
 function stopCurrentAudio() {
-    if (currentAudio) {
-        currentAudio.pause();
-        currentAudio.onended = null;
-        currentAudio.onerror = null;
-        currentAudio.src = "";
-        currentAudio = null;
+    if (globalAudio) {
+        globalAudio.pause();
+        globalAudio.onended = null;
+        globalAudio.onerror = null;
+        globalAudio.src = SILENCE_DATA_URI; // Reset to silence
     }
 }
 
-interface PlayOptions {
-    text: string;
-    scenarioId: string;
-    voice?: string; // e.g. "en-US-Neural2-F"
-    isPro: boolean;
-    userCredits: number;
-    scenarioAudioUrl?: string; // Pre-cached URL from Firestore
-    onPlayStart?: () => void;
-    onPlayEnd?: () => void;
-    onError?: (msg: string) => void;
+/**
+ * Ensures the audio context is unlocked for mobile Safari.
+ * MUST be called inside a synchronous user interaction handler.
+ */
+function blessAudioContext() {
+    if (!globalAudio) {
+        globalAudio = new Audio();
+    }
+    
+    // Play silence instantly to satisfy Safari's synchronous requirement
+    globalAudio.src = SILENCE_DATA_URI;
+    globalAudio.play().catch(() => {
+        // Silently fail if context hasn't been blessed yet
+    });
+
+    // Also bless SpeechSynthesis for mobile native fallback
+    if (typeof window !== "undefined" && window.speechSynthesis) {
+        const blessing = new SpeechSynthesisUtterance("");
+        blessing.volume = 0;
+        window.speechSynthesis.speak(blessing);
+    }
 }
 
-/**
- * The Master TTS Function: "Cache & Profit" Model
- * 1. Check if we already have a focused legacy URL (passed in).
- * 2. If not, hit `/api/tts` which handles its own global caching.
- * 3. Play audio.
- */
 export async function playScenarioAudio(
     dbUser: UserProfile | null,
     scenario: Script,
     options: {
         text?: string;
-        sentenceId?: string; // If playing a specific sentence
+        sentenceId?: string;
         voice?: string;
         onStart: () => void;
         onEnd: () => void;
@@ -51,6 +58,9 @@ export async function playScenarioAudio(
         onAudioGenerated?: (url: string) => void;
     }
 ) {
+    // 🚩 CRITICAL: Synchronously "bless" the context BEFORE any async calls
+    blessAudioContext();
+
     let textToPlay = options.text || scenario.cleanedEnglish;
     if (!textToPlay) {
         options.onError("No text to play.");
@@ -71,13 +81,7 @@ export async function playScenarioAudio(
             const decoderItem = scenario.decoderItems.find(d => d.id === options.sentenceId);
             if (decoderItem) cachedUrl = decoderItem.audioUrl;
         }
-        // Support for Story Segments (using index as ID usually, or maybe we passed a virtual ID)
         if (!cachedUrl && scenario.segments) {
-            // For segments, we might pass "seg_0", "seg_1" etc.
-            // Or we just assume the ID passed matches the convention if we enforce it.
-            // But segments in types don't have an ID field!
-            // So we must rely on index.
-            // Hack: we will assume sentenceId is "seg_{index}" for segments
             if (options.sentenceId.startsWith("seg_")) {
                 const idx = parseInt(options.sentenceId.split("_")[1]);
                 if (scenario.segments[idx]) cachedUrl = scenario.segments[idx].audioUrl;
@@ -85,12 +89,11 @@ export async function playScenarioAudio(
         }
     }
 
-
-    // Increment global generation id so pending async tasks know they are stale
+    // Increment global generation id
     globalPlaybackGeneration++;
     const currentGeneration = globalPlaybackGeneration;
 
-    // STRATEGY 1: CHECK LEGACY CACHE FIRST (Backward Compatibility)
+    // STRATEGY 1: CHECK LEGACY CACHE FIRST
     if (cachedUrl) {
         playAudioFromUrl(cachedUrl, options.onStart, options.onEnd, options.onError);
         return;
@@ -102,96 +105,75 @@ export async function playScenarioAudio(
     const currentUser = auth.currentUser;
 
     if (!currentUser) {
-        // SYNCHRONOUS FALLBACK: Must run immediately to satisfy Safari's strict play-on-click rules
-        console.warn("Guest user: Falling back to native TTS synchronously");
+        console.warn("Guest user: Falling back to native TTS");
         speakNative(textToPlay, () => {}, options.onEnd);
         return;
     }
 
     try {
-        // Fetch User Token for Security Bypass
         const token = await currentUser.getIdToken();
-
-        // 1. Check Local In-Memory Cache first
-        const voice = options.voice || "en-US-Neural2-F"; // Allow override
+        const voice = options.voice || "en-US-Neural2-F";
         const apiUrl = `/api/tts?text=${encodeURIComponent(textToPlay)}&voice=${voice}&token=${token}`;
 
         let targetUrl = apiUrl;
 
         if (audioBlobCache.has(apiUrl)) {
-            // HIT: Use the local Memory Blob
             targetUrl = audioBlobCache.get(apiUrl)!;
         } else {
-            // MISS: Fetch from Global API Cache
             const response = await fetch(apiUrl);
             if (!response.ok) throw new Error("TTS Generation failed");
-
-            // Using response.url from the 302 redirect (Firebase Storage public URL)
             targetUrl = response.url;
-
-            // Save to Local Memory Cache for next time
             audioBlobCache.set(apiUrl, targetUrl);
-
-            // Gamification/Persistence Callback: Provide the permanent URL back to the frontend
             if (options.onAudioGenerated && response.redirected) {
                 options.onAudioGenerated(targetUrl);
             }
         }
 
-        if (globalPlaybackGeneration !== currentGeneration) {
-            // A new play request came in while we were fetching. Abort this one.
-            return;
-        }
+        if (globalPlaybackGeneration !== currentGeneration) return;
 
-        // 2. Play Audio
-        stopCurrentAudio();
-        const audio = new Audio(targetUrl);
-        currentAudio = audio;
-
-        audio.onended = () => {
+        // 2. Play Audio via blessed global player
+        if (!globalAudio) globalAudio = new Audio();
+        
+        globalAudio.src = targetUrl;
+        globalAudio.onended = () => {
             options.onEnd();
-            if (currentAudio === audio) currentAudio = null;
-            // We NO LONGER revoke the object URL here, as the cache retains it for instant replay
         };
-        audio.onerror = () => {
+        globalAudio.onerror = () => {
             options.onError("Playback error");
-            if (currentAudio === audio) currentAudio = null;
         };
 
-        // Handle Safari autoplay block gracefully
-        const playPromise = audio.play();
+        const playPromise = globalAudio.play();
         if (playPromise !== undefined) {
             playPromise.catch(e => {
+                console.error("Audio playback error", e);
                 if (e.name === 'NotAllowedError') {
-                    console.warn("Autoplay blocked by browser. User interaction required.");
-                } else {
-                    console.error("Audio playback error", e);
+                    // Final attempt fallback to native
+                    speakNative(textToPlay, () => {}, options.onEnd);
                 }
             });
         }
 
     } catch (e) {
         console.error("TTS Logic Error", e);
-        // Fallback to native if API fails entirely
         speakNative(textToPlay, () => {}, options.onEnd);
     }
 }
 
 function playAudioFromUrl(url: string, onStart: () => void, onEnd: () => void, onError: (msg: string) => void) {
-    stopCurrentAudio();
-    const audio = new Audio(url);
-    currentAudio = audio;
+    if (!globalAudio) globalAudio = new Audio();
+    globalAudio.pause();
+    globalAudio.src = url;
 
-    audio.onplay = onStart;
-    audio.onended = () => {
-        onEnd();
-        if (currentAudio === audio) currentAudio = null;
-    };
-    audio.onerror = () => {
+    globalAudio.onplay = onStart;
+    globalAudio.onended = onEnd;
+    globalAudio.onerror = () => {
         onError("Failed to play audio url");
-        if (currentAudio === audio) currentAudio = null;
     };
-    audio.play();
+    
+    globalAudio.play().catch(e => {
+        console.error("URL Playback blocked", e);
+        onError("Playback blocked by browser");
+    });
 }
 
 // Global reference to prevent Safari GC bug

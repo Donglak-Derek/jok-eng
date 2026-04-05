@@ -82,7 +82,7 @@ export default function VideosPage() {
                             {/* Short-form vertical player. We autoplay only the active video. */}
                             {activeVideoIndex === index ? (
                                 <iframe
-                                    src={`https://www.youtube.com/embed/${video.youtubeId}?autoplay=1&loop=1&playlist=${video.youtubeId}&controls=0&modestbranding=1&rel=0&showinfo=0`}
+                                    src={`https://www.youtube.com/embed/${video.youtubeId}?autoplay=1&mute=1&loop=1&playlist=${video.youtubeId}&controls=0&modestbranding=1&rel=0&showinfo=0`}
                                     title={video.title}
                                     className="absolute inset-0 w-full h-full object-cover pointer-events-auto"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
