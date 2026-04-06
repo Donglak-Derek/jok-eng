@@ -16,7 +16,7 @@ import VideoCard from "@/components/player/VideoCard";
 import ClozeCard from "@/components/ClozeCard";
 import ScriptPlayerShell from "@/components/ScriptPlayerShell";
 
-import { ArrowRight, Volume2, Lightbulb } from "lucide-react";
+import { ArrowRight, Volume2, Lightbulb, ChevronRight } from "lucide-react";
 import StoryFullView from "./StoryFullView";
 import { playScenarioAudio } from "@/lib/tts";
 
@@ -26,9 +26,10 @@ import { getScriptAudioStatus } from "@/lib/utils";
 
 type Props = {
   script: Script;
+  nextScenarioId?: string;
 };
 
-export default function StoryFlow({ script }: Props) {
+export default function StoryFlow({ script, nextScenarioId }: Props) {
   const router = useRouter();
 
   // Real-time Script Sync (Community Cache)
@@ -176,13 +177,30 @@ export default function StoryFlow({ script }: Props) {
           }
 
           // Background persistence
-          let scriptRef;
-          if ('userId' in script) {
-            scriptRef = doc(db, `users/${(script as UserScript).userId}/scenarios`, script.id);
-          } else {
-            scriptRef = doc(db, `users/jok-eng-official/scenarios`, script.id);
+          const isAdmin = userProfile?.subscription?.tier === 'admin';
+
+          if ('userId' in script && user?.uid && (script as UserScript).userId === user.uid) {
+            // Own Scenario Update
+            const scriptRef = doc(db, `users/${user.uid}/scenarios`, script.id);
+            updateDoc(scriptRef, { segments: newSegments }).catch(e => console.error("Failed to persist audio", e));
+          } else if (!('userId' in script) && isAdmin) {
+            // Official script sponsorship (ADMIN ONLY)
+            user?.getIdToken().then(token => {
+              fetch('/api/sponsor', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  scenarioId: script.id,
+                  sentenceId: segmentId,
+                  type: 'segments',
+                  audioUrl: url,
+                  token
+                })
+              }).then(res => {
+                  if (res.ok) console.log("💎 Admin sponsorship successful");
+              }).catch(e => console.error("Sponsor API error:", e));
+            });
           }
-          updateDoc(scriptRef, { segments: newSegments }).catch(e => console.error("Failed to persist audio", e));
 
           return { ...prev, segments: newSegments };
         });
@@ -236,23 +254,41 @@ export default function StoryFlow({ script }: Props) {
           </div>
 
           <div className="w-full max-w-sm flex flex-col gap-3 mt-4">
-            <Button
-              variant="primary"
-              size="lg"
-              onClick={handleRepeat}
-              className="w-full"
-            >
-              Repeat
-            </Button>
+            {nextScenarioId ? (
+              <>
+                <Button 
+                  onClick={() => router.push(`/scenario/${nextScenarioId}`)} 
+                  className="w-full h-20 text-sm font-black uppercase tracking-[0.2em] rounded-3xl shadow-2xl shadow-primary/30 hover:scale-[1.02] transition-all border border-white/10" 
+                  variant="primary"
+                >
+                  Next Mission <ChevronRight className="ml-2 w-5 h-5" />
+                </Button>
+                <Button 
+                  onClick={handleRepeat} 
+                  className="w-full h-16 text-xs font-black uppercase tracking-[0.2em] rounded-2xl text-zinc-400 hover:text-white" 
+                  variant="ghost"
+                >
+                  Practice Again (Rep {repeats + 1})
+                </Button>
+              </>
+            ) : (
+              <Button
+                variant="primary"
+                size="lg"
+                onClick={handleRepeat}
+                className="w-full h-16 rounded-2xl font-black uppercase tracking-widest shadow-2xl shadow-primary/20"
+              >
+                Initiate Rep {repeats + 1}
+              </Button>
+            )}
 
             <Button
               variant="ghost"
               size="md"
               onClick={handleFinishTraining}
-              className="w-full text-muted-foreground"
-              rightIcon={<ArrowRight className="w-4 h-4" />}
+              className="w-full text-zinc-500 font-black uppercase tracking-widest text-[10px] mt-4"
             >
-              Finish & Return
+              &larr; Return to Base
             </Button>
 
             {/* Content Loop: Blog Link */}

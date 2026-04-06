@@ -14,15 +14,16 @@ import { useAuth } from "@/context/AuthContext";
 type Props = {
     script?: Script; // Optional now
     scriptId?: string; // ID to fetch if script is missing
+    nextScenarioId?: string;
 };
 
 // Main Component
-export default function ScriptClient({ script: initialScript, scriptId }: Props) {
-    return <ScriptClientInner initialScript={initialScript} scriptId={scriptId} />;
+export default function ScriptClient({ script: initialScript, scriptId, nextScenarioId }: Props) {
+    return <ScriptClientInner initialScript={initialScript} scriptId={scriptId} nextScenarioId={nextScenarioId} />;
 }
 
 // Inner component to safely use hooks
-function ScriptClientInner({ initialScript, scriptId }: { initialScript?: Script, scriptId?: string }) {
+function ScriptClientInner({ initialScript, scriptId, nextScenarioId }: { initialScript?: Script, scriptId?: string, nextScenarioId?: string }) {
     const { user, loading: authLoading } = useAuth();
     const [script, setScript] = useState<Script | undefined>(initialScript);
     const [loading, setLoading] = useState(!initialScript);
@@ -113,7 +114,7 @@ function ScriptClientInner({ initialScript, scriptId }: { initialScript?: Script
     }
 
     // 📖 Legacy Text Methodology Routing
-    if (script.type === "story_flow" || script.videoUrl || script.segments) return <StoryFlow script={script} />;
-    if (script.type === "decoder") return <SignalDecoder script={script} />;
-    return <StandardScriptFlow script={script} />;
+    if (script.type === "story_flow" || script.videoUrl || script.segments) return <StoryFlow script={script} nextScenarioId={nextScenarioId} />;
+    if (script.type === "decoder") return <SignalDecoder script={script} nextScenarioId={nextScenarioId} />;
+    return <StandardScriptFlow script={script} nextScenarioId={nextScenarioId} />;
 }

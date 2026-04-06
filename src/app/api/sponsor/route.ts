@@ -10,21 +10,46 @@ export async function POST(request: NextRequest) {
         if (!scenarioId || !sentenceId || !audioUrl || !token) {
             return new NextResponse("Invalid request", { status: 400 });
         }
-        if (type !== "sentence" && type !== "decoderItem") {
+        if (type !== "sentence" && type !== "decoderItem" && type !== "segments") {
             return new NextResponse("Invalid item type", { status: 400 });
         }
 
         // Must be authenticated
-        await getAdminAuth().verifyIdToken(token);
+        const decodedToken = await getAdminAuth().verifyIdToken(token);
+        const uid = decodedToken.uid;
 
         const db = getAdminDb();
-        const scriptRef = db.doc(`users/jok-eng-official/scenarios/${scenarioId}`);
         
-        // Execute Transaction to ensure we don't accidentally overwrite concurrent sponsorships
+        // 🔒 ADMIN CHECK: Only admins can sponsor official content
+        const userDoc = await db.doc(`users/${uid}`).get();
+        const userData = userDoc.data();
+        const isAdmin = userData?.subscription?.tier === 'admin';
+
+        if (!isAdmin) {
+            console.error(`Sponsorship denied: User ${uid} is not an admin.`);
+            return new NextResponse("Unauthorized: Admin privileges required", { status: 403 });
+        }
+
+        let scriptRef = db.doc(`users/jok-eng-official/scenarios/${scenarioId}`);
+        
+        // Execute Transaction
         await db.runTransaction(async (transaction: any) => {
-            const docSnap = await transaction.get(scriptRef);
+            let docSnap = await transaction.get(scriptRef);
+            
+            // 🔎 FALLBACK: If direct path fails, search globally for the official version
             if (!docSnap.exists) {
-                throw new Error("Official script not found");
+                console.log(`Direct path failed for ${scenarioId}, searching via query...`);
+                const q = await db.collectionGroup("scenarios")
+                    .where("id", "==", scenarioId)
+                    .where("userId", "==", "jok-eng-official")
+                    .limit(1)
+                    .get();
+                
+                if (q.empty) {
+                    throw new Error("Official script not found");
+                }
+                scriptRef = q.docs[0].ref;
+                docSnap = q.docs[0];
             }
 
             const data = docSnap.data()!;
@@ -42,6 +67,16 @@ export async function POST(request: NextRequest) {
                 if (idx !== -1 && decoderItems[idx].audioUrl !== audioUrl) {
                     decoderItems[idx].audioUrl = audioUrl;
                     transaction.update(scriptRef, { decoderItems });
+                }
+            } else if (type === 'segments') {
+                const segments = data.segments || [];
+                // Segments usually use seg_0, seg_1... or the step number
+                const idx = segments.findIndex((s: any, i: number) => 
+                    s.id === sentenceId || `seg_${i}` === sentenceId || s.step === sentenceId
+                );
+                if (idx !== -1 && segments[idx].audioUrl !== audioUrl) {
+                    segments[idx].audioUrl = audioUrl;
+                    transaction.update(scriptRef, { segments });
                 }
             }
         });

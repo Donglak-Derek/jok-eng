@@ -3,11 +3,51 @@ import { db } from "./firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
-// Local Memory Cache: Maps API Request URLs to Local Browser Blob URLs
+// Tier 1: In-Memory Content Cache (Text + Voice -> Blob URL)
+const textAudioBlobCache = new Map<string, string>();
+// Tier 2: In-Memory URL Cache (URL -> Blob URL)
 const audioBlobCache = new Map<string, string>();
 
-// Silent 1-pixel/1-millisecond sound to "bless" the audio context synchronously on mobile
-const SILENCE_DATA_URI = "data:audio/wav;base64,UklGRigAAABXQVZFWm1zZSAAAABIAAAAL09wdGlvbnMAAABpZDN0AAAAAAA=";
+/**
+ * Normalizes text and voice for consistent cache keys
+ */
+function getCacheKey(text: string, voice?: string) {
+    const cleanText = text.trim().toLowerCase().replace(/[\[\]]/g, "");
+    const cleanVoice = (voice || "en-US-Neural2-F").toLowerCase();
+    return `${cleanText}@@${cleanVoice}`;
+}
+
+/**
+ * Robust fetch for audio blobs to avoid CORS/redirect issues in <audio> tags
+ */
+async function fetchAudioBlob(url: string, cacheKey?: string): Promise<string | null> {
+    if (audioBlobCache.has(url)) {
+        return audioBlobCache.get(url)!;
+    }
+
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Failed to fetch audio: ${response.status}`);
+    
+    const blob = await response.blob();
+    
+    // VALIDATION: Ensure we got actual audio, not an empty file or a 200-OK HTML error page
+    const headerBuffer = await blob.slice(0, 8).arrayBuffer();
+    const header = Array.from(new Uint8Array(headerBuffer)).map(b => b.toString(16).padStart(2, '0')).join(' ');
+    console.log(`[TTS Info] Fetched Storage: size=${blob.size} bytes, type=${blob.type}, header=${header}`);
+    
+    if (blob.size < 100 || !blob.type.includes("audio")) {
+        console.warn("[TTS Warning] Media invalid or too small.");
+        return null;
+    }
+
+    const objectUrl = URL.createObjectURL(blob);
+    audioBlobCache.set(url, objectUrl);
+    if (cacheKey) textAudioBlobCache.set(cacheKey, objectUrl);
+    return objectUrl;
+}
+
+// Optimized 0.1-second silence MP3 snippet (minimizes overlap while still 'blessing' context)
+const SILENCE_DATA_URI = "data:audio/mpeg;base64,//uQxAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAACSAALCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsL/8AAAABhbmZvAAAA8AAAACAAACSAALCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsL/8AAAAhTEFNRTMuMTAwAof8AAAAAAAAAAAAMUCAAAAAAAAAAAAAAAD/8MUAAAAAAAAAAAAAAAAAAAAAAAANIAAAAAAAVU9VAVVVVRX/8MUAMIAAAAzAAAAANIAAAAAAAVU9VAVVVVRX/8MUALIAAAAzAAAAANIAAAAAAAVU9VAVVVVRX/8MUAMYAAAAzAAAAANIAAAAAAAVU9VAVVVVRU=";
 
 // Global reference to prevent overlapping audio and maintain mobile "blessed" state
 let globalAudio: HTMLAudioElement | null = null;
@@ -18,7 +58,8 @@ function stopCurrentAudio() {
         globalAudio.pause();
         globalAudio.onended = null;
         globalAudio.onerror = null;
-        globalAudio.src = SILENCE_DATA_URI; // Reset to silence
+        globalAudio.src = ""; // Fully clear source
+        globalAudio.load();   // Force clear
     }
 }
 
@@ -30,6 +71,9 @@ function blessAudioContext() {
     if (!globalAudio) {
         globalAudio = new Audio();
     }
+    
+    // Clear previous state
+    stopCurrentAudio();
     
     // Play silence instantly to satisfy Safari's synchronous requirement
     globalAudio.src = SILENCE_DATA_URI;
@@ -61,119 +105,179 @@ export async function playScenarioAudio(
     // 🚩 CRITICAL: Synchronously "bless" the context BEFORE any async calls
     blessAudioContext();
 
+    const voice = options.voice || "en-US-Neural2-F";
     let textToPlay = options.text || scenario.cleanedEnglish;
     if (!textToPlay) {
         options.onError("No text to play.");
         return;
     }
+    
+    // 1️⃣ TIER 1: CLIENT MEMORY CACHE (Zero Network)
+    const cacheKey = getCacheKey(textToPlay, voice);
+    if (textAudioBlobCache.has(cacheKey)) {
+        const cachedUrl = textAudioBlobCache.get(cacheKey)!;
+        console.log(`[TTS Info] Tier 1 HIT: Using memory-cached blob.`);
+        // Play directly
+        playFinalBlob(cachedUrl, textToPlay, options);
+        return;
+    }
 
-    // Remove brackets [ ] used for cloze/keywords to prevent TTS pauses
+    // Remove brackets [ ] used for cloze/keywords for network-level TTS
     textToPlay = textToPlay.replace(/[\[\]]/g, "");
 
-    // Determine Cache Key & URL
-    let cachedUrl = scenario.audioUrl;
+    // 2️⃣ TIER 2: STORAGE KEY (Database check)
+    let sourceUrl = scenario.audioUrl;
     if (options.sentenceId) {
         if (scenario.sentences) {
             const sentence = scenario.sentences.find(s => s.id === options.sentenceId);
-            if (sentence) cachedUrl = sentence.audioUrl;
+            if (sentence) sourceUrl = sentence.audioUrl;
         }
-        if (!cachedUrl && scenario.decoderItems) {
+        if (!sourceUrl && scenario.decoderItems) {
             const decoderItem = scenario.decoderItems.find(d => d.id === options.sentenceId);
-            if (decoderItem) cachedUrl = decoderItem.audioUrl;
+            if (decoderItem) sourceUrl = decoderItem.audioUrl;
         }
-        if (!cachedUrl && scenario.segments) {
+        if (!sourceUrl && scenario.segments) {
             if (options.sentenceId.startsWith("seg_")) {
                 const idx = parseInt(options.sentenceId.split("_")[1]);
-                if (scenario.segments[idx]) cachedUrl = scenario.segments[idx].audioUrl;
+                if (scenario.segments[idx]) sourceUrl = scenario.segments[idx].audioUrl;
             }
         }
     }
 
-    // Increment global generation id
+    // Increment global generation id to handle async races
     globalPlaybackGeneration++;
     const currentGeneration = globalPlaybackGeneration;
 
-    // STRATEGY 1: CHECK LEGACY CACHE FIRST
-    if (cachedUrl) {
-        playAudioFromUrl(cachedUrl, options.onStart, options.onEnd, options.onError);
-        return;
-    }
-
-    options.onStart();
-
-    const auth = getAuth();
-    const currentUser = auth.currentUser;
-
-    if (!currentUser) {
-        console.warn("Guest user: Falling back to native TTS");
-        speakNative(textToPlay, () => {}, options.onEnd);
-        return;
-    }
-
     try {
-        const token = await currentUser.getIdToken();
-        const voice = options.voice || "en-US-Neural2-F";
-        const apiUrl = `/api/tts?text=${encodeURIComponent(textToPlay)}&voice=${voice}&token=${token}`;
+        let finalBlobUrl: string | null = null;
 
-        let targetUrl = apiUrl;
-
-        if (audioBlobCache.has(apiUrl)) {
-            targetUrl = audioBlobCache.get(apiUrl)!;
+        if (sourceUrl) {
+            // Found a Storage URL -> Tier 2 Hit
+            console.log(`[TTS Info] Tier 2 HIT: Fetching direct from Storage URL.`);
+            finalBlobUrl = await fetchAudioBlob(sourceUrl, cacheKey);
         } else {
+            // 3️⃣ TIER 3: API GENERATION (Cloud fallback)
+            console.log(`[TTS Info] Tier 3: Calling Proxy API for generation.`);
+            options.onStart(); // Show loading state
+            
+            const auth = getAuth();
+            const currentUser = auth.currentUser;
+            if (!currentUser) {
+                speakNative(textToPlay, () => {}, options.onEnd);
+                return;
+            }
+
+            const token = await currentUser.getIdToken();
+            const apiUrl = `/api/tts?text=${encodeURIComponent(textToPlay)}&voice=${voice}&token=${token}`;
+
             const response = await fetch(apiUrl);
-            if (!response.ok) throw new Error("TTS Generation failed");
-            targetUrl = response.url;
-            audioBlobCache.set(apiUrl, targetUrl);
-            if (options.onAudioGenerated && response.redirected) {
-                options.onAudioGenerated(targetUrl);
+            if (!response.ok) throw new Error(`TTS API failed: ${response.status}`);
+            
+            const blob = await response.blob();
+            
+            // DIAGNOSTICS
+            const headerBuffer = await blob.slice(0, 8).arrayBuffer();
+            const header = Array.from(new Uint8Array(headerBuffer)).map(b => b.toString(16).padStart(2, '0')).join(' ');
+            const status = response.headers.get("X-Audio-Status") || "ok";
+            console.log(`[TTS Info] API Result: size=${blob.size} bytes, status=${status}, header=${header}`);
+
+            if (status === "new") {
+                console.info(`💎 [Cloud Cache] New audio generated and saved to community storage (${blob.size} bytes).`);
+            }
+
+            if (blob.size < 100 || !blob.type.includes("audio")) {
+                throw new Error("Invalid audio response from API");
+            }
+
+            finalBlobUrl = URL.createObjectURL(blob);
+            
+            // Populate Tier 1 for next time
+            textAudioBlobCache.set(cacheKey, finalBlobUrl);
+
+            // Populate Storage Key for community (Step 3 feedback)
+            const audioPath = response.headers.get("X-Audio-Path");
+            if (options.onAudioGenerated && audioPath) {
+                options.onAudioGenerated(audioPath);
             }
         }
 
-        if (globalPlaybackGeneration !== currentGeneration) return;
-
-        // 2. Play Audio via blessed global player
-        if (!globalAudio) globalAudio = new Audio();
-        
-        globalAudio.src = targetUrl;
-        globalAudio.onended = () => {
-            options.onEnd();
-        };
-        globalAudio.onerror = () => {
-            options.onError("Playback error");
-        };
-
-        const playPromise = globalAudio.play();
-        if (playPromise !== undefined) {
-            playPromise.catch(e => {
-                console.error("Audio playback error", e);
-                if (e.name === 'NotAllowedError') {
-                    // Final attempt fallback to native
-                    speakNative(textToPlay, () => {}, options.onEnd);
-                }
-            });
+        // ⚠️ FINAL EXECUTION
+        if (!finalBlobUrl) {
+            speakNative(textToPlay, () => {}, options.onEnd);
+            return;
         }
 
+        // Abort if another click happened during the fetch
+        if (globalPlaybackGeneration !== currentGeneration) {
+            URL.revokeObjectURL(finalBlobUrl); 
+            return;
+        }
+
+        playFinalBlob(finalBlobUrl, textToPlay, options);
+
     } catch (e) {
-        console.error("TTS Logic Error", e);
+        console.warn("TTS Strategy Error -> Falling back to native speech", e);
         speakNative(textToPlay, () => {}, options.onEnd);
     }
 }
 
-function playAudioFromUrl(url: string, onStart: () => void, onEnd: () => void, onError: (msg: string) => void) {
+/**
+ * Actual playback engine shared by all 3 Tiers
+ */
+function playFinalBlob(blobUrl: string, textToPlay: string, options: { onStart: () => void, onEnd: () => void }) {
     if (!globalAudio) globalAudio = new Audio();
-    globalAudio.pause();
-    globalAudio.src = url;
-
-    globalAudio.onplay = onStart;
-    globalAudio.onended = onEnd;
-    globalAudio.onerror = () => {
-        onError("Failed to play audio url");
-    };
     
-    globalAudio.play().catch(e => {
-        console.error("URL Playback blocked", e);
-        onError("Playback blocked by browser");
-    });
+    // Clear and set
+    globalAudio.onended = null;
+    globalAudio.onerror = null;
+    globalAudio.src = blobUrl;
+    globalAudio.onplay = options.onStart;
+    globalAudio.onended = () => {
+        options.onEnd();
+    };
+
+    globalAudio.onerror = () => {
+        const code = globalAudio?.error?.code;
+        const message = globalAudio?.error?.message;
+        console.error(`Media Error [${code}]: ${message}. Falling back to native.`);
+        speakNative(textToPlay, () => {}, options.onEnd);
+    };
+
+    const playPromise = globalAudio.play();
+    if (playPromise !== undefined) {
+        playPromise.catch(e => {
+            if (e.name === 'NotAllowedError' || e.name === 'AbortError') {
+                speakNative(textToPlay, () => {}, options.onEnd);
+            }
+        });
+    }
+}
+
+/**
+ * Robust wrapper for direct URL playback
+ */
+export async function playAudioFromUrl(url: string, onStart: () => void, onEnd: () => void, onError: (msg: string) => void) {
+    try {
+        const urlToUse = await fetchAudioBlob(url);
+        if (!urlToUse) throw new Error("Invalid media URL");
+
+        if (!globalAudio) globalAudio = new Audio();
+        
+        globalAudio.pause();
+        globalAudio.src = urlToUse;
+        globalAudio.onplay = onStart;
+        globalAudio.onended = onEnd;
+        globalAudio.onerror = () => {
+             // If manual URL fails, we don't have a 'text' context for speech synthesis, 
+             // but we can try to find the text if it was part of a scenario
+             onError("Playback blocked or media corrupted");
+        };
+        
+        await globalAudio.play();
+    } catch (e) {
+        console.error("URL Playback failed", e);
+        onError("Playback error");
+    }
 }
 
 // Global reference to prevent Safari GC bug

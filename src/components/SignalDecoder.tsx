@@ -17,30 +17,34 @@ import { playScenarioAudio } from "@/lib/tts";
 import { useDailyProgress } from "@/hooks/useDailyProgress";
 import { useProgress } from "@/context/ProgressContext";
 
-import { AlertTriangle, ShieldCheck, PartyPopper, Bot, Gem } from "lucide-react";
+import { AlertTriangle, ShieldCheck, PartyPopper, Bot, Gem, ChevronRight } from "lucide-react";
 import { toast } from "react-hot-toast";
 
 type Props = {
     script: Script;
+    nextScenarioId?: string;
 };
 
 // specialized card for Signal Decoder
 function SignalCard({
     item,
+    subStep,
     onHeard,
     isAutoPlayEnabled,
     isGlobalRevealed,
     script,
-    onAudioGenerated
+    onAudioGenerated,
+    onNavigate
 }: {
     item: DecoderItem,
+    subStep: 0 | 1 | 2,
     onHeard: () => void,
     isAutoPlayEnabled: boolean,
     isGlobalRevealed: boolean,
     script: Script,
-    onAudioGenerated: (sentenceId: string, url: string) => void
+    onAudioGenerated: (sentenceId: string, url: string) => void,
+    onNavigate: () => void
 }) {
-    const [isRevealed, setIsRevealed] = useState(false);
     const [speaking, setSpeaking] = useState(false);
     const hasAutoPlayedRef = useRef(false);
     const [localRevealedWords, setLocalRevealedWords] = useState<Set<string>>(new Set());
@@ -90,11 +94,6 @@ function SignalCard({
         );
     };
 
-    // Effect: If global revealed changes to true, reveal local
-    useEffect(() => {
-        if (isGlobalRevealed) setIsRevealed(true);
-    }, [isGlobalRevealed]);
-
     // Need userProfile for playScenarioAudio
     const { userProfile } = useAuth();
 
@@ -125,7 +124,7 @@ function SignalCard({
 
     // Internal Auto-Play Logic
     useEffect(() => {
-        if (isAutoPlayEnabled && !hasAutoPlayedRef.current) {
+        if (subStep === 0 && isAutoPlayEnabled && !hasAutoPlayedRef.current) {
             const timer = setTimeout(() => {
                 if (!hasAutoPlayedRef.current && !speaking) {
                     hasAutoPlayedRef.current = true;
@@ -134,7 +133,7 @@ function SignalCard({
             }, 600); // Slight delay for animation
             return () => clearTimeout(timer);
         }
-    }, [isAutoPlayEnabled, item.id, handlePlay, speaking]);
+    }, [isAutoPlayEnabled, item.id, handlePlay, speaking, subStep]);
 
     // Native TTS cleanup
     useEffect(() => {
@@ -146,117 +145,123 @@ function SignalCard({
     // Helper: Is any word revealed?
     const anyWordRevealed = isGlobalRevealed || localRevealedWords.size > 0;
 
-    return (
-        <div className="bg-zinc-900/50 rounded-[40px] border border-white/5 shadow-2xl overflow-hidden flex flex-col h-full relative backdrop-blur-xl">
-            <div className="absolute inset-0 bg-gradient-to-br from-white/[0.01] to-transparent pointer-events-none" />
-            {/* THE SIGNAL (Top) */}
-            <div className="p-10 md:p-14 bg-zinc-950/30 border-b border-white/5 text-center flex flex-col items-center gap-6 relative z-10">
-                <div className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500">Signal Intercepted</div>
-                <div className="text-3xl md:text-5xl font-black text-white italic tracking-tight leading-none uppercase">
-                    &quot;{renderClozeText(item.phrase)}&quot;
-                </div>
+    let cardContent = null;
 
-                {/* REVEALED DEFINITIONS */}
-                <div className="min-h-[24px] flex flex-col items-center justify-center w-full mt-2">
-                    {anyWordRevealed && keywords.length > 0 ? (
-                        <div className="flex flex-wrap justify-center gap-2 animate-in fade-in slide-in-from-bottom-2 duration-300">
-                            {keywords.map((k) => {
-                                const isWordActive = isGlobalRevealed || localRevealedWords.has(k.word);
-                                if (!isWordActive) return null;
+    if (subStep === 0) {
+        // CARD 1: THE SIGNAL
+        cardContent = (
+            <div className="flex flex-col h-full bg-zinc-900/50 rounded-[40px] border border-white/5 shadow-2xl relative backdrop-blur-xl overflow-hidden min-h-[500px]">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/[0.01] to-transparent pointer-events-none" />
 
-                                return (
-                                    <span key={k.word} className="text-[11px] font-black uppercase tracking-widest px-4 py-2 bg-zinc-950 text-zinc-300 rounded-lg border border-white/5 shadow-inner leading-snug">
-                                        <span className="text-primary mr-1.5">{k.word}</span> <span className="text-zinc-600">:</span> {k.definition}
-                                    </span>
-                                );
-                            })}
-                        </div>
-                    ) : (
-                        <div className="text-xs text-muted-foreground italic h-[24px] flex items-center">
-                            {!isGlobalRevealed && keywords.length > 0 && "Tap hidden words to limit-break"}
-                        </div>
-                    )}
-                </div>
+                <div className="flex-1 p-10 md:p-14 flex flex-col items-center justify-center text-center gap-8 relative z-10">
+                    <div className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500">Signal Intercepted</div>
 
-                <Button
-                    onClick={handlePlay}
-                    variant={speaking ? "outline" : "primary"}
-                    size="lg"
-                    className={`mt-6 w-full md:w-auto h-16 rounded-2xl px-10 transition-all text-sm font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/20 hover:scale-[1.01] active:scale-[0.99]`}
-                >
-                    {speaking ? "DECODING AUDIO..." : <span className="flex items-center gap-2">{item.audioUrl ? <Gem className="w-5 h-5 text-teal-400" /> : <Bot className="w-5 h-5 text-zinc-400" />} Listen To Audio</span>}
-                </Button>
-            </div>
+                    <div className="text-3xl md:text-5xl font-black text-white italic tracking-tight leading-tight uppercase">
+                        &quot;{renderClozeText(item.phrase)}&quot;
+                    </div>
 
-            {/* THE DECODE (Bottom - Revealed) */}
-            <div className="flex-1 p-10 md:p-14 flex flex-col items-center justify-center relative bg-transparent z-10">
-                <AnimatePresence mode="wait">
-                    {!isRevealed && !isGlobalRevealed ? (
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.95 }}
-                            className="flex flex-col items-center gap-6"
+                    {/* REVEALED DEFINITIONS */}
+                    <div className="min-h-[30px] w-full">
+                        {anyWordRevealed && keywords.length > 0 && (
+                            <div className="flex flex-wrap justify-center gap-2 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                                {keywords.map((k) => {
+                                    if (!isGlobalRevealed && !localRevealedWords.has(k.word)) return null;
+                                    return (
+                                        <span key={k.word} className="text-[11px] font-black uppercase tracking-widest px-4 py-2 bg-zinc-950 text-zinc-300 rounded-lg border border-white/5">
+                                            <span className="text-primary mr-1.5">{k.word}</span> : {k.definition}
+                                        </span>
+                                    );
+                                })}
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="flex flex-col w-full max-w-xs gap-4 mt-8">
+                        <Button
+                            onClick={handlePlay}
+                            variant={speaking ? "outline" : "primary"}
+                            className="h-16 rounded-2xl text-xs font-black uppercase tracking-[0.2em]"
                         >
-                            <div className="w-16 h-16 rounded-full border border-zinc-700 flex items-center justify-center mb-8 relative">
-                                <div className="absolute inset-0 rounded-full border border-primary/30 animate-[ping_2.5s_infinite]" />
-                                <div className="w-2 h-2 rounded-full bg-primary" />
-                            </div>
-                            <p className="text-xs font-black tracking-[0.3em] uppercase text-zinc-500 mb-2">
-                                [ TACTICAL PAUSE ]
-                            </p>
-                            <p className="text-2xl md:text-3xl font-black italic text-center text-white uppercase tracking-tight mb-8">
-                                Strategic Gap Detected
-                            </p>
-                            <Button
-                                onClick={() => setIsRevealed(true)}
-                                variant="primary"
-                                className="rounded-2xl px-10 py-6 text-sm font-black uppercase tracking-widest shadow-[0_0_30px_rgba(var(--primary),0.3)] hover:scale-105 transition-all"
-                            >
-                                Decode Signal
-                            </Button>
-                        </motion.div>
-                    ) : (
-                        <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="w-full space-y-8"
-                        >
-                            {/* The Risk */}
-                            <div className="flex gap-6 items-start bg-rose-500/5 p-6 rounded-3xl border border-rose-500/20 shadow-2xl">
-                                <div className="p-3 bg-rose-500/20 text-rose-500 rounded-xl shrink-0 border border-rose-500/30">
-                                    <AlertTriangle className="w-8 h-8" />
-                                </div>
-                                <div className="space-y-1">
-                                    <h4 className="font-black text-rose-500 uppercase tracking-[0.2em] text-[11px]">Subliminal Threat</h4>
-                                    <p className="text-white font-bold leading-tight text-xl italic tracking-tight">{item.actualMeaning}</p>
-                                </div>
-                            </div>
+                            {speaking ? "DECODING AUDIO..." : <span className="flex items-center gap-2">{item.audioUrl ? <Gem className="w-5 h-5 text-teal-400" /> : <Bot className="w-5 h-5 text-zinc-400" />} Listen To Audio</span>}
+                        </Button>
 
-                            {/* The Safe Move */}
-                            <div className="flex gap-6 items-start bg-emerald-500/5 p-6 rounded-3xl border border-emerald-500/20 shadow-2xl">
-                                <div className="p-3 bg-emerald-500/20 text-emerald-500 rounded-xl shrink-0 border border-emerald-500/30">
-                                    <ShieldCheck className="w-8 h-8" />
-                                </div>
-                                <div className="space-y-1">
-                                    <h4 className="font-black text-emerald-500 uppercase tracking-[0.2em] text-[11px]">Tactical Counter</h4>
-                                    <p className="text-white font-bold leading-tight text-xl italic tracking-tight">{item.survivalTip}</p>
-                                </div>
-                            </div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+                        <Button
+                            onClick={onNavigate}
+                            variant="primary"
+                            className="h-20 rounded-3xl text-sm font-black uppercase tracking-[0.3em] shadow-[0_20px_50px_rgba(var(--primary),0.3)] border border-white/20"
+                        >
+                            DECODE <span className="text-xl ml-2">🔓</span>
+                        </Button>
+                    </div>
+                </div>
             </div>
-        </div>
-    );
+        );
+    } else if (subStep === 1) {
+        // CARD 2: HIDDEN MEANING
+        cardContent = (
+            <div className="flex flex-col h-full bg-rose-950/20 rounded-[40px] border border-rose-500/20 shadow-2xl relative backdrop-blur-xl overflow-hidden min-h-[500px]">
+                <div className="absolute inset-0 bg-gradient-to-br from-rose-500/[0.05] to-transparent pointer-events-none" />
+
+                <div className="flex-1 p-10 md:p-14 flex flex-col items-center justify-center text-center gap-10 relative z-10">
+                    <div className="flex flex-col items-center gap-4">
+                        <div className="w-20 h-20 rounded-3xl bg-rose-500/20 border border-rose-500/30 flex items-center justify-center shadow-[0_0_40px_rgba(244,63,94,0.2)]">
+                            <AlertTriangle className="w-10 h-10 text-rose-500" />
+                        </div>
+                        <h4 className="font-black text-rose-500 uppercase tracking-[0.4em] text-xs">Hidden Meaning 🕵️</h4>
+                    </div>
+
+                    <p className="text-2xl md:text-4xl font-black italic text-white uppercase tracking-tight leading-tight max-w-xl">
+                        {item.actualMeaning}
+                    </p>
+
+                    <Button
+                        onClick={onNavigate}
+                        variant="primary"
+                        className="w-full max-w-xs h-20 rounded-3xl text-sm font-black uppercase tracking-[0.2em] bg-rose-600 hover:bg-rose-500 shadow-[0_20px_50px_rgba(225,29,72,0.3)]"
+                    >
+                        HOW TO RESPOND? <span className="text-xl ml-2">🛡️</span>
+                    </Button>
+                </div>
+            </div>
+        );
+    } else if (subStep === 2) {
+        // CARD 3: TACTICAL RESPONSE
+        cardContent = (
+            <div className="flex flex-col h-full bg-emerald-950/20 rounded-[40px] border border-emerald-500/20 shadow-2xl relative backdrop-blur-xl overflow-hidden min-h-[500px]">
+                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/[0.05] to-transparent pointer-events-none" />
+
+                <div className="flex-1 p-10 md:p-14 flex flex-col items-center justify-center text-center gap-10 relative z-10">
+                    <div className="flex flex-col items-center gap-4">
+                        <div className="w-20 h-20 rounded-3xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center shadow-[0_0_40px_rgba(16,185,129,0.2)]">
+                            <ShieldCheck className="w-10 h-10 text-emerald-500" />
+                        </div>
+                        <h4 className="font-black text-emerald-500 uppercase tracking-[0.4em] text-xs">Tactical Response 🛡️</h4>
+                    </div>
+
+                    <p className="text-2xl md:text-4xl font-black italic text-white uppercase tracking-tight leading-tight max-w-xl">
+                        {item.survivalTip}
+                    </p>
+
+                    <Button
+                        onClick={onNavigate}
+                        variant="primary"
+                        className="w-full max-w-xs h-20 rounded-3xl text-sm font-black uppercase tracking-[0.2em] bg-emerald-600 hover:bg-emerald-500 shadow-[0_20px_50px_rgba(5,150,105,0.3)]"
+                    >
+                        NEXT MISSION <ChevronRight className="w-5 h-5 ml-2" />
+                    </Button>
+                </div>
+            </div>
+        );
+    }
+
+    return cardContent;
 }
 
-
-export default function SignalDecoder({ script }: Props) {
+export default function SignalDecoder({ script, nextScenarioId }: Props) {
     const router = useRouter();
 
     // Hooks
-    const { user } = useAuth();
+    const { user, userProfile } = useAuth();
     const { markComplete } = useDailyProgress();
     const { getRepeats } = useProgress();
     const databaseRepeats = getRepeats(script.id);
@@ -267,15 +272,16 @@ export default function SignalDecoder({ script }: Props) {
     // Use localScript items
     const items = useMemo(() => localScript.decoderItems || [], [localScript.decoderItems]);
 
-    // Derived
+    // Derived flags
     const hasCulturalInsight = !!script.culturalInsights || (!!script.summaryPoints && script.summaryPoints.length > 0);
     const hasQuiz = !!script.quizItems && script.quizItems.length > 0;
 
     const itemsCount = items.length;
+    const decoderProgressCount = itemsCount * 3; // 3 cards per signal
 
-    const culturalInsightIndex = hasCulturalInsight ? itemsCount : -1;
-    const quizIndex = hasQuiz ? (itemsCount + (hasCulturalInsight ? 1 : 0)) : -1;
-    const totalSteps = itemsCount + (hasCulturalInsight ? 1 : 0) + (hasQuiz ? 1 : 0);
+    const culturalInsightIndex = decoderProgressCount;
+    const quizIndex = hasQuiz ? (decoderProgressCount + (hasCulturalInsight ? 1 : 0)) : -1;
+    const totalSteps = decoderProgressCount + (hasCulturalInsight ? 1 : 0) + (hasQuiz ? 1 : 0);
 
     const [currentStep, setCurrentStep] = useState(0);
     const [isAutoPlayEnabled, setIsAutoPlayEnabled] = useState(true);
@@ -308,14 +314,18 @@ export default function SignalDecoder({ script }: Props) {
             );
 
             // Background persistence
+            const isAdmin = userProfile?.subscription?.tier === 'admin';
+
             if ('userId' in script && user?.uid && (script as UserScript).userId === user.uid) {
+                // Own Scenario Update
                 const scriptRef = doc(db, `users/${user.uid}/scenarios`, script.id);
                 updateDoc(scriptRef, { decoderItems: newItems }).catch(e => console.error("Failed to persist audio", e));
-            } else if (!('userId' in script)) {
-                // Official script sponsorship via secure API
+            } else if (!('userId' in script) && isAdmin) {
+                // Official script sponsorship (ADMIN ONLY)
                 user?.getIdToken().then(token => {
                     fetch('/api/sponsor', {
                         method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             scenarioId: script.id,
                             sentenceId,
@@ -323,18 +333,21 @@ export default function SignalDecoder({ script }: Props) {
                             audioUrl: url,
                             token
                         })
+                    }).then(res => {
+                        if (res.ok) console.log("💎 Admin sponsorship successful");
                     }).catch(e => console.error("Sponsor API error:", e));
                 });
             }
 
             return { ...prev, decoderItems: newItems };
         });
+        
         // Gamification
         toast.success("💎 You just sponsored this audio for the community!", {
             duration: 4000,
             position: "bottom-center"
         });
-    }, []);
+    }, [script.id, user, userProfile]);
 
     const isOwner = user && 'userId' in script && (script as UserScript).userId === user.uid;
     const isCompletion = currentStep >= totalSteps;
@@ -407,6 +420,11 @@ export default function SignalDecoder({ script }: Props) {
         return <DecoderFullView script={script} onBack={() => setViewMode("flow")} />;
     }
 
+    // Determine current item and subStep
+    const isDecoderStep = currentStep < decoderProgressCount;
+    const itemIndex = isDecoderStep ? Math.floor(currentStep / 3) : -1;
+    const subStep = isDecoderStep ? (currentStep % 3) : -1;
+
     // Render content
     let content = null;
 
@@ -439,10 +457,38 @@ export default function SignalDecoder({ script }: Props) {
                 </div>
 
                 <div className="flex flex-col w-full max-w-sm gap-4">
-                    <Button onClick={handlePracticeAgain} className="w-full h-16 text-sm font-black uppercase tracking-[0.2em] rounded-2xl shadow-2xl shadow-primary/20 hover:scale-[1.02] transition-all" variant="primary">
-                        Initiate Rep {currentReps + 1}
-                    </Button>
-                    <Button variant="ghost" onClick={() => router.push(`/category/${script.categorySlug}`)} className="w-full h-14 text-zinc-500 font-black uppercase tracking-widest text-xs">
+                    {nextScenarioId ? (
+                        <>
+                            <Button 
+                                onClick={() => router.push(`/scenario/${nextScenarioId}`)} 
+                                className="w-full h-20 text-sm font-black uppercase tracking-[0.2em] rounded-3xl shadow-2xl shadow-primary/30 hover:scale-[1.02] transition-all border border-white/10" 
+                                variant="primary"
+                            >
+                                Next Mission <ChevronRight className="ml-2 w-5 h-5" />
+                            </Button>
+                            <Button 
+                                onClick={handlePracticeAgain} 
+                                className="w-full h-16 text-xs font-black uppercase tracking-[0.2em] rounded-2xl text-zinc-400 hover:text-white" 
+                                variant="ghost"
+                            >
+                                Practice Again (Rep {currentReps + 1})
+                            </Button>
+                        </>
+                    ) : (
+                        <Button 
+                            onClick={handlePracticeAgain} 
+                            className="w-full h-16 text-sm font-black uppercase tracking-[0.2em] rounded-2xl shadow-2xl shadow-primary/20 hover:scale-[1.02] transition-all" 
+                            variant="primary"
+                        >
+                            Initiate Rep {currentReps + 1}
+                        </Button>
+                    )}
+                    
+                    <Button 
+                        variant="ghost" 
+                        onClick={() => router.push(`/category/${script.categorySlug}`)} 
+                        className="w-full h-14 text-zinc-500 font-black uppercase tracking-widest text-[10px] mt-4"
+                    >
                         &larr; Return to Base
                     </Button>
                 </div>
@@ -468,11 +514,11 @@ export default function SignalDecoder({ script }: Props) {
                 onFinish={handleNext}
             />
         );
-    } else {
-        const currentItem = items[currentStep];
+    } else if (isDecoderStep) {
+        const currentItem = items[itemIndex];
         content = (
             <motion.div
-                key={currentStep}
+                key={`${itemIndex}-${subStep}`}
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
@@ -481,21 +527,23 @@ export default function SignalDecoder({ script }: Props) {
             >
                 <SignalCard
                     item={currentItem}
+                    subStep={subStep as 0 | 1 | 2}
                     onHeard={() => { }}
                     isAutoPlayEnabled={isAutoPlayEnabled}
                     isGlobalRevealed={isGlobalRevealed}
                     script={localScript}
                     onAudioGenerated={handleAudioGenerated}
+                    onNavigate={handleNext}
                 />
             </motion.div>
         );
     }
 
-    // Determine current audio status for the player shell
-    // If we are on a step that is a SignalCard, check that item.
-    // Otherwise, undefined (hides badge)
-    const currentItemForStatus = (currentStep < itemsCount) ? items[currentStep] : undefined;
+    // Determine current audio status
+    const currentItemForStatus = isDecoderStep ? items[itemIndex] : undefined;
     const audioStatus = currentItemForStatus?.audioUrl ? 'premium' : (currentItemForStatus ? 'robot' : undefined);
+
+    const hideFooter = isDecoderStep;
 
     return (
         <ScriptPlayerShell
@@ -504,19 +552,18 @@ export default function SignalDecoder({ script }: Props) {
             imageUrl={script.imageUrl}
             currentStep={currentStep}
             totalSteps={totalSteps}
-            hasFinished={isCompletion || currentStep === quizIndex} // Hide controls on Quiz/Completion
-
+            hasFinished={isCompletion || currentStep === quizIndex}
+            audioStatus={audioStatus}
             isAutoPlayEnabled={isAutoPlayEnabled}
             onToggleAutoPlay={toggleAutoPlay}
-
             mode={isGlobalRevealed ? "standard" : "cloze"}
             onToggleMode={toggleGlobalReveal}
-
             onNext={handleNext}
             onPrev={handlePrev}
             onRestart={handlePracticeAgain}
             onViewFull={() => setViewMode("full")}
             onBackToMenu={() => router.push(`/category/${script.categorySlug}`)}
+            hideFooter={hideFooter}
         >
             <AnimatePresence mode="wait">
                 {content}

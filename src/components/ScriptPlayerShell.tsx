@@ -46,6 +46,9 @@ type Props = {
         next?: { id: string; title: string };
         prev?: { id: string; title: string };
     };
+
+    // UI Controls
+    hideFooter?: boolean;
 };
 
 export default function ScriptPlayerShell({
@@ -65,6 +68,7 @@ export default function ScriptPlayerShell({
     onViewFull,
     children,
     series, // Destructure series
+    hideFooter, // New Prop
     ...props // Capture audioStatus etc
 }: Props) {
     const [isSharing, setIsSharing] = useState(false);
@@ -225,7 +229,7 @@ export default function ScriptPlayerShell({
             </main>
 
             {/* --- FOOTER (Navigation) --- */}
-            {!hasFinished && (
+            {!hasFinished && !hideFooter && (
                 <div className="flex-none bg-zinc-950 border-t border-white/5 z-10 pb-safe shadow-[0_-4px_30px_rgba(0,0,0,0.4)]">
                     <div className="max-w-3xl mx-auto px-4 py-4 md:px-6 md:py-6 flex items-center justify-between gap-4">
 
@@ -240,14 +244,14 @@ export default function ScriptPlayerShell({
                         </Button>
 
                         {/* Navigation Group (Right) */}
-                        <div className="flex items-center gap-3 flex-1 justify-end max-w-sm ml-auto">
+                        <div className="flex items-center gap-2 md:gap-3 flex-1 justify-end max-w-sm ml-auto">
 
                             {/* Prev (Secondary) */}
                             <Button
                                 variant="ghost"
                                 onClick={onPrev}
                                 disabled={!onPrev || currentStep === 0}
-                                className={`shrink-0 px-8 h-16 rounded-2xl text-sm font-black uppercase tracking-widest transition-all bg-zinc-900 border border-white/5 text-zinc-400 hover:text-white active:scale-95 ${(!onPrev || currentStep === 0) ? "opacity-0 pointer-events-none" : "opacity-100"}`}
+                                className={`shrink-0 px-5 md:px-8 h-16 rounded-2xl text-sm font-black uppercase tracking-widest transition-all bg-zinc-900 border border-white/5 text-zinc-400 hover:text-white active:scale-95 ${(!onPrev || currentStep === 0) ? "opacity-0 pointer-events-none" : "opacity-100"}`}
                             >
                                 Prev
                             </Button>
@@ -256,7 +260,7 @@ export default function ScriptPlayerShell({
                             <Button
                                 variant="primary"
                                 onClick={onNext}
-                                className="flex-1 h-16 px-8 shadow-2xl shadow-primary/20 transition-all active:scale-[0.98] text-sm font-black uppercase tracking-[0.2em] min-w-[140px] rounded-2xl flex justify-center items-center gap-2"
+                                className="flex-1 h-16 px-5 md:px-8 shadow-2xl shadow-primary/20 transition-all active:scale-[0.98] text-sm font-black uppercase tracking-[0.2em] min-w-[110px] md:min-w-[140px] rounded-2xl flex justify-center items-center gap-2"
                                 rightIcon={<ChevronRight className="w-5 h-5" />}
                             >
                                 Next

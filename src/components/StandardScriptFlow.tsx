@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import type { Script, UserScript, Sentence } from "@/types";
 import ClozeCard from "@/components/ClozeCard";
@@ -14,7 +14,7 @@ import { updateDoc, onSnapshot, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useDailyProgress } from "@/hooks/useDailyProgress";
 import { useUserProgress } from "@/hooks/useUserProgress";
-import { Trophy } from "lucide-react";
+import { Trophy, ChevronRight } from "lucide-react";
 import StandardFullView from "./StandardFullView";
 import CulturalNoteCard from "@/components/CulturalNoteCard";
 import QuizCard from "@/components/QuizCard";
@@ -22,9 +22,11 @@ import StoryCard from "@/components/StoryCard";
 import { useProgress } from "@/context/ProgressContext";
 import { getScriptAudioStatus } from "@/lib/utils";
 import { useSeries } from "@/hooks/useSeries";
+import { toast } from "react-hot-toast";
 
 type Props = {
     script: Script;
+    nextScenarioId?: string;
 };
 
 type FlowStep =
@@ -32,9 +34,9 @@ type FlowStep =
     | { type: 'culturalInsight' }
     | { type: 'quiz' };
 
-export default function StandardScriptFlow({ script }: Props) {
+export default function StandardScriptFlow({ script, nextScenarioId }: Props) {
     const router = useRouter();
-    const { user } = useAuth();
+    const { user, userProfile } = useAuth();
     const [localScript, setLocalScript] = useState<Script>(script);
 
     useEffect(() => {
@@ -103,7 +105,7 @@ export default function StandardScriptFlow({ script }: Props) {
     const toggleMode = () => setMode(prev => prev === "standard" ? "cloze" : "standard");
     const toggleAutoPlay = () => setIsAutoPlayEnabled(prev => !prev);
     const toggleGlobalReveal = () => setIsGlobalRevealed(prev => !prev);
-    
+
     // Store originalIndex in heardSet
     const [heardSet, setHeardSet] = useState<Set<number>>(new Set());
     const hasSavedRef = useState(false);
@@ -129,6 +131,49 @@ export default function StandardScriptFlow({ script }: Props) {
         localStorage.setItem(storageKey, JSON.stringify(Array.from(heardSet.values())));
     }, [heardSet, storageKey]);
 
+    const handleAudioGenerated = useCallback((sentenceId: string, url: string) => {
+        setLocalScript(prev => {
+            if (!prev.sentences) return prev;
+            const newSentences = prev.sentences.map(s =>
+                s.id === sentenceId ? { ...s, audioUrl: url } : s
+            );
+
+            // Background persistence
+            const isAdmin = userProfile?.subscription?.tier === 'admin';
+
+            if ('userId' in script && user?.uid && (script as UserScript).userId === user.uid) {
+                // Own Scenario Update
+                const scriptRef = doc(db, `users/${user.uid}/scenarios`, script.id);
+                updateDoc(scriptRef, { sentences: newSentences }).catch(e => console.error("Failed to persist audio", e));
+            } else if (!('userId' in script) && isAdmin) {
+                // Official script sponsorship (ADMIN ONLY)
+                user?.getIdToken().then(token => {
+                    fetch('/api/sponsor', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            scenarioId: script.id,
+                            sentenceId,
+                            type: 'sentence',
+                            audioUrl: url,
+                            token
+                        })
+                    }).then(res => {
+                        if (res.ok) console.log("💎 Admin sponsorship successful");
+                    }).catch(e => console.error("Sponsor API error:", e));
+                });
+            }
+
+            return { ...prev, sentences: newSentences };
+        });
+        
+        // Gamification Toast
+        toast.success("💎 You just sponsored this audio for the community!", {
+            duration: 4000,
+            position: "bottom-center"
+        });
+    }, [script.id, user, userProfile]);
+
     const isCompletion = currentIndex >= totalSteps;
     const isOwner = user && 'userId' in script && (script as UserScript).userId === user.uid;
 
@@ -143,7 +188,7 @@ export default function StandardScriptFlow({ script }: Props) {
                     lastPracticedAt: serverTimestamp()
                 }, { merge: true });
 
-                recordPractice(10, 80); 
+                recordPractice(10, 80);
 
                 if (isOwner) {
                     await updateDoc(doc(db, "users", user.uid, "scenarios", script.id), {
@@ -199,10 +244,10 @@ export default function StandardScriptFlow({ script }: Props) {
     };
 
     const handleBackToMenu = async () => {
-        if ('userId' in script || !script.categorySlug) {
-            router.push('/');
-        } else {
+        if (script.categorySlug) {
             router.push(`/category/${script.categorySlug}`);
+        } else {
+            router.push('/');
         }
     };
 
@@ -268,26 +313,45 @@ export default function StandardScriptFlow({ script }: Props) {
                     </div>
                 </div>
 
-                <div className="flex flex-col w-full max-w-xs gap-3">
-                    <Button onClick={handlePracticeAgain} className="w-full h-14 text-lg font-bold rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-[1.02]" variant="primary">
-                        Practice Again (Rep {currentReps + 1})
-                    </Button>
-                    <Button variant="ghost" onClick={handleBackToMenu} className="w-full h-12 text-muted-foreground hover:text-foreground">
-                        Back to Menu
-                    </Button>
-                    {seriesProp?.next && (
-                        <Button variant="outline" onClick={() => router.push(`/scenario/${seriesProp.next!.id}`)} className="w-full h-12 border-primary/20 text-primary hover:bg-primary/5 mt-2 text-sm font-black uppercase tracking-widest">
-                            Next Episode: {seriesProp.next.title}
+                <div className="flex flex-col w-full max-w-sm gap-4">
+                    {nextScenarioId ? (
+                        <>
+                            <Button 
+                                onClick={() => router.push(`/scenario/${nextScenarioId}`)} 
+                                className="w-full h-20 text-sm font-black uppercase tracking-[0.2em] rounded-3xl shadow-2xl shadow-primary/30 hover:scale-[1.02] transition-all border border-white/10" 
+                                variant="primary"
+                            >
+                                Next Mission <ChevronRight className="ml-2 w-5 h-5" />
+                            </Button>
+                            <Button 
+                                onClick={handlePracticeAgain} 
+                                className="w-full h-16 text-xs font-black uppercase tracking-[0.2em] rounded-2xl text-zinc-400 hover:text-white" 
+                                variant="ghost"
+                            >
+                                Practice Again (Rep {currentReps + 1})
+                            </Button>
+                        </>
+                    ) : (
+                        <Button 
+                            onClick={handlePracticeAgain} 
+                            className="w-full h-16 text-sm font-black uppercase tracking-[0.2em] rounded-2xl shadow-2xl shadow-primary/20 hover:scale-[1.02] transition-all" 
+                            variant="primary"
+                        >
+                            Initiate Rep {currentReps + 1}
                         </Button>
                     )}
+                    
+                    <Button 
+                        variant="ghost" 
+                        onClick={handleBackToMenu} 
+                        className="w-full h-14 text-zinc-500 font-black uppercase tracking-widest text-[10px] mt-4"
+                    >
+                        &larr; Return to Base
+                    </Button>
+
                     {script.relatedBlogUrl && (
-                        <Button variant="ghost" onClick={() => window.open(script.relatedBlogUrl, '_blank')} className="w-full h-12 text-primary font-black uppercase tracking-widest hover:bg-primary/5 mt-2 text-xs">
+                        <Button variant="ghost" onClick={() => window.open(script.relatedBlogUrl, '_blank')} className="w-full h-12 text-primary font-black uppercase tracking-widest hover:bg-primary/5 mt-4 text-xs">
                             Read Full Mission Guide &reg;
-                        </Button>
-                    )}
-                    {script.relatedBlogId && !script.relatedBlogUrl && (
-                        <Button variant="ghost" onClick={() => router.push(`/blogs/${script.relatedBlogId}`)} className="w-full h-12 text-primary font-bold hover:bg-primary/5 mt-2">
-                            Read Full Guide &reg;
                         </Button>
                     )}
                 </div>
@@ -338,6 +402,7 @@ export default function StandardScriptFlow({ script }: Props) {
                                 return next;
                             });
                         }}
+                        onAudioGenerated={(url) => handleAudioGenerated(currentSentence.id, url)}
                     />
                 </motion.div>
             );
@@ -367,6 +432,8 @@ export default function StandardScriptFlow({ script }: Props) {
             <AnimatePresence mode="wait">
                 {content}
             </AnimatePresence>
+
+
         </ScriptPlayerShell>
     );
 }

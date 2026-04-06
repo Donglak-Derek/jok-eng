@@ -118,9 +118,19 @@ export default function ScenarioPage({ params }: Props) {
       );
   }
 
+  // Calculate Next Scenario in this category (Static List)
+  const categoryScripts = scripts.filter(s => s.categorySlug === script?.categorySlug);
+  const currentIndex = categoryScripts.findIndex(s => s.id === id);
+  const nextScenarioId = currentIndex !== -1 && currentIndex + 1 < categoryScripts.length 
+    ? categoryScripts[currentIndex + 1].id 
+    : undefined;
+
   return (
     <div className="min-h-dvh bg-background">
-      <ScriptClient script={script} />
+      <ScriptClient 
+        script={script} 
+        nextScenarioId={nextScenarioId}
+      />
     </div>
   );
 }

@@ -1,14 +1,15 @@
 "use client";
 
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import BottomNav from "@/components/BottomNav";
 import { useEffect, useState, useRef } from "react";
 import { getLatestVideoLessons, VideoLesson } from "@/lib/videoLessons";
-import { Loader2, PlayCircle, Heart, Share2, MessageCircle } from "lucide-react";
+import { Loader2, PlayCircle, Heart, Share2, MessageCircle, X } from "lucide-react";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 export default function VideosPage() {
+    const router = useRouter();
     const [videos, setVideos] = useState<VideoLesson[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [activeVideoIndex, setActiveVideoIndex] = useState(0);
@@ -51,9 +52,20 @@ export default function VideosPage() {
 
     return (
         <div className="fixed inset-0 bg-black text-white flex flex-col z-50">
-            {/* Minimal Header Overlay */}
-            <div className="absolute top-0 w-full z-10 bg-gradient-to-b from-black/80 to-transparent p-4 flex justify-between items-center pointer-events-none">
-                <span className="font-black text-lg text-white">Videos</span>
+            {/* Minimal Header Overlay with Return Button */}
+            <div className="absolute top-0 w-full z-[60] p-6 flex justify-between items-center pointer-events-none">
+                <div className="flex items-center gap-4 pointer-events-auto">
+                    <button 
+                        onClick={() => router.push("/")}
+                        className="w-12 h-12 bg-white/10 backdrop-blur-xl rounded-full flex items-center justify-center border border-white/10 hover:bg-white/20 transition-all shadow-2xl"
+                    >
+                        <X className="w-6 h-6 text-white" />
+                    </button>
+                    <span className="font-black text-xs uppercase tracking-[0.4em] text-white/50 drop-shadow-md">Return To Base</span>
+                </div>
+                <div className="pointer-events-auto">
+                     <span className="font-black text-lg text-white drop-shadow-md italic uppercase tracking-tighter">Mission Replay</span>
+                </div>
             </div>
             
             <main 
@@ -136,8 +148,8 @@ export default function VideosPage() {
                 )}
             </main>
             
-            {/* Inject Global NavBar here so it overlays cleanly */}
-            <div className="absolute bottom-0 w-full z-50">
+            {/* Nav Bar Fixed at Bottom */}
+            <div className="fixed bottom-0 w-full z-50">
                 <BottomNav />
             </div>
         </div>

@@ -25,6 +25,7 @@ type Props = {
   isAutoPlayEnabled?: boolean;
   // Context
   script?: Script;
+  onAudioGenerated?: (url: string) => void;
 };
 
 // --- Animations ---
@@ -59,7 +60,8 @@ export default function ClozeCard({
   mode = "standard",
   isGlobalRevealed = false,
   isAutoPlayEnabled = false,
-  script, // Add script
+  script,
+  onAudioGenerated,
 }: Props) {
   const [speaking, setSpeaking] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -119,40 +121,23 @@ export default function ClozeCard({
           setLoading(false);
         },
         onAudioGenerated: (url) => {
+          if (onAudioGenerated) onAudioGenerated(url);
+          
           if (!script) return;
           const newSentences = [...(script.sentences || [])];
           const targetIndex = newSentences.findIndex(s => s.id === sentence.id);
           if (targetIndex !== -1) {
             newSentences[targetIndex] = { ...newSentences[targetIndex], audioUrl: url };
 
-            // Background persistence
+            // Background persistence for User Scripts (Owner Only)
             if ('userId' in script && userProfile?.uid && (script as UserScript).userId === userProfile.uid) {
                 const scriptRef = doc(db, `users/${userProfile.uid}/scenarios`, script.id);
                 updateDoc(scriptRef, { sentences: newSentences }).then(() => {
-                    toast.success("💎 You just sponsored this audio for the community!", {
+                    toast.success("💎 Audio saved to your mission!", {
                         duration: 4000,
                         position: "bottom-center"
                     });
                 }).catch(e => console.error("Audio save error:", e));
-            } else if (!('userId' in script)) {
-                // Official script sponsorship via secure API
-                getAuth().currentUser?.getIdToken().then(token => {
-                    fetch('/api/sponsor', {
-                        method: 'POST',
-                        body: JSON.stringify({
-                            scenarioId: script.id,
-                            sentenceId: sentence.id,
-                            type: 'sentence',
-                            audioUrl: url,
-                            token
-                        })
-                    }).then(() => {
-                        toast.success("💎 You just sponsored this audio for the community!", {
-                            duration: 4000,
-                            position: "bottom-center"
-                        });
-                    }).catch(e => console.error("Sponsor API error:", e));
-                });
             }
           }
         }
