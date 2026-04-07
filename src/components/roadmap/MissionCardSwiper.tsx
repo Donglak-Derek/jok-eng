@@ -113,17 +113,18 @@ export default function MissionCardSwiper({ mission, onComplete, onRetry, onNext
             className="absolute inset-0 flex flex-col bg-zinc-900"
           >
             <div className="flex-1 overflow-y-auto flex flex-col">
-              <div className="relative w-full aspect-video min-h-[45%] shrink-0">
+              <div className="relative w-full aspect-video min-h-[45%] shrink-0 overflow-hidden bg-zinc-950">
                 <Image
                   src={mission.imageUrl || "/images/placeholder.png"}
                   alt={mission.title}
                   fill
-                  className="object-cover scale-125 transform origin-center"
+                  className="object-cover"
+                  priority
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/40 to-transparent" />
+                <div className="absolute inset-0 -bottom-1 bg-gradient-to-t from-zinc-900 via-zinc-900/40 to-transparent z-10" />
                 
                 {/* Character Overlay */}
-                <div className="absolute bottom-0 left-0 right-0 p-8 flex items-center gap-4">
+                <div className="absolute bottom-4 left-0 right-0 p-8 flex items-center gap-4 z-20">
                   <div className="w-14 h-14 rounded-full bg-primary flex items-center justify-center text-white font-black shadow-2xl shadow-primary/40 border-2 border-white/20 shrink-0 transform -rotate-3 hover:rotate-0 transition-transform">
                     {mission.character?.charAt(0) || "E"}
                   </div>

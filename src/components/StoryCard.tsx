@@ -83,64 +83,46 @@ export default function StoryCard({
       audioRef.current = null;
     }
     if (!heard) onHeard(index);
+
     setLoading(true);
     setSpeaking(true);
 
-    if (script) {
-      playScenarioAudio(userProfile, script, {
-        text: textToDisplay,
-        sentenceId: sentence.id,
-        onStart: () => setSpeaking(true),
-        onEnd: () => {
-          setSpeaking(false);
-          setLoading(false);
-        },
-        onError: (err) => {
-          console.error(err);
-          setSpeaking(false);
-          setLoading(false);
-        },
-        onAudioGenerated: (url) => {
-          if (onAudioGenerated) onAudioGenerated(url);
-          
-          if (!script) return;
-          const newSentences = [...(script.sentences || [])];
-          const targetIndex = newSentences.findIndex(s => s.id === sentence.id);
-          if (targetIndex !== -1) {
-            newSentences[targetIndex] = { ...newSentences[targetIndex], audioUrl: url };
-
-            // Background persistence for User Scripts (Owner Only)
-            if ('userId' in script && userProfile?.uid && (script as UserScript).userId === userProfile.uid) {
-                const scriptRef = doc(db, `users/${userProfile.uid}/scenarios`, script.id);
-                updateDoc(scriptRef, { sentences: newSentences }).then(() => {
-                    toast.success("💎 Audio saved to your mission!", {
-                        duration: 4000,
-                        position: "bottom-center"
-                    });
-                }).catch(e => console.error("Audio save error:", e));
-            }
-          }
-        }
-      });
-    } else {
-      try {
-        const token = await getAuth().currentUser?.getIdToken();
-        const params = new URLSearchParams({ text: cleanText(textToDisplay), voice: "en-US-AriaNeural" });
-        if (token) params.append("token", token);
-        const audio = new Audio(`/api/tts?${params}`);
-        audioRef.current = audio;
-        audio.oncanplay = () => setLoading(false);
-        audio.onended = () => {
-          setSpeaking(false);
-          audioRef.current = null;
-        };
-        audio.play().catch(e => console.error(e));
-      } catch (e) {
-        console.error("Preview TTS failed", e);
+    // Centralized Service (Handles Tier 1, 2, 3 and Safari blessing)
+    playScenarioAudio(userProfile, script || null, {
+      text: textToDisplay,
+      sentenceId: sentence.id,
+      onStart: () => setSpeaking(true),
+      onEnd: () => {
         setSpeaking(false);
         setLoading(false);
+      },
+      onError: (err) => {
+        console.error(err);
+        setSpeaking(false);
+        setLoading(false);
+      },
+      onAudioGenerated: (url) => {
+        if (onAudioGenerated) onAudioGenerated(url);
+        
+        if (!script) return;
+        const newSentences = [...(script.sentences || [])];
+        const targetIndex = newSentences.findIndex(s => s.id === sentence.id);
+        if (targetIndex !== -1) {
+          newSentences[targetIndex] = { ...newSentences[targetIndex], audioUrl: url };
+
+          // Background persistence for User Scripts (Owner Only)
+          if ('userId' in script && userProfile?.uid && (script as UserScript).userId === userProfile.uid) {
+              const scriptRef = doc(db, `users/${userProfile.uid}/scenarios`, script.id);
+              updateDoc(scriptRef, { sentences: newSentences }).then(() => {
+                  toast.success("💎 Audio saved to your mission!", {
+                      duration: 4000,
+                      position: "bottom-center"
+                  });
+              }).catch(e => console.error("Audio save error:", e));
+          }
+        }
       }
-    }
+    });
   }, [heard, index, onHeard, textToDisplay, userProfile, script, sentence.id, onAudioGenerated]);
 
   const hasAutoPlayedRef = useRef(false);

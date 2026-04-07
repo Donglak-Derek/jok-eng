@@ -91,7 +91,7 @@ function blessAudioContext() {
 
 export async function playScenarioAudio(
     dbUser: UserProfile | null,
-    scenario: Script,
+    scenario: Script | null,
     options: {
         text?: string;
         sentenceId?: string;
@@ -102,16 +102,17 @@ export async function playScenarioAudio(
         onAudioGenerated?: (url: string) => void;
     }
 ) {
-    // 🚩 CRITICAL: Synchronously "bless" the context BEFORE any async calls
+    // 🚩 CRITICAL: Synchronously "bless" the context BEFORE any async calls.
+    // Safari REQUIRES the first audio action to be in the direct call stack.
     blessAudioContext();
 
     const voice = options.voice || "en-US-Neural2-F";
-    let textToPlay = options.text || scenario.cleanedEnglish;
+    let textToPlay = options.text || scenario?.cleanedEnglish;
     if (!textToPlay) {
         options.onError("No text to play.");
         return;
     }
-    
+
     // 1️⃣ TIER 1: CLIENT MEMORY CACHE (Zero Network)
     const cacheKey = getCacheKey(textToPlay, voice);
     if (textAudioBlobCache.has(cacheKey)) {
@@ -126,8 +127,8 @@ export async function playScenarioAudio(
     textToPlay = textToPlay.replace(/[\[\]]/g, "");
 
     // 2️⃣ TIER 2: STORAGE KEY (Database check)
-    let sourceUrl = scenario.audioUrl;
-    if (options.sentenceId) {
+    let sourceUrl = scenario?.audioUrl;
+    if (options.sentenceId && scenario) {
         if (scenario.sentences) {
             const sentence = scenario.sentences.find(s => s.id === options.sentenceId);
             if (sentence) sourceUrl = sentence.audioUrl;

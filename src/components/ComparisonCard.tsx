@@ -130,85 +130,42 @@ export default function ComparisonCard({
     setLoading(true);
     setSpeaking(true);
 
-    if (script) {
-      playScenarioAudio(userProfile, script, {
-        text: textToSpeak,
-        sentenceId: sentence.id,
-        onStart: () => setSpeaking(true),
-        onEnd: () => {
-          setSpeaking(false);
-          setLoading(false);
-        },
-        onError: (err) => {
-          console.error(err);
-          setSpeaking(false);
-          setLoading(false);
-        },
-        onAudioGenerated: (url) => {
-          if (onAudioGenerated) onAudioGenerated(url);
-          
-          if (!script) return;
-          const newSentences = [...(script.sentences || [])];
-          const targetIndex = newSentences.findIndex(s => s.id === sentence.id);
-          if (targetIndex !== -1) {
-            newSentences[targetIndex] = { ...newSentences[targetIndex], audioUrl: url };
+    // Centralized Service (Handles Tier 1, 2, 3 and Safari blessing)
+    playScenarioAudio(userProfile, script || null, {
+      text: textToSpeak,
+      sentenceId: sentence.id,
+      onStart: () => setSpeaking(true),
+      onEnd: () => {
+        setSpeaking(false);
+        setLoading(false);
+      },
+      onError: (err) => {
+        console.error(err);
+        setSpeaking(false);
+        setLoading(false);
+      },
+      onAudioGenerated: (url) => {
+        if (onAudioGenerated) onAudioGenerated(url);
+        
+        if (!script) return;
+        const newSentences = [...(script.sentences || [])];
+        const targetIndex = newSentences.findIndex(s => s.id === sentence.id);
+        if (targetIndex !== -1) {
+          newSentences[targetIndex] = { ...newSentences[targetIndex], audioUrl: url };
 
-            // Background persistence for User Scripts (Owner Only)
-            if ('userId' in script && userProfile?.uid && (script as UserScript).userId === userProfile.uid) {
-                const scriptRef = doc(db, `users/${userProfile.uid}/scenarios`, script.id);
-                updateDoc(scriptRef, { sentences: newSentences }).then(() => {
-                    toast.success("💎 Audio saved to your mission!", {
-                        duration: 4000,
-                        position: "bottom-center"
-                    });
-                }).catch(e => console.error("Audio save error:", e));
-            }
+          // Background persistence for User Scripts (Owner Only)
+          if ('userId' in script && userProfile?.uid && (script as UserScript).userId === userProfile.uid) {
+              const scriptRef = doc(db, `users/${userProfile.uid}/scenarios`, script.id);
+              updateDoc(scriptRef, { sentences: newSentences }).then(() => {
+                  toast.success("💎 Audio saved to your mission!", {
+                      duration: 4000,
+                      position: "bottom-center"
+                  });
+              }).catch(e => console.error("Audio save error:", e));
           }
         }
-      });
-    } else {
-      try {
-        const token = await getAuth().currentUser?.getIdToken();
-        const params = new URLSearchParams({
-          text: textToSpeak,
-          voice: "en-US-AriaNeural",
-        });
-        if (token) params.append("token", token);
-
-        const audio = new Audio(`/api/tts?${params}`);
-        audioRef.current = audio;
-
-        await new Promise<void>((resolve, reject) => {
-          audio.oncanplay = () => setLoading(false);
-          audio.onended = () => {
-            setSpeaking(false);
-            resolve();
-          };
-          audio.onerror = (e) => {
-            setSpeaking(false);
-            reject(e);
-          };
-          audio.play().catch((e) => {
-            setSpeaking(false);
-            reject(e);
-          });
-        });
-
-      } catch (error) {
-        console.warn("TTS fallback", error);
-        if (window.speechSynthesis) {
-          const u = new SpeechSynthesisUtterance(textToSpeak);
-          setLoading(false);
-          u.onend = () => setSpeaking(false);
-          window.speechSynthesis.speak(u);
-        } else {
-          setSpeaking(false);
-          setLoading(false);
-        }
-      } finally {
-        setLoading(false);
       }
-    }
+    });
   }, [index, onHeard, sentence, speaking, userProfile, script, onAudioGenerated]);
 
   const hasAutoPlayedRef = useRef(false);
