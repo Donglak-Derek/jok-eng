@@ -1,17 +1,17 @@
-import { Mission } from "@/types";
+import { Session } from "@/types";
 import { Lock, Star, Play, Check, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
-
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-interface MissionNodeProps {
-    mission: Mission;
+interface SessionNodeProps {
+    session: Session;
     index: number;
     isCompleted?: boolean;
     isLocked?: boolean;
 }
 
-export default function MissionNode({ mission, index, isCompleted, isLocked }: MissionNodeProps) {
+export default function SessionNode({ session, index, isCompleted, isLocked }: SessionNodeProps) {
     const router = useRouter();
 
     let statusColor = "border-zinc-800 text-zinc-600 bg-zinc-900/50";
@@ -34,31 +34,50 @@ export default function MissionNode({ mission, index, isCompleted, isLocked }: M
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             className={`group relative flex items-center gap-4 w-full p-1 ${!isLocked ? 'cursor-pointer' : 'cursor-not-allowed'}`}
-            onClick={() => !isLocked && router.push(`/mission/mission-${mission.day}`)}
+            onClick={() => !isLocked && router.push(`/session/${session.day}`)}
         >
-            {/* Status Indicator (Square/Military Style) */}
-            <div className={`shrink-0 w-12 h-12 border-2 flex items-center justify-center transition-all duration-300 ${statusColor}`}>
+            {/* Status Indicator (Square/Premium Style) */}
+            <div className={`shrink-0 w-12 h-12 border-2 flex items-center justify-center transition-all duration-300 z-10 ${statusColor}`}>
                 {isLocked ? (
                     <Lock className="w-4 h-4 opacity-40" />
                 ) : isCompleted ? (
                     <Check className="w-5 h-5 stroke-[3]" />
                 ) : (
-                    <span className="text-sm font-black italic tracking-tighter">{mission.day}</span>
+                    <span className="text-sm font-black italic tracking-tighter">{session.day}</span>
                 )}
             </div>
 
-            {/* Mission Info */}
+            {/* Session Thumbnail */}
+            <div className={`relative w-16 h-12 overflow-hidden border border-white/10 shrink-0 hidden xs:block ${isLocked ? 'grayscale opacity-30' : ''}`}>
+                {session.imageUrl ? (
+                    <Image 
+                        src={session.imageUrl} 
+                        alt={session.title} 
+                        fill 
+                        className="object-cover transition-transform duration-500 group-hover:scale-110"
+                        sizes="64px"
+                    />
+                ) : (
+                    <div className="w-full h-full bg-zinc-900 flex items-center justify-center">
+                        <Star className="w-3 h-3 text-zinc-800" />
+                    </div>
+                )}
+                {/* Overlay for locked/vibe */}
+                <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/40 to-transparent" />
+            </div>
+
+            {/* Session Info */}
             <div className="flex-1 flex flex-col justify-center min-w-0">
                 <div className="flex items-center gap-2 mb-0.5">
                     <span className={`text-[10px] font-black uppercase tracking-widest ${isLocked ? 'text-zinc-700' : 'text-primary/70'}`}>
-                        Msn {mission.day.toString().padStart(2, '0')}
+                        Session {session.day.toString().padStart(2, '0')}
                     </span>
                     {isCompleted && (
                         <div className="w-1 h-1 rounded-full bg-primary" />
                     )}
                 </div>
                 <h3 className={`text-sm font-black uppercase italic tracking-tighter truncate ${isLocked ? 'text-zinc-600' : 'text-white'}`}>
-                    {mission.title}
+                    {session.title}
                 </h3>
             </div>
 

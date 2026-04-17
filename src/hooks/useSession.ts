@@ -2,32 +2,36 @@ import { useState, useEffect } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
-import { Mission, MissionOption } from "@/types";
+import { Session, SessionOption } from "@/types";
+import { fixImagePath } from "@/lib/utils/image";
 
-export type { Mission, MissionOption };
+export type { Session, SessionOption };
 
-export function useMission(dayId: number) {
-    const [mission, setMission] = useState<Mission | null>(null);
+export function useSession(dayId: number) {
+    const [session, setSession] = useState<Session | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         let isMounted = true;
 
-        async function fetchCurrentMission() {
+        async function fetchCurrentSession() {
             setLoading(true);
             setError(null);
             try {
                 const docRef = doc(db, "missions", `day_${dayId}`);
                 const docSnap = await getDoc(docRef);
-
                 if (docSnap.exists()) {
                     if (isMounted) {
-                        setMission(docSnap.data() as Mission);
+                        const data = docSnap.data() as Session;
+                        setSession({
+                            ...data,
+                            imageUrl: fixImagePath(data.imageUrl)
+                        });
                     }
                 } else {
                     if (isMounted) {
-                        setError(`Mission Day ${dayId} not found in database.`);
+                        setError(`Session Day ${dayId} not found in database.`);
                     }
                 }
 
@@ -38,7 +42,7 @@ export function useMission(dayId: number) {
                 }
             } catch (err: any) {
                 if (isMounted) {
-                    setError(err.message || "Failed to fetch mission.");
+                    setError(err.message || "Failed to fetch session.");
                 }
             } finally {
                 if (isMounted) {
@@ -47,12 +51,12 @@ export function useMission(dayId: number) {
             }
         }
 
-        fetchCurrentMission();
+        fetchCurrentSession();
 
         return () => {
             isMounted = false;
         };
     }, [dayId]);
 
-    return { mission, loading, error };
+    return { session, loading, error };
 }

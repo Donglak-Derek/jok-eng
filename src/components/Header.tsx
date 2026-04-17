@@ -36,7 +36,7 @@ export default function Header({ transparent = false }: HeaderProps) {
                 <div className="flex-1 flex justify-start items-center gap-4 md:gap-8">
                     <Link href="/" className="group flex items-center gap-0">
                         <h1 className="font-sans font-black italic text-xl tracking-tight group-hover:opacity-80 transition-opacity text-white">
-                            Amly
+                            JokEng
                         </h1>
                         <span className="ml-2 px-1.5 py-0.5 text-[8px] uppercase tracking-[0.2em] font-black rounded-sm bg-primary/10 text-primary border border-primary/20">
                             Beta
@@ -108,7 +108,7 @@ export default function Header({ transparent = false }: HeaderProps) {
                                                 <p className="font-bold text-sm text-white truncate lowercase tracking-tight">{user.displayName}</p>
                                                 <div className="flex items-center gap-1.5 mt-0.5">
                                                     <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-                                                    <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Active Operator</p>
+                                                    <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Active Learner</p>
                                                 </div>
                                             </div>
 
@@ -155,7 +155,7 @@ export default function Header({ transparent = false }: HeaderProps) {
                                                     }}
                                                     className="w-full flex items-center gap-3 px-3 py-2 text-[10px] font-black uppercase tracking-widest text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-all"
                                                 >
-                                                    Terminate Session
+                                                    Log out
                                                 </button>
                                             </div>
                                         </div>

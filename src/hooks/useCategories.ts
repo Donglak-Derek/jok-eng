@@ -26,12 +26,6 @@ export function useCategories() {
 
             // If empty, keep the fallback defaults intact
             if (fetchedCategories.length > 0) {
-                // Sort to keep American Culture at the end
-                fetchedCategories.sort((a, b) => {
-                    if (a.slug === "american_culture") return 1;
-                    if (b.slug === "american_culture") return -1;
-                    return 0; // Keep original order for the rest
-                });
                 setCategories(fetchedCategories);
             }
             setLoading(false);

@@ -2,6 +2,7 @@ import { Script, UserProfile } from "@/types";
 import { db } from "./firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+import { ADMIN_UID } from "./constants";
 
 // Tier 1: In-Memory Content Cache (Text + Voice -> Blob URL)
 const textAudioBlobCache = new Map<string, string>();
@@ -157,17 +158,31 @@ export async function playScenarioAudio(
             console.log(`[TTS Info] Tier 2 HIT: Fetching direct from Storage URL.`);
             finalBlobUrl = await fetchAudioBlob(sourceUrl, cacheKey);
         } else {
-            // 3️⃣ TIER 3: API GENERATION (Cloud fallback)
-            console.log(`[TTS Info] Tier 3: Calling Proxy API for generation.`);
-            options.onStart(); // Show loading state
+            // 3️⃣ TIER 3: API GENERATION (Admin restricted)
+            console.log(`[TTS Info] Tier 3 check: API generation eligibility.`);
             
             const auth = getAuth();
             const currentUser = auth.currentUser;
+            
+            // Check admin status
+            const isAdmin = currentUser?.uid === ADMIN_UID || 
+                            dbUser?.subscription?.tier === 'admin' ||
+                            (dbUser as any)?.isAdmin === true;
+
+            if (!isAdmin) {
+                console.info("[TTS Info] Non-admin user: Falling back to native browser TTS for missing audio.");
+                speakNative(textToPlay, () => {}, options.onEnd);
+                return;
+            }
+
             if (!currentUser) {
                 speakNative(textToPlay, () => {}, options.onEnd);
                 return;
             }
 
+            console.log(`[TTS Info] Admin verified: Calling Proxy API for generation.`);
+            options.onStart(); // Show loading state
+            
             const token = await currentUser.getIdToken();
             const apiUrl = `/api/tts?text=${encodeURIComponent(textToPlay)}&voice=${voice}&token=${token}`;
 

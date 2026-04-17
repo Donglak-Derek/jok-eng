@@ -75,7 +75,7 @@ export default function ScriptPlayerShell({
 
     useEffect(() => {
         if (title) {
-            localStorage.setItem("amly_last_visit", JSON.stringify({
+            localStorage.setItem("jokeng_last_visit", JSON.stringify({
                 path: window.location.pathname,
                 title: title,
                 type: "Scenario"
@@ -105,7 +105,7 @@ export default function ScriptPlayerShell({
                         {props.audioStatus === 'premium' ? (
                             <div className="flex items-center gap-1.5 px-3 py-1 rounded-sm bg-primary/10 border border-primary/20 shadow-[0_0_10px_rgba(var(--primary),0.1)]">
                                 <Diamond className="w-3.5 h-3.5 text-primary" />
-                                <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em] hidden md:inline ml-1">Tactical Audio</span>
+                                <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em] hidden md:inline ml-1">Premium Audio</span>
                             </div>
                         ) : props.audioStatus === 'robot' ? (
                             <div className="flex items-center gap-1.5 px-3 py-1 rounded-sm bg-zinc-900 border border-white/5">
@@ -207,7 +207,7 @@ export default function ScriptPlayerShell({
                     {/* Series Indicator */}
                     {series && (
                         <div className="absolute top-1 left-1/2 -translate-x-1/2 text-[9px] uppercase font-black tracking-[0.2em] text-zinc-500 bg-zinc-900/80 px-3 py-1 rounded-sm shadow-xl backdrop-blur-sm border border-white/5">
-                            Mission Sector: {series.current} <span className="mx-1 text-zinc-500 opacity-30">/</span> {series.total}
+                            Session Progress: {series.current} <span className="mx-1 text-zinc-500 opacity-30">/</span> {series.total}
                         </div>
                     )}
                 </div>
@@ -238,7 +238,7 @@ export default function ScriptPlayerShell({
                             variant="ghost"
                             onClick={onRestart}
                             className="text-zinc-500 hover:text-white shrink-0 w-16 h-16 rounded-2xl p-0 flex items-center justify-center bg-zinc-900 border border-white/5 hover:border-white/10 transition-all active:scale-95"
-                            title="Restart Mission"
+                            title="Restart Session"
                         >
                             <RotateCcw className="w-7 h-7" />
                         </Button>

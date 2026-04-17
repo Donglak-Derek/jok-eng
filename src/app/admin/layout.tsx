@@ -40,7 +40,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         return (
             <div className="min-h-screen bg-neutral-950 text-white flex flex-col items-center justify-center gap-4">
                 <ShieldAlert className="w-12 h-12 text-primary animate-pulse" />
-                <h2 className="text-xl font-black tracking-widest uppercase text-neutral-500">Verifying Clearance...</h2>
+                <h2 className="text-xl font-black tracking-widest uppercase text-neutral-500">Preparing Dashboard...</h2>
             </div>
         );
     }
@@ -50,7 +50,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         { label: "Categories", href: "/admin/categories", icon: <Layers className="w-5 h-5" /> },
         { label: "Video Vault", href: "/admin/videos", icon: <Video className="w-5 h-5" /> },
         { label: "AI Generator", href: "/admin/generator", icon: <Sparkles className="w-5 h-5" /> },
-        { label: "Missions", href: "/admin/missions", icon: <Sparkles className="w-5 h-5" /> },
+        { label: "Roadmap", href: "/admin/sessions", icon: <Sparkles className="w-5 h-5" /> },
         { label: "Blogs", href: "/admin/blogs", icon: <FileText className="w-5 h-5" /> },
         { label: "Scenarios", href: "/admin/scenarios", icon: <MessageSquareQuote className="w-5 h-5" /> },
     ];
@@ -102,7 +102,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                         className="flex items-center gap-3 px-4 py-3 rounded-xl text-neutral-500 hover:text-white hover:bg-neutral-800 transition-all font-bold text-sm uppercase tracking-wider"
                     >
                         <LogOut className="w-5 h-5" />
-                        Exit Matrix
+                        Go To Site
                     </Link>
                 </div>
             </aside>

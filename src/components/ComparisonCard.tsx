@@ -157,10 +157,10 @@ export default function ComparisonCard({
           if ('userId' in script && userProfile?.uid && (script as UserScript).userId === userProfile.uid) {
               const scriptRef = doc(db, `users/${userProfile.uid}/scenarios`, script.id);
               updateDoc(scriptRef, { sentences: newSentences }).then(() => {
-                  toast.success("💎 Audio saved to your mission!", {
-                      duration: 4000,
-                      position: "bottom-center"
-                  });
+                   toast.success("💎 Session audio saved!", {
+                       duration: 4000,
+                       position: "bottom-center"
+                   });
               }).catch(e => console.error("Audio save error:", e));
           }
         }
@@ -199,7 +199,7 @@ export default function ComparisonCard({
         animate={{ opacity: 1 }}
       >
         <div className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em] mb-4">
-          Mission Context
+          Scenario Context
         </div>
         <div className="text-2xl md:text-4xl font-black text-white leading-tight italic tracking-tight">
           {sentence.scenario}
@@ -215,11 +215,11 @@ export default function ComparisonCard({
                  <div className="absolute inset-0 rounded-full border border-primary/30 animate-[ping_2.5s_infinite]" />
                  <div className="w-2 h-2 rounded-full bg-primary" />
              </div>
-             <p className="text-xs font-black tracking-[0.3em] uppercase text-zinc-500 mb-2">
-                 [ TACTICAL PAUSE ]
+             <p className="text-[10px] font-black tracking-[0.3em] uppercase text-zinc-500 mb-2">
+                 [ THINKING... ]
              </p>
              <p className="text-2xl md:text-3xl font-black italic text-center text-white uppercase tracking-tight">
-                 Analyze Subtext
+                 Analyze The Vibe
              </p>
           </div>
         )}
@@ -233,8 +233,8 @@ export default function ComparisonCard({
           >
             <div className="absolute top-0 left-0 w-12 h-12 bg-rose-500/10 blur-xl" />
             <div className="text-[10px] font-black text-rose-500 uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
-              <span className="bg-rose-500/20 px-2 py-0.5 rounded-sm border border-rose-500/30">WARNING</span>
-              <span>Potential Trap</span>
+              <span className="bg-rose-500/20 px-2 py-0.5 rounded-sm border border-rose-500/30">RISK</span>
+              <span>Common Pitfall</span>
             </div>
 
             <div className="text-2xl md:text-3xl font-black leading-tight text-white/50 text-left italic line-through decoration-rose-500/50 decoration-2">
@@ -261,8 +261,8 @@ export default function ComparisonCard({
             className={`relative bg-teal-500/5 p-6 rounded-2xl border border-teal-500/20 shadow-lg shadow-teal-500/10 flex-1 flex flex-col`}
           >
             <div className="text-xs font-bold text-teal-500 uppercase tracking-wider mb-4 flex items-center gap-2">
-              <span className="bg-teal-500/10 px-2 py-0.5 rounded text-[10px] border border-teal-500/20">Star Answer</span>
-              <span>Better Approach</span>
+              <span className="bg-teal-500/10 px-2 py-0.5 rounded text-[10px] border border-teal-500/20">Fluent Answer</span>
+              <span>Premium Approach</span>
             </div>
 
             <div className="text-2xl md:text-3xl font-bold leading-relaxed text-white text-left">

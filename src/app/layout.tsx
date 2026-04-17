@@ -12,9 +12,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Amly | Speak Like a Leader",
-  description: "Master high-functioning professional English. Understand the subtext, sound natural, and speak like a leader with AI-powered scenarios.",
-  keywords: ["English learning", "professional English", "leadership communication", "business English", "AI English coach"],
+  title: "JokEng | Speak Like a Local",
+  description: "Master real-world American English. Understand the subtext, sound natural, and speak with confidence through playful, high-stakes scenarios.",
+  keywords: ["English learning", "American English", "culture", "natural conversation", "AI English coach"],
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,

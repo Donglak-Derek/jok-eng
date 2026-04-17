@@ -214,7 +214,7 @@ export const JOB_CATEGORIES = {
 };
 
 // Phase 4: Roadmap / 90-Day Challenge
-export type MissionOption = {
+export type SessionOption = {
   id: string;
   text: string;
   vibe_score: number;
@@ -223,7 +223,7 @@ export type MissionOption = {
   audioUrl?: string;
 };
 
-export type Mission = {
+export type Session = {
   day: number;
   phase: number;
   module: string;
@@ -235,7 +235,7 @@ export type Mission = {
   cloze_keywords: string[];
   scenario_text: string;
   scenarioAudioUrl?: string;
-  options: MissionOption[];
+  options: SessionOption[];
   x_ray: string;
   x_rayAudioUrl?: string;
   cloze_translations?: Record<string, string>;

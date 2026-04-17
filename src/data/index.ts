@@ -21,7 +21,6 @@ export const scripts: Script[] = [
 ];
 
 const orderedSlugs = [
-  "american_culture",
   "small_talk",
   "texting_decoder",
   "office_banter",

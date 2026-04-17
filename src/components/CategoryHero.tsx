@@ -110,7 +110,7 @@ export default function CategoryHero({
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider opacity-60">
               <span className={`w-2 h-2 rounded-full ${theme.accent}`} />
-              Training Module
+              Studio Module
             </div>
                         <h1 className={`text-3xl md:text-5xl lg:text-6xl font-black italic uppercase tracking-tighter ${theme.text} drop-shadow-sm`}>
                             {categoryName}
@@ -125,7 +125,7 @@ export default function CategoryHero({
           {/* Progress Bar */}
                     <div className="space-y-3 max-w-sm">
                         <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-zinc-500">
-                            <span>Sector Progress</span>
+                            <span>Module Mastered</span>
                             <span className="text-white">{completedIds.size} / {scripts.length}</span>
                         </div>
                         <div className="h-2 w-full bg-zinc-950 rounded-full overflow-hidden shadow-inner border border-white/5">
@@ -148,7 +148,7 @@ export default function CategoryHero({
             )}
                         {isAllComplete && (
                             <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mt-2">
-                                All objectives cleared for today. Stand by.
+                                All sessions complete for today. See you tomorrow!
                             </div>
                         )}
           </div>
@@ -165,7 +165,7 @@ export default function CategoryHero({
                         <div className="relative z-10">
                             <div className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
                                 <Star className={`w-3 h-3 ${theme.text}`} fill="currentColor" />
-                                Priority Mission
+                                Recommended Session
                             </div>
 
                             <div className="flex gap-4 items-center mb-6">
@@ -201,7 +201,7 @@ export default function CategoryHero({
                         <Link href={`/scenario/${nextUpScript.id}`} className="block relative z-10 w-full">
                             <Button className={`w-full ${theme.accent} hover:opacity-90 border-transparent text-white shadow-xl shadow-primary/20 py-6 text-sm font-black uppercase tracking-widest`}>
                                 <Play className="w-4 h-4 mr-2" fill="currentColor" />
-                                Begin Training
+                                Start Session
                             </Button>
                         </Link>
                     </motion.div>

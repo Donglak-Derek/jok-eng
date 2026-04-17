@@ -114,7 +114,7 @@ export default function StoryCard({
           if ('userId' in script && userProfile?.uid && (script as UserScript).userId === userProfile.uid) {
               const scriptRef = doc(db, `users/${userProfile.uid}/scenarios`, script.id);
               updateDoc(scriptRef, { sentences: newSentences }).then(() => {
-                  toast.success("💎 Audio saved to your mission!", {
+                  toast.success("💎 Audio saved to your session!", {
                       duration: 4000,
                       position: "bottom-center"
                   });
@@ -242,7 +242,7 @@ export default function StoryCard({
       {/* Mood Badge (Optional) */}
       {sentence.mood && (
         <div className={`text-[10px] font-black uppercase tracking-widest text-zinc-500/60 w-full ${isSkit ? (isSpeakerA ? 'text-left' : 'text-right') : 'text-center'}`}>
-          [ Tactical Intensity: {sentence.mood} ]
+          [ Vibe Level: {sentence.mood} ]
         </div>
       )}
 

@@ -247,7 +247,7 @@ function SignalCard({
                         variant="primary"
                         className="w-full max-w-xs h-20 rounded-3xl text-sm font-black uppercase tracking-[0.2em] bg-emerald-600 hover:bg-emerald-500 shadow-[0_20px_50px_rgba(5,150,105,0.3)]"
                     >
-                        NEXT MISSION <ChevronRight className="w-5 h-5 ml-2" />
+                        NEXT SESSION <ChevronRight className="w-5 h-5 ml-2" />
                     </Button>
                 </div>
             </div>
@@ -445,7 +445,7 @@ export default function SignalDecoder({ script, nextScenarioId }: Props) {
                     <div className="absolute inset-0 bg-primary/5 blur-2xl rounded-full" />
                     <PartyPopper className="w-16 h-16 text-primary drop-shadow-[0_0_10px_rgba(var(--primary),0.5)] relative z-10" />
                 </div>
-                <h2 className="text-4xl md:text-6xl font-black italic text-white mb-2 uppercase tracking-tighter">Mission Accomplished</h2>
+                <h2 className="text-4xl md:text-6xl font-black italic text-white mb-2 uppercase tracking-tighter">Challenge Complete</h2>
                 <p className="text-zinc-500 text-xl font-black uppercase tracking-[0.3em] mb-12">{encouragement}</p>
 
                 <div className="bg-zinc-900/50 border border-white/5 p-10 rounded-[40px] mb-12 flex flex-col items-center min-w-[280px] shadow-2xl backdrop-blur-xl relative overflow-hidden">
@@ -464,7 +464,7 @@ export default function SignalDecoder({ script, nextScenarioId }: Props) {
                                 className="w-full h-20 text-sm font-black uppercase tracking-[0.2em] rounded-3xl shadow-2xl shadow-primary/30 hover:scale-[1.02] transition-all border border-white/10" 
                                 variant="primary"
                             >
-                                Next Mission <ChevronRight className="ml-2 w-5 h-5" />
+                                Next Session <ChevronRight className="ml-2 w-5 h-5" />
                             </Button>
                             <Button 
                                 onClick={handlePracticeAgain} 
@@ -489,7 +489,7 @@ export default function SignalDecoder({ script, nextScenarioId }: Props) {
                         onClick={() => router.push(`/category/${script.categorySlug}`)} 
                         className="w-full h-14 text-zinc-500 font-black uppercase tracking-widest text-[10px] mt-4"
                     >
-                        &larr; Return to Base
+                        &larr; Return to Menu
                     </Button>
                 </div>
             </motion.div>

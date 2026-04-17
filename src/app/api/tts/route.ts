@@ -15,12 +15,16 @@ export async function GET(request: NextRequest) {
         return new NextResponse("Unauthorized", { status: 401 });
     }
 
+    let decodedToken;
     try {
-        await getAdminAuth().verifyIdToken(token);
+        decodedToken = await getAdminAuth().verifyIdToken(token);
     } catch (e) {
         return new NextResponse("Unauthorized", { status: 401 });
     }
 
+    // Server-side Admin Check
+    const isAdmin = decodedToken.uid === "pbz1yjIxjRhnAA9N5Fyi4YyNy9R2";
+    
     if (!text) {
         return new NextResponse("Missing text", { status: 400 });
     }
@@ -57,7 +61,15 @@ export async function GET(request: NextRequest) {
             });
         }
 
-        console.log(`Cache MISS: ${cacheFilePath} - Generating via Google TTS`);
+        // --- CACHE MISS HANDLING ---
+        
+        // Block Non-Admins from generating new cloud TTS (Tier 3)
+        if (!isAdmin) {
+            console.log(`Cache MISS: ${cacheFilePath} - Generation blocked for non-admin.`);
+            return new NextResponse("Admin required for generation", { status: 403 });
+        }
+
+        console.log(`Cache MISS: ${cacheFilePath} - Generating via Google TTS (Admin verified)`);
 
         // 2. GENERATE AND CACHE (Official Google Cloud TTS)
         if (GOOGLE_API_KEY) {

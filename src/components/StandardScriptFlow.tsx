@@ -301,13 +301,13 @@ export default function StandardScriptFlow({ script, nextScenarioId }: Props) {
                 </div>
 
                 <h2 className="text-3xl md:text-5xl font-black italic uppercase tracking-tighter text-white mb-2">
-                    Training Objective Cleared
+                    Session Complete
                 </h2>
                 <p className="text-zinc-500 font-bold uppercase tracking-widest text-xs mb-10">{encouragement}</p>
 
                 <div className="bg-zinc-950/50 border border-white/5 p-8 rounded-[32px] mb-10 flex flex-col items-center min-w-[240px] shadow-2xl relative overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none" />
-                    <span className="text-[10px] uppercase font-black tracking-[0.3em] text-zinc-600 mb-4">Total Script Mastery</span>
+                    <span className="text-[10px] uppercase font-black tracking-[0.3em] text-zinc-600 mb-4">Total Mastery</span>
                     <div className="text-6xl font-black text-primary tabular-nums italic tracking-tighter">
                         {currentReps}
                     </div>
@@ -321,14 +321,14 @@ export default function StandardScriptFlow({ script, nextScenarioId }: Props) {
                                 className="w-full h-20 text-sm font-black uppercase tracking-[0.2em] rounded-3xl shadow-2xl shadow-primary/30 hover:scale-[1.02] transition-all border border-white/10" 
                                 variant="primary"
                             >
-                                Next Mission <ChevronRight className="ml-2 w-5 h-5" />
+                                Next Session <ChevronRight className="ml-2 w-5 h-5" />
                             </Button>
                             <Button 
                                 onClick={handlePracticeAgain} 
                                 className="w-full h-16 text-xs font-black uppercase tracking-[0.2em] rounded-2xl text-zinc-400 hover:text-white" 
                                 variant="ghost"
                             >
-                                Practice Again (Rep {currentReps + 1})
+                                Start Again (Rep {currentReps + 1})
                             </Button>
                         </>
                     ) : (
@@ -337,7 +337,7 @@ export default function StandardScriptFlow({ script, nextScenarioId }: Props) {
                             className="w-full h-16 text-sm font-black uppercase tracking-[0.2em] rounded-2xl shadow-2xl shadow-primary/20 hover:scale-[1.02] transition-all" 
                             variant="primary"
                         >
-                            Initiate Rep {currentReps + 1}
+                            Start Again {currentReps + 1}
                         </Button>
                     )}
                     
@@ -346,12 +346,12 @@ export default function StandardScriptFlow({ script, nextScenarioId }: Props) {
                         onClick={handleBackToMenu} 
                         className="w-full h-14 text-zinc-500 font-black uppercase tracking-widest text-[10px] mt-4"
                     >
-                        &larr; Return to Base
+                        &larr; Return to Studio
                     </Button>
 
                     {script.relatedBlogUrl && (
                         <Button variant="ghost" onClick={() => window.open(script.relatedBlogUrl, '_blank')} className="w-full h-12 text-primary font-black uppercase tracking-widest hover:bg-primary/5 mt-4 text-xs">
-                            Read Full Mission Guide &reg;
+                            Read Full Session Guide &reg;
                         </Button>
                     )}
                 </div>

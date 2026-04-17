@@ -44,12 +44,6 @@ export const CATEGORY_DETAILS: Record<
     image: "/images/categories/texting_decoder_v2.png",
     color: "cyan",
   },
-  american_culture: {
-    name: "American Culture",
-    description: "Watch real videos to learn exactly what Americans do and say.",
-    image: "/images/categories/american_culture_v3.png",
-    color: "cyan",
-  },
 };
 // Add new categories by extending CATEGORY_DETAILS.
 

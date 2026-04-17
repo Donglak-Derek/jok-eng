@@ -4,21 +4,21 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
 import { ChevronRight, RotateCcw, Award, Globe, MessageSquare, Zap, Lock } from "lucide-react";
 import Image from "next/image";
-import { Mission, MissionOption } from "@/types";
+import { Session, SessionOption } from "@/types";
 import confetti from "canvas-confetti";
 
-interface MissionCardSwiperProps {
-  mission: Mission;
-  onComplete: (option: MissionOption) => void;
+interface SessionCardSwiperProps {
+  session: Session;
+  onComplete: (option: SessionOption) => void;
   onRetry: () => void;
   onNext?: () => void;
 }
 
 type CardStep = "INTRO" | "SCENARIO" | "CHOICE" | "XRAY" | "WIN";
 
-export default function MissionCardSwiper({ mission, onComplete, onRetry, onNext }: MissionCardSwiperProps) {
+export default function SessionCardSwiper({ session, onComplete, onRetry, onNext }: SessionCardSwiperProps) {
   const [step, setStep] = useState<CardStep>("INTRO");
-  const [selectedOption, setSelectedOption] = useState<MissionOption | null>(null);
+  const [selectedOption, setSelectedOption] = useState<SessionOption | null>(null);
 
   useEffect(() => {
     if (step === "WIN") {
@@ -62,7 +62,7 @@ export default function MissionCardSwiper({ mission, onComplete, onRetry, onNext
     setStep("INTRO");
   };
 
-  const handleChoice = (option: MissionOption) => {
+  const handleChoice = (option: SessionOption) => {
     setSelectedOption(option);
     setStep("XRAY");
   };
@@ -86,19 +86,19 @@ export default function MissionCardSwiper({ mission, onComplete, onRetry, onNext
           >
             <div className="space-y-6 max-w-xs md:max-w-sm relative z-10 w-full overflow-y-auto">
               <div className="inline-block px-3 py-1 bg-primary/20 text-primary border border-primary/30 rounded-full text-[10px] font-black uppercase tracking-widest">
-                Day {mission.day} • {mission.module}
+                Day {session.day} • {session.module}
               </div>
               <h1 className="text-3xl font-black italic tracking-tighter text-white uppercase leading-tight">
-                {mission.title}
+                {session.title}
               </h1>
               <p className="text-zinc-400 text-lg font-medium leading-relaxed pb-4">
-                {mission.strategic_brief}
+                {session.strategic_brief}
               </p>
               <button
                 onClick={nextStep}
                 className="w-full py-5 bg-white text-black font-black uppercase tracking-widest text-sm rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
               >
-                Begin Mission <ChevronRight className="w-5 h-5" />
+                Begin Session <ChevronRight className="w-5 h-5" />
               </button>
             </div>
           </motion.div>
@@ -115,8 +115,8 @@ export default function MissionCardSwiper({ mission, onComplete, onRetry, onNext
             <div className="flex-1 overflow-y-auto flex flex-col">
               <div className="relative w-full aspect-video min-h-[45%] shrink-0 overflow-hidden bg-zinc-950">
                 <Image
-                  src={mission.imageUrl || "/images/placeholder.png"}
-                  alt={mission.title}
+                  src={session.imageUrl || "/images/placeholder.png"}
+                  alt={session.title}
                   fill
                   className="object-cover"
                   priority
@@ -126,12 +126,12 @@ export default function MissionCardSwiper({ mission, onComplete, onRetry, onNext
                 {/* Character Overlay */}
                 <div className="absolute bottom-4 left-0 right-0 p-8 flex items-center gap-4 z-20">
                   <div className="w-14 h-14 rounded-full bg-primary flex items-center justify-center text-white font-black shadow-2xl shadow-primary/40 border-2 border-white/20 shrink-0 transform -rotate-3 hover:rotate-0 transition-transform">
-                    {mission.character?.charAt(0) || "E"}
+                    {session.character?.charAt(0) || "E"}
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/60 mb-0.5">Mission Lead</span>
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/60 mb-0.5">Session Lead</span>
                     <h3 className="text-lg font-black text-white uppercase tracking-tighter leading-none italic">
-                      {mission.character || "The Encounter"} <span className="text-primary opacity-80">Says:</span>
+                      {session.character || "The Encounter"} <span className="text-primary opacity-80">Says:</span>
                     </h3>
                   </div>
                 </div>
@@ -144,7 +144,7 @@ export default function MissionCardSwiper({ mission, onComplete, onRetry, onNext
                   transition={{ delay: 0.2 }}
                   className="text-3xl md:text-3xl leading-tight font-black text-white italic tracking-tight"
                 >
-                  &ldquo;{mission.scenario_text}&rdquo;
+                  &ldquo;{session.scenario_text}&rdquo;
                 </motion.div>
               </div>
             </div>
@@ -171,7 +171,7 @@ export default function MissionCardSwiper({ mission, onComplete, onRetry, onNext
               Swipe or Tap to React
             </h2>
             <div className="space-y-4">
-              {mission.options.map((option, idx) => (
+              {session.options.map((option, idx) => (
                 <SwipeCard
                   key={option.id}
                   option={option}
@@ -201,11 +201,11 @@ export default function MissionCardSwiper({ mission, onComplete, onRetry, onNext
                   <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
                     <Zap className="w-4 h-4 text-primary" />
                   </div>
-                  <span className="text-xs font-black uppercase tracking-[0.2em] text-primary">Cultural X-Ray</span>
+                  <span className="text-xs font-black uppercase tracking-[0.2em] text-primary">Vibe X-Ray</span>
                 </div>
 
                 <p className="text-2xl md:text-2xl font-black italic tracking-tight text-white leading-tight">
-                  {mission.x_ray}
+                  {session.x_ray}
                 </p>
 
                 <div className={`p-6 rounded-2xl border-2 transition-all duration-500 relative overflow-hidden ${selectedOption.vibe_score >= 80 ? 'bg-green-500/10 border-green-500/30' : 'bg-red-500/10 border-red-500/30'}`}>
@@ -270,17 +270,17 @@ export default function MissionCardSwiper({ mission, onComplete, onRetry, onNext
             </div>
 
             <div className="space-y-1">
-              <h2 className="text-3xl font-black italic tracking-tighter uppercase text-white leading-none">Mission Complete</h2>
+              <h2 className="text-3xl font-black italic tracking-tighter uppercase text-white leading-none">Session Complete</h2>
               <div className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-primary/10 rounded-sm border border-primary/20">
                 <span className="text-primary font-black uppercase tracking-[0.2em] text-[10px]">Skill Unlocked: Social Opener</span>
               </div>
             </div>
 
-            {/* Tactical Scoreboard */}
+            {/* Scoreboard */}
             <div className="w-full py-4 px-6 bg-zinc-900/50 border-y border-white/5 flex items-center justify-between">
               <div className="text-left">
                 <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-0.5">XP Earned</p>
-                <p className="text-2xl font-black text-primary italic leading-none">+{mission.xp}</p>
+                <p className="text-2xl font-black text-primary italic leading-none">+{session.xp}</p>
               </div>
               <div className="h-8 w-px bg-white/10" />
               <div className="text-right">
@@ -295,7 +295,7 @@ export default function MissionCardSwiper({ mission, onComplete, onRetry, onNext
                   onClick={onNext}
                   className="w-full py-5 bg-primary text-primary-foreground font-black uppercase tracking-widest text-sm rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-xl shadow-primary/30"
                 >
-                  Next Training Day <ChevronRight className="w-5 h-5" />
+                  Next Session <ChevronRight className="w-5 h-5" />
                 </button>
               )}
               
@@ -329,7 +329,7 @@ export default function MissionCardSwiper({ mission, onComplete, onRetry, onNext
   );
 }
 
-function SwipeCard({ option, onSelect, isLeft }: { option: MissionOption, onSelect: () => void, isLeft: boolean }) {
+function SwipeCard({ option, onSelect, isLeft }: { option: SessionOption, onSelect: () => void, isLeft: boolean }) {
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-100, 100], [-10, 10]);
   const opacity = useTransform(x, [-150, -100, 0, 100, 150], [0, 1, 1, 1, 0]);

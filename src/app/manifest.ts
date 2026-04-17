@@ -2,8 +2,8 @@ import { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
     return {
-        name: "Amly: Master Your Culture",
-        short_name: "Amly",
+        name: "JokEng: Master American English",
+        short_name: "JokEng",
         description: "Learn everyday English expressions through short vertical videos and interactive scenarios.",
         start_url: "/",
         display: "standalone",

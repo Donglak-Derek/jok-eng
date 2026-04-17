@@ -17,11 +17,11 @@ import ActivityTracker from "@/components/profile/ActivityTracker";
 
 // Rank Logic Helpers
 const getRank = (xp: number) => {
-    if (xp >= 8000) return { title: "Elite Commander 👑", color: "from-yellow-400 to-amber-600" };
-    if (xp >= 3000) return { title: "Tactical Lead 🗣️", color: "from-purple-400 to-indigo-600" };
-    if (xp >= 1000) return { title: "Social Athlete 🤝", color: "from-blue-400 to-cyan-600" };
-    if (xp >= 200) return { title: "Active Trainee ✨", color: "from-emerald-400 to-green-600" };
-    return { title: "Recruit 🌱", color: "from-slate-400 to-slate-600" };
+    if (xp >= 8000) return { title: "Social Architect 👑", color: "from-yellow-400 to-amber-600" };
+    if (xp >= 3000) return { title: "Confident Lead 🗣️", color: "from-purple-400 to-indigo-600" };
+    if (xp >= 1000) return { title: "Social Pro 🤝", color: "from-blue-400 to-cyan-600" };
+    if (xp >= 200) return { title: "Active Learner ✨", color: "from-emerald-400 to-green-600" };
+    return { title: "New Starter 🌱", color: "from-slate-400 to-slate-600" };
 };
 
 export default function ProfilePage() {
@@ -106,7 +106,7 @@ export default function ProfilePage() {
                     transition={{ delay: 0.2 }}
                     className="text-muted-foreground max-w-sm mb-8 text-sm md:text-base leading-relaxed"
                 >
-                    Create a free account to track your daily Training Log and build elite social muscle.
+                    Create a free account to track your daily Session Log and build elite social muscle.
                 </motion.p>
                 <motion.div
                     initial={{ y: 20, opacity: 0 }}
@@ -258,13 +258,13 @@ export default function ProfilePage() {
                     />
                     <StatsCard
                         icon="⚡"
-                        label="Current Grit"
+                        label="Current Streak"
                         value={(progress?.streak || 0).toString()}
                         delay={0.6}
                     />
                     <StatsCard
                         icon="🏆"
-                        label="Max Grit"
+                        label="Max Streak"
                         value={(stats?.longestStreak || 0).toString()}
                         delay={0.7}
                     />
@@ -303,7 +303,7 @@ export default function ProfilePage() {
                                     )}
                                 </div>
                                 <p className="text-yellow-500/80 text-xs font-bold uppercase tracking-widest mt-0.5">
-                                    {progress?.completedDays?.includes(90) ? "90-Day Mission Accomplished" : "Veteran Roadmap Survivor"}
+                                    {progress?.completedDays?.includes(90) ? "90-Day Challenge Complete" : "Veteran Roadmap Survivor"}
                                 </p>
                             </div>
                         </div>

@@ -3,7 +3,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import RoadmapPath from "@/components/roadmap/RoadmapPath";
-import { useMissions } from "@/hooks/useMissions";
+import { useSessions } from "@/hooks/useSessions";
 import { Suspense, useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import StreakWidget from "@/components/StreakWidget";
@@ -12,19 +12,19 @@ import PracticeCTA from "@/components/roadmap/PracticeCTA";
 
 function RoadmapDashboard() {
     const { user, loading: authLoading } = useAuth();
-    const { missions, loading: missionsLoading } = useMissions();
+    const { sessions, loading: sessionsLoading } = useSessions();
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
         setMounted(true);
-        localStorage.setItem("amly_last_visit", JSON.stringify({
+        localStorage.setItem("jokeng_last_visit", JSON.stringify({
             title: "90-Day Challenge",
             path: "/roadmap",
             type: "Roadmap"
         }));
     }, []);
 
-    if (!mounted || authLoading || missionsLoading) {
+    if (!mounted || authLoading || sessionsLoading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-background">
                 <Loader2 className="w-8 h-8 animate-spin text-primary" />
@@ -39,7 +39,7 @@ function RoadmapDashboard() {
             <main className="flex-1 w-full pt-28 pb-20">
                 <div className="max-w-md mx-auto px-4 w-full text-center mb-8">
                     <h1 className="text-4xl font-black italic uppercase tracking-tighter mb-2">90-Day Challenge</h1>
-                    <p className="text-zinc-500 font-bold uppercase tracking-widest text-xs">Foundation Training</p>
+                    <p className="text-zinc-500 font-bold uppercase tracking-widest text-xs">Foundation Sessions</p>
                 </div>
 
                 {/* User Stats/Streak Area */}
@@ -50,7 +50,7 @@ function RoadmapDashboard() {
                 )}
 
                 <div className="max-w-md mx-auto px-4 w-full">
-                    <RoadmapPath missions={missions} />
+                    <RoadmapPath sessions={sessions} />
                 </div>
 
                 <PracticeCTA />

@@ -21,7 +21,7 @@ export function useUserProgress(uid: string | undefined) {
             
             // Persistent update
             if (!uid || uid === "guest") {
-                localStorage.setItem("amly_guest_progress", JSON.stringify(updated));
+                localStorage.setItem("jokeng_guest_progress", JSON.stringify(updated));
             } else {
                 try {
                     await updateDoc(doc(db, "userProgress", uid), updates);
@@ -38,7 +38,7 @@ export function useUserProgress(uid: string | undefined) {
         if (!uid) {
             // Guest mode: load from localStorage
             try {
-                const stored = localStorage.getItem("amly_guest_progress");
+                const stored = localStorage.getItem("jokeng_guest_progress");
                 if (stored) {
                     const parsed = JSON.parse(stored) as UserProgress;
                     checkStreakReset(parsed).then(setProgress);
@@ -52,7 +52,7 @@ export function useUserProgress(uid: string | undefined) {
                         badges: [],
                         completions: 0,
                     };
-                    localStorage.setItem("amly_guest_progress", JSON.stringify(defaultGuestProgress));
+                    localStorage.setItem("jokeng_guest_progress", JSON.stringify(defaultGuestProgress));
                     setProgress(defaultGuestProgress);
                 }
             } catch (e) {
@@ -133,7 +133,7 @@ export function useUserProgress(uid: string | undefined) {
                     ...updates
                 } as UserProgress;
 
-                localStorage.setItem("amly_guest_progress", JSON.stringify(updatedProgress));
+                localStorage.setItem("jokeng_guest_progress", JSON.stringify(updatedProgress));
                 setProgress(updatedProgress);
             } catch (e) {
                 console.error("Failed to update guest progress in localStorage", e);
@@ -149,7 +149,7 @@ export function useUserProgress(uid: string | undefined) {
                 ...updates
             } as UserProgress);
         } catch (error) {
-            console.error("Failed to update mission progress", error);
+            console.error("Failed to update session progress", error);
         }
     };
 
@@ -168,7 +168,7 @@ export function useUserProgress(uid: string | undefined) {
                 ...progress,
                 ...updates
             } as UserProgress;
-            localStorage.setItem("amly_guest_progress", JSON.stringify(updatedProgress));
+            localStorage.setItem("jokeng_guest_progress", JSON.stringify(updatedProgress));
             setProgress(updatedProgress);
             return;
         }
@@ -189,7 +189,7 @@ export function useUserProgress(uid: string | undefined) {
         progress, 
         loading, 
         recordPractice, 
-        recordMissionSuccess: (dayId: number, xp: number, vibe: number) => recordPractice(xp, vibe, dayId),
+        recordSessionSuccess: (dayId: number, xp: number, vibe: number) => recordPractice(xp, vibe, dayId),
         resetRoadmap 
     };
 }

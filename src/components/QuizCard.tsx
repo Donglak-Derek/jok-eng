@@ -70,14 +70,14 @@ export default function QuizCard({ items, onFinish }: Props) {
                     <span className="text-4xl">🏆</span>
                 </div>
                 <div>
-                    <h2 className="text-4xl font-black italic text-white mb-2 uppercase tracking-tighter">Objective Cleared</h2>
+                    <h2 className="text-4xl font-black italic text-white mb-2 uppercase tracking-tighter">Challenge Complete</h2>
                     <p className="text-zinc-500 text-lg uppercase font-bold tracking-widest">Efficiency: {score} / {items.length}</p>
                 </div>
                 <button
                     onClick={onFinish}
                     className="w-full py-5 bg-primary text-white rounded-2xl font-black uppercase tracking-widest text-lg hover:opacity-90 transition-all shadow-2xl shadow-primary/20"
                 >
-                    Return to Mission
+                    Return to Session
                 </button>
              </motion.div>
         </div>
@@ -98,7 +98,7 @@ export default function QuizCard({ items, onFinish }: Props) {
         <div className="bg-zinc-950/80 p-6 border-b border-white/5 flex justify-between items-center relative z-10">
             <div className="flex items-center gap-3 text-zinc-400 font-black uppercase tracking-widest text-xs">
                 <HelpCircle className="w-4 h-4 text-primary" />
-                <span>Sector Assessment {currentIndex + 1}/{items.length}</span>
+                <span>Progress Check {currentIndex + 1}/{items.length}</span>
             </div>
             <span className="text-[10px] font-black bg-zinc-900 border border-white/10 px-3 py-1.5 rounded uppercase tracking-[0.2em] text-zinc-500">
                 Score: {score}
@@ -154,13 +154,13 @@ export default function QuizCard({ items, onFinish }: Props) {
                     className="bg-zinc-950/50 p-8 border-t border-white/5 relative z-10"
                  >
                      <p className="text-sm text-zinc-400 mb-6 bg-zinc-900 p-5 rounded-2xl border border-white/5 leading-relaxed">
-                         <strong className="text-primary uppercase tracking-widest text-[10px] block mb-2">Strategy Intelligence:</strong> {currentItem.explanation}
+                         <strong className="text-primary uppercase tracking-widest text-[10px] block mb-2">Insight:</strong> {currentItem.explanation}
                      </p>
                      <button
                         onClick={handleNext}
                         className="w-full py-5 bg-primary text-white rounded-2xl font-black uppercase tracking-widest flex items-center justify-center gap-3 transition-all hover:opacity-90 shadow-2xl shadow-primary/20"
                      >
-                        {currentIndex < items.length - 1 ? "Next Analysis" : "Final Debrief"} <ArrowRight className="w-5 h-5" />
+                        {currentIndex < items.length - 1 ? "Next Analysis" : "Finish"} <ArrowRight className="w-5 h-5" />
                      </button>
                  </motion.div>
              )}

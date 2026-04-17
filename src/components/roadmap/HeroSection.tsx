@@ -14,70 +14,63 @@ export default function HeroSection() {
     }, []);
 
     return (
-        <section className="relative w-full py-20 flex flex-col items-center justify-center overflow-hidden bg-background">
-            {/* Background Military Accents */}
-            <div className="absolute top-0 left-0 w-full h-full pointer-events-none -z-10 opacity-20">
-                <div className="absolute top-10 left-10 w-32 h-32 border-l-4 border-t-4 border-primary" />
-                <div className="absolute bottom-10 right-10 w-32 h-32 border-r-4 border-b-4 border-primary" />
+        <section className="relative w-full py-24 flex flex-col items-center justify-center overflow-hidden bg-background">
+            {/* Background Accents - Premium Glow */}
+            <div className="absolute top-0 left-0 w-full h-full pointer-events-none -z-10 opacity-30">
+                <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-primary/20 blur-[120px] rounded-full" />
+                <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-500/10 blur-[120px] rounded-full" />
             </div>
 
-            <div className="container-minimal flex flex-col items-center text-center space-y-8">
-                {/* Military Serial Number / Tag */}
+            <div className="container-minimal flex flex-col items-center text-center space-y-10">
+                {/* Premium Badge */}
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="px-3 py-1 bg-primary/10 border border-primary/30 rounded-sm text-[10px] font-black tracking-[0.3em] uppercase text-primary mb-4"
+                    className="px-4 py-1.5 bg-zinc-950/50 backdrop-blur-md border border-white/10 rounded-full text-[10px] font-black tracking-[0.4em] uppercase text-zinc-400 mb-2 shadow-xl"
                 >
-                    Mission: Live Better in America
+                    Learn American English through Play
                 </motion.div>
 
-                {/* The Main Animation */}
-                <div className="relative flex items-center justify-center text-4xl xs:text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black italic tracking-tighter uppercase leading-none w-full px-4">
-                    <span className="text-primary italic shrink-0">Am</span>
-                    
-                    <motion.div
-                        animate={{ 
-                            width: isShrunk ? 0 : "auto",
-                            opacity: isShrunk ? 0 : 1,
-                            marginRight: isShrunk ? 0 : "0.15em",
-                            marginLeft: isShrunk ? 0 : "0.1em",
-                            scaleX: isShrunk ? 0.5 : 1
-                        }}
-                        transition={{ 
-                            duration: 0.8, 
-                            ease: [0.16, 1, 0.3, 1] 
-                        }}
-                        className="overflow-hidden whitespace-nowrap text-muted-foreground/40 origin-left"
+                {/* The Main Title */}
+                <div className="relative flex flex-col items-center justify-center space-y-2 px-4">
+                    <motion.h1 
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="text-6xl xs:text-7xl sm:text-8xl md:text-9xl font-black italic tracking-tighter uppercase text-white leading-none drop-shadow-2xl"
                     >
-                        erican +
-                    </motion.div>
-
-                    <span className="text-primary italic shrink-0">ly</span>
+                        Jok<span className="text-primary">Eng</span>
+                    </motion.h1>
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.3 }}
+                        className="h-1 w-32 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50"
+                    />
                 </div>
 
-                {/* Motivational Copy */}
+                {/* New Slogan */}
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.5 }}
-                    className="space-y-4 max-w-2xl"
+                    className="space-y-6 max-w-2xl px-4"
                 >
-                    <h2 className="text-2xl md:text-3xl lg:text-4xl font-black tracking-tight text-foreground uppercase italic leading-tight">
-                        English isn&apos;t enough. <br className="sm:hidden" /> Learn the <span className="text-primary">culture.</span>
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight text-foreground uppercase italic leading-[1.1]">
+                        Master English, <br className="sm:hidden" /> the <span className="text-primary italic">Fun</span> Way.
                     </h2>
-                    <p className="text-muted-foreground font-medium text-lg md:text-xl">
-                        2-minute daily missions. Real American life.
+                    <p className="text-muted-foreground font-medium text-lg md:text-xl max-w-xl mx-auto leading-relaxed">
+                        Say goodbye to boring textbooks. 2-minute daily sessions that make you sound like a local.
                     </p>
                 </motion.div>
 
                 {/* Action Indicator */}
                 <motion.div
-                    animate={{ y: [0, 5, 0] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    className="pt-10 flex flex-col items-center gap-2"
+                    animate={{ y: [0, 8, 0] }}
+                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                    className="pt-12 flex flex-col items-center gap-3"
                 >
-                    <div className="w-px h-12 bg-gradient-to-b from-primary to-transparent" />
-                    <span className="text-[10px] font-black tracking-widest uppercase text-muted-foreground/60">Scroll to Deploy</span>
+                    <div className="w-px h-16 bg-gradient-to-b from-primary/50 to-transparent" />
+                    <span className="text-[10px] font-black tracking-[0.3em] uppercase text-zinc-500">Scroll to Explore</span>
                 </motion.div>
             </div>
         </section>

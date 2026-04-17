@@ -9,7 +9,7 @@ export default function ResumeBanner() {
     const [lastVisit, setLastVisit] = useState<{title: string, path: string, type: string} | null>(null);
 
     useEffect(() => {
-        const stored = localStorage.getItem("amly_last_visit");
+        const stored = localStorage.getItem("jokeng_last_visit");
         if (stored) {
             try {
                 setLastVisit(JSON.parse(stored));
@@ -36,7 +36,7 @@ export default function ResumeBanner() {
                             </div>
                             <div>
                                 <p className="text-[10px] uppercase font-black tracking-widest text-primary/80 mb-1">
-                                    Resume Training • {lastVisit.type}
+                                    Resume Session • {lastVisit.type}
                                 </p>
                                 <p className="text-base font-bold text-white group-hover:text-primary transition-colors">
                                     {lastVisit.title}

@@ -132,7 +132,7 @@ export default function ClozeCard({
           if ('userId' in script && userProfile?.uid && (script as UserScript).userId === userProfile.uid) {
               const scriptRef = doc(db, `users/${userProfile.uid}/scenarios`, script.id);
               updateDoc(scriptRef, { sentences: newSentences }).then(() => {
-                  toast.success("💎 Audio saved to your mission!", {
+                  toast.success("💎 Audio saved to your session!", {
                       duration: 4000,
                       position: "bottom-center"
                   });

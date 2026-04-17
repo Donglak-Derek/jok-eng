@@ -38,12 +38,12 @@ export default function CompletionCard({ onReset, completions, isLocked }: Compl
                         <h2 className={`text-3xl font-black italic tracking-tighter uppercase leading-tight transition-colors duration-700 ${
                             isLocked ? 'text-zinc-600' : 'text-white'
                         }`}>
-                            {isLocked ? "The Final Frontier." : "Excellent Work, Soldier."}
+                            {isLocked ? "The Final Frontier." : "Excellent Progress."}
                         </h2>
                         <p className="text-zinc-500 text-sm font-bold uppercase tracking-wide leading-relaxed max-w-[300px] mx-auto">
                             {isLocked 
-                                ? "Complete the full 90-day mission tree to earn your legendary Social Master badge and restart the cycle."
-                                : "The mission is complete, but the training never stops. If you're not 100% confident yet, hit it again."
+                                ? "Complete the full 90-day roadmap to earn your legendary Social Master badge and restart the cycle."
+                                : "The journey is complete, but the refinement never stops. If you're not 100% confident yet, hit it again."
                             }
                         </p>
                     </div>
@@ -52,7 +52,7 @@ export default function CompletionCard({ onReset, completions, isLocked }: Compl
                         <div className="flex items-center gap-2">
                              <Medal className={`w-5 h-5 ${isLocked ? 'text-zinc-700' : 'text-primary'}`} />
                              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">
-                                {isLocked ? "Mission Tracking Active" : "Tactical Achievement Status"}
+                                {isLocked ? "Session Progress Tracking" : "Experience Status"}
                              </span>
                         </div>
                         <div className="flex items-center gap-1.5">
@@ -82,7 +82,7 @@ export default function CompletionCard({ onReset, completions, isLocked }: Compl
                         ) : (
                             <RotateCcw className="w-4 h-4 group-hover:rotate-[-180deg] transition-transform duration-700" />
                         )}
-                        {isLocked ? "Complete Day 90 to Claim Badge" : "Claim Badge & Restart Mission"}
+                        {isLocked ? "Complete Day 90 to Claim Badge" : "Claim Badge & Restart Roadmap"}
                     </button>
                     
                     {!isLocked && (

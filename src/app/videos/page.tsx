@@ -61,10 +61,10 @@ export default function VideosPage() {
                     >
                         <X className="w-6 h-6 text-white" />
                     </button>
-                    <span className="font-black text-xs uppercase tracking-[0.4em] text-white/50 drop-shadow-md">Return To Base</span>
+                    <span className="font-black text-xs uppercase tracking-[0.4em] text-white/50 drop-shadow-md">Return To Menu</span>
                 </div>
                 <div className="pointer-events-auto">
-                     <span className="font-black text-lg text-white drop-shadow-md italic uppercase tracking-tighter">Mission Replay</span>
+                     <span className="font-black text-lg text-white drop-shadow-md italic uppercase tracking-tighter">Session Replay</span>
                 </div>
             </div>
             

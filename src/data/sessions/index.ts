@@ -1,13 +1,13 @@
-import { Mission, Season, Achievement } from "@/types";
-import { season1Missions } from "./season1";
-import { season2Missions } from "./season2";
-import { season3Missions } from "./season3";
-import { season4Missions } from "./season4";
-import { season5Missions } from "./season5";
-import { season6Missions } from "./season6";
-import { season7Missions } from "./season7";
-import { season8Missions } from "./season8";
-import { season9Missions } from "./season9";
+import { Session, Season, Achievement } from "@/types";
+import { season1Sessions } from "./season1";
+import { season2Sessions } from "./season2";
+import { season3Sessions } from "./season3";
+import { season4Sessions } from "./season4";
+import { season5Sessions } from "./season5";
+import { season6Sessions } from "./season6";
+import { season7Sessions } from "./season7";
+import { season8Sessions } from "./season8";
+import { season9Sessions } from "./season9";
 
 export const seasons: Season[] = [
   { id: 1, title: "Arrival Survival", days: [1, 10], description: "Master the essentials of navigating a new country." },
@@ -33,14 +33,14 @@ export const achievements: Achievement[] = [
   { id: "leadership-legend", title: "Leadership Legend", description: "Completed Season 9: Leadership Upgrade", icon: "👑" },
 ];
 
-export const missions: Mission[] = [
-  ...season1Missions,
-  ...season2Missions,
-  ...season3Missions,
-  ...season4Missions,
-  ...season5Missions,
-  ...season6Missions,
-  ...season7Missions,
-  ...season8Missions,
-  ...season9Missions,
+export const sessions: Session[] = [
+  ...season1Sessions,
+  ...season2Sessions,
+  ...season3Sessions,
+  ...season4Sessions,
+  ...season5Sessions,
+  ...season6Sessions,
+  ...season7Sessions,
+  ...season8Sessions,
+  ...season9Sessions,
 ];

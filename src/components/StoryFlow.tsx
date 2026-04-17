@@ -248,7 +248,7 @@ export default function StoryFlow({ script, nextScenarioId }: Props) {
 
           <div className="space-y-2">
             <h2 className="text-3xl font-black italic uppercase tracking-tighter text-white">
-              Story Objective Cleared
+              Story Complete
             </h2>
             <p className="text-lg text-zinc-500 font-medium">Flow mastery achieved.</p>
           </div>
@@ -261,7 +261,7 @@ export default function StoryFlow({ script, nextScenarioId }: Props) {
                   className="w-full h-20 text-sm font-black uppercase tracking-[0.2em] rounded-3xl shadow-2xl shadow-primary/30 hover:scale-[1.02] transition-all border border-white/10" 
                   variant="primary"
                 >
-                  Next Mission <ChevronRight className="ml-2 w-5 h-5" />
+                  Next Session <ChevronRight className="ml-2 w-5 h-5" />
                 </Button>
                 <Button 
                   onClick={handleRepeat} 
@@ -288,7 +288,7 @@ export default function StoryFlow({ script, nextScenarioId }: Props) {
               onClick={handleFinishTraining}
               className="w-full text-zinc-500 font-black uppercase tracking-widest text-[10px] mt-4"
             >
-              &larr; Return to Base
+              &larr; Return to Menu
             </Button>
 
             {/* Content Loop: Blog Link */}
@@ -380,7 +380,7 @@ export default function StoryFlow({ script, nextScenarioId }: Props) {
           <div className="bg-zinc-900/50 rounded-2xl border border-white/5 shadow-2xl p-6 md:p-12 flex flex-col gap-6 md:gap-8 min-h-[400px]">
             <div className="flex flex-col gap-6 text-center items-center">
               <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 border border-white/5 px-4 py-1.5 rounded-sm bg-zinc-950 shadow-inner">
-                Sector Step {currentSegment.step}
+                Step {currentSegment.step}
               </span>
 
               {/* Main English Text */}

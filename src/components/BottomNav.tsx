@@ -30,7 +30,7 @@ export default function BottomNav() {
         }
     ];
 
-    const hiddenRoutes = ["/mission", "/scenario", "/script"];
+    const hiddenRoutes = ["/mission", "/scenario", "/script", "/session"];
     const isHidden = hiddenRoutes.some(route => pathname?.startsWith(route));
 
     if (isHidden) return null;

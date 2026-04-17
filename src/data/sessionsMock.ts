@@ -1,4 +1,4 @@
-export const mockMissionData = [
+export const mockSessionData = [
     {
         "day": 1,
         "phase": 1,
